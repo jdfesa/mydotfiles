@@ -31,3 +31,6 @@ ln -s ~/mydotfiles/sketchybar ~/.config/sketchybar
 
 Este symlink es visible al listar con ls -l ~/.config y debe verse así:
 sketchybar -> /Users/jd/mydotfiles/sketchybar
+
+Update README desde github
+
