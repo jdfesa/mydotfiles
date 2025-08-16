@@ -8,9 +8,10 @@ Por ahora contiene únicamente mi configuración de [Sketchybar](https://felixkr
 
 ## 📦 Estructura actual
 
+```bash
 mydotfiles/
 └── sketchybar/
-
+```
 
 ---
 
