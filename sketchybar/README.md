@@ -18,6 +18,7 @@ La configuración se carga desde `sketchybarrc`, que a su vez carga otros archiv
 Aquí se definen *qué* elementos aparecen en la barra y en qué orden.
 
 *   `spaces.sh`: **Integrado con AeroSpace**. Genera los indicadores de escritorios (1-8). Escucha el evento `aerospace_workspace_change` para actualizarse.
+*   `current_apps.sh`: **NUEVO**. Muestra iconos de *todas* las ventanas abiertas en el escritorio actual (no solo la enfocada). Usa `aerospace list-windows`.
 *   `front_app.sh`: Muestra el nombre de la app activa.
 *   `spotify.sh`: Control e información de medios.
 *   `battery.sh`, `cpu.sh`, `wifi.sh`: Información del sistema.
