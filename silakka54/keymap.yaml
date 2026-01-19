@@ -37,9 +37,9 @@ layers:
     - .
     - /
     - RSHIFT
-  - - SPACE
+  - - {t: ESCAPE, h: LGUI, type: layer}
     - LT1(TAB)
-    - {t: ESCAPE, h: LGUI, type: layer}
+    - SPACE
     - {t: BSPACE, h: RGUI, type: destructive}
     - LT2(DELETE)
     - {t: ENTER, h: ALL}
@@ -449,4 +449,8 @@ draw_config:
     \ del borde */\n}\n\n/* Colores de Fondo */\n.destructive { fill: #c62828 !important;\
     \ } /* Rojo */\n.layer { fill: #0277bd !important; }       /* Azul */\n.trans\
     \ { fill: #424242 !important; opacity: 0.9; }\n.ghost { fill: none !important;\
-    \ stroke: #aaaaaa !important; stroke-dasharray: 4 2; opacity: 0.5; }\n"
+    \ stroke: #aaaaaa !important; stroke-dasharray: 4 2; opacity: 0.5; }\n\n/* ETIQUETAS\
+    \ DE CAPA (L0, Sym, etc) */\ntext.label {\n    fill: #ffffff !important;\n   \
+    \ font-size: 20px !important;\n    font-weight: 800 !important;\n    opacity:\
+    \ 1 !important;\n    text-anchor: start !important; /* Alinear a la izquierda\
+    \ si es necesario */\n}\n"
