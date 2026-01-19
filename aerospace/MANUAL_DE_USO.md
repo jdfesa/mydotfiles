@@ -29,36 +29,38 @@ En tu teclado (Silakka54), esto está muy accesible (ej. manteniendo `Enter` o t
 ---
 
 ## 🚦 Modos (El Semáforo)
-Para no quedarte sin teclas, usamos "Modos". Cuando entras en un modo, **aparecerá un indicador ROJO en la barra superior**.
+Para no quedarte sin teclas, usamos "Modos". Cuando entras en un modo, **el color del BORDE de la ventana cambiará**.
 
-### 1. Modo Normal (Por defecto)
+### 1. Modo Normal (Borde AZUL)
 Aquí pasas el 99% del tiempo.
 *   `Hyper + h/j/k/l`: Mover el *foco* (mirar a otra ventana).
 *   `Hyper + 1-8`: Cambiar de Escritorio.
 *   `Alt + h/j/k/l`: **Mover** la ventana actual de lugar.
 *   `Alt + Shift + h/j/k/l`: **⚠️ SUPER PODER: Forzar Split (Join)**.
-    *   Úsalo cuando quieras "meter" la ventana actual dentro de otra.
-    *   Ejemplo: Tienes Chrome. Quieres Terminal a su derecha. Foco en Terminal -> `Alt + Shift + Izq` (Hacia Chrome).
 
-### 2. Modo Resize (`Hyper + R`)
-*Aparece "RESIZE" en la barra.*
+### 2. Modo Resize (`Hyper + R`) -> Borde ROJO 🔴
+*¡Peligro! Estás modificando tamaños.*
 *   Mueve `h` (más angosto) o `l` (más ancho).
 *   **Recuerda**: Solo funciona si tienes al menos 2 ventanas.
-*   `Esc`: Salir.
+*   `Esc`: Salir (Vuelve a Azul).
 
-### 3. Modo Layout (`Hyper + /`)
-*Aparece "LAYOUT" en la barra.*
+### 3. Modo Layout (`Hyper + /`) -> Borde VERDE 🟢
+*Organización y estructura.*
 *   `v`: Cambiar a orientación **Vertical** (una arriba de otra).
 *   `h`: Cambiar a orientación **Horizontal** (una al lado de otra).
 *   `a`: Acordeón (Colapsa las ventanas inactivas).
 *   `Esc`: Salir.
 
-### 4. Modo Persistencia (`Hyper + P`)
-*Aparece "PERSISTENCE" en la barra.*
+### 4. Modo Persistencia (`Hyper + P`) -> Borde VIOLETA 🟣
+*Memoria del sistema.*
 *   `s`: **Save** (Guardar foto de tus ventanas actuales).
 *   `l`: **Load** (Restaurar esa foto tras reiniciar).
+*   `Esc`: Salir.
 
----
+### 5. Modo Servicio (`Hyper + ;`) -> Borde ROSA 🌸
+*Mantenimiento.*
+*   `r`: Resetear layout (aplanar).
+*   `esc`: Recargar configuración.
 
 ## 🖱️ Barra Interactiva (Sketchybar)
 Tu barra no es solo adorno:

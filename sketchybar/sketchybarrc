@@ -79,7 +79,6 @@ source "$ITEM_DIR/spaces.sh"
 source "$ITEM_DIR/current_apps.sh"
 source "$ITEM_DIR/yabai.sh"
 source "$ITEM_DIR/front_app.sh"
-source "$ITEM_DIR/mode.sh"
 
 # Center
 source "$ITEM_DIR/spotify.sh"
