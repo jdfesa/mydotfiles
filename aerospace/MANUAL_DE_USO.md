@@ -21,6 +21,8 @@ La mayoría del tiempo estarás aquí.
 
 ### 📦 Mover Ventanas (ALT)
 *   **Mover Física**: `Alt + h / j / k / l` (Intercambia de lugar).
+*   **Forzar Split (Join)**: `Alt + Shift + h / j / k / l`.
+    *   *Usa esto para "meter" una ventana dentro de otra y forzar la división.*
 *   **Enviar a WS**: `Alt + 1` al `8` (Envía la ventana sin cambiar tu foco).
 
 ---
