@@ -1,0 +1,42 @@
+draw_config:
+  key_w: 72
+  key_h: 62
+  split_gap: 30
+  dark_mode: true
+  n_columns: 1
+  
+  # --- CSS CRÍTICO: ESTO ES LO QUE ARREGLA EL COLOR ---
+  svg_style: |
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800');
+    
+    /* 1. REGLA GLOBAL: Todo texto nace BLANCO */
+    text, tspan {
+        font-family: "JetBrains Mono", monospace !important;
+        fill: #ffffff !important; /* Blanco obligatorio */
+        text-anchor: middle;
+        dominant-baseline: middle;
+        stroke: none !important;
+    }
+
+    /* 2. FORZAR BLANCO EN TECLAS DE COLOR (La solución real) */
+    /* Apuntamos especificamente a las clases que generan el fondo rojo/azul */
+    .destructive text, .layer text, .destructive tspan, .layer tspan {
+        fill: #ffffff !important;
+        opacity: 1 !important;
+    }
+
+    /* Tamaños y Posición */
+    text.tap { font-size: 13px !important; font-weight: 800; }
+    
+    /* Texto Secundario (Super/Sym/Nav) - SUBIDO para que se vea */
+    text.hold, text.shifted {
+        font-size: 10px !important;
+        font-weight: 800 !important;
+        transform: translateY(-9px); /* Subimos 9px para separarlo del borde */
+    }
+
+    /* Colores de Fondo */
+    .destructive { fill: #c62828 !important; } /* Rojo */
+    .layer { fill: #0277bd !important; }       /* Azul */
+    .trans { fill: #424242 !important; opacity: 0.9; }
+    .ghost { fill: none !important; stroke: #aaaaaa !important; stroke-dasharray: 4 2; opacity: 0.5; }
