@@ -17,8 +17,10 @@ La configuración se carga desde `sketchybarrc`, que a su vez carga otros archiv
 ### `items/` (Definición Visual)
 Aquí se definen *qué* elementos aparecen en la barra y en qué orden.
 
-*   `spaces.sh`: **Integrado con AeroSpace**. Genera los indicadores de escritorios (1-8). Escucha el evento `aerospace_workspace_change` para actualizarse.
-*   `current_apps.sh`: **NUEVO**. Muestra iconos de *todas* las ventanas abiertas en el escritorio actual (no solo la enfocada). Usa `aerospace list-windows`.
+*   `spaces.sh`: **Integrado con AeroSpace**. Genera los indicadores de escritorios (1-8).
+*   `current_apps.sh`: **Gestor de Ventanas**. Crea el `app_manager`.
+    *   Este manager genera **botones individuales dinámicos** (`app.WINDOW_ID`) para cada ventana abierta.
+    *   **Click Izquierdo**: Ejecuta `app_click.sh` -> Mueve la ventana clickeada a la **Izquierda** (Split) manteniendo el foco en tu ventana actual.
 *   `front_app.sh`: Muestra el nombre de la app activa.
 *   `spotify.sh`: Control e información de medios.
 *   `battery.sh`, `cpu.sh`, `wifi.sh`: Información del sistema.

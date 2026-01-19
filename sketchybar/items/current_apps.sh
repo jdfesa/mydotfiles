@@ -2,16 +2,20 @@
 
 # $CONFIG_DIR/items/current_apps.sh
 
-current_apps=(
-  script="$PLUGIN_DIR/current_apps.sh"
-  icon.drawing=off
-  label.font="sketchybar-app-font:Regular:16.0"
-  label.color=$WHITE
-  background.padding_left=10
-  background.padding_right=10
-  associated_display=active
+# 1. Create Anchor Item (Start of list)
+sketchybar --add item apps_start left \
+           --set apps_start drawing=off \
+           --move apps_start after space.8
+
+# 2. Logic Controller (Manager)
+# This item doesn't draw anything, it just runs the script on events
+app_manager=(
+  script="$PLUGIN_DIR/app_manager.sh"
+  updates=on
+  drawing=off
 )
 
-sketchybar --add item current_apps left \
-           --set current_apps "${current_apps[@]}" \
-           --subscribe current_apps aerospace_workspace_change front_app_switched space_windows_change
+sketchybar --add item app_manager left \
+           --set app_manager "${app_manager[@]}" \
+           --subscribe app_manager aerospace_workspace_change front_app_switched space_windows_change
+
