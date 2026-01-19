@@ -59,5 +59,45 @@ Si quieres cambiar colores o estilos:
 1.  Edita **`draw_config.yaml`** para cambiar el CSS (colores de fondo, fuentes).
 2.  Edita **`post_process.py`** si quieres cambiar qué teclas se consideran "destructivas" (rojas) o de "capa" (azules).
 
+## 🧠 Comportamientos "Mágicos" (Ya configurados)
+
+Tu teclado tiene superpoderes ocultos en la configuración actual:
+
+*   **Hyper Key**: Si mantienes presionado `Enter` (pulgar derecho), actúa como `Cmd+Alt+Ctrl+Shift`. Ideal para atajos de window management (Aerospace).
+*   **Escape Rápido**: Presionar `j` + `k` al mismo tiempo = `Esc`. (Combo).
+*   **Caps Word**: Presionar `Shift Izquierdo` + `Shift Derecho` al mismo tiempo activa mayúsculas *solo para la palabra actual*. Se desactiva automáticamente al presionar Espacio.
+*   **Caps Lock Perenne**: Golpear `Shift Izquierdo` dos veces rápido (Double Tap) = Caps Lock activado permanentemente. (Un toque más para desactivar).
+*   **Space**: Configurado como tecla única en el pulgar izquierdo.
+
+---
+
+## 🔮 El Camino hacia Corne (Sugerencias 40%)
+
+Si tu meta es reducir teclas (migrar a un Corne de 42 o 36 teclas) y descartar la fila numérica y columnas exteriores, aquí tienes una hoja de ruta de mejoras sugeridas (sin aplicar aún):
+
+### 1. Home Row Mods (La clave del minimalismo)
+Como perderás las columnas exteriores donde viven `Ctrl`, `Alt`, `Shift` clásico, la solución es ponerlos en `A, S, D, F`.
+*   Mantener `F` = `Shift`
+*   Mantener `D` = `Cmd` (o `Ctrl`)
+*   Mantener `S` = `Alt`
+*   Esto libera los meñiques y permite teclados en miniatura.
+
+### 2. Capa de Navegación & Mouse (Capa 4 - Vacía)
+Podrías usar una de las capas vacías para convertir `I, J, K, L` en un mouse real.
+*   Move Mouse Up/Down/Left/Right.
+*   Click Izquierdo/Derecho en los pulgares.
+*   Scroll con `U` y `O`.
+*   *Útil para no soltar el teclado nunca.*
+
+### 3. Capa de Símbolos Optimizada (Coding)
+La capa actual tiene símbolos, pero un layout como **"Callum-style mods"** o una capa de símbolos dedicada para programar (`{ } [ ] ( )` en la "Home Row" de una capa) acelera el flujo de código un 200%.
+
+### 4. Capa AeroSpace Dedicada (Capa 5 - Vacía)
+Ya que usas AeroSpace, podrías mapear una capa donde:
+*   Las teclas `Q, W, E, R...` muevan ventanas directamente sin necesitar el acorde de 4 dedos (Hyper).
+*   Simplemente mantienes presionado un pulgar (ej. `Lower`) y presionas `1` para ir al workspace 1.
+
+*Estas son solo ideas para cuando te sientas listo para el siguiente nivel de eficiencia.* 🧪
+
 ---
 *Documentación generada para el futuro yo.* 🤖
