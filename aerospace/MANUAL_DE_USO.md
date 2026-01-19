@@ -1,41 +1,82 @@
-# Manual de Uso: Configuración AeroSpace (Hyper & Alt)
+# Manual de Uso: Configuración AeroSpace
 
-Esta configuración optimizada separa claramente las acciones de **Ver/Navegar** de las acciones de **Mover/Organizar**.
+> [!WARNING]
+> **DEFINICIÓN DE TECLA HYPER**
+>
+> **Hyper = Cmd + Alt + Ctrl + Shift** (Las 4 teclas a la vez).
+>
+> *Esta configuración se basa en el uso de una tecla dedicada en tu teclado programable.*
 
-## 1. Filosofía de Modificadores
+Bienvenido a tu entorno de ventanas tiling. Esta configuración está diseñada para "ver" con Hyper y "mover" con Alt, priorizando la **persistencia** de tu flujo de trabajo.
 
-*   **HYPER (`cmd+alt+ctrl+shift`)** = **VER**. Úsalo para mover tu atención (foco) o cambiar lo que ves (workspaces).
-*   **ALT (`option`)** = **MOVER**. Úsalo para mover las ventanas de lugar.
+## 1. Sistema de Navegación (Main Mode)
 
-## 2. Acciones de Navegación (HYPER)
-*Usa tu tecla Hyper dedicada.*
+La mayoría del tiempo estarás aquí.
 
-*   **Foco en Ventanas:**
-    *   `hyper + h / j / k / l`: Mover el foco (Izquierda/Abajo/Arriba/Derecha).
-*   **Cambiar de Workspace:**
-    *   `hyper + 1` al `6`: Ir al escritorio deseado.
-    *   `hyper + tab`: Volver al escritorio anterior.
-*   **Utilidades:**
-    *   `hyper + r`: Entrar a **Modo Resize**.
-    *   `hyper + ;`: Entrar a **Modo Servicio**.
-    *   `hyper + t`: Abrir Terminal (Ghostty).
+### 🧭 Moverse y Ver (HYPER)
+*   **Foco**: `Hyper + h / j / k / l` (Izquierda, Abajo, Arriba, Derecha).
+*   **Workspaces**: `Hyper + 1` al `8`.
+*   **Volver**: `Hyper + Tab` (Regresa al workspace anterior).
+*   **Terminal Rápida**: `Hyper + T` (Abre Ghostty).
 
-## 3. Acciones de Movimiento (ALT)
-*Usa la tecla Alt/Option normal.*
+### 📦 Mover Ventanas (ALT)
+*   **Mover Física**: `Alt + h / j / k / l` (Intercambia de lugar).
+*   **Enviar a WS**: `Alt + 1` al `8` (Envía la ventana sin cambiar tu foco).
 
-*   **Mover Ventanas (Swap):**
-    *   `alt + h / j / k / l`: Mueve la ventana enfocada físicamente en esa dirección.
-*   **Enviar a Workspace (Background Move):**
-    *   `alt + 1` al `6`: Envía la ventana actual al escritorio N **sin cambiar tu foco**.
+---
 
-## 4. Mapa de Monitores y Apps
+## 2. Sistema de Modos (Hyper + Letra)
 
-| Monitor | Workspaces | Apps |
+Para acciones complejas, usamos "Modos" para no rompernos los dedos.
+
+### 💾 Modo Persistencia (`Hyper + P`)
+*El sistema mágico para guardar tu sesión.*
+1.  **Antes de irte**: Presiona `Hyper + P` y luego **`s`** (Save).
+    *   *Esto guarda una "foto" de dónde está cada ventana.*
+2.  **Al volver**: Abre tus apps desordenadas, presiona `Hyper + P` y luego **`l`** (Load).
+    *   *Las ventanas volarán automáticamente a su lugar guardado.*
+3.  **Salir**: `Esc`.
+
+### 🪟 Modo Layout (`Hyper + /`)
+*Cambia cómo se organizan las ventanas.*
+*   **`a`**: **Acordeón** (Hace las ventanas colapsables, ideal para muchas columnas).
+*   **`t`**: **Tiles** (El mosaico clásico, por defecto).
+*   **`v` / `h`**: Fuerza orientación Vertical / Horizontal.
+*   **`Esc`**: Salir.
+
+### 📐 Modo Resize (`Hyper + R`)
+*Ajusta tamaños.*
+*   `h` / `l`: Ancho.
+*   `j` / `k`: Alto.
+*   `Esc`: Salir.
+
+### 🛠 Modo Servicio (`Hyper + ;`)
+*Cosas del sistema.*
+*   `r`: **Aplanar** (Resetea layouts extraños si se rompe algo).
+*   `Backspace`: Cerrar todo menos la ventana actual (Zen).
+*   `Esc`: Recargar Configuración (Reload).
+
+---
+
+## 3. Mapa de Espacios de Trabajo
+
+Se fuerza un orden lógico por monitores (Main = Izquierda, Secondary = Derecha).
+
+| WS | Monitor | Uso Sugerido |
 | :--- | :--- | :--- |
-| **Main (Izq)** | 1 (DB), 2 (Sec), 5 (Music) | TablePlus, VLC, Spotify -> Main |
-| **Secondary (Der)** | 3 (Brain), 4 (Web), 6 (Comms) | Obsidian, Telegram, Discord -> Secondary |
+| **1** | Main | **Terminal / Dev** (Ghostty, VSCode) |
+| **2** | Main | **Web** (Navegadores) |
+| **5** | Main | **Media** (Spotify, VLC) |
+| **7** | Main | Extras / Temporales |
+| **3** | Sec | **Productividad** (Obsidian, Notas) |
+| **4** | Sec | **Lectura** (PDFs, Docs) |
+| **6** | Sec | **Comunicaciones** (Telegram, Discord) |
+| **8** | Sec | Sistema / Archivos |
 
-## 5. Modo Resize
-1.  Activar con `hyper + r`.
-2.  Ajustar con `h/j/k/l` (sin modificadores).
-3.  Salir con `esc` o `enter`.
+---
+
+## 4. Solución de Problemas
+
+**¿Las ventanas no se guardan al reiniciar?**
+El script de persistencia usa el **Título de la Ventana**. Si Chrome cambia el título de "Youtube" a "Google", puede que no la reconozca perfectamente. Simplemente muévela a su sitio y vuelve a guardar (`Hyper + P` -> `s`).
+

@@ -1,14 +1,12 @@
 # AeroSpace Configuration for User
 # Based on system context: macOS (Hackintosh), Sketchybar, HYPER Key (Splits).
-# LOGIC:
-# - HYPER (cmd-alt-ctrl-shift) = SEE/NAVIGATE (Focus, Workspace Switch)
-# - ALT = MOVE (Move Window, Move to Workspace)
+# HYPER = cmd-alt-ctrl-shift
 
 # Config version
 config-version = 2
 
 # Start AeroSpace at login
-start-at-login = false
+start-at-login = true
 
 # Normalizations
 enable-normalization-flatten-containers = true
@@ -22,7 +20,7 @@ default-root-container-orientation = 'auto'
 # Mouse follows focus
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# GAPS Configuration (Crucial for Sketchybar)
+# GAPS Configuration
 [gaps]
     inner.horizontal = 8
     inner.vertical =   8
@@ -31,22 +29,24 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     outer.top =        45  # Reserved for Sketchybar
     outer.right =      8
 
-# Monitor and Workspace Assignments
+# Monitor and Workspace Assignments (1-8)
 [workspace-to-monitor-force-assignment]
-    1 = 'main'
-    2 = 'main'
-    5 = 'main' # Ajedrez/Ocio
-    3 = 'secondary'
-    4 = 'secondary'
-    6 = 'secondary' # Comunicaciones
+    1 = 'main'       # Terminal / Dev
+    2 = 'main'       # Web Browsing
+    5 = 'main'       # Media / Music
+    7 = 'main'       # Extras
+    3 = 'secondary'  # Productivity / Notes
+    4 = 'secondary'  # Reading / Docs
+    6 = 'secondary'  # Communications (Chat)
+    8 = 'secondary'  # System / Files
 
-# App Routing Rules (Auto-move apps to workspaces)
+# App Routing Rules (Baseline - Manual persistence handles the rest)
 [[on-window-detected]]
-if.app-name-regex-substring = 'TablePlus'
+if.app-name-regex-substring = 'Ghostty'
 run = 'move-node-to-workspace 1'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'VLC'
+if.app-name-regex-substring = 'TablePlus'
 run = 'move-node-to-workspace 1'
 
 [[on-window-detected]]
@@ -65,27 +65,27 @@ run = 'move-node-to-workspace 6'
 if.app-name-regex-substring = 'Discord'
 run = 'move-node-to-workspace 6'
 
-
 # Key Mapping Preset
 [key-mapping]
     preset = 'qwerty'
 
-# MAIN BINDNIG MODE
+# =================================================================
+# MAIN BINDING MODE
+# =================================================================
 [mode.main.binding]
 
     # Global Actions
-    # Terminal: HYPER + T
     cmd-alt-ctrl-shift-t = 'exec-and-forget open -n -a /Applications/Ghostty.app'
     
-    # Reload Config: HYPER + Shift + R (Standard convention, though service mode exists)
-    # Keeping Service Mode on HYPER + Shift + ;
+    # Modes Entry Points
     cmd-alt-ctrl-shift-semicolon = 'mode service'
+    cmd-alt-ctrl-shift-r = 'mode resize'
+    cmd-alt-ctrl-shift-slash = 'mode layout'
+    cmd-alt-ctrl-shift-p = 'mode persistence'
 
     # -----------------------------------------------------------------
     # NAVIGATION / SEEING -> HYPER (cmd-alt-ctrl-shift)
     # -----------------------------------------------------------------
-
-    # Focus Window (Vim keys)
     cmd-alt-ctrl-shift-h = 'focus left'
     cmd-alt-ctrl-shift-j = 'focus down'
     cmd-alt-ctrl-shift-k = 'focus up'
@@ -98,38 +98,63 @@ run = 'move-node-to-workspace 6'
     cmd-alt-ctrl-shift-4 = 'workspace 4'
     cmd-alt-ctrl-shift-5 = 'workspace 5'
     cmd-alt-ctrl-shift-6 = 'workspace 6'
+    cmd-alt-ctrl-shift-7 = 'workspace 7'
+    cmd-alt-ctrl-shift-8 = 'workspace 8'
 
-    # Special Workspace Commands
     cmd-alt-ctrl-shift-tab = 'workspace-back-and-forth'
-
-    # Layout modifications (HYPER)
-    cmd-alt-ctrl-shift-slash = 'layout tiles horizontal vertical'
-    cmd-alt-ctrl-shift-comma = 'layout accordion horizontal vertical'
-
-    # RESIZE Mode Entry (HYPER)
-    cmd-alt-ctrl-shift-r = 'mode resize'
-
 
     # -----------------------------------------------------------------
     # MOVING / ARRANGING -> ALT
     # -----------------------------------------------------------------
-
-    # Move window physically (Swap)
     alt-h = 'move left'
     alt-j = 'move down'
     alt-k = 'move up'
     alt-l = 'move right'
 
-    # Move node to workspace (Keep focus on current workspace - "Background move")
+    # Move node to workspace
     alt-1 = 'move-node-to-workspace 1'
     alt-2 = 'move-node-to-workspace 2'
     alt-3 = 'move-node-to-workspace 3'
     alt-4 = 'move-node-to-workspace 4'
     alt-5 = 'move-node-to-workspace 5'
     alt-6 = 'move-node-to-workspace 6'
+    alt-7 = 'move-node-to-workspace 7'
+    alt-8 = 'move-node-to-workspace 8'
 
+# =================================================================
+# MODE: PERSISTENCE (Hyper + P)
+# =================================================================
+[mode.persistence.binding]
+    # S = Snapshot (Save current state)
+    s = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/save_layout.py', 'mode main']
+    
+    # L = Load (Restore from snapshot)
+    l = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/restore_layout.py', 'mode main']
+    
+    esc = 'mode main'
+    enter = 'mode main'
 
-# RESIZE MODE
+# =================================================================
+# MODE: LAYOUT (Hyper + /)
+# =================================================================
+[mode.layout.binding]
+    a = ['layout accordion horizontal vertical', 'mode main'] # Accordion Toggle
+    t = ['layout tiles horizontal vertical', 'mode main']     # Tiles Toggle
+    
+    # Split Manipulations
+    minus = 'split horizontal'
+    backslash = 'split vertical'
+    
+    # Orientation
+    v = 'layout vertical'
+    h = 'layout horizontal'
+
+    esc = 'mode main'
+    enter = 'mode main'
+
+# =================================================================
+# MODE: RESIZE (Hyper + R)
+# =================================================================
 [mode.resize.binding]
     h = 'resize width -50'
     l = 'resize width +50'
@@ -138,8 +163,11 @@ run = 'move-node-to-workspace 6'
     esc = 'mode main'
     enter = 'mode main'
 
-# SERVICE MODE
+# =================================================================
+# MODE: SERVICE (Hyper + ;)
+# =================================================================
 [mode.service.binding]
     esc = ['reload-config', 'mode main']
-    r = ['flatten-workspace-tree', 'mode main'] # reset layout
+    r = ['flatten-workspace-tree', 'mode main'] # Reset layout structure
     backspace = ['close-all-windows-but-current', 'mode main']
+
