@@ -17,13 +17,13 @@ fi
 
 # 1. Convertir tu JSON (exportado de Vial) a YAML para el dibujante
 # 1. Convertir VIal (.vil) a formato compatible QMK JSON (wrapper de "layers")
-python3 -c "import json; d=json.load(open('$DIR/silakka54_main.vil')); print(json.dumps({'layers': [[(k if isinstance(k, str) else 'KC_NO') for r in l for k in r] for l in d['layout']]}))" > "$DIR/temp_qmk.json"
+python3 -c "import json; d=json.load(open('$DIR/silakka54_main.vil')); print(json.dumps({'layers': [[(k if isinstance(k, str) else 'KC_NO') for r in l for k in r if k != -1] for l in d['layout']]}))" > "$DIR/temp_qmk.json"
 
 # 2. Parsear el JSON temporal
 "$KEYMAP_CMD" parse -c 12 -q "$DIR/temp_qmk.json" > "$DIR/keymap.yaml"
 rm "$DIR/temp_qmk.json"
 
 # 2. Dibujar el SVG
-"$KEYMAP_CMD" draw "$DIR/keymap.yaml" --ortho-layout "{split: true, rows: 5, columns: 6}" > "$DIR/keymap.svg"
+"$KEYMAP_CMD" draw "$DIR/keymap.yaml" --qmk-info-json "$DIR/qmk_info.json" > "$DIR/keymap.svg"
 
 echo "✅ Grafico actualizado: keymap.svg"
