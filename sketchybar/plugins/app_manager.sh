@@ -56,15 +56,16 @@ render_apps() {
         icon=$icon_result
 
         # Stylometry
-        # If it's the focused window, highlight it
         if [ "$id" = "$FOCUSED_ID" ]; then
-            color=$WHITE
             icon_color=$WHITE
             background_color=$GREY # Active highlight
+            # Focused: Normal size
+            icon_font="sketchybar-app-font:Regular:16.0"
         else
-            color=$WHITE
-            icon_color=$WHITE
-            background_color=$BACKGROUND_2 # Inactive
+            # Unfocused: Dimmed and smaller ("opacas y mas chicas")
+            icon_color=0xff505050 # Darker grey/transparent
+            background_color=$BACKGROUND_2 
+            icon_font="sketchybar-app-font:Regular:14.0"
         fi
 
         if [ "$exists" = "false" ]; then
@@ -73,6 +74,7 @@ render_apps() {
                        --set "$item_name" \
                              script="$CONFIG_DIR/plugins/app_click.sh" \
                              icon="$icon" \
+                             icon.font="$icon_font" \
                              icon.color="$icon_color" \
                              label.drawing=off \
                              background.color="$background_color" \
@@ -88,6 +90,7 @@ render_apps() {
             # Update existing
             sketchybar --set "$item_name" \
                              icon="$icon" \
+                             icon.font="$icon_font" \
                              background.color="$background_color" \
                              icon.color="$icon_color"
         fi
