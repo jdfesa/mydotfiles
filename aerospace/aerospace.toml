@@ -141,11 +141,7 @@ run = 'move-node-to-workspace 6'
     a = ['layout accordion horizontal vertical', 'mode main'] # Accordion Toggle
     t = ['layout tiles horizontal vertical', 'mode main']     # Tiles Toggle
     
-    # Split Manipulations
-    minus = 'split horizontal'
-    backslash = 'split vertical'
-    
-    # Orientation
+    # Orientation (Tiles)
     v = 'layout vertical'
     h = 'layout horizontal'
 
