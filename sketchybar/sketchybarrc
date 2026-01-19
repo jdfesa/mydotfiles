@@ -37,6 +37,7 @@ bar=(
   y_offset=0
   margin=0
   topmost=off
+  blur_radius=25
 )
 
 

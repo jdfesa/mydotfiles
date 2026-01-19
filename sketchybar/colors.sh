@@ -31,7 +31,7 @@ export BG1=0x603c3e4f
 export BG2=0x60494d64
 
 # General bar colors
-export BAR_COLOR=$BG0
+export BAR_COLOR=0xaa1e1e2e
 export BAR_BORDER_COLOR=$BG2
 export BACKGROUND_1=$BG1
 export BACKGROUND_2=$BG2
