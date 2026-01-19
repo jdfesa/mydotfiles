@@ -75,7 +75,7 @@ run = 'move-node-to-workspace 6'
 
     # Global Actions
     # Terminal: HYPER + T
-    cmd-alt-ctrl-shift-t = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+    cmd-alt-ctrl-shift-t = 'exec-and-forget open -n -a /Applications/Ghostty.app'
     
     # Reload Config: HYPER + Shift + R (Standard convention, though service mode exists)
     # Keeping Service Mode on HYPER + Shift + ;

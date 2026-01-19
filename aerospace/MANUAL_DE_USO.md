@@ -18,7 +18,7 @@ Esta configuración optimizada separa claramente las acciones de **Ver/Navegar**
 *   **Utilidades:**
     *   `hyper + r`: Entrar a **Modo Resize**.
     *   `hyper + ;`: Entrar a **Modo Servicio**.
-    *   `hyper + enter`: Abrir Terminal.
+    *   `hyper + t`: Abrir Terminal (Ghostty).
 
 ## 3. Acciones de Movimiento (ALT)
 *Usa la tecla Alt/Option normal.*
