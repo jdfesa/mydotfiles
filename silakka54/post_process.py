@@ -46,11 +46,45 @@ def main():
                         meta = {'t': key}
                         # If we modify it, we must replace the string with the dict
                     
+                    # REPLACEMENTS
+                    replacements = {
+                        'SCOLON': ';', 'KC_SCOLON': ';',
+                        'MINUS': '-', 'KC_MINUS': '-',
+                        'EQUAL': '=', 'KC_EQUAL': '=',
+                        'LBRACKET': '[', 'KC_LBRACKET': '[',
+                        'RBRACKET': ']', 'KC_RBRACKET': ']',
+                        'BSLASH': '\\', 'KC_BSLASH': '\\',
+                        'SLASH': '/', 'KC_SLASH': '/',
+                        'COMMA': ',', 'KC_COMMA': ',',
+                        'DOT': '.', 'KC_DOT': '.',
+                        'QUOTE': "'", 'KC_QUOTE': "'",
+                        'GRAVE': '`', 'KC_GRAVE': '`',
+                        'Sft+1': '!', 'Sft+2': '@', 'Sft+3': '#', 'Sft+4': '$', 'Sft+5': '%',
+                        'Sft+6': '^', 'Sft+7': '&', 'Sft+8': '*', 'Sft+9': '(', 'Sft+0': ')',
+                        'Sft+`': '~', 'Sft+-': '_', 'Sft+=': '+', 'Sft+[': '{', 'Sft+]': '}',
+                        'Sft+\\': '|', 'Sft+;': ':', 'Sft+\'': '"', 'Sft+,': '<', 'Sft+.': '>', 'Sft+/': '?',
+                        'LALT': 'Alt', 'RALT': 'Alt', 'LCTL': 'Ctrl', 'RCTL': 'Ctrl',
+                        'LGUI': 'Gui', 'RGUI': 'Gui', 'LSFT': 'Shift', 'RSFT': 'Shift',
+                        'ESCAPE': 'Esc', 'BSPACE': 'Bksp', 'DELETE': 'Del', 'CAPSLOCK': 'Caps',
+                        'KC_ESCAPE': 'Esc', 'KC_BSPACE': 'Bksp', 'KC_DELETE': 'Del', 'KC_CAPSLOCK': 'Caps',
+                        'KC_LALT': 'Alt', 'KC_RALT': 'Alt', 'KC_LCTL': 'Ctrl', 'KC_RCTL': 'Ctrl',
+                        'KC_LGUI': 'Gui', 'KC_RGUI': 'Gui', 'KC_LSFT': 'Shift', 'KC_RSFT': 'Shift',
+                        'KC_SPACE': 'Space', 'KC_ENTER': 'Enter', 'KC_TAB': 'Tab'
+                    }
+                    
+                    # Clean up common prefixes if needed (like KC_) - handled in dict above for safety
+                    if label in replacements:
+                        label = replacements[label]
+                        meta['t'] = label
+                        row[i] = meta # Ensure change is saved
+                    
+                    # Clean up 'Sft+' prefix for unmapped keys if desirabled? 
+                    # User asked for "Sft+1" -> "!", covering most common ones.
+                    
                     # Apply rules
                     # 1. Destructive
                     if label in destructive_keys:
                         meta['type'] = 'destructive'
-                        # Ensure we use the object form
                         row[i] = meta
                     
                     # 2. Layer (if it has a hold 'h' that looks like a layer or is explicit)

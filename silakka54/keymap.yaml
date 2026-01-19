@@ -1,6 +1,6 @@
 layers:
   L0:
-  - - {t: ESCAPE, type: destructive}
+  - - {t: Esc, type: destructive}
     - '1'
     - '2'
     - '3'
@@ -11,9 +11,20 @@ layers:
     - '8'
     - '9'
     - '0'
-    - {t: BSPACE, type: destructive}
-  - [LALT, Q, W, E, R, T, Y, U, I, O, P, '-']
-  - - {t: ESCAPE, h: LCTL, type: layer}
+    - {t: Bksp, type: destructive}
+  - - {t: Alt}
+    - Q
+    - W
+    - E
+    - R
+    - T
+    - Y
+    - U
+    - I
+    - O
+    - P
+    - '-'
+  - - {t: Esc, h: LCTL, type: layer}
     - A
     - S
     - D
@@ -23,9 +34,9 @@ layers:
     - J
     - K
     - L
-    - SCOLON
-    - RALT
-  - - {t: LSFT, h: sticky}
+    - {t: ;}
+    - {t: Alt}
+  - - {t: Shift, h: sticky}
     - Z
     - X
     - C
@@ -37,10 +48,10 @@ layers:
     - .
     - /
     - RSHIFT
-  - - {t: ESCAPE, h: LGUI, type: layer}
+  - - {t: Esc, h: LGUI, type: layer}
     - LT1(TAB)
     - SPACE
-    - {t: BSPACE, h: RGUI, type: destructive}
+    - {t: Bksp, h: RGUI, type: destructive}
     - LT2(DELETE)
     - {t: ENTER, h: ALL}
   L1:
@@ -57,18 +68,18 @@ layers:
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
   - - '`'
-    - Sft+1
-    - Sft+2
-    - Sft+3
-    - Sft+4
-    - Sft+5
-    - Sft+6
-    - Sft+7
-    - Sft+8
-    - Sft+9
-    - Sft+0
+    - {t: '!'}
+    - {t: '@'}
+    - {t: '#'}
+    - {t: $}
+    - {t: '%'}
+    - {t: ^}
+    - {t: '&'}
+    - {t: '*'}
+    - {t: (}
+    - {t: )}
     - {t: "\u25BD", type: trans}
-  - - Sft+`
+  - - {t: '~'}
     - '1'
     - '2'
     - '3'
@@ -84,10 +95,10 @@ layers:
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
-    - LBRACKET
+    - {t: '['}
     - Sft+LBRACKET
     - Sft+RBRACKET
-    - RBRACKET
+    - {t: ']'}
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
@@ -112,15 +123,15 @@ layers:
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
   - - {t: "\u25BD", type: trans}
-    - {t: DELETE, type: destructive}
+    - {t: Del, type: destructive}
     - {t: "\u25BD", type: trans}
-    - Sft+-
+    - {t: _}
     - KP PLUS
     - PGUP
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
     - Sft+BSLASH
-    - BSLASH
+    - {t: \}
     - Sft+Gui+4
     - {t: "\u25BD", type: trans}
   - - {t: "\u25BD", type: trans}
@@ -136,8 +147,8 @@ layers:
     - APPLICATION
     - {t: "\u25BD", type: trans}
   - - {t: "\u25BD", type: trans}
-    - Sft+,
-    - Sft+.
+    - {t: <}
+    - {t: '>'}
     - Ctl+C
     - Ctl+V
     - ''''
@@ -191,7 +202,7 @@ layers:
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
   - - {t: "\u25BD", type: trans}
-    - {t: CAPSLOCK, type: destructive}
+    - {t: Caps, type: destructive}
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
     - {t: "\u25BD", type: trans}
