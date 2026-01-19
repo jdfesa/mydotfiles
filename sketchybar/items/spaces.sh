@@ -1,12 +1,11 @@
 #!/bin/bash
 
-SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12")
+# AeroSpace Workspaces (1-8 as defined in aerospace.toml)
+SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8")
 
-# Destroy space on right click, focus space on left click.
-# New space by left clicking separator (>)
+# Add custom event for AeroSpace
+sketchybar --add event aerospace_workspace_change
 
-sid=0
-spaces=()
 for i in "${!SPACE_ICONS[@]}"
 do
   sid=$(($i+1))
@@ -19,7 +18,7 @@ do
     padding_left=2
     padding_right=2
     label.padding_right=20
-    icon.highlight_color=$RED
+    icon.highlight_color=$GREEN
     label.color=$GREY
     label.highlight_color=$WHITE
     label.font="sketchybar-app-font:Regular:16.0"
@@ -29,23 +28,11 @@ do
     script="$PLUGIN_DIR/space.sh"
   )
 
-  sketchybar --add space space.$sid left    \
+  sketchybar --add item space.$sid left    \
              --set space.$sid "${space[@]}" \
-             --subscribe space.$sid mouse.clicked
+             --subscribe space.$sid aerospace_workspace_change mouse.clicked
 done
 
-space_creator=(
-  icon=􀆊
-  icon.font="$FONT:Heavy:16.0"
-  padding_left=10
-  padding_right=8
-  label.drawing=off
-  display=active
-  click_script='yabai -m space --create'
-  script="$PLUGIN_DIR/space_windows.sh"
-  icon.color=$WHITE
-)
+# We don't need space_creator for local workspaces typically, but keeping it simple for now or removing if unused.
+# Removing space_creator as AeroSpace handles creation/static workspaces.
 
-sketchybar --add item space_creator left               \
-           --set space_creator "${space_creator[@]}"   \
-           --subscribe space_creator space_windows_change

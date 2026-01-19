@@ -1,42 +1,34 @@
 #!/bin/bash
 
-update() {
-  source "$CONFIG_DIR/colors.sh"
-  COLOR=$BACKGROUND_2
-  if [ "$SELECTED" = "true" ]; then
-    COLOR=$GREY
-  fi
-  sketchybar --set $NAME icon.highlight=$SELECTED \
-                         label.highlight=$SELECTED \
-                         background.border_color=$COLOR
-}
+source "$CONFIG_DIR/colors.sh"
 
-set_space_label() {
-  sketchybar --set $NAME icon="$@"
+# Extract SID from name (e.g. space.1 -> 1)
+SID="${NAME#*.}"
+
+update() {
+  # AEROSPACE_FOCUSED_WORKSPACE is passed via the trigger or environment
+  if [ "$FOCUSED_WORKSPACE" = "$SID" ]; then
+    sketchybar --set $NAME icon.highlight=on \
+                           label.highlight=on \
+                           background.border_color=$GREY
+  else
+    sketchybar --set $NAME icon.highlight=off \
+                           label.highlight=off \
+                           background.border_color=$BACKGROUND_2
+  fi
 }
 
 mouse_clicked() {
-  if [ "$BUTTON" = "right" ]; then
-    yabai -m space --destroy $SID
-  else
-    if [ "$MODIFIER" = "shift" ]; then
-      SPACE_LABEL="$(osascript -e "return (text returned of (display dialog \"Give a name to space $NAME:\" default answer \"\" with icon note buttons {\"Cancel\", \"Continue\"} default button \"Continue\"))")"
-      if [ $? -eq 0 ]; then
-        if [ "$SPACE_LABEL" = "" ]; then
-          set_space_label "${NAME:6}"
-        else
-          set_space_label "${NAME:6} ($SPACE_LABEL)"
-        fi
-      fi
-    else
-      yabai -m space --focus $SID 2>/dev/null
-    fi
-  fi
+  # AeroSpace command to switch workspace
+  aerospace workspace "$SID"
 }
 
 case "$SENDER" in
   "mouse.clicked") mouse_clicked
   ;;
+  "aerospace_workspace_change") update
+  ;;
   *) update
   ;;
 esac
+
