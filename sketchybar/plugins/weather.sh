@@ -2,8 +2,8 @@
 
 NAME="weather"
 
-LAT="-23.1325"
-LON="-64.3242"
+# Cargar variables privadas (Lat/Lon)
+source "$CONFIG_DIR/secrets.sh"
 
 # Ficheros de estado para no “romper” el label si falla la red
 STATE_DIR="/tmp/sketchybar_weather"
