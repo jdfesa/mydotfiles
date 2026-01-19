@@ -81,10 +81,10 @@ run = 'move-node-to-workspace 6'
     cmd-alt-ctrl-shift-t = 'exec-and-forget open -n -a /Applications/Ghostty.app'
     
     # Modes Entry Points (Visual Feedback via Borders)
-    cmd-alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget borders active_color=0xffed8796'] # Pink
-    cmd-alt-ctrl-shift-r = ['mode resize', 'exec-and-forget borders active_color=0xffff0000']  # Red
-    cmd-alt-ctrl-shift-slash = ['mode layout', 'exec-and-forget borders active_color=0xffa6da95']  # Green
-    cmd-alt-ctrl-shift-p = ['mode persistence', 'exec-and-forget borders active_color=0xffc6a0f6'] # Purple
+    cmd-alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh SERVICE'] # Pink
+    cmd-alt-ctrl-shift-r = ['mode resize', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh RESIZE']  # Red
+    cmd-alt-ctrl-shift-slash = ['mode layout', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh LAYOUT']  # Green
+    cmd-alt-ctrl-shift-p = ['mode persistence', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh PERSISTENCE'] # Purple
 
     # -----------------------------------------------------------------
     # NAVIGATION / SEEING -> HYPER (cmd-alt-ctrl-shift)
@@ -135,27 +135,27 @@ run = 'move-node-to-workspace 6'
 # =================================================================
 [mode.persistence.binding]
     # S = Snapshot (Save current state)
-    s = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/save_layout.py', 'mode main', 'exec-and-forget borders active_color=0xff8aadf4']
+    s = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/save_layout.py', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
     
     # L = Load (Restore from snapshot)
-    l = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/restore_layout.py', 'mode main', 'exec-and-forget sketchybar --trigger borders active_color=0xff8aadf4']
+    l = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/restore_layout.py', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
     
-    esc = ['mode main', 'exec-and-forget borders active_color=0xff8aadf4']
-    enter = ['mode main', 'exec-and-forget borders active_color=0xff8aadf4']
+    esc = ['mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+    enter = ['mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
 
 # =================================================================
 # MODE: LAYOUT (Hyper + /)
 # =================================================================
 [mode.layout.binding]
-    a = ['layout accordion horizontal vertical', 'mode main', 'exec-and-forget borders active_color=0xff8aadf4'] # Accordion Toggle
-    t = ['layout tiles horizontal vertical', 'mode main', 'exec-and-forget borders active_color=0xff8aadf4']     # Tiles Toggle
+    a = ['layout accordion horizontal vertical', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL'] # Accordion Toggle
+    t = ['layout tiles horizontal vertical', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']     # Tiles Toggle
     
     # Orientation (Tiles)
-    v = ['layout vertical', 'mode main', 'exec-and-forget borders active_color=0xff8aadf4']
-    h = ['layout horizontal', 'mode main', 'exec-and-forget borders active_color=0xff8aadf4']
+    v = ['layout vertical', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+    h = ['layout horizontal', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
 
-    esc = ['mode main', 'exec-and-forget borders active_color=0xff8aadf4']
-    enter = ['mode main', 'exec-and-forget borders active_color=0xff8aadf4']
+    esc = ['mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+    enter = ['mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
 
 # =================================================================
 # MODE: RESIZE (Hyper + R)
@@ -165,14 +165,14 @@ run = 'move-node-to-workspace 6'
     l = 'resize width +50'
     j = 'resize height +50'
     k = 'resize height -50'
-    esc = ['mode main', 'exec-and-forget borders active_color=0xff8aadf4']
-    enter = ['mode main', 'exec-and-forget borders active_color=0xff8aadf4']
+    esc = ['mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+    enter = ['mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
 
 # =================================================================
 # MODE: SERVICE (Hyper + ;)
 # =================================================================
 [mode.service.binding]
-    esc = ['reload-config', 'mode main', 'exec-and-forget borders active_color=0xff8aadf4']
-    r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget borders active_color=0xff8aadf4'] # Reset layout structure
-    backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget borders active_color=0xff8aadf4']
+    esc = ['reload-config', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+    r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL'] # Reset layout structure
+    backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget /bin/bash ~/.mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
 
