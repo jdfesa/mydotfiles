@@ -2,6 +2,8 @@
 
 Bienvenido a la configuración de tu teclado **Silakka54** (Split 5x6 Column Staggered).
 
+![Silakka54 Layout](./keymap.svg)
+
 Esta carpeta contiene todo lo necesario para gestionar el layout del teclado y generar automáticamente la visualización gráfica del mismo.
 
 ## 📂 Estructura de Archivos
