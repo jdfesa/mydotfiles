@@ -11,10 +11,12 @@ Actualmente gestiono las siguientes herramientas:
 
 - **[Aerospace](https://github.com/nikitabobko/AeroSpace)**: Tiling Window Manager para macOS.
 - **[Sketchybar](https://felixkratz.github.io/SketchyBar/)**: Barra de estado personalizada.
+- **[JankyBorders](https://github.com/FelixKratz/JankyBorders)**: Bordes de ventana con colores y esquinas redondeadas.
 
 ```bash
 mydotfiles/
 ├── aerospace/   # Configuración de AeroSpace
+├── borders/     # Configuración de JankyBorders
 ├── sketchybar/  # Configuración de Sketchybar
 └── README.md
 ```
@@ -60,4 +62,8 @@ Si clonas este repositorio en una nueva máquina:
 
     # Sketchybar
     ln -s ~/mydotfiles/sketchybar ~/.config/sketchybar
+
+    # JankyBorders
+    mkdir -p ~/.config/borders
+    ln -s ~/mydotfiles/borders/bordersrc ~/.config/borders/bordersrc
     ```
