@@ -33,6 +33,15 @@ text.hold, text.shifted {
 .trans { fill: #424242 !important; opacity: 0.9; }
 .ghost { fill: none !important; stroke: #aaaaaa !important; stroke-dasharray: 4 2; opacity: 0.5; }
 
+/* ETIQUETAS DE CAPA (L0, Sym, etc) */
+text.label {
+    fill: #ffffff !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    opacity: 1 !important;
+    text-anchor: start !important; /* Alinear a la izquierda si es necesario */
+}
+
 svg.keymap { fill: #d1d6db; }
 rect.key { fill: #3f4750; }
 rect.key, rect.combo { stroke: #60666c; }

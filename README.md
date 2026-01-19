@@ -12,13 +12,13 @@ Actualmente gestiono las siguientes herramientas:
 - **[Aerospace](https://github.com/nikitabobko/AeroSpace)**: Tiling Window Manager para macOS.
 - **[Sketchybar](https://felixkratz.github.io/SketchyBar/)**: Barra de estado personalizada.
 - **[JankyBorders](https://github.com/FelixKratz/JankyBorders)**: Bordes de ventana con colores y esquinas redondeadas.
-- **Silakka54**: Configuración de mi teclado split (layout generado automáticamente).
+- **[Silakka54](silakka54/README.md)**: Configuración y visualización automática del teclado.
 
 ```bash
 mydotfiles/
 ├── aerospace/   # Configuración de AeroSpace
 ├── borders/     # Configuración de JankyBorders
-├── silakka54/   # Teclado Silakka54 (+ render automático)
+├── silakka54/   # Teclado Silakka54 (Ver README interno)
 ├── sketchybar/  # Configuración de Sketchybar
 └── README.md
 ```
