@@ -1,84 +1,84 @@
-# Manual de Uso: Configuración AeroSpace
+# 📖 Manual de Uso: Tu Nuevo Entorno
 
-> [!WARNING]
-> **DEFINICIÓN DE TECLA HYPER**
->
-> **Hyper = Cmd + Alt + Ctrl + Shift** (Las 4 teclas a la vez).
->
-> *Esta configuración se basa en el uso de una tecla dedicada en tu teclado programable.*
+Bienvenido a tu nueva nave espacial. Este manual no es técnico, es lógico. Aquí entenderás cómo moverte, organizar tus ventanas y por qué las cosas pasan como pasan.
 
-Bienvenido a tu entorno de ventanas tiling. Esta configuración está diseñada para "ver" con Hyper y "mover" con Alt, priorizando la **persistencia** de tu flujo de trabajo.
+## 🧠 Conceptos Básicos (Léeme primero)
 
-## 1. Sistema de Navegación (Main Mode)
+Antes de presionar teclas, entiende cómo "piensa" **AeroSpace**:
 
-La mayoría del tiempo estarás aquí.
+1.  **Todo es una Baldosa (Tile)**: Las ventanas no flotan una encima de otra. Ocupan el 100% del espacio disponible.
+    *   *Si tienes sola UNA ventana*: Ocupará toda la pantalla (menos los huecos).
+    *   *Si abres otra*: Se dividirán el espacio automáticamente (50/50).
 
-### 🧭 Moverse y Ver (HYPER)
-*   **Foco**: `Hyper + h / j / k / l` (Izquierda, Abajo, Arriba, Derecha).
-*   **Workspaces**: `Hyper + 1` al `8`.
-*   **Volver**: `Hyper + Tab` (Regresa al workspace anterior).
-*   **Terminal Rápida**: `Hyper + T` (Abre Ghostty).
+2.  **El Misterio del "Resize" (Redimensionar)**:
+    *   **Pregunta**: *"¿Por qué si presiono Hyper+R y trato de achicar una ventana sola, no pasa nada?"*
+    *   **Respuesta**: Porque **no tiene a quién cederle ese espacio**. En este sistema, para hacer una ventana más chica, otra debe hacerse más grande. Si estás solo en el escritorio, no puedes cambiar tu tamaño porque el sistema te obliga a llenar el hueco.
 
-### 📦 Mover Ventanas (ALT)
-*   **Mover Física**: `Alt + h / j / k / l` (Intercambia de lugar).
-*   **Forzar Split (Join)**: `Alt + Shift + h / j / k / l`.
-    *   *Usa esto para "meter" una ventana dentro de otra y forzar la división.*
-*   **Enviar a WS**: `Alt + 1` al `8` (Envía la ventana sin cambiar tu foco).
+3.  **Aplanamiento (Flattening)**:
+    *   Por defecto, el sistema intenta mantener todo simple. Si mueves una ventana a la derecha, simplemente se pone al lado. No crea "cajas dentro de cajas" infinitas... a menos que tú se lo ordenes (ver "Forzar Split").
 
 ---
 
-## 2. Sistema de Modos (Hyper + Letra)
+## ⌨️ La Tecla Maestra: HYPER
+Tu tecla `Hyper` es la combinación de **Cmd + Alt + Ctrl + Shift**.
+En tu teclado (Silakka54), esto está muy accesible (ej. manteniendo `Enter` o tecla dedicada).
 
-Para acciones complejas, usamos "Modos" para no rompernos los dedos.
+*   **HYPER**: Se usa para **NAVEGAR** (Mirar, cambiar de modo).
+*   **ALT**: Se usa para **MOVER** (Acciones físicas con la ventana).
 
-### 💾 Modo Persistencia (`Hyper + P`)
-*El sistema mágico para guardar tu sesión.*
-1.  **Antes de irte**: Presiona `Hyper + P` y luego **`s`** (Save).
-    *   *Esto guarda una "foto" de dónde está cada ventana.*
-2.  **Al volver**: Abre tus apps desordenadas, presiona `Hyper + P` y luego **`l`** (Load).
-    *   *Las ventanas volarán automáticamente a su lugar guardado.*
-3.  **Salir**: `Esc`.
+---
 
-### 🪟 Modo Layout (`Hyper + /`)
-*Cambia cómo se organizan las ventanas.*
-*   **`a`**: **Acordeón** (Hace las ventanas colapsables, ideal para muchas columnas).
-*   **`t`**: **Tiles** (El mosaico clásico, por defecto).
-*   **`v` / `h`**: Fuerza orientación Vertical / Horizontal.
-*   **`Esc`**: Salir.
+## 🚦 Modos (El Semáforo)
+Para no quedarte sin teclas, usamos "Modos". Cuando entras en un modo, **aparecerá un indicador ROJO en la barra superior**.
 
-### 📐 Modo Resize (`Hyper + R`)
-*Ajusta tamaños.*
-*   `h` / `l`: Ancho.
-*   `j` / `k`: Alto.
+### 1. Modo Normal (Por defecto)
+Aquí pasas el 99% del tiempo.
+*   `Hyper + h/j/k/l`: Mover el *foco* (mirar a otra ventana).
+*   `Hyper + 1-8`: Cambiar de Escritorio.
+*   `Alt + h/j/k/l`: **Mover** la ventana actual de lugar.
+*   `Alt + Shift + h/j/k/l`: **⚠️ SUPER PODER: Forzar Split (Join)**.
+    *   Úsalo cuando quieras "meter" la ventana actual dentro de otra.
+    *   Ejemplo: Tienes Chrome. Quieres Terminal a su derecha. Foco en Terminal -> `Alt + Shift + Izq` (Hacia Chrome).
+
+### 2. Modo Resize (`Hyper + R`)
+*Aparece "RESIZE" en la barra.*
+*   Mueve `h` (más angosto) o `l` (más ancho).
+*   **Recuerda**: Solo funciona si tienes al menos 2 ventanas.
 *   `Esc`: Salir.
 
-### 🛠 Modo Servicio (`Hyper + ;`)
-*Cosas del sistema.*
-*   `r`: **Aplanar** (Resetea layouts extraños si se rompe algo).
-*   `Backspace`: Cerrar todo menos la ventana actual (Zen).
-*   `Esc`: Recargar Configuración (Reload).
+### 3. Modo Layout (`Hyper + /`)
+*Aparece "LAYOUT" en la barra.*
+*   `v`: Cambiar a orientación **Vertical** (una arriba de otra).
+*   `h`: Cambiar a orientación **Horizontal** (una al lado de otra).
+*   `a`: Acordeón (Colapsa las ventanas inactivas).
+*   `Esc`: Salir.
+
+### 4. Modo Persistencia (`Hyper + P`)
+*Aparece "PERSISTENCE" en la barra.*
+*   `s`: **Save** (Guardar foto de tus ventanas actuales).
+*   `l`: **Load** (Restaurar esa foto tras reiniciar).
 
 ---
 
-## 3. Mapa de Espacios de Trabajo
-
-Se fuerza un orden lógico por monitores (Main = Izquierda, Secondary = Derecha).
-
-| WS | Monitor | Uso Sugerido |
-| :--- | :--- | :--- |
-| **1** | Main | **Terminal / Dev** (Ghostty, VSCode) |
-| **2** | Main | **Web** (Navegadores) |
-| **5** | Main | **Media** (Spotify, VLC) |
-| **7** | Main | Extras / Temporales |
-| **3** | Sec | **Productividad** (Obsidian, Notas) |
-| **4** | Sec | **Lectura** (PDFs, Docs) |
-| **6** | Sec | **Comunicaciones** (Telegram, Discord) |
-| **8** | Sec | Sistema / Archivos |
+## 🖱️ Barra Interactiva (Sketchybar)
+Tu barra no es solo adorno:
+1.  **Escritorio Activo**: El número se pone VERDE y los iconos de las apps te siguen.
+2.  **Lista de Apps**: Ves iconos de TODAS las ventanas abiertas.
+    *   **Click en icono**: Trae esa ventana a tu lado (Split Izquierdo) sin quitarte el foco. ¡Magia!
 
 ---
 
-## 4. Solución de Problemas
+## 🆘 Solución de Problemas Comunes
 
-**¿Las ventanas no se guardan al reiniciar?**
-El script de persistencia usa el **Título de la Ventana**. Si Chrome cambia el título de "Youtube" a "Google", puede que no la reconozca perfectamente. Simplemente muévela a su sitio y vuelve a guardar (`Hyper + P` -> `s`).
+**"No puedo dividir Chrome y Antigravity"**
+1.  Usa el **Super Poder**: `Alt + Shift + Flechas`.
+2.  Esto fuerza a que se unan.
 
+**"Hyper+R no hace nada"**
+1.  ¿Estás solo en el escritorio? -> Es normal.
+2.  ¿Hay más ventanas? -> Mira la barra. Si dice "RESIZE", usa `H` y `L`.
+
+**"Se rompió todo"**
+1.  `Hyper + ;` (Modo Servicio).
+2.  `R`: "Aplanar todo" (Resetea la estructura visual).
+3.  `Esc`: Recargar configuración.

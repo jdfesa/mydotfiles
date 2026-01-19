@@ -80,11 +80,11 @@ run = 'move-node-to-workspace 6'
     # Global Actions
     cmd-alt-ctrl-shift-t = 'exec-and-forget open -n -a /Applications/Ghostty.app'
     
-    # Modes Entry Points
-    cmd-alt-ctrl-shift-semicolon = 'mode service'
-    cmd-alt-ctrl-shift-r = 'mode resize'
-    cmd-alt-ctrl-shift-slash = 'mode layout'
-    cmd-alt-ctrl-shift-p = 'mode persistence'
+    # Modes Entry Points (With Visual Feedback)
+    cmd-alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget sketchybar --trigger mode_change MODE="SERVICE"']
+    cmd-alt-ctrl-shift-r = ['mode resize', 'exec-and-forget sketchybar --trigger mode_change MODE="RESIZE"']
+    cmd-alt-ctrl-shift-slash = ['mode layout', 'exec-and-forget sketchybar --trigger mode_change MODE="LAYOUT"']
+    cmd-alt-ctrl-shift-p = ['mode persistence', 'exec-and-forget sketchybar --trigger mode_change MODE="PERSISTENCE"']
 
     # -----------------------------------------------------------------
     # NAVIGATION / SEEING -> HYPER (cmd-alt-ctrl-shift)
@@ -135,27 +135,27 @@ run = 'move-node-to-workspace 6'
 # =================================================================
 [mode.persistence.binding]
     # S = Snapshot (Save current state)
-    s = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/save_layout.py', 'mode main']
+    s = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/save_layout.py', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
     
     # L = Load (Restore from snapshot)
-    l = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/restore_layout.py', 'mode main']
+    l = ['exec-and-forget python3 ~/.mydotfiles/aerospace/scripts/restore_layout.py', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
     
-    esc = 'mode main'
-    enter = 'mode main'
+    esc = ['mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
+    enter = ['mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
 
 # =================================================================
 # MODE: LAYOUT (Hyper + /)
 # =================================================================
 [mode.layout.binding]
-    a = ['layout accordion horizontal vertical', 'mode main'] # Accordion Toggle
-    t = ['layout tiles horizontal vertical', 'mode main']     # Tiles Toggle
+    a = ['layout accordion horizontal vertical', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""'] # Accordion Toggle
+    t = ['layout tiles horizontal vertical', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']     # Tiles Toggle
     
     # Orientation (Tiles)
-    v = 'layout vertical'
-    h = 'layout horizontal'
+    v = ['layout vertical', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
+    h = ['layout horizontal', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
 
-    esc = 'mode main'
-    enter = 'mode main'
+    esc = ['mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
+    enter = ['mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
 
 # =================================================================
 # MODE: RESIZE (Hyper + R)
@@ -165,14 +165,14 @@ run = 'move-node-to-workspace 6'
     l = 'resize width +50'
     j = 'resize height +50'
     k = 'resize height -50'
-    esc = 'mode main'
-    enter = 'mode main'
+    esc = ['mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
+    enter = ['mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
 
 # =================================================================
 # MODE: SERVICE (Hyper + ;)
 # =================================================================
 [mode.service.binding]
-    esc = ['reload-config', 'mode main']
-    r = ['flatten-workspace-tree', 'mode main'] # Reset layout structure
-    backspace = ['close-all-windows-but-current', 'mode main']
+    esc = ['reload-config', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
+    r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""'] # Reset layout structure
+    backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget sketchybar --trigger mode_change MODE=""']
 
