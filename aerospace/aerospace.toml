@@ -1,6 +1,6 @@
 # AeroSpace Configuration for User
-# Based on system context: macOS (Hackintosh), Sketchybar, HYPER Key (Splits).
-# HYPER = cmd-alt-ctrl-shift
+# Based on system context: macOS (Hackintosh), Sketchybar, Silakka54 Keyboard.
+# HYPER = cmd-alt-ctrl-shift (Actions/Apps) | MEH = alt-ctrl-shift (Navigation)
 
 # Config version
 config-version = 2
@@ -77,85 +77,97 @@ run = 'move-node-to-workspace 6'
 # =================================================================
 [mode.main.binding]
 
-    # Global Actions
+    # =================================================================
+    # KEY BINDING STRATEGY (THE TRINITY)
+    # 1. HYPER (Cmd+Ctrl+Opt+Shift) -> ACTIONS & MOVEMENT (Heavy)
+    #    - Move Windows
+    #    - Move to Workspace
+    #    - Launch Apps / Modes
+    #
+    # 2. MEH (Ctrl+Opt+Shift) -> RAlt on Silakka54 -> NAVIGATION (Light)
+    #    - Focus Window
+    #    - Switch Workspace
+    #
+    # 3. ALT (LAlt) -> SYSTEM (Reserved for macOS)
+    # =================================================================
+
+    # --- GLOBAL APPS (HYPER) ---
     cmd-alt-ctrl-shift-t = 'exec-and-forget open -n -a /Applications/Ghostty.app'
+    # cmd-alt-ctrl-shift-c = 'exec-and-forget open -a "Google Chrome" --args --new-window'
+
+    # --- NAVIGATION (MEH = Ctrl+Opt+Shift) ---
+    # Focus Window
+    alt-ctrl-shift-h = 'focus left'
+    alt-ctrl-shift-j = 'focus down'
+    alt-ctrl-shift-k = 'focus up'
+    alt-ctrl-shift-l = 'focus right'
+
+    # Switch Workspace
+    alt-ctrl-shift-1 = 'workspace 1'
+    alt-ctrl-shift-2 = 'workspace 2'
+    alt-ctrl-shift-3 = 'workspace 3'
+    alt-ctrl-shift-4 = 'workspace 4'
+    alt-ctrl-shift-5 = 'workspace 5'
+    alt-ctrl-shift-6 = 'workspace 6'
+    alt-ctrl-shift-7 = 'workspace 7'
+    alt-ctrl-shift-8 = 'workspace 8'
     
-    # Modes Entry Points (Visual Feedback via Borders)
-    cmd-alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh SERVICE'] # Pink
-    cmd-alt-ctrl-shift-r = ['mode resize', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh RESIZE']  # Red
-    cmd-alt-ctrl-shift-slash = ['mode layout', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh LAYOUT']  # Green
-    cmd-alt-ctrl-shift-p = ['mode persistence', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh PERSISTENCE'] # Purple
+    alt-ctrl-shift-tab = 'workspace-back-and-forth'
 
-    # -----------------------------------------------------------------
-    # NAVIGATION / SEEING -> HYPER (cmd-alt-ctrl-shift)
-    # -----------------------------------------------------------------
-    cmd-alt-ctrl-shift-h = 'focus left'
-    cmd-alt-ctrl-shift-j = 'focus down'
-    cmd-alt-ctrl-shift-k = 'focus up'
-    cmd-alt-ctrl-shift-l = 'focus right'
+    # --- MOVING WINDOWS (HYPER = Cmd+Ctrl+Opt+Shift) ---
+    # Move Window
+    cmd-alt-ctrl-shift-h = 'move left'
+    cmd-alt-ctrl-shift-j = 'move down'
+    cmd-alt-ctrl-shift-k = 'move up'
+    cmd-alt-ctrl-shift-l = 'move right'
 
-    # Workspace Switching
-    cmd-alt-ctrl-shift-1 = 'workspace 1'
-    cmd-alt-ctrl-shift-2 = 'workspace 2'
-    cmd-alt-ctrl-shift-3 = 'workspace 3'
-    cmd-alt-ctrl-shift-4 = 'workspace 4'
-    cmd-alt-ctrl-shift-5 = 'workspace 5'
-    cmd-alt-ctrl-shift-6 = 'workspace 6'
-    cmd-alt-ctrl-shift-7 = 'workspace 7'
-    cmd-alt-ctrl-shift-8 = 'workspace 8'
+    # Move to Workspace
+    cmd-alt-ctrl-shift-1 = 'move-node-to-workspace 1'
+    cmd-alt-ctrl-shift-2 = 'move-node-to-workspace 2'
+    cmd-alt-ctrl-shift-3 = 'move-node-to-workspace 3'
+    cmd-alt-ctrl-shift-4 = 'move-node-to-workspace 4'
+    cmd-alt-ctrl-shift-5 = 'move-node-to-workspace 5'
+    cmd-alt-ctrl-shift-6 = 'move-node-to-workspace 6'
+    cmd-alt-ctrl-shift-7 = 'move-node-to-workspace 7'
+    cmd-alt-ctrl-shift-8 = 'move-node-to-workspace 8'
+    
+    cmd-alt-ctrl-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
-    cmd-alt-ctrl-shift-tab = 'workspace-back-and-forth'
+    # --- MODES (HYPER) ---
+    cmd-alt-ctrl-shift-r = ['mode resize', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh RESIZE']
 
-    # -----------------------------------------------------------------
-    # MOVING / ARRANGING -> ALT
-    # -----------------------------------------------------------------
-    alt-h = 'move left'
-    alt-j = 'move down'
-    alt-k = 'move up'
-    alt-l = 'move right'
-
-    # Move node to workspace
-    alt-1 = 'move-node-to-workspace 1'
-    alt-2 = 'move-node-to-workspace 2'
-    alt-3 = 'move-node-to-workspace 3'
-    alt-4 = 'move-node-to-workspace 4'
-    alt-5 = 'move-node-to-workspace 5'
-    alt-6 = 'move-node-to-workspace 6'
-    alt-7 = 'move-node-to-workspace 7'
-    alt-8 = 'move-node-to-workspace 8'
-
-    # Join With (Manual Split Creation) -> Alt + Shift + Arrow
-    alt-shift-h = 'join-with left'
-    alt-shift-j = 'join-with down'
-    alt-shift-k = 'join-with up'
-    alt-shift-l = 'join-with right'
+    # Join With (Manual Split)
+    cmd-alt-ctrl-shift-left = 'join-with left'
+    cmd-alt-ctrl-shift-down = 'join-with down'
+    cmd-alt-ctrl-shift-up = 'join-with up'
+    cmd-alt-ctrl-shift-right = 'join-with right'
 
 # =================================================================
 # MODE: PERSISTENCE (Hyper + P)
 # =================================================================
-[mode.persistence.binding]
-    # S = Snapshot (Save current state)
-    s = ['exec-and-forget python3 /Users/jd/mydotfiles/aerospace/scripts/save_layout.py', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-    
-    # L = Load (Restore from snapshot)
-    l = ['exec-and-forget python3 /Users/jd/mydotfiles/aerospace/scripts/restore_layout.py', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-    
-    esc = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-    enter = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+# [mode.persistence.binding]
+#     # S = Snapshot (Save current state)
+#     s = ['exec-and-forget python3 /Users/jd/mydotfiles/aerospace/scripts/save_layout.py', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+#     
+#     # L = Load (Restore from snapshot)
+#     l = ['exec-and-forget python3 /Users/jd/mydotfiles/aerospace/scripts/restore_layout.py', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+#     
+#     esc = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+#     enter = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
 
 # =================================================================
 # MODE: LAYOUT (Hyper + /)
 # =================================================================
-[mode.layout.binding]
-    a = ['layout accordion horizontal vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL'] # Accordion Toggle
-    t = ['layout tiles horizontal vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']     # Tiles Toggle
-    
-    # Orientation (Tiles)
-    v = ['layout vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-    h = ['layout horizontal', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-
-    esc = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-    enter = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+# [mode.layout.binding]
+#     a = ['layout accordion horizontal vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL'] # Accordion Toggle
+#     t = ['layout tiles horizontal vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']     # Tiles Toggle
+#     
+#     # Orientation (Tiles)
+#     v = ['layout vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+#     h = ['layout horizontal', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+# 
+#     esc = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+#     enter = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
 
 # =================================================================
 # MODE: RESIZE (Hyper + R)
@@ -171,8 +183,8 @@ run = 'move-node-to-workspace 6'
 # =================================================================
 # MODE: SERVICE (Hyper + ;)
 # =================================================================
-[mode.service.binding]
-    esc = ['reload-config', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-    r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL'] # Reset layout structure
-    backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+# [mode.service.binding]
+#     esc = ['reload-config', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
+#     r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL'] # Reset layout structure
+#     backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
 
