@@ -48,7 +48,9 @@ Aquí pasas el 99% del tiempo.
 *Organización y estructura.*
 *   `v`: Cambiar a orientación **Vertical** (una arriba de otra).
 *   `h`: Cambiar a orientación **Horizontal** (una al lado de otra).
-*   `a`: Acordeón (Colapsa las ventanas inactivas).
+*   `a`: **Acordeón** (Apila las ventanas como cartas).
+    *   *Nota*: En este modo NO puedes cambiar el tamaño de las ventanas individualmente.
+*   `t`: **Mosaico (Tiles)** (Vuelve al modo normal donde todas se ven).
 *   `Esc`: Salir.
 
 ### 4. Modo Persistencia (`Hyper + P`) -> Borde VIOLETA 🟣
@@ -59,8 +61,20 @@ Aquí pasas el 99% del tiempo.
 
 ### 5. Modo Servicio (`Hyper + ;`) -> Borde ROSA 🌸
 *Mantenimiento.*
-*   `r`: Resetear layout (aplanar).
+*   `r`: **Resetear layout (Aplanar)**. Si tus ventanas se ven raras o no las encuentras, pulsa esto.
 *   `esc`: Recargar configuración.
+
+---
+
+## 📐 Entendiendo los Layouts (¿Dónde están mis ventanas?)
+
+A veces AeroSpace apila las ventanas y parecen desaparecer. Esto pasa por el **Acordeón**.
+
+### Acordeón vs Tiles
+*   **Tiles (Mosaico)**: Todas las ventanas comparten el espacio y ninguna se tapa. Es el modo por defecto.
+*   **Acordeón**: Las ventanas se apilan "hacia el fondo". Solo ves una barrita de las que están atrás.
+    *   **¿Para qué sirve?**: Si tienes 10 ventanas y quieres enfocarte en una sin que las otras se hagan diminutas.
+    *   **¿Cómo salgo?**: `Hyper + /` y luego pulsa `t` (Tiles) o usa el "Botón de Pánico" (`Hyper + ;` luego `r`).
 
 ## 🖱️ Barra Interactiva (Sketchybar)
 Tu barra no es solo adorno:
