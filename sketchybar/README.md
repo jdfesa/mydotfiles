@@ -61,5 +61,26 @@ Edita `colors.sh`.
 2.  Crea la definición en `items/mi_item.sh`.
 3.  Añade `source "$ITEM_DIR/mi_item.sh"` en `sketchybarrc`.
 
+
+---
+
+## 📦 Iconos de Estado (Parte Derecha)
+
+Aclaración sobre esos "iconitos raros" que ves a la derecha:
+
+### 1. 📦 La Cajita (Homebrew)
+Es tu gestor de paquetes.
+*   **Verde con check (✓)**: Tu sistema está actualizado (0 pendientes).
+*   **Amarillo/Rojo**: Tienes actualizaciones de programas pendientes.
+
+### 2. 🔔 Campana (GitHub)
+Te avisa si tienes notificaciones en GitHub.
+*   **Importante**: Para que este icono funcione de verdad, debes abrir una terminal y ejecutar `gh auth login`.
+*   Si no lo haces, es meramente decorativo.
+
+### 3. ⚡ CPU y RAM
+*   **CPU**: Cuánto le cuesta pensar a tu ordenador.
+*   **RAM**: Cuánta memoria estás usando. (Amarillo = RAM casi llena).
+
 ---
 *Hecho para ser mantenible y escalable.* 🛠
