@@ -70,6 +70,25 @@ Tu barra no es solo adorno:
 
 ---
 
+## 🛠️ Arquitectura Técnica (Scripts)
+
+Para que todo esto funcione, usamos scripts personalizados en `~/.mydotfiles/aerospace/scripts/`. Si eres curioso o necesitas arreglar algo, aquí está qué hace cada uno:
+
+### 1. `borders_mode.sh`
+*   **Función**: Es el cerebro de los colores.
+*   **Uso**: Recibe el nombre del modo (ej. `RESIZE`) y le habla a **JankyBorders** para cambiar el color del borde activo.
+*   **Colores**: Azul (Normal), Rojo (Resize), Verde (Layout), Violeta (Persistencia), Rosa (Servicio).
+
+### 2. `save_layout.py`
+*   **Función**: "congela" el estado actual.
+*   **Lógica**: Lee todas las ventanas abiertas y sus posiciones usando `aerospace list-windows --json` y las guarda en un archivo temporal JSON.
+
+### 3. `restore_layout.py`
+*   **Función**: "descongela" el estado.
+*   **Lógica**: Lee el archivo JSON guardado e intenta mover las ventanas a sus escritorios originales.
+
+---
+
 ## 🆘 Solución de Problemas Comunes
 
 **"No puedo dividir Chrome y Antigravity"**
@@ -78,7 +97,7 @@ Tu barra no es solo adorno:
 
 **"Hyper+R no hace nada"**
 1.  ¿Estás solo en el escritorio? -> Es normal.
-2.  ¿Hay más ventanas? -> Mira la barra. Si dice "RESIZE", usa `H` y `L`.
+2.  ¿Hay más ventanas? -> Mira el borde. Si es **ROJO**, usa `H` y `L`.
 
 **"Se rompió todo"**
 1.  `Hyper + ;` (Modo Servicio).
