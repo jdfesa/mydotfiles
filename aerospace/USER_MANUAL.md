@@ -19,24 +19,50 @@ Antes de presionar teclas, entiende cómo "piensa" **AeroSpace**:
 
 ---
 
-## ⌨️ La Tecla Maestra: HYPER
-Tu tecla `Hyper` es la combinación de **Cmd + Alt + Ctrl + Shift**.
-En tu teclado (Silakka54), esto está muy accesible (ej. manteniendo `Enter` o tecla dedicada).
+## 🎹 La "Santa Trinidad" del Teclado (Silakka54)
 
-*   **HYPER**: Se usa para **NAVEGAR** (Mirar, cambiar de modo).
-*   **ALT**: Se usa para **MOVER** (Acciones físicas con la ventana).
+Hemos diseñado una estrategia de tres capas para evitar conflictos y maximizar la velocidad:
+
+### 1. HYPER (`Cmd + Alt + Ctrl + Shift`) -> ACCIÓN 🚀
+*   **Función**: Acciones "pesadas" y globales.
+*   **Uso**: Mover ventanas, lanzar apps, entrar a modos.
+*   **Mnemotecnia**: "Hyper hace cosas Fuertes".
+
+### 2. MEH (`Ctrl + Alt + Shift`) -> NAVEGACIÓN 🧭
+*   **Tecla Física**: `RAlt` (derecha) en tu Silakka54.
+*   **Función**: Mirar alrededor (Focus) y cambiar de escritorio.
+*   **Mnemotecnia**: "Meh es para Mirar".
+*   **⚠️ Nota Técnica**: AeroSpace exige un orden estricto de modificadores. Aunque se llama "Meh" y visualmente es `Ctrl+Alt+Shift`, en la configuración interna (`aerospace.toml`) **DEBE Escribirse como `alt-ctrl-shift`**. Si pones otro orden, no funciona.
+
+### 3. ALT (`Left Alt`) -> SISTEMA 🍎
+*   **Función**: Reservada para macOS.
+*   **Uso**: Atajos nativos `Opt + Left/Right` (saltar palabras), caracteres especiales, etc.
+*   **Beneficio**: Ya no choca con AeroSpace.
 
 ---
 
-## 🚦 Modos (El Semáforo)
-Para no quedarte sin teclas, usamos "Modos". Cuando entras en un modo, **el color del BORDE de la ventana cambiará**.
+## 🚦 Atajos Principales
 
-### 1. Modo Normal (Borde AZUL)
-Aquí pasas el 99% del tiempo.
-*   `Hyper + h/j/k/l`: Mover el *foco* (mirar a otra ventana).
-*   `Hyper + 1-8`: Cambiar de Escritorio.
-*   `Alt + h/j/k/l`: **Mover** la ventana actual de lugar.
-*   `Alt + Shift + h/j/k/l`: **⚠️ SUPER PODER: Forzar Split (Join)**.
+### Navegación (MEH)
+*   `Meh + h/j/k/l`: **Foco** (Mirar a la ventana de al lado).
+*   `Meh + 1-8`: Cambiar de **Escritorio**.
+*   `Meh + Tab`: Volver al último escritorio (Back & Forth).
+
+### Movimiento (HYPER)
+*   `Hyper + h/j/k/l`: **Mover** la ventana cargándola contigo.
+*   `Hyper + 1-8`: **Enviar** ventana a otro escritorio.
+*   `Hyper + Tab`: Mover ventana al siguiente monitor.
+
+### Modos Especiales
+Hemos simplificado la configuración para dejar solo lo esencial:
+
+#### 🔴 Modo Resize (`Hyper + R`)
+*   **Borde Rojo**.
+*   `h/l`: Modificar ancho.
+*   `j/k`: Modificar alto.
+*   `Esc`: Salir.
+
+*(Los modos Layout, Persistencia y Servicio están desactivados temporalmente para simplificar el uso).*
 
 ### 2. Modo Resize (`Hyper + R`) -> Borde ROJO 🔴
 *¡Peligro! Estás modificando tamaños.*
