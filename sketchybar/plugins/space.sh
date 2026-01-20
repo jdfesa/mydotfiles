@@ -10,11 +10,13 @@ update() {
   if [ "$FOCUSED_WORKSPACE" = "$SID" ]; then
     sketchybar --set $NAME icon.highlight=on \
                            label.highlight=on \
-                           background.border_color=$GREY
+                           background.border_color=$WHITE \
+                           background.drawing=on
   else
     sketchybar --set $NAME icon.highlight=off \
                            label.highlight=off \
-                           background.border_color=$BACKGROUND_2
+                           background.border_color=$BACKGROUND_2 \
+                           background.drawing=off
   fi
 }
 

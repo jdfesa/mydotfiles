@@ -53,14 +53,17 @@ render_apps() {
         icon=$icon_result
 
         # Stylometry
+        # Stylometry
         if [ "$id" = "$FOCUSED_WINDOW_ID" ]; then
             icon_color=$WHITE
             background_color=$GREY
+            background_drawing="on"
             icon_font="sketchybar-app-font:Regular:16.0"
         else
-            # Lighter grey, more visible ("no tan opaco")
-            icon_color=0xffa0a0a0 
+            # Unfocused: "Sub-icon" style (No background, transparent icon)
+            icon_color=0x80ffffff 
             background_color=$BACKGROUND_2 
+            background_drawing="off"
             icon_font="sketchybar-app-font:Regular:14.0"
         fi
 
@@ -72,6 +75,7 @@ render_apps() {
                              icon.font="$icon_font" \
                              icon.color="$icon_color" \
                              label.drawing=off \
+                             background.drawing="$background_drawing" \
                              background.color="$background_color" \
                              background.padding_left=5 \
                              background.padding_right=5 \
@@ -85,6 +89,7 @@ render_apps() {
             sketchybar --set "$item_name" \
                              icon="$icon" \
                              icon.font="$icon_font" \
+                             background.drawing="$background_drawing" \
                              background.color="$background_color" \
                              icon.color="$icon_color" \
                        --move "$item_name" after "$ANCHOR"
