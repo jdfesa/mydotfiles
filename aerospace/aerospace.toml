@@ -1,101 +1,61 @@
-# AeroSpace Configuration for User
-# Based on system context: macOS (Hackintosh), Sketchybar, Silakka54 Keyboard.
-# HYPER = cmd-alt-ctrl-shift (Actions/Apps) | MEH = alt-ctrl-shift (Navigation)
+# AeroSpace MINIMAL CONFIGURATION
+# Goal: Stability and Simplicity.
+# If this works, we add features back one by one.
 
-# Config version
 config-version = 2
-
-# Start AeroSpace at login
 start-at-login = true
 
-# Normalizations
-enable-normalization-flatten-containers = true
-enable-normalization-opposite-orientation-for-nested-containers = true
-
-# Sketchybar Integration
-exec-on-workspace-change = ['/bin/bash', '-c', 'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE']
-
-# Layout
-accordion-padding = 30
+# -----------------------------------------------------------------------------
+# 1. CORE LAYOUT (The Bare Minimum)
+# -----------------------------------------------------------------------------
+# 'tiles' = Windows split 50/50.
+# 'auto'  = Splits side-by-side if wide, top-bottom if tall.
 default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 
-# Mouse follows focus
+# Disable complex normalizations to avoid "magic" movement
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+
+# Mouse behavior
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# GAPS Configuration
+# -----------------------------------------------------------------------------
+# 2. APPEARANCE (Only Sketchybar Space)
+# -----------------------------------------------------------------------------
 [gaps]
-    inner.horizontal = 8
-    inner.vertical =   8
-    outer.left =       8
-    outer.bottom =     8
-    outer.top =        45  # Reserved for Sketchybar
-    outer.right =      8
+    inner.horizontal = 0
+    inner.vertical =   0
+    outer.left =       0
+    outer.bottom =     0
+    outer.right =      0
+    
+    # REQUIRED: Space for the top bar (Sketchybar)
+    outer.top =        48 
 
-# Monitor and Workspace Assignments (1-8)
-[workspace-to-monitor-force-assignment]
-    1 = 'main'       # Terminal / Dev
-    2 = 'main'       # Web Browsing
-    5 = 'main'       # Media / Music
-    7 = 'main'       # Extras
-    3 = 'secondary'  # Productivity / Notes
-    4 = 'secondary'  # Reading / Docs
-    6 = 'secondary'  # Communications (Chat)
-    8 = 'secondary'  # System / Files
-
-# App Routing Rules (Baseline - Manual persistence handles the rest)
-[[on-window-detected]]
-if.app-name-regex-substring = 'Ghostty'
-run = 'move-node-to-workspace 1'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'TablePlus'
-run = 'move-node-to-workspace 1'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'Obsidian'
-run = 'move-node-to-workspace 3'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'Spotify'
-run = 'move-node-to-workspace 5'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'Telegram'
-run = 'move-node-to-workspace 6'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'Discord'
-run = 'move-node-to-workspace 6'
-
-# Key Mapping Preset
-[key-mapping]
-    preset = 'qwerty'
-
-# =================================================================
-# MAIN BINDING MODE
-# =================================================================
+# -----------------------------------------------------------------------------
+# 3. KEYBINDINGS (The Trinity: Hyper/Meh)
+# -----------------------------------------------------------------------------
 [mode.main.binding]
 
-    # =================================================================
-    # KEY BINDING STRATEGY (THE TRINITY)
-    # 1. HYPER (Cmd+Ctrl+Opt+Shift) -> ACTIONS & MOVEMENT (Heavy)
-    #    - Move Windows
-    #    - Move to Workspace
-    #    - Launch Apps / Modes
-    #
-    # 2. MEH (Ctrl+Opt+Shift) -> RAlt on Silakka54 -> NAVIGATION (Light)
-    #    - Focus Window
-    #    - Switch Workspace
-    #
-    # 3. ALT (LAlt) -> SYSTEM (Reserved for macOS)
-    # =================================================================
-
-    # --- GLOBAL APPS (HYPER) ---
+    # --- HYPER (Cmd+Ctrl+Opt+Shift) -> ACTIONS ---
     cmd-alt-ctrl-shift-t = 'exec-and-forget open -n -a /Applications/Ghostty.app'
-    # cmd-alt-ctrl-shift-c = 'exec-and-forget open -a "Google Chrome" --args --new-window'
+    cmd-alt-ctrl-shift-backspace = 'reload-config'
+    
+    # Move Focus (Physical)
+    cmd-alt-ctrl-shift-h = 'move left'
+    cmd-alt-ctrl-shift-j = 'move down'
+    cmd-alt-ctrl-shift-k = 'move up'
+    cmd-alt-ctrl-shift-l = 'move right'
 
-    # --- NAVIGATION (MEH = Ctrl+Opt+Shift) ---
+    # Move to Workspace
+    cmd-alt-ctrl-shift-1 = 'move-node-to-workspace 1'
+    cmd-alt-ctrl-shift-2 = 'move-node-to-workspace 2'
+    cmd-alt-ctrl-shift-3 = 'move-node-to-workspace 3'
+    cmd-alt-ctrl-shift-4 = 'move-node-to-workspace 4'
+    cmd-alt-ctrl-shift-5 = 'move-node-to-workspace 5'
+
+    # --- MEH (Alt+Ctrl+Shift) -> NAVIGATION ---
     # Focus Window
     alt-ctrl-shift-h = 'focus left'
     alt-ctrl-shift-j = 'focus down'
@@ -108,83 +68,7 @@ run = 'move-node-to-workspace 6'
     alt-ctrl-shift-3 = 'workspace 3'
     alt-ctrl-shift-4 = 'workspace 4'
     alt-ctrl-shift-5 = 'workspace 5'
-    alt-ctrl-shift-6 = 'workspace 6'
-    alt-ctrl-shift-7 = 'workspace 7'
-    alt-ctrl-shift-8 = 'workspace 8'
-    
-    alt-ctrl-shift-tab = 'workspace-back-and-forth'
 
-    # --- MOVING WINDOWS (HYPER = Cmd+Ctrl+Opt+Shift) ---
-    # Move Window
-    cmd-alt-ctrl-shift-h = 'move left'
-    cmd-alt-ctrl-shift-j = 'move down'
-    cmd-alt-ctrl-shift-k = 'move up'
-    cmd-alt-ctrl-shift-l = 'move right'
-
-    # Move to Workspace
-    cmd-alt-ctrl-shift-1 = 'move-node-to-workspace 1'
-    cmd-alt-ctrl-shift-2 = 'move-node-to-workspace 2'
-    cmd-alt-ctrl-shift-3 = 'move-node-to-workspace 3'
-    cmd-alt-ctrl-shift-4 = 'move-node-to-workspace 4'
-    cmd-alt-ctrl-shift-5 = 'move-node-to-workspace 5'
-    cmd-alt-ctrl-shift-6 = 'move-node-to-workspace 6'
-    cmd-alt-ctrl-shift-7 = 'move-node-to-workspace 7'
-    cmd-alt-ctrl-shift-8 = 'move-node-to-workspace 8'
-    
-    cmd-alt-ctrl-shift-tab = 'move-workspace-to-monitor --wrap-around next'
-
-    # --- MODES (HYPER) ---
-    cmd-alt-ctrl-shift-r = ['mode resize', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh RESIZE']
-
-    # Join With (Manual Split)
-    cmd-alt-ctrl-shift-left = 'join-with left'
-    cmd-alt-ctrl-shift-down = 'join-with down'
-    cmd-alt-ctrl-shift-up = 'join-with up'
-    cmd-alt-ctrl-shift-right = 'join-with right'
-
-# =================================================================
-# MODE: PERSISTENCE (Hyper + P)
-# =================================================================
-# [mode.persistence.binding]
-#     # S = Snapshot (Save current state)
-#     s = ['exec-and-forget python3 /Users/jd/mydotfiles/aerospace/scripts/save_layout.py', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-#     
-#     # L = Load (Restore from snapshot)
-#     l = ['exec-and-forget python3 /Users/jd/mydotfiles/aerospace/scripts/restore_layout.py', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-#     
-#     esc = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-#     enter = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-
-# =================================================================
-# MODE: LAYOUT (Hyper + /)
-# =================================================================
-# [mode.layout.binding]
-#     a = ['layout accordion horizontal vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL'] # Accordion Toggle
-#     t = ['layout tiles horizontal vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']     # Tiles Toggle
-#     
-#     # Orientation (Tiles)
-#     v = ['layout vertical', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-#     h = ['layout horizontal', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-# 
-#     esc = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-#     enter = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-
-# =================================================================
-# MODE: RESIZE (Hyper + R)
-# =================================================================
-[mode.resize.binding]
-    h = 'resize width -50'
-    l = 'resize width +50'
-    j = 'resize height +50'
-    k = 'resize height -50'
-    esc = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-    enter = ['mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-
-# =================================================================
-# MODE: SERVICE (Hyper + ;)
-# =================================================================
-# [mode.service.binding]
-#     esc = ['reload-config', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-#     r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL'] # Reset layout structure
-#     backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget /bin/bash /Users/jd/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL']
-
+    # --- UTILS ---
+    # Flatten: Use this if windows get "stuck" in a weird nested split
+    alt-ctrl-shift-f = 'flatten-workspace-tree'
