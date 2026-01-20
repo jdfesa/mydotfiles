@@ -12,12 +12,14 @@ Actualmente gestiono las siguientes herramientas:
 - **[Aerospace](https://github.com/nikitabobko/AeroSpace)**: Tiling Window Manager para macOS.
 - **[Sketchybar](https://felixkratz.github.io/SketchyBar/)**: Barra de estado personalizada.
 - **[JankyBorders](https://github.com/FelixKratz/JankyBorders)**: Bordes de ventana con colores y esquinas redondeadas.
+- **[Ghostty](ghostty/README.md)**: Terminal emuladora GPU-accelerated.
 - **[Silakka54](silakka54/README.md)**: Configuración y visualización automática del teclado.
 
 ```bash
 mydotfiles/
 ├── aerospace/   # Configuración de AeroSpace
 ├── borders/     # Configuración de JankyBorders
+├── ghostty/     # Terminal Ghostty (Config, Temas, Shaders)
 ├── silakka54/   # Teclado Silakka54 (Ver README interno)
 ├── sketchybar/  # Configuración de Sketchybar
 └── README.md
@@ -68,4 +70,8 @@ Si clonas este repositorio en una nueva máquina:
     # JankyBorders
     mkdir -p ~/.config/borders
     ln -s ~/mydotfiles/borders/bordersrc ~/.config/borders/bordersrc
+
+    # Ghostty
+    mkdir -p ~/.config/ghostty
+    ln -s ~/mydotfiles/ghostty/config ~/.config/ghostty/config
     ```

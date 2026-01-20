@@ -3,8 +3,12 @@
 Configuration for [Ghostty](https://github.com/ghostty-org/ghostty), the fast, feature-rich, and cross-platform terminal emulator.
 
 ## 📂 Structure
-*   **Location**: `~/mydotfiles/ghostty/config`
+*   **Location**: `~/mydotfiles/ghostty/`
+    *   `config`: **El Cerebro**. Archivo principal donde definimos atajos, fuentes y comportamiento.
+    *   `ghostty-theme`: **La Piel**. Archivo con la paleta de colores hexadecimales.
+    *   `shaders/`: **Efectos Visuales**. Una colección de pequeños programas gráficos (.glsl) que alteran como se ve la terminal (efecto CRT, Bloom/Brillo, Matrix, etc).
 *   **Symlink**: `~/.config/ghostty/config` -> `~/mydotfiles/ghostty/config`
+    *   *Note*: The theme and shaders are loaded relative to the main config file.
 
 ## 🎨 Aesthetic & Theme
 *   **Theme**: Loading from external file `ghostty-theme`.
