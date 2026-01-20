@@ -58,12 +58,14 @@ render_apps() {
             icon_color=$WHITE
             background_color=$GREY
             background_drawing="on"
+            label_drawing="on"
             icon_font="sketchybar-app-font:Regular:16.0"
         else
-            # Unfocused: "Sub-icon" style (No background, transparent icon)
+            # Unfocused: "Sub-icon" style (No background, transparent icon, no label)
             icon_color=0x80ffffff 
             background_color=$BACKGROUND_2 
             background_drawing="off"
+            label_drawing="off"
             icon_font="sketchybar-app-font:Regular:14.0"
         fi
 
@@ -74,7 +76,7 @@ render_apps() {
                              icon="$icon" \
                              icon.font="$icon_font" \
                              icon.color="$icon_color" \
-                             label.drawing=off \
+                             label.drawing="$label_drawing" \
                              background.drawing="$background_drawing" \
                              background.color="$background_color" \
                              background.padding_left=5 \
@@ -91,6 +93,7 @@ render_apps() {
                              icon.font="$icon_font" \
                              background.drawing="$background_drawing" \
                              background.color="$background_color" \
+                             label.drawing="$label_drawing" \
                              icon.color="$icon_color" \
                        --move "$item_name" after "$ANCHOR"
         fi

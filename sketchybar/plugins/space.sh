@@ -16,7 +16,7 @@ update() {
     sketchybar --set $NAME icon.highlight=off \
                            label.highlight=off \
                            background.border_color=$BACKGROUND_2 \
-                           background.drawing=off
+                           background.drawing=on
   fi
 }
 
