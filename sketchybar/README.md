@@ -2,6 +2,12 @@
 
 Bienvenido a la documentación interna de tu setup de **Sketchybar**. Este archivo explica cómo funciona cada componente, plugin e item para facilitar futuras modificaciones.
 
+
+## 🖼️ Preview
+
+![Left Bar](screenshots/left_bar.png)
+![Right Bar](screenshots/right_bar.png)
+
 ## 🏗 Arquitectura General
 
 Sketchybar funciona mediante un sistema de **Items** (elementos visuales) que ejecutan **Plugins** (scripts bash) en respuesta a **Eventos**.
