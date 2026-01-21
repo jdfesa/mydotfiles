@@ -146,7 +146,7 @@
   "terminal.integrated.cursorWidth": 2,
   "terminal.integrated.gpuAcceleration": "auto",
   "terminal.integrated.enableImages": true,
-  "terminal.integrated.env.windows": { },
+  "terminal.integrated.env.windows": {},
   "terminal.integrated.shellIntegration.decorationsEnabled": "overviewRuler",
   "terminal.integrated.enableVisualBell": true,
   "terminal.integrated.fastScrollSensitivity": 8,
@@ -251,26 +251,6 @@
   "catppuccin.workbenchMode": "minimal",
   "catppuccin.boldKeywords": true,
   "catppuccin.italicKeywords": true,
-  "animations.Enabled": true,
-  "animations.Active": "Indent",
-  "animations.CursorAnimation": true,
-  "animations.Install-Method": "Custom UI Style",
-  "animations.CursorAnimationOptions": {
-    "Color": "#6d8be0",
-    "TrailLength": 8,
-    "CursorStyle": "block"
-  },
-  "animations.Command-Palette": "Scale",
-  "animations.Durations": {
-    "Active": 200,
-    "Scrolling": 200,
-    "Tabs": 200
-  },
-  "custom-ui-style.external.imports": [
-    "file:///Users/jd/.vscode/extensions/brandonkirbyson.vscode-animations-2.0.7/dist/updateHandler.js",
-    "file:///Users/jd/mydotfiles/vscode/custom.css"
-  ],
-  // "custom-ui-style.external.loadStrategy": "cache",
   // * ╭───────────────────────────────────────────────────────╮
   // * │                 Source Control                        │
   // * ╰───────────────────────────────────────────────────────╯
@@ -496,7 +476,7 @@
     "markdown": true,
     "scminput": false
   },
-  "github.copilot.advanced": { },
+  "github.copilot.advanced": {},
   "github.copilot.selectedCompletionModel": "",
   "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.chat.agent.thinkingTool": true,
@@ -1327,12 +1307,8 @@
   "code-runner.runInTerminal": true,
   "notebook.cellToolbarVisibility": "hover",
   "notebook.formatOnSave.enabled": true,
-  "roo-cline.deniedCommands": [ ],
+  "roo-cline.deniedCommands": [],
   "yazi-vscode.yaziPath": "/opt/homebrew/bin/yazi",
   "yazi-vscode.configPath": "/Users/jd/.config/yazi/yazi.toml",
-  "chat.editing.confirmEditRequestRemoval": false,
-  "vscode_custom_css.imports": [
-    "file:///Users/jd/mydotfiles/vscode/custom.css"
-  ],
-  "vscode_custom_css.policy": true
+  "chat.editing.confirmEditRequestRemoval": false
 }
