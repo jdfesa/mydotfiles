@@ -3,6 +3,10 @@
 </h1>
 
 <p align="center">
+  <img src="screenshots/preview.png" alt="Sketchybar Preview" width="100%">
+</p>
+
+<p align="center">
   <b>Una configuración moderna, rápida y mantenible escrita en Lua.</b>
 </p>
 
