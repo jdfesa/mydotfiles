@@ -1,92 +1,100 @@
-# 📊 Sketchybar Configuration Documentation
+<h1 align="center">
+  <img alt="image" src="https://github.com/user-attachments/assets/ec762bdd-e8e4-42f5-8fdf-a49ccc43ba87" width="60%"/>
+  <br>
+  SketchyBar Configuration
+  <br>
+  <i>part of my <a href="https://github.com/Efterklang/dotfiles">dotfiles</a></i>
+  <br>
+  <img src="https://img.shields.io/github/commit-activity/y/Efterklang/sketchybar?style=for-the-badge&labelColor=%23222436&color=%235771AA" alt="Commit Frequency">
+  <img src="https://img.shields.io/github/license/Efterklang/sketchybar?style=for-the-badge&labelColor=%23222436&color=%235771AA" alt="License">
+</h1>
 
-Bienvenido a la documentación interna de tu setup de **Sketchybar**. Este archivo explica cómo funciona cada componente, plugin e item para facilitar futuras modificaciones.
+## Install
 
+### Using script
 
-## 🖼️ Preview
+```sh
+curl -fsSL https://raw.githubusercontent.com/Efterklang/sketchybar/main/install.sh | sh -s
+```
 
-![Left Bar](screenshots/left_bar.png)
-![Right Bar](screenshots/right_bar.png)
+### Manual
 
-## 🏗 Arquitectura General
-
-Sketchybar funciona mediante un sistema de **Items** (elementos visuales) que ejecutan **Plugins** (scripts bash) en respuesta a **Eventos**.
-
-La configuración se carga desde `sketchybarrc`, que a su vez carga otros archivos:
-
-*   **`sketchybarrc`**: Archivo maestro. Inicializa la barra, define variables globales y carga los items.
-*   **`colors.sh`**: Define la paleta de colores (actualmente Catppuccin).
-*   **`icons.sh`**: Mapeo de variables a iconos FontAwesome/NerdFonts.
-
-## 📂 Estructura de Directorios
-
-### `items/` (Definición Visual)
-Aquí se definen *qué* elementos aparecen en la barra y en qué orden.
-
-*   `spaces.sh`: **Integrado con AeroSpace**. Genera los indicadores de escritorios (1-8).
-*   `current_apps.sh`: **Gestor de Ventanas**. Crea el `app_manager`.
-    *   Este manager genera **botones individuales dinámicos** (`app.WINDOW_ID`) para cada ventana abierta.
-    *   **Click Izquierdo**: Ejecuta `app_click.sh` -> Mueve la ventana clickeada a la **Izquierda** (Split) manteniendo el foco en tu ventana actual.
-*   `front_app.sh`: Muestra el nombre de la app activa.
-*   `spotify.sh`: Control e información de medios.
-*   `battery.sh`, `cpu.sh`, `wifi.sh`: Información del sistema.
-*   `apple.sh`: Logo de Apple y menú (estético).
-
-### `plugins/` (Lógica y Comportamiento)
-Aquí vive la inteligencia. Son scripts ejecutados por los items.
-
-*   **`space.sh`**: **(CRÍTICO)** Gestiona la lógica de los escritorios.
-    *   **Input**: Recibe `$FOCUSED_WORKSPACE` desde AeroSpace.
-    *   **Lógica**: Compara el ID del workspace actual con el ID del item. Si coinciden, activa el highlight (Verde).
-    *   **Click**: Ejecuta `aerospace workspace <ID>` para cambiar de escritorio.
-*   `weather.sh`: Obtiene el clima (usa `secrets.sh` para coordenadas).
-*   `spotify.sh`: Interactúa con la API o AppleScript de Spotify.
-
-## 🔗 Integración AeroSpace <-> Sketchybar
-
-La magia de que se ilumine el escritorio correcto ocurre gracias a esta conexión:
-
-1.  **AeroSpace (`aerospace.toml`)**:
-    Detecta un cambio de workspace y ejecuta:
-    ```bash
-    sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE
-    ```
-2.  **Sketchybar (`items/spaces.sh`)**:
-    Suscribe todos los items `space.x` al evento `aerospace_workspace_change`.
-3.  **Plugin (`plugins/space.sh`)**:
-    Se ejecuta, lee `$FOCUSED_WORKSPACE`, y si coincide con su ID, se pinta de verde.
-
-## 🎨 Personalización
-
-### Cambiar Colores
-Edita `colors.sh`.
-*   Para cambiar el color del highlight del workspace, edita `items/spaces.sh` -> `icon.highlight_color`.
-
-### Añadir nuevos plugins
-1.  Crea el script en `plugins/mi_script.sh` (recuerda `chmod +x`).
-2.  Crea la definición en `items/mi_item.sh`.
-3.  Añade `source "$ITEM_DIR/mi_item.sh"` en `sketchybarrc`.
-
+```sh
+# install dependencies
+brew install lua jq switchaudio-osx media-control imagemagick
+# install sketchybar system stats plugin for CPU, RAM and network monitoring
+brew tap joncrangle/tap
+brew install sketchybar-system-stats
+# install fonts
+brew install --cask font-sketchybar-app-font font-maple-mono-nf-cn
+# install SbarLua
+git clone --depth 1 --quiet https://github.com/FelixKratz/SbarLua.git /tmp/sbarlua
+cd /tmp/sbarlua && make install
+# install config
+git clone --depth 1 https://github.com/Efterklang/sketchybar ~/.config/sketchybar
+```
 
 ---
 
-## 📦 Iconos de Estado (Parte Derecha)
+## Configuration
 
-Aclaración sobre esos "iconitos raros" que ves a la derecha:
-
-### 1. 📦 La Cajita (Homebrew)
-Es tu gestor de paquetes.
-*   **Verde con check (✓)**: Tu sistema está actualizado (0 pendientes).
-*   **Amarillo/Rojo**: Tienes actualizaciones de programas pendientes.
-
-### 2. 🔔 Campana (GitHub)
-Te avisa si tienes notificaciones en GitHub.
-*   **Importante**: Para que este icono funcione de verdad, debes abrir una terminal y ejecutar `gh auth login`.
-*   Si no lo haces, es meramente decorativo.
-
-### 3. ⚡ CPU y RAM
-*   **CPU**: Cuánto le cuesta pensar a tu ordenador.
-*   **RAM**: Cuánta memoria estás usando. (Amarillo = RAM casi llena).
+The default configuration is located in **`settings.lua`**.
 
 ---
-*Hecho para ser mantenible y escalable.* 🛠
+
+## Preview
+
+Rewritten entirely in **Lua** using the `sbarlua` API. For the legacy **bash**
+version, see [here](https://github.com/Efterklang/sketchybar/tree/bash).
+
+### Themes
+
+| Tokyo Night                                                                                                                          | Catppuccin Mocha                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="3028" height="1732" alt="image" src="https://github.com/user-attachments/assets/2219184b-5456-438d-b86e-c5fc30369196" /> | <img width="3028" height="1732" alt="image" src="https://github.com/user-attachments/assets/ec762bdd-e8e4-42f5-8fdf-a49ccc43ba87"/> |
+---
+
+### Left Items
+
+| Item             | Click Script                                                              |
+| ---------------- | ------------------------------------------------------------------------- |
+| logo             | same as clicking the Apple icon                                           |
+| workspaces       | left click → switch to that space<br>right click → open `Mission Control` |
+| app menus        | click → open macOS app menu                                               |
+| space indicators | swap menus and spaces                                                     |
+| front app        | show app menu[^1]                                                         |
+
+> [!NOTE]
+> Supported Window Managers
+>
+> - macOS Native (default)
+> - Aerospace (experimental and buggy 😅)
+
+---
+
+### Right Items
+
+| Item                           | Click Script                                                            |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| media                          | show music controller (play/pause, next, previous, repeat/random, etc.) |
+| hardware stats                 | cpu graph[^2] · memory graph[^3] · netspeed item[^2]                    |
+| toggle stats                   | show/hide hardware stats (cpu, memory, netspeed)                        |
+| homebrew stats                 | show outdated packages                                                  |
+| wechat, qq (or any other apps) | open chat app                                                           |
+| volume                         | show volume slider and output device selector[^2]                       |
+| wifi                           | show wifi networks and VPN status                                       |
+| battery                        | show remaining time and percentage                                      |
+| cal & time                     | open Calendar.app                                                       |
+
+---
+
+## Credits
+
+[^1]: Credit [Sinjhin/SketchyMenu: A menu plugin et al for FelixKratz/SketchyBar](https://github.com/Sinjhin/SketchyMenu)
+
+[^2]: Credit [FelixKratz/dotfiles: My personal macOS configuration](https://github.com/FelixKratz/dotfiles)
+
+[^3]: Credit [TheGoldenPatrik1/sketchybar-config: My personal configuration for SketchyBar](https://github.com/TheGoldenPatrik1/sketchybar-config)
+
+<!-- weather
+https://github.com/FelixKratz/SketchyBar/discussions/12?sort=top#discussioncomment-5283361 -->
