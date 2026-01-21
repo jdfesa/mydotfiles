@@ -21,96 +21,112 @@ Esta configuración es una evolución completa migrada de Bash a **Lua** (usando
 
 ## 🚀 Instalación y Dependencias
 
-### Prerrequisitos
-Para que esta configuración funcione correctamente, necesitas instalar las siguientes dependencias. Usa Homebrew para facilitar el proceso:
+Para poder replicar esta configuración en cualquier máquina nueva, sigue estos pasos en orden.
+
+### 1. Prerrequisitos (Homebrew)
+Necesitamos instalar el núcleo de Sketchybar y varias utilidades para los widgets (clima, audio, etc.).
 
 ```sh
-# 1. Instalar Sketchybar (si no lo tienes)
+# Agregar los repositorios necesarios (Taps)
 brew tap FelixKratz/formulae
 brew tap joncrangle/tap
+
+# Instalar Sketchybar y el helper de estadísticas
 brew install sketchybar sketchybar-system-stats
 
-# 2. Instalar utilidades esenciales
-# jq: Necesario para parsear JSON (usado por el widget del Clima)
-# lua: Lenguaje base de la configuración
+# Instalar lenguajes y herramientas
+# - lua: Lenguaje de la configuración
+# - jq: Procesador JSON (vital para el clima)
+# - switchaudio-osx: Cambiar dispositivos de audio
+# - media-control: Controlar música (Spotify/Music)
+# - imagemagick: Procesamiento de imágenes de iconos
 brew install lua jq switchaudio-osx media-control imagemagick
+```
 
-# 3. Instalar Fuentes (CRÍTICO)
-# Sin estas fuentes, verás rectángulos o texto roto en lugar de iconos.
+### 2. Instalar Fuentes (CRÍTICO)
+Sin estas fuentes, verás rectángulos o signos de interrogación en lugar de iconos.
+
+```sh
+# Fuentes de iconos y monoespaciadas
 brew install --cask font-sketchybar-app-font font-maple-mono-nf-cn
 brew install --cask font-hack-nerd-font
 ```
 
-### Instalar SbarLua (API de Lua para Sketchybar)
-Esta configuración requiere `SbarLua` para funcionar. Sketchybar por defecto usa sh, pero nosotros usamos este plugin para lógica avanzada.
+### 3. Instalar SbarLua (Motor Lua)
+Esta configuración **NO** funciona con scripts bash tradicionales. Necesitas compilar e instalar el helper de Lua.
 
 ```sh
+# Clonar y compilar SbarLua
 git clone --depth 1 --quiet https://github.com/FelixKratz/SbarLua.git /tmp/sbarlua
 cd /tmp/sbarlua && make install
+rm -rf /tmp/sbarlua
 ```
+> **Nota**: Esto instalará `sketchybar.so` en una ruta donde Lua pueda encontrarlo (usualmente `/usr/local/lib/` o `~/.local/share/sketchybar/`).
 
-### Instalar Configuración
-Si estás en este repo, probablemente ya tienes los archivos. Simplemente asegúrate de que `.config/sketchybar` apunte a esta carpeta.
+---
+
+## 📂 Instalación de la Configuración (Dotfiles)
+
+Si ya tienes este repositorio clonado en tu máquina, solo necesitas crear el enlace simbólico.
 
 ```sh
-# Ejemplo de link simbólico si clonaste en otro lado
-ln -sf ~/path/to/mydotfiles/sketchybar ~/.config/sketchybar
+# Asegúrate de que no exista una configuración previa
+rm -rf ~/.config/sketchybar
+
+# Crea el enlace simbólico (Ajusta la ruta si tus dotfiles están en otro lado)
+ln -sf ~/mydotfiles/sketchybar ~/.config/sketchybar
+
+# Reinicia Sketchybar para aplicar cambios
+brew services restart sketchybar
 ```
 
 ---
 
 ## 📂 Estructura del Proyecto
 
-A diferencia de las configuraciones clásicas en Bash (que lanzan un proceso por cada item), esta configuración carga un solo entorno Lua, lo que reduce drásticamente el uso de CPU.
+Esta configuración carga un solo entorno Lua, lo que reduce drásticamente el uso de CPU comparado con scripts bash.
 
-- **`init.lua`**: Punto de entrada. Carga la configuración base y lanza el bucle de eventos.
-- **`settings.lua`**: Variables globales (Fuentes, Colores, Padding). Aquí definimos `ID_STYLE = nil` para tener espacios numéricos.
+- **`init.lua`**: Punto de entrada. Inicializa la barra y carga los demás archivos.
+- **`settings.lua`**: Configuración global (Fuentes, Colores, Márgenes).
 - **`items/`**: Definición de cada widget.
-  - **`weather/`**: Script avanzado de clima (`weather.lua` + `weather.sh`).
-  - **`monitor/`**: Scripts de sistema (RAM, CPU).
-  - **`front_app/`**: Lógica de la aplicación activa.
-- **`helpers/`**: Funciones de utilidad y mapas de iconos.
+  - **`weather/`**: Script híbrido para el clima (`weather.lua` + `weather.sh`).
+  - **`monitor/`**: Scripts de sistema (CPU, RAM, Wifi).
+  - **`front_app/`**: Muestra la app activa con su icono real.
+- **`helpers/`**: Funciones de utilidad y tablas de iconos.
 
 ---
 
 ## 🌟 Widgets Destacados y Personalizaciones
 
-Hemos realizado varias mejoras clave sobre la configuración base:
+Hemos realizado varias mejoras clave sobre la configuración base de *Efterklang*:
 
 ### 1. Clima (Weather)
-- **Script Híbrido**: Usa `weather.sh` para hacer la petición a `wttr.in` y `weather.lua` para renderizarlo.
-- **Dependencia**: Requiere `jq` instalado y en el path (verificado en `/opt/homebrew/bin/jq`).
-- **Iconos Dinámicos**: Muestra sol, nubes, lluvia, etc., dependiendo del estado real.
+- **Híbrido**: Usa un script shell para llamar a `wttr.in` y Lua para renderizar.
+- **Requisito**: `jq` debe estar instalado.
+- **Personalización**: Muestra iconos dinámicos según el estado del tiempo.
 
 ### 2. Monitor de RAM Preciso
-- **Problema Anterior**: El comando `memory_pressure` nativo a veces se congelaba o daba datos abstractos.
-- **Solución**: Implementamos `ram.sh` que usa `vm_stat` para calcular el uso real de memoria (App + Wired + Compressed).
-- **Resultado**: Un porcentaje de uso de RAM extremadamente preciso y actualizado cada 5 segundos.
+- **Mejora**: Usamos un script personalizado (`ram.sh`) que calcula la memoria "Wired + App + Compressed" usando `vm_stat`, dando un % real de uso, mucho más preciso que el comando `memory_pressure`.
 
 ### 3. Espacios de Trabajo (Workspaces)
-- **Estilo Numérico**: Se desactivó el mapeo "Grip" (letras griegas) en favor de números claros (1, 2, 3...) para coincidir con los atajos de teclado de **AeroSpace**.
-- **Configuración**: Controlado en `settings.lua` (`ID_STYLE = nil`).
-
-### 4. Aplicación Frontal (Front App)
-- **Estilo Visual**: Muestra el icono **real** de la aplicación (imagen a color del sistema) junto a su nombre.
-- **Implementación**: Usa `icon.background.image` en `front_app.lua` apuntando a `app.<NombreApp>`, lo que permite a Sketchybar extraer el icono oficial de la app directamente desde macOS.
+- **Simple**: Usamos números (1, 2, 3...) en lugar de iconos complejos, para alinear visualmente con los atajos de teclado de **AeroSpace**.
 
 ---
 
-## 🔧 Troubleshooting
+## 🔧 Troubleshooting (Solución de Problemas)
 
 ### "Veo cuadrados en lugar de iconos"
-- **Causa**: Falta la fuente `sketchybar-app-font`.
-- **Solución**: Ejecuta `brew install --cask font-sketchybar-app-font` y recarga la barra (`sketchybar --reload`).
+- **Causa**: Falta la fuente `sketchybar-app-font` o las Nerd Fonts.
+- **Solución**: Reinstala las fuentes del paso 2 y reinicia la barra (`sketchybar --reload`).
 
-### "El clima no carga"
+### "El clima no carga o sale vacío"
 - **Causa**: Probablemente `jq` no está instalado o no está en el PATH.
-- **Verificación**: Ejecuta `which jq` en tu terminal. Si no sale nada, instala con `brew install jq`.
+- **Verificación**: Ejecuta `which jq`. Si no sale nada, `brew install jq`.
+- **API**: Verifica que tienes internet, ya que `wttr.in` requiere conexión.
 
-### "Los espacios tienen nombres raros"
-- Revisa `settings.lua`. Si quieres números, asegúrate de que `ID_STYLE` sea `nil`. Si quieres letras griegas, ponlo en `"greek_uppercase"`.
+### "No pasa nada al reiniciar o error de Lua"
+- **Causa**: Probablemente **SbarLua** no se instaló bien.
+- **Solución**: Repite el paso 3 ("Instalar SbarLua"). Verifica si existe el archivo con `ls /usr/local/lib/sketchybar.so` o `ls ~/.local/share/sketchybar/sketchybar.so`.
 
----
-
-## 🎨 Temas
-La configuración soporta múltiples temas definidos en `themes/`. Por defecto usamos una variante oscura estilizada. Puedes cambiar los colores editando `settings.lua` o importando otro archivo de tema en `init.lua`.
+### "Espacios con nombres raros"
+- Revisa `settings.lua`. Si quieres números, asegúrate de que `ID_STYLE` sea `nil`.
