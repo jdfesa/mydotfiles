@@ -15,8 +15,7 @@ Run the following commands to link the settings and snippets to the VS Code user
 
 # Create Symlinks
 ln -sf ~/mydotfiles/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
-rm -rf ~/Library/Application\ Support/Code/User/snippets
-ln -sf ~/mydotfiles/vscode/snippets ~/Library/Application\ Support/Code/User/snippets
+
 ```
 
 ### 2. Install Extensions
@@ -31,5 +30,5 @@ cat extensions.txt | xargs -L 1 code --install-extension
 ## 📂 File Structure
 - **`settings.json`**: Core editor settings.
 
-- **`snippets/`**: Code snippets.
+
 - **`extensions.txt`**: Extension list.
