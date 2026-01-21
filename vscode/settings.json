@@ -56,7 +56,7 @@
     "workbench.editors.gettingStartedInput": true
   },
   "workbench.list.defaultFindMode": "filter",
-  "workbench.activityBar.location": "top",
+  "workbench.activityBar.location": "default",
   "workbench.layoutControl.enabled": false,
   "workbench.editorAssociations": {
     "*.copilotmd": "vscode.markdown.preview.editor",
