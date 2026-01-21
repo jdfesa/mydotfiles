@@ -3,7 +3,12 @@
 </h1>
 
 <p align="center">
-  <img src="screenshots/preview.png" alt="Sketchybar Preview" width="100%">
+  <b>Left Side</b><br>
+  <img src="screenshots/preview_left.png" alt="Sketchybar Preview Left" width="100%">
+</p>
+<p align="center">
+  <b>Right Side</b><br>
+  <img src="screenshots/preview_right.png" alt="Sketchybar Preview Right" width="100%">
 </p>
 
 <p align="center">
