@@ -5,6 +5,25 @@
     --font-status-bar: "Maple Mono NF CN";
 }
 
+/* ---------------- TRANSPARENCY RULES ---------------- */
+/* These make the main window transparent so the wallpaper shows through */
+body,
+.monaco-workbench,
+.monaco-editor,
+.monaco-editor-background,
+.monaco-pane-view-label,
+.monaco-list-row {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+/* Ensure the main container allows transparency */
+html {
+    background: transparent !important;
+}
+
+/* ---------------- ORIGINAL CSS ---------------- */
+
 /* command center palette */
 .quick-input-widget {
     transform: translateY(-50%) !important;
