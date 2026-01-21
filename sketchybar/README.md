@@ -27,7 +27,8 @@ Para que esta configuración funcione correctamente, necesitas instalar las sigu
 ```sh
 # 1. Instalar Sketchybar (si no lo tienes)
 brew tap FelixKratz/formulae
-brew install sketchybar
+brew tap joncrangle/tap
+brew install sketchybar sketchybar-system-stats
 
 # 2. Instalar utilidades esenciales
 # jq: Necesario para parsear JSON (usado por el widget del Clima)
