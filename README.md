@@ -13,6 +13,7 @@ Actualmente gestiono las siguientes herramientas:
 - **[Sketchybar](https://felixkratz.github.io/SketchyBar/)**: Barra de estado personalizada.
 - **[JankyBorders](https://github.com/FelixKratz/JankyBorders)**: Bordes de ventana con colores y esquinas redondeadas.
 - **[Ghostty](ghostty/README.md)**: Terminal emuladora GPU-accelerated.
+- **[Fastfetch](fastfetch/README.md)**: Información del sistema con tema de Serial Experiments Lain.
 - **[Silakka54](silakka54/README.md)**: Configuración y visualización automática del teclado.
 
 ```bash
@@ -20,6 +21,7 @@ mydotfiles/
 ├── aerospace/   # Configuración de AeroSpace
 ├── borders/     # Configuración de JankyBorders
 ├── ghostty/     # Terminal Ghostty (Config, Temas, Shaders)
+├── fastfetch/   # Configuración de Fastfetch (Tema Lain)
 ├── silakka54/   # Teclado Silakka54 (Ver README interno)
 ├── sketchybar/  # Configuración de Sketchybar
 └── README.md
@@ -74,4 +76,7 @@ Si clonas este repositorio en una nueva máquina:
     # Ghostty
     mkdir -p ~/.config/ghostty
     ln -s ~/mydotfiles/ghostty/config ~/.config/ghostty/config
+
+    # Fastfetch
+    ln -s ~/mydotfiles/fastfetch ~/.config/fastfetch
     ```
