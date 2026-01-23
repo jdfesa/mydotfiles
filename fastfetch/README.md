@@ -64,7 +64,9 @@ Ahora, al ejecutar `fastfetch`, cargará automáticamente el tema con la imagen 
 
 Incluido en este directorio encontrarás un script llamado `fastfetch_gallery.sh`.
 
-Este script es una utilidad para **explorar visualmente** todos los "presets" (temas predefinidos) que vienen con fastfetch.
+Fastfetch incluye muchos **"presets"** (temas predefinidos) que son ideales para no tener que configurar todo desde cero. Puedes usar uno que te guste tal cual, o usarlo como base para tu propia configuración.
+
+Sin embargo, es difícil saber cuál elegir solo viendo los nombres. Este script soluciona eso permitiéndote **explorar visualmente** todos estos presets directamente en tu terminal.
 
 ### ¿Qué hace el código?
 1.  Carga todos los presets disponibles en memoria.
