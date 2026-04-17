@@ -45,7 +45,7 @@
   "workbench.activityBar.iconClickBehavior": "toggle",
   "workbench.editor.closeEmptyGroups": true,
   "workbench.editor.closeOnFileDelete": true,
-  "workbench.editor.tabActionCloseVisibility": false,
+  "workbench.editor.tabActionCloseVisibility": true,
   "workbench.view.alwaysShowHeaderActions": true,
   "workbench.tree.indent": 10,
   "workbench.list.smoothScrolling": true,
@@ -55,7 +55,7 @@
     "workbench.editors.gettingStartedInput": true
   },
   "workbench.list.defaultFindMode": "filter",
-  "workbench.activityBar.location": "top",
+  "workbench.activityBar.location": "right",
   "workbench.layoutControl.enabled": false,
   "workbench.editorAssociations": {
     "*.copilotmd": "vscode.markdown.preview.editor",
