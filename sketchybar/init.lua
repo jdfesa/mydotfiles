@@ -9,12 +9,12 @@ SBAR.begin_config()
 local preset_conf = PRESET_OPTIONS[PRESET] or PRESET_OPTIONS["gnix"]
 
 SBAR.bar({
-  color = COLORS.base,
+  color = COLORS.with_alpha(COLORS.base, 0.8),
   height = preset_conf.HEIGHT,
   border_width = preset_conf.BOREDER_WIDTH,
   border_color = COLORS.surface0,
   corner_radius = preset_conf.CORNER_RADIUS,
-  blur_radius = 15,
+  blur_radius = 20,
   shadow = { drawing = true },
   sticky = true,
   font_smoothing = true,
