@@ -21,3 +21,6 @@ Para recrear la misma experiencia fluida en un entorno o Mac nuevo, solo necesit
 
 ### ⚠️ Requisitos
 Asegúrate de configurar globalmente dentro de NetBeans (en `Tools -> Options -> Appearance -> Colors & Fonts`) la misma tipografía monoespaciada oficial de tu sistema, como **Maple Mono NF CN** (o cualquier Nerd Font instalada), para evitar que los logotipos de la rama y GitHub se transformen en cuadrados rotos por falta de glifos.
+
+### 🖼️ Resultado Visual
+![NetBeans Clean Prompt Demo](netbeans_clean_prompt.png)
