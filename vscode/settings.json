@@ -1321,9 +1321,7 @@
   "vim.statusBarColors.visualblock": "#f38ba8",
   "vim.statusBarColors.replace": "#f9e2af",
   "breadcrumbs.enabled": true,
-  "vibrancy.type": "fullscreen-ui",
-  "vibrancy.theme": "Dark",
-  "vibrancy.opacity": 0.9,
+
   "custom-ui-style.stylesheet": {
     ".monaco-workbench": "font-family: 'Maple Mono NF CN', monospace !important;"
   },
