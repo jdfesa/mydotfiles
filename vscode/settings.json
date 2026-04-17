@@ -1321,6 +1321,21 @@
   "vim.statusBarColors.visualblock": "#f38ba8",
   "vim.statusBarColors.replace": "#f9e2af",
   "breadcrumbs.enabled": true,
+  "custom-ui-style.electron": {
+    "vibrancy": "fullscreen-ui",
+    "visualEffectState": "active",
+    "backgroundColor": "#00000000"
+  },
+  "workbench.colorCustomizations": {
+    "[Claude Theme]": {
+      "editor.background": "#000000b3",
+      "sideBar.background": "#00000055",
+      "activityBar.background": "#00000033",
+      "panel.background": "#000000b3",
+      "tab.activeBackground": "#00000088",
+      "tab.inactiveBackground": "#00000055"
+    }
+  },
   "custom-ui-style.stylesheet": {
     ".monaco-workbench": "font-family: 'Maple Mono NF CN', monospace !important;"
   },
