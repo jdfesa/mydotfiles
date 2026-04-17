@@ -4,8 +4,8 @@
   // * ╰───────────────────────────────────────────────────────╯
   "workbench.colorCustomizations": {
     "editorCursor.foreground": "#b4befe",
-    "editorIndentGuide.activeBackground1": "#F5C2E7"
-  },
+    "editorIndentGuide.activeBackground1": "#F5C2E7",
+    },
   "editor.tokenColorCustomizations": {
     "textMateRules": [
       {
@@ -35,7 +35,7 @@
     ]
   },
   "workbench.navigationControl.enabled": false,
-  "workbench.colorTheme": "Claude Theme",
+  "workbench.colorTheme": "Dark+",
   "workbench.preferredLightColorTheme": "Claude Theme",
   "workbench.iconTheme": "catppuccin noctis icons",
   "workbench.editor.editorActionsLocation": "hidden",
@@ -143,8 +143,7 @@
   "terminal.integrated.fontLigatures": true,
   "terminal.integrated.cursorStyleInactive": "none",
   "terminal.integrated.cursorWidth": 2,
-  "terminal.integrated.gpuAcceleration": "auto",
-  "terminal.integrated.enableImages": true,
+  "terminal.integrated.gpuAcceleration": "auto","terminal.integrated.enableImages": true,
   "terminal.integrated.env.windows": { },
   "terminal.integrated.shellIntegration.decorationsEnabled": "overviewRuler",
   "terminal.integrated.enableVisualBell": true,
@@ -1298,8 +1297,7 @@
     "vscodevim.vim": 1
   },
   "vscode-office.pasterImgPath": "assets/${fileName}/${now}.png",
-  "window.autoDetectColorScheme": true,
-  "color-highlight.useARGB": true,
+  "window.autoDetectColorScheme": true,"color-highlight.useARGB": true,
   "python.defaultInterpreterPath": "/usr/bin/python3",
   "inlineChat.enableV2": true,
   "inlineChat.hideOnRequest": true,
@@ -1325,5 +1323,5 @@
   "custom-ui-style.stylesheet": {
     ".monaco-workbench": "font-family: 'Maple Mono NF CN', monospace !important;"
   },
-  "workbench.preferredDarkColorTheme": "Claude Theme"
-}
+  "workbench.preferredDarkColorTheme": "Claude Theme",
+  }
