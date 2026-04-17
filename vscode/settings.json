@@ -324,7 +324,7 @@
       "strikethrough": false,
       "bold": true,
       "italic": true,
-      "backgroundColor": "#cba6f7",
+      "backgroundColor": "#cba6f7"
     }
   ],
   "errorLens.fontStyleItalic": true,
