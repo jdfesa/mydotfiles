@@ -1320,15 +1320,9 @@
   "vim.statusBarColors.visualline": "#f38ba8",
   "vim.statusBarColors.visualblock": "#f38ba8",
   "vim.statusBarColors.replace": "#f9e2af",
-  "breadcrumbs.enabled": false,
-  "custom-ui-style.electron": {
-    "titleBarStyle": "hiddenInset"
-  },
+  "breadcrumbs.enabled": true,
   "custom-ui-style.stylesheet": {
-    ".monaco-workbench": "font-family: 'Maple Mono NF CN', monospace !important;",
-    ".titlebar-container": "display: none !important;",
-    ".part.sidebar": "box-shadow: none !important; border-right: 1px solid #333 !important;",
-    ".part.statusbar": "border-top: none !important; box-shadow: none !important; font-size: 13px !important; font-weight: bold !important;"
+    ".monaco-workbench": "font-family: 'Maple Mono NF CN', monospace !important;"
   },
   "workbench.preferredDarkColorTheme": "Claude Theme"
 }
