@@ -15,7 +15,7 @@ Actualmente gestiono las siguientes herramientas:
 - **[Ghostty](ghostty/README.md)**: Terminal emuladora GPU-accelerated.
 - **[Fastfetch](fastfetch/README.md)**: Información del sistema con tema de Serial Experiments Lain.
 - **[Silakka54](silakka54/README.md)**: Configuración y visualización automática del teclado.
-
+- **[Starship](starship/README.md)**: Prompt para la terminal moderno, rápido y multiplataforma.
 ```bash
 mydotfiles/
 ├── aerospace/   # Configuración de AeroSpace
@@ -24,6 +24,7 @@ mydotfiles/
 ├── fastfetch/   # Configuración de Fastfetch (Tema Lain)
 ├── silakka54/   # Teclado Silakka54 (Ver README interno)
 ├── sketchybar/  # Configuración de Sketchybar
+├── starship/    # Prompt (Multiplataforma)
 └── README.md
 ```
 
@@ -79,6 +80,9 @@ Si clonas este repositorio en una nueva máquina:
 
     # Fastfetch
     ln -s ~/mydotfiles/fastfetch ~/.config/fastfetch
+
+    # Starship
+    ln -s ~/mydotfiles/starship/starship.toml ~/.config/starship.toml
     ```
 
 ### 🛡️ Protección contra modificaciones accidentales (Blindaje)
