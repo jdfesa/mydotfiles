@@ -21,3 +21,4 @@ ritwickdey.liveserver
 subframe7536.custom-ui-style
 tomoki1207.pdf
 yesitsfebreeze.smearcursor
+adampan.vibrancy-continued
