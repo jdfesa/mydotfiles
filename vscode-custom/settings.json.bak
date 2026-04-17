@@ -35,8 +35,9 @@
     ]
   },
   "workbench.navigationControl.enabled": false,
-  "workbench.colorTheme": "Claude Theme",
-  "workbench.preferredLightColorTheme": "Claude Theme",
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+  "workbench.preferredLightColorTheme": "Catppuccin Mocha",
   "workbench.iconTheme": "catppuccin noctis icons",
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.pinnedTabSizing": "shrink",
@@ -55,7 +56,7 @@
     "workbench.editors.gettingStartedInput": true
   },
   "workbench.list.defaultFindMode": "filter",
-  "workbench.activityBar.location": "top",
+  "workbench.activityBar.location": "default",
   "workbench.layoutControl.enabled": false,
   "workbench.editorAssociations": {
     "*.copilotmd": "vscode.markdown.preview.editor",
@@ -160,7 +161,7 @@
   "window.restoreWindows": "one",
   "window.newWindowDimensions": "inherit",
   "window.openFilesInNewWindow": "off",
-  "window.titleBarStyle": "hiddenInset",
+  "window.titleBarStyle": "custom",
   "explorer.incrementalNaming": "smart",
   "explorer.confirmPasteNative": false,
   "explorer.confirmDragAndDrop": false,
@@ -1310,25 +1311,5 @@
   "yazi-vscode.yaziPath": "/opt/homebrew/bin/yazi",
   "yazi-vscode.configPath": "/Users/jd/.config/yazi/yazi.toml",
   "chat.editing.confirmEditRequestRemoval": false,
-  "markdown-preview-enhanced.previewTheme": "one-dark.css",
-  "workbench.statusBar.visible": true,
-  "workbench.editor.showTabs": "multiple",
-  "vim.statusBarColorControl": true,
-  "vim.statusBarColors.normal": "#89b4fa",
-  "vim.statusBarColors.insert": "#a6e3a1",
-  "vim.statusBarColors.visual": "#f38ba8",
-  "vim.statusBarColors.visualline": "#f38ba8",
-  "vim.statusBarColors.visualblock": "#f38ba8",
-  "vim.statusBarColors.replace": "#f9e2af",
-  "breadcrumbs.enabled": false,
-  "custom-ui-style.electron": {
-    "titleBarStyle": "hiddenInset"
-  },
-  "custom-ui-style.stylesheet": {
-    ".monaco-workbench": "font-family: 'Maple Mono NF CN', monospace !important;",
-    ".titlebar-container": "display: none !important;",
-    ".part.sidebar": "box-shadow: none !important; border-right: 1px solid #333 !important;",
-    ".part.statusbar": "border-top: none !important; box-shadow: none !important; font-size: 13px !important; font-weight: bold !important;"
-  },
-  "workbench.preferredDarkColorTheme": "Claude Theme"
+  "markdown-preview-enhanced.previewTheme": "one-dark.css"
 }
