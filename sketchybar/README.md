@@ -125,6 +125,7 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 | Los eventos Lua (`subscribe`) no reaccionaban bien para controlar el ítem de modo o el highlight del workspace | Se eliminaron los subscribers Lua; AeroSpace controla los ítems directamente vía CLI (`sketchybar --set`) usando scripts externos (Ver [SCRIPTS.md](../aerospace/SCRIPTS.md)) |
 | `exec-and-forget` de AeroSpace no encontraba el binario `sketchybar` | Se usa la ruta absoluta `/usr/local/bin/sketchybar` (ver nota en el [README de AeroSpace](../aerospace/README.md#-nota-técnica-importante-path-en-exec-and-forget)) |
 | `sketchybar --reload` no siempre recarga los módulos Lua | Se usa `brew services restart sketchybar` para un reinicio completo |
+| Los workspaces no aparecen al reiniciar (los ítems `space.*` no se crean) | Sketchybar arranca sin el PATH del shell; `io.popen("aerospace ...)"` falla silenciosamente. Solución: ruta absoluta `"/usr/local/bin/aerospace"` en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua). Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
 
 #### Componentes
 
@@ -155,6 +156,12 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 - Verifica que `WINDOW_MANAGER = "aerospace"` en `settings.lua`.
 - Ejecuta `brew services restart sketchybar` (un `--reload` no siempre recarga los módulos Lua).
 - Verifica que AeroSpace está corriendo: `aerospace list-workspaces --all`.
+
+### "Los workspaces no aparecen después de reiniciar el sistema"
+- **Causa conocida**: Sketchybar arranca sin el PATH del shell; el binario `aerospace` no se encuentra desde Lua.
+- **Verificación**: `sketchybar --query space.U` → si devuelve `not found`, el bug está activo.
+- **Solución**: ya aplicada en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua) usando ruta absoluta.
+- **Detalle completo**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 ### "El indicador de modo [S] no aparece al entrar a modo servicio"
 - Verifica que `aerospace.toml` usa la ruta absoluta: `/usr/local/bin/sketchybar --set aerospace_mode drawing=on`.

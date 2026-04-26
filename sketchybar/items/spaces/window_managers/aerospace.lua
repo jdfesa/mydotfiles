@@ -4,6 +4,10 @@
 ---@diagnostic disable: need-check-nil
 local app_icons = require("helpers.spaces_util.app_icons")
 
+-- Ruta absoluta necesaria: al iniciar sesión, Sketchybar corre sin el PATH
+-- del shell, por lo que 'aerospace' sin ruta completa no se encuentra.
+local AEROSPACE = "/usr/local/bin/aerospace"
+
 local function parse_string_to_table(s)
   local result = {}
   for line in s:gmatch("([^\n]+)") do
@@ -13,14 +17,14 @@ local function parse_string_to_table(s)
 end
 
 local function get_workspaces()
-  local file = io.popen("aerospace list-workspaces --all")
+  local file = io.popen(AEROSPACE .. " list-workspaces --all")
   local result = file:read("*a")
   file:close()
   return parse_string_to_table(result)
 end
 
 local function get_current_workspace()
-  local file = io.popen("aerospace list-workspaces --focused")
+  local file = io.popen(AEROSPACE .. " list-workspaces --focused")
   local result = file:read("*a")
   file:close()
   return parse_string_to_table(result)[1]
@@ -122,7 +126,7 @@ end
 function Window_Manager:update_space_labels()
   for _, workspace in ipairs(aerospace_workspaces) do
     SBAR.exec(
-      "aerospace list-windows --workspace " .. workspace .. " --format '%{app-name}' ",
+      AEROSPACE .. " list-windows --workspace " .. workspace .. " --format '%{app-name}' ",
       function(apps)
         local icon_line = ""
         for _, name in ipairs(parse_string_to_table(apps)) do
