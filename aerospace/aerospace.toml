@@ -26,7 +26,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # ─── Integración Sketchybar ──────────────────────────────────────────
 # Notifica a Sketchybar cuando cambiás de workspace para actualizar la barra.
 exec-on-workspace-change = ['/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+    '$HOME/mydotfiles/aerospace/scripts/update_sketchybar_workspace.sh'
 ]
 
 # ─── Workspaces persistentes (por letra, mnemotécnicos) ──────────────

@@ -29,8 +29,8 @@ end
 local aerospace_workspaces = get_workspaces()
 local initial_current_workspace = get_current_workspace()
 
--- Register custom event triggered from aerospace.toml
-SBAR.add("event", "aerospace_workspace_change")
+-- Note: workspace highlights are updated via CLI (bash script) from aerospace.toml
+-- App icon labels are updated via a periodic timer below
 
 local Window_Manager = {}
 
@@ -71,15 +71,6 @@ function Window_Manager:init()
 
     workspace_items[workspace] = space_item
 
-    -- Highlight on workspace change
-    space_item:subscribe("aerospace_workspace_change", function(env)
-      local is_selected = env.FOCUSED_WORKSPACE == workspace
-      space_item:set({
-        icon = { highlight = is_selected },
-        label = { highlight = is_selected },
-        background = { border_color = is_selected and COLORS.lavender or COLORS.surface1 },
-      })
-    end)
 
     -- Click to switch workspace
     space_item:subscribe("mouse.clicked", function(env)
@@ -124,11 +115,6 @@ function Window_Manager:start_watcher()
   })
 
   watcher:subscribe("routine", function(env)
-    self:update_space_labels()
-  end)
-
-  -- Also update labels on workspace change
-  watcher:subscribe("aerospace_workspace_change", function(env)
     self:update_space_labels()
   end)
 end

@@ -122,7 +122,7 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 | Problema | Solución |
 |---|---|
 | `SBAR.add("space", ...)` solo acepta IDs enteros (Spaces de macOS) | Se usa `SBAR.add("item", ...)` que acepta strings como `"U"`, `"I"`, `"O"` |
-| Los eventos Lua (`subscribe`) no reaccionaban para controlar el ítem de modo | Se eliminó el subscriber Lua y AeroSpace controla el ítem directamente vía CLI (`sketchybar --set`) |
+| Los eventos Lua (`subscribe`) no reaccionaban bien para controlar el ítem de modo o el highlight del workspace | Se eliminaron los subscribers Lua; AeroSpace controla los ítems directamente vía CLI (`sketchybar --set`) usando scripts externos (Ver [SCRIPTS.md](../aerospace/SCRIPTS.md)) |
 | `exec-and-forget` de AeroSpace no encontraba el binario `sketchybar` | Se usa la ruta absoluta `/usr/local/bin/sketchybar` (ver nota en el [README de AeroSpace](../aerospace/README.md#-nota-técnica-importante-path-en-exec-and-forget)) |
 | `sketchybar --reload` no siempre recarga los módulos Lua | Se usa `brew services restart sketchybar` para un reinicio completo |
 

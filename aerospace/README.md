@@ -165,11 +165,12 @@ AeroSpace está integrado con Sketchybar para reemplazar los Spaces nativos de m
 
 - **Configuración Global**: En `sketchybar/settings.lua`, `WINDOW_MANAGER` está configurado en `"aerospace"`.
 - **Módulo Personalizado**: El módulo `sketchybar/items/spaces/window_managers/aerospace.lua` crea los ítems de workspace usando `SBAR.add("item", ...)` en vez de `SBAR.add("space", ...)` (que solo funciona con Spaces nativos de macOS).
-- **Comunicación**: `aerospace.toml` tiene un hook `exec-on-workspace-change` que ejecuta:
+- **Comunicación**: `aerospace.toml` tiene un hook `exec-on-workspace-change` que ejecuta un script bash externo:
   ```bash
-  sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE
+  $HOME/mydotfiles/aerospace/scripts/update_sketchybar_workspace.sh
   ```
-  Esto hace que Sketchybar resalte el workspace activo y actualice los íconos de apps.
+  Este script usa el CLI directo de Sketchybar para actualizar el color (highlight) de manera 100% confiable, puenteando los eventos Lua que a veces fallan.
+  > 📖 **Para más detalles técnicos**, consulta el documento [**SCRIPTS.md**](SCRIPTS.md).
 
 ### 2. Indicador de Modo Activo (`[S]` en rojo)
 
