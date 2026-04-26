@@ -172,7 +172,7 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 
 - [ ] **App routing (`on-window-detected`)**: Automatizar que ciertas apps siempre abran en un workspace específico (ej: Ghostty → U, Chrome → I, Spotify → Y).
 - [ ] **Modos con colores en borders**: Cambiar el color del borde según el modo activo (resize = rojo, layout = verde). Usa el script `borders_mode.sh` existente.
-- [ ] **Integración Sketchybar**: Cambiar `WINDOW_MANAGER` de `"macos_native"` a `"aerospace"` en `settings.lua` para que la barra muestre los workspaces de AeroSpace.
+- [x] **Integración Sketchybar**: ~~Cambiar `WINDOW_MANAGER` de `"macos_native"` a `"aerospace"` en `settings.lua`~~ ✅ Activado. La barra muestra los workspaces de AeroSpace.
 - [ ] **Move workspace to monitor**: Mover un workspace completo a otro monitor.
 - [ ] **Workspace-to-monitor assignment**: Asignar workspaces fijos a monitores específicos.
 

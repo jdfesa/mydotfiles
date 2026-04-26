@@ -23,6 +23,12 @@ default-root-container-orientation = 'auto'
 # ─── Mouse sigue al foco cuando cambiás de monitor ────────────────────
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+# ─── Integración Sketchybar ──────────────────────────────────────────
+# Notifica a Sketchybar cuando cambiás de workspace para actualizar la barra.
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+
 # ─── Workspaces persistentes (por letra, mnemotécnicos) ──────────────
 # U = Uno (principal, IDE/editor)
 # I = Internet (Chrome, browsers)

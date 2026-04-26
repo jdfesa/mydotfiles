@@ -1,5 +1,5 @@
 --- @type "macos_native" | "aerospace"
-WINDOW_MANAGER = "macos_native"
+WINDOW_MANAGER = "aerospace"
 --- @type "gnix" | "compact"
 PRESET = "gnix"
 --- @type "catppuccin_mocha" | "catppuccin_latte" | "rose_pine" | "tokyo_night"
