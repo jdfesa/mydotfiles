@@ -74,24 +74,44 @@ Algunas ventanas pueden "flotar" sobre el mosaico (como en macOS normal). AeroSp
 
 ### Workspaces por Letra (mano derecha)
 
-Los workspaces usan letras mnemotécnicas. Alt (izquierda) + letra (derecha) = dos teclas, cross-hand, sin capas.
+Todos los workspaces usan la mano derecha. La mano izquierda sostiene `Alt` fijo — nunca se mueve. Las letras se eligieron por dos criterios: **alcance ergonómico** (fila superior, sin levantar la mano del home row) y **mnemónico en inglés** (cada letra ancla una palabra que describe el propósito del workspace).
 
 ```
 Mano derecha en el Silakka54:
-  Y  U  I  O  P       ← fila accesible
-  H  J  K  L  ;       ← home row (reservada para navegación)
-  N  M  ,  .  /       ← fila inferior
+  Y  U  I  O  P       ← fila accesible (reach up)
+  H  J  K  L  ;       ← home row (reservada para navegación de ventanas)
+  N  M  ,  .  /       ← fila inferior (reach down)
 ```
 
-| Atajo | Workspace | Uso |
+#### Prioridad de alcance
+
+El workspace más usado va en la letra más cómoda. El orden de comodidad de mayor a menor:
+
+| Dedo | Letra | Comodidad |
 |---|---|---|
-| `Alt + U` | **U** | **U**no — Principal (IDE, editor, dev) |
-| `Alt + I` | **I** | **I**nternet — Browsers (Chrome) |
-| `Alt + O` | **O** | **O**bsidian — Notas, estudio |
-| `Alt + P` | **P** | **P**ersonal — Chat (Telegram, Discord) |
-| `Alt + Y` | **Y** | M**ú**sica/**Y**outube — Media (Spotify) |
-| `Alt + N` | **N** | **N**avegador — Archivos (Finder, sistema) |
-| `Alt + Tab` | — | Volver al workspace anterior (back & forth) |
+| Índice ↑ | **U** | ★★★ más natural |
+| Medio ↑ | **I** | ★★★ |
+| Anular ↑ | **O** | ★★★ |
+| Meñique ↑ | **P** | ★★ (algo de estiramiento) |
+| Índice ↑ izq. | **Y** | ★★ (cruzar hacia la izquierda) |
+| Índice ↓ | **N** | ★★ (bajar fila) |
+
+Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
+
+#### Mnemonics (en inglés)
+
+| Atajo | Palabra ancla | Propósito | Apps candidatas |
+|---|---|---|---|
+| `Alt + U` | **Universe** | Hub principal. Dev, código, terminal | Ghostty, VS Code, Cursor |
+| `Alt + I` | **Internet** | Web y navegación. Browsing, referencias | Chrome, Firefox |
+| `Alt + O` | **Organize** | Gestión del conocimiento. Notas, PKM | Obsidian |
+| `Alt + P` | **People** | Comunicación. Todo lo que involucra otras personas | Telegram, Discord, Mail |
+| `Alt + Y` | **Yield** | Descanso activo. Media, música, entretenimiento | Spotify, VLC |
+| `Alt + N` | **Navigate** | Sistema operativo. Archivos, utilidades | Finder |
+| `Alt + Tab` | — | Volver al workspace anterior (back & forth) | — |
+
+> **Yield** es intencionalmente agnóstico a la plataforma: tanto Spotify como YouTube van aquí.
+> La columna *Apps candidatas* es la base para el ruteo automático con `on-window-detected` (Fase 3).
 
 ### Mover Ventana a Workspace (Meh + letra)
 
