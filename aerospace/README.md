@@ -159,15 +159,49 @@ Click en el icono de AeroSpace en la barra de menú → "Reload Config".
 
 ## 🎨 Integración con Sketchybar
 
-AeroSpace está integrado con tu barra superior de Sketchybar para reemplazar los nativos "Spaces de macOS".
+AeroSpace está integrado con Sketchybar para reemplazar los Spaces nativos de macOS en la barra superior. La integración tiene **dos partes**: los indicadores de workspaces y el indicador de modo activo.
 
-1. **Configuración Global**: En `sketchybar/settings.lua`, `WINDOW_MANAGER` está configurado en `"aerospace"`.
-2. **Módulo Personalizado**: Sketchybar carga el módulo `aerospace.lua` que utiliza SBAR items en vez de SBAR spaces nativos.
-3. **Comunicación**: Cuando cambiás de workspace, `aerospace.toml` ejecuta un hook (`exec-on-workspace-change`) que le manda un trigger a Sketchybar para que actualice el color del workspace activo y los íconos de las aplicaciones.
+### 1. Indicadores de Workspaces (letras U, I, O, P, Y, N)
 
-Si Sketchybar no muestra los workspaces (letras U, I, O...), recargalo con la terminal:
+- **Configuración Global**: En `sketchybar/settings.lua`, `WINDOW_MANAGER` está configurado en `"aerospace"`.
+- **Módulo Personalizado**: El módulo `sketchybar/items/spaces/window_managers/aerospace.lua` crea los ítems de workspace usando `SBAR.add("item", ...)` en vez de `SBAR.add("space", ...)` (que solo funciona con Spaces nativos de macOS).
+- **Comunicación**: `aerospace.toml` tiene un hook `exec-on-workspace-change` que ejecuta:
+  ```bash
+  sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE
+  ```
+  Esto hace que Sketchybar resalte el workspace activo y actualice los íconos de apps.
+
+### 2. Indicador de Modo Activo (`[S]` en rojo)
+
+AeroSpace soporta **modos custom** (como i3). Cada modo cambia qué atajos de teclado están activos. Actualmente tenemos `main` (normal) y `service` (mantenimiento), pero se pueden agregar más (ej: `resize`).
+
+El indicador de modo funciona así:
+- Se crea un ítem `aerospace_mode` en el módulo Lua con `drawing = false` (oculto por defecto).
+- **AeroSpace controla directamente el ítem vía CLI** — no usa eventos Lua (fallaban silenciosamente).
+- Al entrar a un modo: `sketchybar --set aerospace_mode drawing=on`
+- Al salir del modo: `sketchybar --set aerospace_mode drawing=off`
+- Si se agregan más modos en el futuro, cada uno debe incluir el `exec-and-forget` correspondiente en su binding.
+
+### ⚠️ Nota Técnica Importante: PATH en `exec-and-forget`
+
+El comando `exec-and-forget` de AeroSpace **no hereda el PATH del shell del usuario**. Esto significa que binarios instalados por Homebrew (como `sketchybar`) no se encuentran con solo poner su nombre.
+
+```toml
+# ❌ NO funciona — no encuentra sketchybar
+'exec-and-forget sketchybar --set aerospace_mode drawing=on'
+
+# ✅ SÍ funciona — ruta absoluta
+'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=on'
+```
+
+El hook `exec-on-workspace-change` **sí** usa `/bin/bash -c`, que carga el PATH, por eso ese sí funciona con solo `sketchybar`. En cambio, `exec-and-forget` ejecuta el comando directamente sin shell.
+
+### Troubleshooting Sketchybar
+
+Si Sketchybar no muestra los workspaces (letras U, I, O...) o el indicador de modo, probá:
 ```bash
-sketchybar --reload
+# Reinicio completo (el --reload no siempre recarga los módulos Lua)
+brew services restart sketchybar
 ```
 
 ---
@@ -187,7 +221,8 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 
 - [ ] **App routing (`on-window-detected`)**: Automatizar que ciertas apps siempre abran en un workspace específico (ej: Ghostty → U, Chrome → I, Spotify → Y).
 - [ ] **Modos con colores en borders**: Cambiar el color del borde según el modo activo (resize = rojo, layout = verde). Usa el script `borders_mode.sh` existente.
-- [x] **Integración Sketchybar**: ~~Cambiar `WINDOW_MANAGER` de `"macos_native"` a `"aerospace"` en `settings.lua`~~ ✅ Activado. La barra muestra los workspaces de AeroSpace.
+- [x] **Integración Sketchybar — Workspaces**: ✅ La barra muestra las letras de cada workspace y resalta el activo.
+- [x] **Integración Sketchybar — Indicador de modo**: ✅ Aparece `[S]` en rojo cuando estás en modo servicio. Se oculta al volver a `main`. Usa CLI directo (`--set`) en vez de eventos Lua.
 - [ ] **Move workspace to monitor**: Mover un workspace completo a otro monitor.
 - [ ] **Workspace-to-monitor assignment**: Asignar workspaces fijos a monitores específicos.
 
