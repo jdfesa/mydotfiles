@@ -1,8 +1,8 @@
--- quite buggy 😅
--- Credits: https://github.com/falleco/dotfiles/blob/main/sketchybar
+-- AeroSpace workspace integration for Sketchybar
+-- Uses "item" type instead of "space" type since AeroSpace workspaces
+-- are not macOS native spaces (they use string IDs like "U", "I", "O").
 ---@diagnostic disable: need-check-nil
 local app_icons = require("helpers.spaces_util.app_icons")
-local sbar_utils = require("helpers.spaces_util.sbar_util")
 
 local function parse_string_to_table(s)
   local result = {}
@@ -19,8 +19,6 @@ local function get_workspaces()
   return parse_string_to_table(result)
 end
 
-local aerospace_workspaces = get_workspaces()
-
 local function get_current_workspace()
   local file = io.popen("aerospace list-workspaces --focused")
   local result = file:read("*a")
@@ -28,34 +26,71 @@ local function get_current_workspace()
   return parse_string_to_table(result)[1]
 end
 
+local aerospace_workspaces = get_workspaces()
 local initial_current_workspace = get_current_workspace()
 
-local Window_Manager = {
-  events = {
-    window_change = "space_windows_change", -- TODO: replace with real event name
-    focus_change = "aerospace_workspace_change",
-  },
-  observer = nil,
-}
+-- Register the custom event that aerospace.toml triggers via exec-on-workspace-change
+SBAR.add("event", "aerospace_workspace_change")
+
+local Window_Manager = {}
+
+-- Store created workspace items for later updates
+local workspace_items = {}
 
 function Window_Manager:init()
   for i, workspace in ipairs(aerospace_workspaces) do
     local selected = workspace == initial_current_workspace
-    local space_item = sbar_utils:add_space_item(workspace, i)
-    sbar_utils:highlight_focused_space(space_item, selected)
 
-    space_item:subscribe(self.events.focus_change, function(env)
-      local selected = env.FOCUSED_WORKSPACE == workspace
-      sbar_utils:highlight_focused_space(space_item, selected)
+    local space_item = SBAR.add("item", "space." .. workspace, {
+      icon = {
+        string = workspace,
+        padding_left = SPACES.ITEM_PADDING,
+        padding_right = 8,
+        color = selected and COLORS.mauve or COLORS.text,
+        highlight_color = COLORS.mauve,
+        highlight = selected,
+      },
+      label = {
+        padding_right = SPACES.ITEM_PADDING,
+        color = COLORS.subtext0,
+        highlight_color = COLORS.lavender,
+        font = "sketchybar-app-font:Regular:16.0",
+        y_offset = -1,
+        highlight = selected,
+      },
+      padding_right = GROUP_PADDINGS,
+      padding_left = 1,
+      background = {
+        color = COLORS.base,
+        border_width = 2,
+        height = 26,
+        border_color = selected and COLORS.lavender or COLORS.surface1,
+      },
+      position = "left",
+    })
+
+    workspace_items[workspace] = space_item
+
+    -- Highlight on workspace change
+    space_item:subscribe("aerospace_workspace_change", function(env)
+      local is_selected = env.FOCUSED_WORKSPACE == workspace
+      space_item:set({
+        icon = { highlight = is_selected },
+        label = { highlight = is_selected },
+        background = { border_color = is_selected and COLORS.lavender or COLORS.surface1 },
+      })
     end)
 
+    -- Click to switch workspace
     space_item:subscribe("mouse.clicked", function(env)
-      LOG:info(env.NAME)
-      self:perform_switch_desktop(env.BUTTON, env.SID)
+      if env.BUTTON == "left" then
+        SBAR.exec("aerospace workspace " .. workspace)
+      end
     end)
   end
-  -- init app icons for each space
-  self:update_space_label()
+
+  -- Initial app icon update
+  self:update_space_labels()
 end
 
 function Window_Manager:start_watcher()
@@ -66,27 +101,35 @@ function Window_Manager:start_watcher()
   })
 
   watcher:subscribe("routine", function(env)
-    self:update_space_label()
+    self:update_space_labels()
+  end)
+
+  -- Also update labels on workspace change
+  watcher:subscribe("aerospace_workspace_change", function(env)
+    self:update_space_labels()
   end)
 end
 
---- @param button string the mouse button clicked
---- @param sid string clicked space's id
-function Window_Manager:perform_switch_desktop(button, sid)
-  if button == "left" then
-    SBAR.exec("aerospace workspace " .. sid)
-  elseif button == "right" then
-    -- not implemented
-  elseif button == "other" then -- for eaxmple, middle click
-    LOG:info("Middle click on space " .. sid)
-  end
-end
-
-function Window_Manager:update_space_label()
+function Window_Manager:update_space_labels()
   for _, workspace in ipairs(aerospace_workspaces) do
-    SBAR.exec("aerospace list-windows --workspace " .. workspace .. " --format '%{app-name}' ", function(apps)
-      sbar_utils:update_space(workspace, parse_string_to_table(apps))
-    end)
+    SBAR.exec(
+      "aerospace list-windows --workspace " .. workspace .. " --format '%{app-name}' ",
+      function(apps)
+        local icon_line = ""
+        for _, name in ipairs(parse_string_to_table(apps)) do
+          if name and name ~= "" then
+            local icon = app_icons[name] or app_icons["default"] or "?"
+            icon_line = icon_line .. icon
+          end
+        end
+        icon_line = icon_line ~= "" and icon_line or "—"
+        if workspace_items[workspace] then
+          SBAR.animate("tanh", 10, function()
+            workspace_items[workspace]:set({ label = icon_line })
+          end)
+        end
+      end
+    )
   end
 end
 
