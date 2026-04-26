@@ -157,6 +157,21 @@ Click en el icono de AeroSpace en la barra de menú → "Reload Config".
 
 ---
 
+## 🎨 Integración con Sketchybar
+
+AeroSpace está integrado con tu barra superior de Sketchybar para reemplazar los nativos "Spaces de macOS".
+
+1. **Configuración Global**: En `sketchybar/settings.lua`, `WINDOW_MANAGER` está configurado en `"aerospace"`.
+2. **Módulo Personalizado**: Sketchybar carga el módulo `aerospace.lua` que utiliza SBAR items en vez de SBAR spaces nativos.
+3. **Comunicación**: Cuando cambiás de workspace, `aerospace.toml` ejecuta un hook (`exec-on-workspace-change`) que le manda un trigger a Sketchybar para que actualice el color del workspace activo y los íconos de las aplicaciones.
+
+Si Sketchybar no muestra los workspaces (letras U, I, O...), recargalo con la terminal:
+```bash
+sketchybar --reload
+```
+
+---
+
 ## 🗺️ Roadmap de Funcionalidades (TODO)
 
 Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marcá con `[x]` las que vayas incorporando.
@@ -211,22 +226,23 @@ AeroSpace busca su configuración en `~/.config/aerospace/aerospace.toml`.
 
 ### "Solo veo 1 workspace"
 - **Causa**: No tenías `persistent-workspaces` configurados. AeroSpace solo muestra workspaces que tienen ventanas.
-- **Solución**: La Fase 1 ya incluye `persistent-workspaces = ["1", "2", "3", "4", "5"]`.
+- **Solución**: La Fase 1 ya incluye `persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]`.
 
 ### "Las ventanas desaparecieron"
 - AeroSpace las movió a la esquina inferior de la pantalla (así es como emula workspaces). Ejecutá `aerospace list-windows --all` en la terminal para ver dónde están.
 - Si AeroSpace crashea, las ventanas quedan con 1px visible en la esquina. Arrastralas manualmente al centro.
 
 ### "Un atajo no funciona"
-1. Verificá que no hay conflicto con otra app (Karabiner, Raycast, macOS). AeroSpace no puede capturar teclas que ya están ocupadas.
-2. Recargá la config: `Alt + Shift + ;` → `Esc`.
-3. Verificá la config: `aerospace reload-config` en la terminal. Si hay error, te lo muestra.
+1. **Karabiner-Elements**: Si tenés Karabiner instalado y activo, es muy probable que esté interceptando las teclas (ej. al tratar de mapear F3) y bloqueando los atajos de AeroSpace. **Solución**: Desactivá Karabiner.
+2. Verificá que no hay conflicto con otra app (Raycast, macOS). AeroSpace no puede capturar teclas que ya están ocupadas.
+3. Recargá la config: `Meh + ;` → `Esc`.
+4. Verificá la config: `aerospace reload-config` en la terminal. Si hay error, te lo muestra.
 
 ### "Las ventanas se ven raras / están anidadas"
-- Entrá al modo servicio (`Alt + Shift + ;`) y presioná `R` para aplanar el árbol del workspace actual.
+- Entrá al modo servicio (`Meh + ;`) y presioná `R` para aplanar el árbol del workspace actual.
 
 ### "Quiero que una ventana flote (no tile)"
-- Entrá al modo servicio (`Alt + Shift + ;`) y presioná `F` para alternar entre floating y tiling.
+- Entrá al modo servicio (`Meh + ;`) y presioná `F` para alternar entre floating y tiling.
 
 ### "¿Cómo veo qué workspaces existen y qué ventanas tienen?"
 ```bash
