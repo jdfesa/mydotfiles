@@ -1,10 +1,11 @@
 # ╔═══════════════════════════════════════════════════════════════════════╗
 # ║                    AeroSpace — Fase 1: Navegación                    ║
 # ║                                                                      ║
-# ║  Config mínima y funcional. Solo lo esencial para organizar          ║
-# ║  ventanas en workspaces con atajos simples.                          ║
+# ║  Modificadores:                                                      ║
+# ║    Alt            → Navegación (mirar, ir a workspace)               ║
+# ║    Meh (hold key) → Acción (mover ventana, enviar a workspace)       ║
 # ║                                                                      ║
-# ║  Modificador base: Alt (LAlt en Silakka54, fila superior izquierda)  ║
+# ║  Meh = Ctrl+Alt+Shift = UNA sola tecla en el Silakka54              ║
 # ║  Documentación: aerospace/README.md                                  ║
 # ╚═══════════════════════════════════════════════════════════════════════╝
 
@@ -12,25 +13,18 @@ config-version = 2
 start-at-login = true
 
 # ─── Normalización (recomendado por la documentación oficial) ───────────
-# Mantiene el árbol de ventanas simple y predecible.
-# flatten: evita contenedores con un solo hijo (innecesarios).
-# opposite-orientation: fuerza orientaciones alternadas al anidar.
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
 # ─── Layout por defecto ────────────────────────────────────────────────
-# tiles = las ventanas comparten el espacio visible (mosaico).
-# auto  = horizontal si el monitor es ancho, vertical si es alto.
 default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 
 # ─── Mouse sigue al foco cuando cambiás de monitor ────────────────────
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# ─── Workspaces persistentes ──────────────────────────────────────────
-# CLAVE: Estos workspaces SIEMPRE existen, aunque estén vacíos.
-# Sin esto, solo ves el workspace que tiene ventanas.
-persistent-workspaces = ["1", "2", "3", "4", "5"]
+# ─── Workspaces persistentes (0-9) ───────────────────────────────────
+persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 # ─── Gaps (espacios) ─────────────────────────────────────────────────
 [gaps]
@@ -39,8 +33,7 @@ persistent-workspaces = ["1", "2", "3", "4", "5"]
     outer.left       = 0
     outer.bottom     = 0
     outer.right      = 0
-    # Espacio reservado para Sketchybar (barra superior)
-    outer.top        = 48
+    outer.top        = 48  # Espacio para Sketchybar
 
 # ─── Teclado QWERTY ─────────────────────────────────────────────────
 [key-mapping]
@@ -50,58 +43,72 @@ persistent-workspaces = ["1", "2", "3", "4", "5"]
 # ATAJOS — Modo Principal (main)
 # ═════════════════════════════════════════════════════════════════════
 #
-# FILOSOFÍA DE MODIFICADORES:
-#   Alt + tecla         → Navegación (mirar, ir a workspace)
-#   Alt + Shift + tecla → Acción (mover ventana, mover a workspace)
+# FILOSOFÍA:
+#   Alt + tecla → NAVEGACIÓN (mirar, ir)     — modificador ligero
+#   Meh + tecla → ACCIÓN (mover, enviar)     — una sola tecla hold
+#
+# Meh en el Silakka54 = tecla hold derecha de la home row
+# En aerospace.toml se escribe como: alt-ctrl-shift
 #
 # ═════════════════════════════════════════════════════════════════════
 [mode.main.binding]
 
-    # ─── Cambiar de Workspace (Alt + número) ────────────────────────
+    # ─── NAVEGACIÓN: Cambiar de Workspace (Alt + número) ────────────
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'
     alt-3 = 'workspace 3'
     alt-4 = 'workspace 4'
     alt-5 = 'workspace 5'
+    alt-6 = 'workspace 6'
+    alt-7 = 'workspace 7'
+    alt-8 = 'workspace 8'
+    alt-9 = 'workspace 9'
+    alt-0 = 'workspace 0'
 
-    # ─── Mover ventana a Workspace (Alt + Shift + número) ───────────
-    alt-shift-1 = 'move-node-to-workspace 1'
-    alt-shift-2 = 'move-node-to-workspace 2'
-    alt-shift-3 = 'move-node-to-workspace 3'
-    alt-shift-4 = 'move-node-to-workspace 4'
-    alt-shift-5 = 'move-node-to-workspace 5'
+    # ─── ACCIÓN: Mover ventana a Workspace (Meh + número) ──────────
+    alt-ctrl-shift-1 = 'move-node-to-workspace 1'
+    alt-ctrl-shift-2 = 'move-node-to-workspace 2'
+    alt-ctrl-shift-3 = 'move-node-to-workspace 3'
+    alt-ctrl-shift-4 = 'move-node-to-workspace 4'
+    alt-ctrl-shift-5 = 'move-node-to-workspace 5'
+    alt-ctrl-shift-6 = 'move-node-to-workspace 6'
+    alt-ctrl-shift-7 = 'move-node-to-workspace 7'
+    alt-ctrl-shift-8 = 'move-node-to-workspace 8'
+    alt-ctrl-shift-9 = 'move-node-to-workspace 9'
+    alt-ctrl-shift-0 = 'move-node-to-workspace 0'
 
-    # ─── Navegar entre ventanas (Alt + H/J/K/L) ────────────────────
-    # Estilo Vim: H=izq, J=abajo, K=arriba, L=derecha
+    # ─── NAVEGACIÓN: Foco entre ventanas (Alt + H/J/K/L) ───────────
     alt-h = 'focus left'
     alt-j = 'focus down'
     alt-k = 'focus up'
     alt-l = 'focus right'
 
-    # ─── Mover ventana de posición (Alt + Shift + H/J/K/L) ─────────
-    alt-shift-h = 'move left'
-    alt-shift-j = 'move down'
-    alt-shift-k = 'move up'
-    alt-shift-l = 'move right'
+    # ─── ACCIÓN: Mover ventana de posición (Meh + H/J/K/L) ─────────
+    alt-ctrl-shift-h = 'move left'
+    alt-ctrl-shift-j = 'move down'
+    alt-ctrl-shift-k = 'move up'
+    alt-ctrl-shift-l = 'move right'
 
-    # ─── Volver al workspace anterior (Alt + Tab) ───────────────────
+    # ─── NAVEGACIÓN: Volver al workspace anterior ───────────────────
     alt-tab = 'workspace-back-and-forth'
 
-    # ─── Entrar al Modo Servicio (Alt + Shift + ;) ──────────────────
-    alt-shift-semicolon = 'mode service'
+    # ─── ACCIÓN: Fullscreen (Alt + F) ──────────────────────────────
+    # Hace que la ventana actual ocupe TODO el workspace.
+    # Las demás ventanas del workspace siguen ahí, pero ocultas.
+    # Presionar de nuevo para volver al mosaico.
+    alt-f = 'fullscreen'
+
+    # ─── Modo Servicio (Meh + ;) ───────────────────────────────────
+    alt-ctrl-shift-semicolon = 'mode service'
 
 # ═════════════════════════════════════════════════════════════════════
 # Modo Servicio — Mantenimiento rápido
 # ═════════════════════════════════════════════════════════════════════
-# Se activa con: Alt + Shift + ;
+# Se activa con: Meh + ;
 # Se sale con:   Esc (recarga config) o Enter (vuelve sin recargar)
 # ═════════════════════════════════════════════════════════════════════
 [mode.service.binding]
-    # Recargar configuración y volver al modo main
     esc = ['reload-config', 'mode main']
-    # Volver sin recargar
     enter = 'mode main'
-    # Resetear layout (aplanar árbol si las ventanas se ven raras)
     r = ['flatten-workspace-tree', 'mode main']
-    # Toggle floating/tiling (si una ventana está flotando y la querés tilear)
     f = ['layout floating tiling', 'mode main']

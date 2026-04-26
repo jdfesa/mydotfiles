@@ -64,34 +64,28 @@ Algunas ventanas pueden "flotar" sobre el mosaico (como en macOS normal). AeroSp
 
 ## ⌨️ Atajos Activos (Fase 1)
 
-**Modificador base: `Alt`** (tecla LAlt en el Silakka54, fila superior izquierda).
+**Dos modificadores, una lógica:**
+- `Alt` (LAlt en Silakka54) = **Navegación** — mirar, ir
+- `Meh` (hold en home row derecha del Silakka54) = **Acción** — mover, enviar
 
-**Regla simple:**
-- `Alt + tecla` = **Navegación** (mirar, ir)
-- `Alt + Shift + tecla` = **Acción** (mover, enviar)
+> **Meh** = `Ctrl+Alt+Shift` combinados. En el Silakka54 se activa manteniendo **una sola tecla**. En el `aerospace.toml` se escribe como `alt-ctrl-shift`.
 
-### Cambiar de Workspace
+### Cambiar de Workspace (Alt + número)
 
 | Atajo | Acción |
 |---|---|
-| `Alt + 1` | Ir al workspace 1 |
-| `Alt + 2` | Ir al workspace 2 |
-| `Alt + 3` | Ir al workspace 3 |
-| `Alt + 4` | Ir al workspace 4 |
-| `Alt + 5` | Ir al workspace 5 |
+| `Alt + 1` a `Alt + 9` | Ir al workspace 1–9 |
+| `Alt + 0` | Ir al workspace 0 |
 | `Alt + Tab` | Volver al workspace anterior (back & forth) |
 
-### Mover Ventanas a Otro Workspace
+### Mover Ventana a Otro Workspace (Meh + número)
 
 | Atajo | Acción |
 |---|---|
-| `Alt + Shift + 1` | Enviar ventana al workspace 1 |
-| `Alt + Shift + 2` | Enviar ventana al workspace 2 |
-| `Alt + Shift + 3` | Enviar ventana al workspace 3 |
-| `Alt + Shift + 4` | Enviar ventana al workspace 4 |
-| `Alt + Shift + 5` | Enviar ventana al workspace 5 |
+| `Meh + 1` a `Meh + 9` | Enviar ventana al workspace 1–9 |
+| `Meh + 0` | Enviar ventana al workspace 0 |
 
-### Navegar entre Ventanas (dentro del mismo workspace)
+### Navegar entre Ventanas (Alt + H/J/K/L)
 
 | Atajo | Acción |
 |---|---|
@@ -100,20 +94,26 @@ Algunas ventanas pueden "flotar" sobre el mosaico (como en macOS normal). AeroSp
 | `Alt + K` | Foco a la ventana de **arriba** |
 | `Alt + L` | Foco a la ventana de la **derecha** |
 
-### Mover Ventanas de Posición (dentro del mismo workspace)
+### Mover Ventana de Posición (Meh + H/J/K/L)
 
 | Atajo | Acción |
 |---|---|
-| `Alt + Shift + H` | Mover ventana a la **izquierda** |
-| `Alt + Shift + J` | Mover ventana **abajo** |
-| `Alt + Shift + K` | Mover ventana **arriba** |
-| `Alt + Shift + L` | Mover ventana a la **derecha** |
+| `Meh + H` | Mover ventana a la **izquierda** |
+| `Meh + J` | Mover ventana **abajo** |
+| `Meh + K` | Mover ventana **arriba** |
+| `Meh + L` | Mover ventana a la **derecha** |
+
+### Fullscreen
+
+| Atajo | Acción |
+|---|---|
+| `Alt + F` | **Toggle fullscreen** — La ventana ocupa todo el workspace. Las demás siguen ahí pero ocultas. Presionar de nuevo para volver al mosaico. |
 
 ### Modo Servicio (mantenimiento)
 
 | Atajo | Acción |
 |---|---|
-| `Alt + Shift + ;` | **Entrar** al modo servicio |
+| `Meh + ;` | **Entrar** al modo servicio |
 | `Esc` (en modo servicio) | **Recargar configuración** y volver |
 | `Enter` (en modo servicio) | Volver sin recargar |
 | `R` (en modo servicio) | Resetear layout (aplanar árbol) |
@@ -127,7 +127,7 @@ Después de editar `aerospace.toml`, necesitás recargar para que los cambios su
 
 ### Opción 1: Atajo de teclado (recomendado)
 ```
-Alt + Shift + ;   →   Esc
+Meh + ;   →   Esc
 ```
 Esto entra al modo servicio y la tecla `Esc` recarga la configuración automáticamente.
 
@@ -151,7 +151,6 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 
 - [ ] **Resize mode**: Modo dedicado para redimensionar ventanas con `H/J/K/L`. Solo funciona si hay 2+ ventanas en el workspace (una se agranda, otra se achica).
 - [ ] **Toggle layout**: Cambiar entre tiles y accordion con un atajo (`alt-slash` y `alt-comma` en la config default).
-- [ ] **Fullscreen**: Hacer que una ventana ocupe todo el workspace temporalmente.
 - [ ] **Join-with**: Forzar que dos ventanas se combinen en un contenedor con orientación específica. Útil para crear layouts complejos.
 - [ ] **Resize smart**: Atajo rápido para agrandar/achicar sin entrar a un modo dedicado (`alt-minus`, `alt-equal`).
 
@@ -160,9 +159,8 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 - [ ] **App routing (`on-window-detected`)**: Automatizar que ciertas apps siempre abran en un workspace específico (ej: Ghostty → ws 1, Chrome → ws 2, Spotify → ws 5).
 - [ ] **Modos con colores en borders**: Cambiar el color del borde según el modo activo (resize = rojo, layout = verde). Usa el script `borders_mode.sh` existente.
 - [ ] **Integración Sketchybar**: Notificar a Sketchybar cuando cambiás de workspace para que la barra muestre el workspace activo.
-- [ ] **Move workspace to monitor**: Mover un workspace completo a otro monitor (`alt-shift-tab`).
-- [ ] **Workspace-to-monitor assignment**: Asignar workspaces fijos a monitores específicos (ej: ws 1-3 al monitor principal, ws 4-5 al secundario).
-- [ ] **Migrar a Hyper/Meh**: Usar las teclas Hyper (Enter mantenido) y Meh del Silakka54 como modificadores para AeroSpace, liberando Alt para otros usos.
+- [ ] **Move workspace to monitor**: Mover un workspace completo a otro monitor.
+- [ ] **Workspace-to-monitor assignment**: Asignar workspaces fijos a monitores específicos (ej: ws 1-5 al monitor principal, ws 6-0 al secundario).
 
 ### Fase 4 — "Personalización avanzada" *(opcional)*
 
