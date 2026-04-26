@@ -2,17 +2,17 @@
 # ║                    AeroSpace — Fase 1: Navegación                    ║
 # ║                                                                      ║
 # ║  Modificadores:                                                      ║
-# ║    Alt            → Navegación (mirar, ir a workspace)               ║
-# ║    Meh (hold key) → Acción (mover ventana, enviar a workspace)       ║
+# ║    Alt            → Navegación (ir a workspace, foco)                ║
+# ║    Meh (hold key) → Acción (mover ventana)                           ║
 # ║                                                                      ║
-# ║  Meh = Ctrl+Alt+Shift = UNA sola tecla en el Silakka54              ║
-# ║  Documentación: aerospace/README.md                                  ║
+# ║  Workspaces por LETRAS (mano derecha, sin fila numérica)             ║
+# ║  Alt = meñique izquierdo | Letra = mano derecha                      ║
 # ╚═══════════════════════════════════════════════════════════════════════╝
 
 config-version = 2
 start-at-login = true
 
-# ─── Normalización (recomendado por la documentación oficial) ───────────
+# ─── Normalización ─────────────────────────────────────────────────────
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
@@ -23,10 +23,16 @@ default-root-container-orientation = 'auto'
 # ─── Mouse sigue al foco cuando cambiás de monitor ────────────────────
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# ─── Workspaces persistentes (0-9) ───────────────────────────────────
-persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+# ─── Workspaces persistentes (por letra, mnemotécnicos) ──────────────
+# U = Uno (principal, IDE/editor)
+# I = Internet (Chrome, browsers)
+# O = Obsidian (notas, estudio)
+# P = Personal (Telegram, Discord, chat)
+# Y = YouTube/música (Spotify, media)
+# N = Navegador de archivos (Finder, sistema)
+persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
 
-# ─── Gaps (espacios) ─────────────────────────────────────────────────
+# ─── Gaps ─────────────────────────────────────────────────────────────
 [gaps]
     inner.horizontal = 0
     inner.vertical   = 0
@@ -43,69 +49,54 @@ persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 # ATAJOS — Modo Principal (main)
 # ═════════════════════════════════════════════════════════════════════
 #
-# FILOSOFÍA:
-#   Alt + tecla → NAVEGACIÓN (mirar, ir)     — modificador ligero
-#   Meh + tecla → ACCIÓN (mover, enviar)     — una sola tecla hold
+# LÓGICA:
+#   Alt + letra   → IR al workspace (navegación)
+#   Meh + letra   → MOVER ventana al workspace (acción)
 #
-# Meh en el Silakka54 = tecla hold derecha de la home row
-# En aerospace.toml se escribe como: alt-ctrl-shift
+# Todas las letras de workspace están en la MANO DERECHA:
+#   Y  U  I  O  P      ← fila superior (cómoda, no es la numérica)
+#            N          ← fila inferior
 #
 # ═════════════════════════════════════════════════════════════════════
 [mode.main.binding]
 
-    # ─── NAVEGACIÓN: Cambiar de Workspace (Alt + número) ────────────
-    alt-1 = 'workspace 1'
-    alt-2 = 'workspace 2'
-    alt-3 = 'workspace 3'
-    alt-4 = 'workspace 4'
-    alt-5 = 'workspace 5'
-    alt-6 = 'workspace 6'
-    alt-7 = 'workspace 7'
-    alt-8 = 'workspace 8'
-    alt-9 = 'workspace 9'
-    alt-0 = 'workspace 0'
+    # ─── WORKSPACE: Ir (Alt + letra) ───────────────────────────────
+    alt-u = 'workspace U'       # Uno (principal)
+    alt-i = 'workspace I'       # Internet
+    alt-o = 'workspace O'       # Obsidian/notas
+    alt-p = 'workspace P'       # Personal/chat
+    alt-y = 'workspace Y'       # YouTube/música
+    alt-n = 'workspace N'       # Navegador/archivos
 
-    # ─── ACCIÓN: Mover ventana a Workspace (Meh + número) ──────────
-    alt-ctrl-shift-1 = 'move-node-to-workspace 1'
-    alt-ctrl-shift-2 = 'move-node-to-workspace 2'
-    alt-ctrl-shift-3 = 'move-node-to-workspace 3'
-    alt-ctrl-shift-4 = 'move-node-to-workspace 4'
-    alt-ctrl-shift-5 = 'move-node-to-workspace 5'
-    alt-ctrl-shift-6 = 'move-node-to-workspace 6'
-    alt-ctrl-shift-7 = 'move-node-to-workspace 7'
-    alt-ctrl-shift-8 = 'move-node-to-workspace 8'
-    alt-ctrl-shift-9 = 'move-node-to-workspace 9'
-    alt-ctrl-shift-0 = 'move-node-to-workspace 0'
+    # ─── WORKSPACE: Mover ventana (Meh + letra) ───────────────────
+    alt-ctrl-shift-u = 'move-node-to-workspace U'
+    alt-ctrl-shift-i = 'move-node-to-workspace I'
+    alt-ctrl-shift-o = 'move-node-to-workspace O'
+    alt-ctrl-shift-p = 'move-node-to-workspace P'
+    alt-ctrl-shift-y = 'move-node-to-workspace Y'
+    alt-ctrl-shift-n = 'move-node-to-workspace N'
 
-    # ─── NAVEGACIÓN: Foco entre ventanas (Alt + H/J/K/L) ───────────
+    # ─── FOCO: Navegar entre ventanas (Alt + H/J/K/L) ─────────────
     alt-h = 'focus left'
     alt-j = 'focus down'
     alt-k = 'focus up'
     alt-l = 'focus right'
 
-    # ─── ACCIÓN: Mover ventana de posición (Meh + H/J/K/L) ─────────
+    # ─── MOVER: Reposicionar ventana (Meh + H/J/K/L) ──────────────
     alt-ctrl-shift-h = 'move left'
     alt-ctrl-shift-j = 'move down'
     alt-ctrl-shift-k = 'move up'
     alt-ctrl-shift-l = 'move right'
 
-    # ─── NAVEGACIÓN: Volver al workspace anterior ───────────────────
-    alt-tab = 'workspace-back-and-forth'
+    # ─── UTILIDADES ────────────────────────────────────────────────
+    alt-tab = 'workspace-back-and-forth'    # Volver al workspace anterior
+    alt-f = 'fullscreen'                     # Toggle fullscreen
 
-    # ─── ACCIÓN: Fullscreen (Alt + F) ──────────────────────────────
-    # Hace que la ventana actual ocupe TODO el workspace.
-    # Las demás ventanas del workspace siguen ahí, pero ocultas.
-    # Presionar de nuevo para volver al mosaico.
-    alt-f = 'fullscreen'
-
-    # ─── Modo Servicio (Meh + ;) ───────────────────────────────────
+    # ─── Modo Servicio (Meh + ;) ──────────────────────────────────
     alt-ctrl-shift-semicolon = 'mode service'
 
 # ═════════════════════════════════════════════════════════════════════
 # Modo Servicio — Mantenimiento rápido
-# ═════════════════════════════════════════════════════════════════════
-# Se activa con: Meh + ;
-# Se sale con:   Esc (recarga config) o Enter (vuelve sin recargar)
 # ═════════════════════════════════════════════════════════════════════
 [mode.service.binding]
     esc = ['reload-config', 'mode main']

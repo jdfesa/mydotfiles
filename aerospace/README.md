@@ -65,25 +65,39 @@ Algunas ventanas pueden "flotar" sobre el mosaico (como en macOS normal). AeroSp
 ## ⌨️ Atajos Activos (Fase 1)
 
 **Dos modificadores, una lógica:**
-- `Alt` (LAlt en Silakka54) = **Navegación** — mirar, ir
+- `Alt` (meñique izquierdo en Silakka54) = **Navegación** — ir, mirar
 - `Meh` (hold en home row derecha del Silakka54) = **Acción** — mover, enviar
 
-> **Meh** = `Ctrl+Alt+Shift` combinados. En el Silakka54 se activa manteniendo **una sola tecla**. En el `aerospace.toml` se escribe como `alt-ctrl-shift`.
+> **Meh** = `Ctrl+Alt+Shift` combinados. En el Silakka54 se activa manteniendo **una sola tecla**. En `aerospace.toml` se escribe como `alt-ctrl-shift`.
 
-### Cambiar de Workspace (Alt + número)
+> **Regla de diseño**: La fila numérica NO se usa. Todos los atajos están en las filas de letras, accesibles sin levantar las manos del home row.
+
+### Workspaces por Letra (mano derecha)
+
+Los workspaces usan letras mnemotécnicas. Alt (izquierda) + letra (derecha) = dos teclas, cross-hand, sin capas.
+
+```
+Mano derecha en el Silakka54:
+  Y  U  I  O  P       ← fila accesible
+  H  J  K  L  ;       ← home row (reservada para navegación)
+  N  M  ,  .  /       ← fila inferior
+```
+
+| Atajo | Workspace | Uso |
+|---|---|---|
+| `Alt + U` | **U** | **U**no — Principal (IDE, editor, dev) |
+| `Alt + I` | **I** | **I**nternet — Browsers (Chrome) |
+| `Alt + O` | **O** | **O**bsidian — Notas, estudio |
+| `Alt + P` | **P** | **P**ersonal — Chat (Telegram, Discord) |
+| `Alt + Y` | **Y** | M**ú**sica/**Y**outube — Media (Spotify) |
+| `Alt + N` | **N** | **N**avegador — Archivos (Finder, sistema) |
+| `Alt + Tab` | — | Volver al workspace anterior (back & forth) |
+
+### Mover Ventana a Workspace (Meh + letra)
 
 | Atajo | Acción |
 |---|---|
-| `Alt + 1` a `Alt + 9` | Ir al workspace 1–9 |
-| `Alt + 0` | Ir al workspace 0 |
-| `Alt + Tab` | Volver al workspace anterior (back & forth) |
-
-### Mover Ventana a Otro Workspace (Meh + número)
-
-| Atajo | Acción |
-|---|---|
-| `Meh + 1` a `Meh + 9` | Enviar ventana al workspace 1–9 |
-| `Meh + 0` | Enviar ventana al workspace 0 |
+| `Meh + U/I/O/P/Y/N` | Enviar ventana al workspace correspondiente |
 
 ### Navegar entre Ventanas (Alt + H/J/K/L)
 
@@ -150,17 +164,17 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 ### Fase 2 — "Puedo ajustar" *(cuando domines la Fase 1)*
 
 - [ ] **Resize mode**: Modo dedicado para redimensionar ventanas con `H/J/K/L`. Solo funciona si hay 2+ ventanas en el workspace (una se agranda, otra se achica).
-- [ ] **Toggle layout**: Cambiar entre tiles y accordion con un atajo (`alt-slash` y `alt-comma` en la config default).
+- [ ] **Toggle layout**: Cambiar entre tiles y accordion con un atajo.
 - [ ] **Join-with**: Forzar que dos ventanas se combinen en un contenedor con orientación específica. Útil para crear layouts complejos.
-- [ ] **Resize smart**: Atajo rápido para agrandar/achicar sin entrar a un modo dedicado (`alt-minus`, `alt-equal`).
+- [ ] **Resize smart**: Atajo rápido para agrandar/achicar sin entrar a un modo dedicado.
 
 ### Fase 3 — "Tengo superpoderes" *(cuando domines la Fase 2)*
 
-- [ ] **App routing (`on-window-detected`)**: Automatizar que ciertas apps siempre abran en un workspace específico (ej: Ghostty → ws 1, Chrome → ws 2, Spotify → ws 5).
+- [ ] **App routing (`on-window-detected`)**: Automatizar que ciertas apps siempre abran en un workspace específico (ej: Ghostty → U, Chrome → I, Spotify → Y).
 - [ ] **Modos con colores en borders**: Cambiar el color del borde según el modo activo (resize = rojo, layout = verde). Usa el script `borders_mode.sh` existente.
-- [ ] **Integración Sketchybar**: Notificar a Sketchybar cuando cambiás de workspace para que la barra muestre el workspace activo.
+- [ ] **Integración Sketchybar**: Cambiar `WINDOW_MANAGER` de `"macos_native"` a `"aerospace"` en `settings.lua` para que la barra muestre los workspaces de AeroSpace.
 - [ ] **Move workspace to monitor**: Mover un workspace completo a otro monitor.
-- [ ] **Workspace-to-monitor assignment**: Asignar workspaces fijos a monitores específicos (ej: ws 1-5 al monitor principal, ws 6-0 al secundario).
+- [ ] **Workspace-to-monitor assignment**: Asignar workspaces fijos a monitores específicos.
 
 ### Fase 4 — "Personalización avanzada" *(opcional)*
 
