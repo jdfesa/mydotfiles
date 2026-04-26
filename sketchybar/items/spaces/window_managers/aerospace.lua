@@ -29,8 +29,9 @@ end
 local aerospace_workspaces = get_workspaces()
 local initial_current_workspace = get_current_workspace()
 
--- Register the custom event that aerospace.toml triggers via exec-on-workspace-change
+-- Register the custom events that aerospace.toml triggers
 SBAR.add("event", "aerospace_workspace_change")
+SBAR.add("event", "aerospace_mode_change")
 
 local Window_Manager = {}
 
@@ -91,6 +92,38 @@ function Window_Manager:init()
 
   -- Initial app icon update
   self:update_space_labels()
+
+  -- Mode Indicator (hidden by default, shows up when in service mode)
+  local mode_indicator = SBAR.add("item", "aerospace_mode", {
+    position = "left",
+    icon = {
+      string = "🔧",
+      padding_left = 8,
+      padding_right = 4,
+      color = COLORS.red,
+    },
+    label = {
+      string = "SERVICE MODE",
+      padding_right = 8,
+      color = COLORS.red,
+      font = { style = "Bold" },
+    },
+    background = {
+      color = COLORS.base,
+      border_color = COLORS.red,
+      border_width = 2,
+      height = 26,
+    },
+    drawing = false, -- Only draw when not in main mode
+  })
+
+  mode_indicator:subscribe("aerospace_mode_change", function(env)
+    if env.MODE == "service" then
+      mode_indicator:set({ drawing = true })
+    else
+      mode_indicator:set({ drawing = false })
+    end
+  end)
 end
 
 function Window_Manager:start_watcher()
