@@ -42,10 +42,10 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
 [gaps]
     inner.horizontal = 0
     inner.vertical   = 0
-    outer.left       = 0
-    outer.bottom     = 0
-    outer.right      = 0
-    outer.top        = 48  # Espacio para Sketchybar
+    outer.left       = 6
+    outer.bottom     = 6
+    outer.right      = 6
+    outer.top        = 42  # Espacio para Sketchybar (~36px barra + 6px gap)
 
 # ─── Teclado QWERTY ─────────────────────────────────────────────────
 [key-mapping]
