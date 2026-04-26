@@ -93,7 +93,7 @@ El workspace más usado va en la letra más cómoda. El orden de comodidad de ma
 | Medio ↑ | **I** | ★★★ |
 | Anular ↑ | **O** | ★★★ |
 | Meñique ↑ | **P** | ★★ (algo de estiramiento) |
-| Índice ↑ izq. | **Y** | ★★ (cruzar hacia la izquierda) |
+| Índice ↑ ext. | **Y** | ★★ (alcance extendido del índice) |
 | Índice ↓ | **N** | ★★ (bajar fila) |
 
 Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
