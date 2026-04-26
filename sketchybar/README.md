@@ -87,8 +87,10 @@ brew services restart sketchybar
 Esta configuración carga un solo entorno Lua, lo que reduce drásticamente el uso de CPU comparado con scripts bash.
 
 - **`init.lua`**: Punto de entrada. Inicializa la barra y carga los demás archivos.
-- **`settings.lua`**: Configuración global (Fuentes, Colores, Márgenes).
+- **`settings.lua`**: Configuración global (Fuentes, Colores, Márgenes, `WINDOW_MANAGER`).
 - **`items/`**: Definición de cada widget.
+  - **`spaces/window_managers/aerospace.lua`**: Módulo de integración con AeroSpace (workspaces + indicador de modo).
+  - **`spaces/window_managers/macos_native.lua`**: Módulo para Spaces nativos de macOS (no activo).
   - **`weather/`**: Script híbrido para el clima (`weather.lua` + `weather.sh`).
   - **`monitor/`**: Scripts de sistema (CPU, RAM, Wifi).
   - **`front_app/`**: Muestra la app activa con su icono real.
@@ -108,8 +110,26 @@ Hemos realizado varias mejoras clave sobre la configuración base de *Efterklang
 ### 2. Monitor de RAM Preciso
 - **Mejora**: Usamos un script personalizado (`ram.sh`) que calcula la memoria "Wired + App + Compressed" usando `vm_stat`, dando un % real de uso, mucho más preciso que el comando `memory_pressure`.
 
-### 3. Espacios de Trabajo (Workspaces)
-- **Simple**: Usamos números (1, 2, 3...) en lugar de iconos complejos, para alinear visualmente con los atajos de teclado de **AeroSpace**.
+### 3. Integración con AeroSpace (Window Manager)
+
+Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de AeroSpace.
+
+- **Configuración**: En `settings.lua`, `WINDOW_MANAGER = "aerospace"` activa el módulo correspondiente.
+- **Módulo**: `items/spaces/window_managers/aerospace.lua` crea los ítems de workspace.
+
+#### Decisiones técnicas importantes
+
+| Problema | Solución |
+|---|---|
+| `SBAR.add("space", ...)` solo acepta IDs enteros (Spaces de macOS) | Se usa `SBAR.add("item", ...)` que acepta strings como `"U"`, `"I"`, `"O"` |
+| Los eventos Lua (`subscribe`) no reaccionaban para controlar el ítem de modo | Se eliminó el subscriber Lua y AeroSpace controla el ítem directamente vía CLI (`sketchybar --set`) |
+| `exec-and-forget` de AeroSpace no encontraba el binario `sketchybar` | Se usa la ruta absoluta `/usr/local/bin/sketchybar` (ver nota en el [README de AeroSpace](../aerospace/README.md#-nota-técnica-importante-path-en-exec-and-forget)) |
+| `sketchybar --reload` no siempre recarga los módulos Lua | Se usa `brew services restart sketchybar` para un reinicio completo |
+
+#### Componentes
+
+1. **Workspaces (U, I, O, P, Y, N)**: Ítems a la izquierda de la barra que muestran cada workspace con su letra e íconos de las apps que contiene. El workspace activo se resalta en color lavanda.
+2. **Indicador de modo (`aerospace_mode`)**: Ítem oculto por defecto (`drawing = false`). AeroSpace lo muestra/oculta directamente con `--set drawing=on/off` desde `aerospace.toml` al entrar/salir de modos (ej: servicio). Muestra `[S]` en rojo para el modo servicio.
 
 ---
 
@@ -130,3 +150,12 @@ Hemos realizado varias mejoras clave sobre la configuración base de *Efterklang
 
 ### "Espacios con nombres raros"
 - Revisa `settings.lua`. Si quieres números, asegúrate de que `ID_STYLE` sea `nil`.
+
+### "No veo los workspaces de AeroSpace / solo veo un Space"
+- Verifica que `WINDOW_MANAGER = "aerospace"` en `settings.lua`.
+- Ejecuta `brew services restart sketchybar` (un `--reload` no siempre recarga los módulos Lua).
+- Verifica que AeroSpace está corriendo: `aerospace list-workspaces --all`.
+
+### "El indicador de modo [S] no aparece al entrar a modo servicio"
+- Verifica que `aerospace.toml` usa la ruta absoluta: `/usr/local/bin/sketchybar --set aerospace_mode drawing=on`.
+- Si cambiaste la ubicación de Sketchybar, actualizá la ruta con `which sketchybar`.
