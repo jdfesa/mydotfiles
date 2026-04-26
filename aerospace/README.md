@@ -1,145 +1,238 @@
-# 📖 Manual de Uso: Tu Nuevo Entorno
+# 🪟 AeroSpace — Tiling Window Manager
 
-Bienvenido a tu nueva nave espacial. Este manual no es técnico, es lógico. Aquí entenderás cómo moverte, organizar tus ventanas y por qué las cosas pasan como pasan.
-
-## 🧠 Conceptos Básicos (Léeme primero)
-
-Antes de presionar teclas, entiende cómo "piensa" **AeroSpace**:
-
-1.  **Todo es una Baldosa (Tile)**: Las ventanas no flotan una encima de otra. Ocupan el 100% del espacio disponible.
-    *   *Si tienes sola UNA ventana*: Ocupará toda la pantalla (menos los huecos).
-    *   *Si abres otra*: Se dividirán el espacio automáticamente (50/50).
-
-2.  **El Misterio del "Resize" (Redimensionar)**:
-    *   **Pregunta**: *"¿Por qué si presiono Hyper+R y trato de achicar una ventana sola, no pasa nada?"*
-    *   **Respuesta**: Porque **no tiene a quién cederle ese espacio**. En este sistema, para hacer una ventana más chica, otra debe hacerse más grande. Si estás solo en el escritorio, no puedes cambiar tu tamaño porque el sistema te obliga a llenar el hueco.
-
-3.  **Aplanamiento (Flattening)**:
-    *   Por defecto, el sistema intenta mantener todo simple. Si mueves una ventana a la derecha, simplemente se pone al lado. No crea "cajas dentro de cajas" infinitas... a menos que tú se lo ordenes (ver "Forzar Split").
+> **Fase actual: 1 — Navegación Básica**
+>
+> Esta configuración está diseñada para adopción incremental. Empezamos con lo mínimo funcional y vamos sumando features cuando domines las anteriores.
 
 ---
 
-## 🎹 La "Santa Trinidad" del Teclado (Silakka54)
+## 🧠 ¿Qué es AeroSpace y cómo piensa?
 
-Hemos diseñado una estrategia de tres capas para evitar conflictos y maximizar la velocidad:
+AeroSpace es un **tiling window manager** para macOS inspirado en [i3](https://i3wm.org/). En lugar de ventanas flotando unas encima de otras (como macOS por defecto), las ventanas se organizan automáticamente en un mosaico que ocupa toda la pantalla.
 
-### 1. HYPER (`Cmd + Alt + Ctrl + Shift`) -> ACCIÓN 🚀
-*   **Función**: Acciones "pesadas" y globales.
-*   **Uso**: Mover ventanas, lanzar apps, entrar a modos.
-*   **Mnemotecnia**: "Hyper hace cosas Fuertes".
+### Concepto Clave: Workspaces ≠ Spaces de macOS
 
-### 2. MEH (`Ctrl + Alt + Shift`) -> NAVEGACIÓN 🧭
-*   **Tecla Física**: `RAlt` (derecha) en tu Silakka54.
-*   **Función**: Mirar alrededor (Focus) y cambiar de escritorio.
-*   **Mnemotecnia**: "Meh es para Mirar".
-*   **⚠️ Nota Técnica**: AeroSpace exige un orden estricto de modificadores. Aunque se llama "Meh" y visualmente es `Ctrl+Alt+Shift`, en la configuración interna (`aerospace.toml`) **DEBE Escribirse como `alt-ctrl-shift`**. Si pones otro orden, no funciona.
+| Concepto | macOS Spaces | AeroSpace Workspaces |
+|---|---|---|
+| **Qué son** | Escritorios virtuales nativos de macOS (Mission Control) | Espacios virtuales **emulados** por AeroSpace |
+| **Cómo cambiás** | `Ctrl + ←/→` o gestos del trackpad (con animación lenta) | Un atajo de teclado, **instantáneo**, sin animación |
+| **Límite** | Hasta 16 por monitor | Ilimitados (se pueden nombrar con letras y números) |
+| **Control por teclado** | Solo cambiar entre ellos | Crear, mover ventanas, asignar a monitores, todo por teclado |
+| **API pública** | No (Apple no ofrece API para gestionarlos) | Sí (AeroSpace tiene CLI completo) |
 
-### 3. ALT (`Left Alt`) -> SISTEMA 🍎
-*   **Función**: Reservada para macOS.
-*   **Uso**: Atajos nativos `Opt + Left/Right` (saltar palabras), caracteres especiales, etc.
-*   **Beneficio**: Ya no choca con AeroSpace.
+**¿Cómo funciona la magia?** AeroSpace mueve las ventanas "ocultas" a una esquina invisible de la pantalla (abajo a la derecha). Cuando cambiás de workspace, las trae de vuelta. Todo pasa dentro de **un solo Space de macOS**.
 
----
+> **Recomendación**: Tené **un solo Space de macOS** y usá exclusivamente los workspaces de AeroSpace. Los Spaces de macOS solo agregan complejidad y bugs.
 
-## 🚦 Atajos Principales
+### El Árbol de Ventanas (Tree)
 
-### Navegación (MEH)
-*   `Meh + h/j/k/l`: **Foco** (Mirar a la ventana de al lado).
-*   `Meh + 1-8`: Cambiar de **Escritorio**.
-*   `Meh + Tab`: Volver al último escritorio (Back & Forth).
+AeroSpace organiza las ventanas en una estructura de **árbol**:
 
-### Movimiento (HYPER)
-*   `Hyper + h/j/k/l`: **Mover** la ventana cargándola contigo.
-*   `Hyper + 1-8`: **Enviar** ventana a otro escritorio.
-*   `Hyper + Tab`: Mover ventana al siguiente monitor.
+```
+Workspace 1 (raíz)
+├── Ghostty (ventana)
+└── Contenedor horizontal
+    ├── Chrome (ventana)
+    └── VS Code (ventana)
+```
 
-### Modos Especiales
-Hemos simplificado la configuración para dejar solo lo esencial:
+- **Cada workspace tiene su propia raíz**.
+- **Las ventanas son hojas** (no tienen hijos).
+- **Los contenedores** agrupan ventanas y tienen dos propiedades:
+  - **Layout**: `tiles` (mosaico, todas visibles) o `accordion` (apiladas, solo una visible).
+  - **Orientación**: `horizontal` (lado a lado) o `vertical` (una arriba de otra).
 
-#### 🔴 Modo Resize (`Hyper + R`)
-*   **Borde Rojo**.
-*   `h/l`: Modificar ancho.
-*   `j/k`: Modificar alto.
-*   `Esc`: Salir.
+### Layouts: Tiles vs Accordion
 
-*(Los modos Layout, Persistencia y Servicio están desactivados temporalmente para simplificar el uso).*
+- **Tiles (Mosaico)**: Todas las ventanas comparten el espacio visible. Es el modo por defecto. Si tenés 3 ventanas, se dividen en tercios.
+- **Accordion**: Las ventanas se apilan "una detrás de otra". Solo ves una a la vez, con padding a los costados indicando que hay más ventanas. Navegás con `focus left/right`.
 
-### 2. Modo Resize (`Hyper + R`) -> Borde ROJO 🔴
-*¡Peligro! Estás modificando tamaños.*
-*   Mueve `h` (más angosto) o `l` (más ancho).
-*   **Recuerda**: Solo funciona si tienes al menos 2 ventanas.
-*   `Esc`: Salir (Vuelve a Azul).
+### Normalización
 
-### 3. Modo Layout (`Hyper + /`) -> Borde VERDE 🟢
-*Organización y estructura.*
-*   `v`: Cambiar a orientación **Vertical** (una arriba de otra).
-*   `h`: Cambiar a orientación **Horizontal** (una al lado de otra).
-*   `a`: **Acordeón** (Apila las ventanas como cartas).
-    *   *Nota*: En este modo NO puedes cambiar el tamaño de las ventanas individualmente.
-*   `t`: **Mosaico (Tiles)** (Vuelve al modo normal donde todas se ven).
-*   `Esc`: Salir.
+AeroSpace simplifica automáticamente el árbol:
 
-### 4. Modo Persistencia (`Hyper + P`) -> Borde VIOLETA 🟣
-*Memoria del sistema.*
-*   `s`: **Save** (Guardar foto de tus ventanas actuales).
-*   `l`: **Load** (Restaurar esa foto tras reiniciar).
-*   `Esc`: Salir.
+1. **Flatten**: Si un contenedor tiene un solo hijo, se elimina el contenedor (es innecesario).
+2. **Opposite orientation**: Contenedores anidados deben tener orientaciones opuestas (horizontal → vertical → horizontal).
 
-### 5. Modo Servicio (`Hyper + ;`) -> Borde ROSA 🌸
-*Mantenimiento.*
-*   `r`: **Resetear layout (Aplanar)**. Si tus ventanas se ven raras o no las encuentras, pulsa esto.
-*   `esc`: Recargar configuración.
+Esto hace que la estructura del árbol sea predecible mirando cómo están las ventanas en pantalla.
+
+### Floating (Flotante)
+
+Algunas ventanas pueden "flotar" sobre el mosaico (como en macOS normal). AeroSpace detecta automáticamente diálogos y los flota. También podés alternar manualmente entre floating y tiling.
 
 ---
 
-## 📐 Entendiendo los Layouts (¿Dónde están mis ventanas?)
+## ⌨️ Atajos Activos (Fase 1)
 
-A veces AeroSpace apila las ventanas y parecen desaparecer. Esto pasa por el **Acordeón**.
+**Modificador base: `Alt`** (tecla LAlt en el Silakka54, fila superior izquierda).
 
-### Acordeón vs Tiles
-*   **Tiles (Mosaico)**: Todas las ventanas comparten el espacio y ninguna se tapa. Es el modo por defecto.
-*   **Acordeón**: Las ventanas se apilan "hacia el fondo". Solo ves una barrita de las que están atrás.
-    *   **¿Para qué sirve?**: Si tienes 10 ventanas y quieres enfocarte en una sin que las otras se hagan diminutas.
-    *   **¿Cómo salgo?**: `Hyper + /` y luego pulsa `t` (Tiles) o usa el "Botón de Pánico" (`Hyper + ;` luego `r`).
+**Regla simple:**
+- `Alt + tecla` = **Navegación** (mirar, ir)
+- `Alt + Shift + tecla` = **Acción** (mover, enviar)
 
-## 🖱️ Barra Interactiva (Sketchybar)
-Tu barra no es solo adorno:
-1.  **Escritorio Activo**: El número se pone VERDE y los iconos de las apps te siguen.
-2.  **Lista de Apps**: Ves iconos de TODAS las ventanas abiertas.
-    *   **Click en icono**: Trae esa ventana a tu lado (Split Izquierdo) sin quitarte el foco. ¡Magia!
+### Cambiar de Workspace
+
+| Atajo | Acción |
+|---|---|
+| `Alt + 1` | Ir al workspace 1 |
+| `Alt + 2` | Ir al workspace 2 |
+| `Alt + 3` | Ir al workspace 3 |
+| `Alt + 4` | Ir al workspace 4 |
+| `Alt + 5` | Ir al workspace 5 |
+| `Alt + Tab` | Volver al workspace anterior (back & forth) |
+
+### Mover Ventanas a Otro Workspace
+
+| Atajo | Acción |
+|---|---|
+| `Alt + Shift + 1` | Enviar ventana al workspace 1 |
+| `Alt + Shift + 2` | Enviar ventana al workspace 2 |
+| `Alt + Shift + 3` | Enviar ventana al workspace 3 |
+| `Alt + Shift + 4` | Enviar ventana al workspace 4 |
+| `Alt + Shift + 5` | Enviar ventana al workspace 5 |
+
+### Navegar entre Ventanas (dentro del mismo workspace)
+
+| Atajo | Acción |
+|---|---|
+| `Alt + H` | Foco a la ventana de la **izquierda** |
+| `Alt + J` | Foco a la ventana de **abajo** |
+| `Alt + K` | Foco a la ventana de **arriba** |
+| `Alt + L` | Foco a la ventana de la **derecha** |
+
+### Mover Ventanas de Posición (dentro del mismo workspace)
+
+| Atajo | Acción |
+|---|---|
+| `Alt + Shift + H` | Mover ventana a la **izquierda** |
+| `Alt + Shift + J` | Mover ventana **abajo** |
+| `Alt + Shift + K` | Mover ventana **arriba** |
+| `Alt + Shift + L` | Mover ventana a la **derecha** |
+
+### Modo Servicio (mantenimiento)
+
+| Atajo | Acción |
+|---|---|
+| `Alt + Shift + ;` | **Entrar** al modo servicio |
+| `Esc` (en modo servicio) | **Recargar configuración** y volver |
+| `Enter` (en modo servicio) | Volver sin recargar |
+| `R` (en modo servicio) | Resetear layout (aplanar árbol) |
+| `F` (en modo servicio) | Toggle floating ↔ tiling |
 
 ---
 
-## 🛠️ Arquitectura Técnica (Scripts)
+## 🔄 Cómo Recargar la Configuración
 
-Para que todo esto funcione, usamos scripts personalizados en `~/.mydotfiles/aerospace/scripts/`. Si eres curioso o necesitas arreglar algo, aquí está qué hace cada uno:
+Después de editar `aerospace.toml`, necesitás recargar para que los cambios surtan efecto.
 
-### 1. `borders_mode.sh`
-*   **Función**: Es el cerebro de los colores.
-*   **Uso**: Recibe el nombre del modo (ej. `RESIZE`) y le habla a **JankyBorders** para cambiar el color del borde activo.
-*   **Colores**: Azul (Normal), Rojo (Resize), Verde (Layout), Violeta (Persistencia), Rosa (Servicio).
+### Opción 1: Atajo de teclado (recomendado)
+```
+Alt + Shift + ;   →   Esc
+```
+Esto entra al modo servicio y la tecla `Esc` recarga la configuración automáticamente.
 
-### 2. `save_layout.py`
-*   **Función**: "congela" el estado actual.
-*   **Lógica**: Lee todas las ventanas abiertas y sus posiciones usando `aerospace list-windows --json` y las guarda en un archivo temporal JSON.
+### Opción 2: Desde la terminal
+```bash
+aerospace reload-config
+```
 
-### 3. `restore_layout.py`
-*   **Función**: "descongela" el estado.
-*   **Lógica**: Lee el archivo JSON guardado e intenta mover las ventanas a sus escritorios originales.
+### Opción 3: Desde el icono de la barra
+Click en el icono de AeroSpace en la barra de menú → "Reload Config".
+
+> Si la configuración tiene errores de sintaxis, AeroSpace mostrará una notificación con el error. No se aplicarán los cambios hasta que corrijas el error.
 
 ---
 
-## 🆘 Solución de Problemas Comunes
+## 🗺️ Roadmap de Funcionalidades (TODO)
 
-**"No puedo dividir Chrome y Antigravity"**
-1.  Usa el **Super Poder**: `Alt + Shift + Flechas`.
-2.  Esto fuerza a que se unan.
+Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marcá con `[x]` las que vayas incorporando.
 
-**"Hyper+R no hace nada"**
-1.  ¿Estás solo en el escritorio? -> Es normal.
-2.  ¿Hay más ventanas? -> Mira el borde. Si es **ROJO**, usa `H` y `L`.
+### Fase 2 — "Puedo ajustar" *(cuando domines la Fase 1)*
 
-**"Se rompió todo"**
-1.  `Hyper + ;` (Modo Servicio).
-2.  `R`: "Aplanar todo" (Resetea la estructura visual).
-3.  `Esc`: Recargar configuración.
+- [ ] **Resize mode**: Modo dedicado para redimensionar ventanas con `H/J/K/L`. Solo funciona si hay 2+ ventanas en el workspace (una se agranda, otra se achica).
+- [ ] **Toggle layout**: Cambiar entre tiles y accordion con un atajo (`alt-slash` y `alt-comma` en la config default).
+- [ ] **Fullscreen**: Hacer que una ventana ocupe todo el workspace temporalmente.
+- [ ] **Join-with**: Forzar que dos ventanas se combinen en un contenedor con orientación específica. Útil para crear layouts complejos.
+- [ ] **Resize smart**: Atajo rápido para agrandar/achicar sin entrar a un modo dedicado (`alt-minus`, `alt-equal`).
+
+### Fase 3 — "Tengo superpoderes" *(cuando domines la Fase 2)*
+
+- [ ] **App routing (`on-window-detected`)**: Automatizar que ciertas apps siempre abran en un workspace específico (ej: Ghostty → ws 1, Chrome → ws 2, Spotify → ws 5).
+- [ ] **Modos con colores en borders**: Cambiar el color del borde según el modo activo (resize = rojo, layout = verde). Usa el script `borders_mode.sh` existente.
+- [ ] **Integración Sketchybar**: Notificar a Sketchybar cuando cambiás de workspace para que la barra muestre el workspace activo.
+- [ ] **Move workspace to monitor**: Mover un workspace completo a otro monitor (`alt-shift-tab`).
+- [ ] **Workspace-to-monitor assignment**: Asignar workspaces fijos a monitores específicos (ej: ws 1-3 al monitor principal, ws 4-5 al secundario).
+- [ ] **Migrar a Hyper/Meh**: Usar las teclas Hyper (Enter mantenido) y Meh del Silakka54 como modificadores para AeroSpace, liberando Alt para otros usos.
+
+### Fase 4 — "Personalización avanzada" *(opcional)*
+
+- [ ] **`after-startup-command`**: Ejecutar comandos al iniciar AeroSpace (ej: lanzar Sketchybar).
+- [ ] **`automatically-unhide-macos-hidden-apps`**: Prevenir que `Cmd+H` oculte apps accidentalmente.
+- [ ] **Gaps personalizados**: Agregar separación visual entre ventanas para estética.
+- [ ] **Accordion padding**: Configurar cuánto padding muestra el modo accordion.
+- [ ] **Per-monitor gaps**: Gaps diferentes según el monitor.
+- [ ] **Persistent workspaces con letras**: Usar workspaces con nombres mnemotécnicos (T=Terminal, W=Web, M=Music).
+
+---
+
+## 📁 Archivos en esta Carpeta
+
+| Archivo | Descripción |
+|---|---|
+| `aerospace.toml` | Configuración activa de AeroSpace (Fase 1) |
+| `README.md` | Este documento |
+| `scripts/borders_mode.sh` | Script para cambiar color de bordes según modo. **No activo en Fase 1**, se reintegra en Fase 3 |
+
+### Symlink
+
+La carpeta `aerospace/` de este repo está enlazada a `~/.config/aerospace/`:
+```bash
+ls -la ~/.config/aerospace
+# → /Users/jd/mydotfiles/aerospace
+```
+
+AeroSpace busca su configuración en `~/.config/aerospace/aerospace.toml`.
+
+---
+
+## 🆘 Troubleshooting
+
+### "Solo veo 1 workspace"
+- **Causa**: No tenías `persistent-workspaces` configurados. AeroSpace solo muestra workspaces que tienen ventanas.
+- **Solución**: La Fase 1 ya incluye `persistent-workspaces = ["1", "2", "3", "4", "5"]`.
+
+### "Las ventanas desaparecieron"
+- AeroSpace las movió a la esquina inferior de la pantalla (así es como emula workspaces). Ejecutá `aerospace list-windows --all` en la terminal para ver dónde están.
+- Si AeroSpace crashea, las ventanas quedan con 1px visible en la esquina. Arrastralas manualmente al centro.
+
+### "Un atajo no funciona"
+1. Verificá que no hay conflicto con otra app (Karabiner, Raycast, macOS). AeroSpace no puede capturar teclas que ya están ocupadas.
+2. Recargá la config: `Alt + Shift + ;` → `Esc`.
+3. Verificá la config: `aerospace reload-config` en la terminal. Si hay error, te lo muestra.
+
+### "Las ventanas se ven raras / están anidadas"
+- Entrá al modo servicio (`Alt + Shift + ;`) y presioná `R` para aplanar el árbol del workspace actual.
+
+### "Quiero que una ventana flote (no tile)"
+- Entrá al modo servicio (`Alt + Shift + ;`) y presioná `F` para alternar entre floating y tiling.
+
+### "¿Cómo veo qué workspaces existen y qué ventanas tienen?"
+```bash
+# Ver todos los workspaces
+aerospace list-workspaces --all
+
+# Ver todas las ventanas y en qué workspace están
+aerospace list-windows --all
+
+# Ver los monitores detectados
+aerospace list-monitors
+```
+
+---
+
+## 📚 Referencias
+
+- [Documentación oficial de AeroSpace](https://nikitabobko.github.io/AeroSpace/guide)
+- [Lista de comandos](https://nikitabobko.github.io/AeroSpace/commands)
+- [Goodies (integraciones, tips)](https://nikitabobko.github.io/AeroSpace/goodies)
+- [Configuración del teclado Silakka54](../silakka54/README.md)
