@@ -29,9 +29,8 @@ end
 local aerospace_workspaces = get_workspaces()
 local initial_current_workspace = get_current_workspace()
 
--- Register custom events triggered from aerospace.toml
+-- Register custom event triggered from aerospace.toml
 SBAR.add("event", "aerospace_workspace_change")
-SBAR.add("event", "aerospace_mode_change")
 
 local Window_Manager = {}
 
@@ -90,8 +89,10 @@ function Window_Manager:init()
     end)
   end
 
-  -- Mode indicator — hidden by default, visible when in a non-main mode
-  local mode_item = SBAR.add("item", "aerospace_mode", {
+  -- Mode indicator — hidden by default.
+  -- AeroSpace controls this directly via `sketchybar --set` in aerospace.toml.
+  -- No Lua event subscription needed (CLI approach is more reliable).
+  SBAR.add("item", "aerospace_mode", {
     position = "left",
     drawing = false,
     icon = {
@@ -110,19 +111,6 @@ function Window_Manager:init()
       border_color = COLORS.red,
     },
   })
-
-  mode_item:subscribe("aerospace_mode_change", function(env)
-    local mode = env.MODE or "main"
-    if mode ~= "main" then
-      local mode_labels = { service = "[S]" }
-      mode_item:set({
-        drawing = true,
-        icon = { string = mode_labels[mode] or ("[" .. mode .. "]") },
-      })
-    else
-      mode_item:set({ drawing = false })
-    end
-  end)
 
   -- Initial app icon update
   self:update_space_labels()
