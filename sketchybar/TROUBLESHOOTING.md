@@ -61,3 +61,30 @@ Cualquier `io.popen(...)` o `SBAR.exec(...)` dentro de la config Lua de Sketchyb
 | Otros (`jq`, etc.) | verificar con `which <binario>` |
 
 ---
+
+## [BUG] Workspaces vacíos al encender (race condition Sketchybar ↔ AeroSpace)
+
+**Síntoma**: Aun con la ruta absoluta corregida (ver bug anterior), al encender la Mac los workspaces no aparecen. Si después se ejecuta `sketchybar --reload` manualmente, todo funciona perfecto.
+
+**Causa raíz**: Race condition de orden de carga:
+
+1. **macOS lanza Sketchybar** vía LaunchAgent (`brew services`) → se ejecuta `aerospace.lua` → `io.popen("aerospace list-workspaces --all")` retorna vacío porque AeroSpace **todavía no ha arrancado**.
+2. **Segundos después, AeroSpace arranca** (`start-at-login = true`), pero Sketchybar ya terminó de inicializar con 0 workspaces.
+
+### Solución aplicada
+
+Usar el hook `after-startup-command` de AeroSpace, que se ejecuta **exactamente cuando AeroSpace termina de inicializarse**. Este es el momento idóneo para recargar Sketchybar:
+
+```toml
+# aerospace.toml
+after-startup-command = ['exec-and-forget /usr/local/bin/sketchybar --reload']
+```
+
+**Flujo corregido**:
+1. macOS inicia → Sketchybar arranca (sin workspaces, pero no importa)
+2. AeroSpace arranca → `after-startup-command` dispara `sketchybar --reload`
+3. Sketchybar reinicia su config Lua → ahora `aerospace list-workspaces` devuelve datos → workspaces creados correctamente ✅
+
+> **Nota**: Se usa `exec-and-forget` para que el reload sea asíncrono (fire-and-forget). La ruta absoluta `/usr/local/bin/sketchybar` es necesaria por la misma razón de PATH documentada arriba.
+
+---
