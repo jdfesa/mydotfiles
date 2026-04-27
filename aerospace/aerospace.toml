@@ -12,13 +12,6 @@
 config-version = 2
 start-at-login = true
 
-# ─── Reload Sketchybar tras arrancar AeroSpace ──────────────────────
-# Sketchybar arranca vía LaunchAgent antes que AeroSpace, por lo que
-# los workspaces no existen aún cuando Lua intenta listarlos.
-# Este hook se ejecuta justo al terminar la inicialización de AeroSpace,
-# momento perfecto para recargar Sketchybar con la info ya disponible.
-after-startup-command = ['exec-and-forget /usr/local/bin/sketchybar --reload']
-
 # ─── Normalización ─────────────────────────────────────────────────────
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
