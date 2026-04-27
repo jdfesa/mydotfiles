@@ -33,6 +33,10 @@ end
 local aerospace_workspaces = get_workspaces()
 local initial_current_workspace = get_current_workspace()
 
+-- Si AeroSpace no estaba corriendo al arrancar (race condition al inicio de macOS),
+-- INIT_DONE será false y el retry en init() se encarga de esperar y recargar.
+local INIT_DONE = (#aerospace_workspaces > 0)
+
 -- Note: workspace highlights are updated via CLI (bash script) from aerospace.toml
 -- App icon labels are updated via a periodic timer below
 
@@ -107,8 +111,35 @@ function Window_Manager:init()
     },
   })
 
-  -- Initial app icon update
-  self:update_space_labels()
+  if INIT_DONE then
+    -- AeroSpace estaba listo → actualizar iconos de apps normalmente
+    self:update_space_labels()
+  else
+    -- AeroSpace no estaba listo al arrancar (race condition).
+    -- Timer que reintenta cada 3s. Cuando AeroSpace responda,
+    -- espera 1s y recarga Sketchybar. Máximo 10 intentos (30s).
+    local retry_count = 0
+    local MAX_RETRIES = 10
+    local retry_watcher = SBAR.add("item", "aerospace_retry", {
+      drawing = false,
+      updates = true,
+      update_freq = 3,
+    })
+
+    retry_watcher:subscribe("routine", function()
+      retry_count = retry_count + 1
+      local ws = get_workspaces()
+
+      if #ws > 0 then
+        -- AeroSpace respondió. Detener timer y recargar en 1 segundo.
+        retry_watcher:set({ update_freq = 0 })
+        SBAR.exec("sleep 1 && /usr/local/bin/sketchybar --reload")
+      elseif retry_count >= MAX_RETRIES then
+        -- No respondió en 30s. Dejar de intentar.
+        retry_watcher:set({ update_freq = 0 })
+      end
+    end)
+  end
 end
 
 function Window_Manager:start_watcher()
