@@ -110,3 +110,11 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=off']
     f = ['layout floating tiling', 'mode main', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=off']
 
+# ═════════════════════════════════════════════════════════════════════
+# Reglas de ruteo de ventanas (App routing)
+# ═════════════════════════════════════════════════════════════════════
+
+# Mandar Finder siempre al workspace N (Navigate)
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'move-node-to-workspace N'
