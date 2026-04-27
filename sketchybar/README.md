@@ -125,7 +125,8 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 | Los eventos Lua (`subscribe`) no reaccionaban bien para controlar el ítem de modo o el highlight del workspace | Se eliminaron los subscribers Lua; AeroSpace controla los ítems directamente vía CLI (`sketchybar --set`) usando scripts externos (Ver [SCRIPTS.md](../aerospace/SCRIPTS.md)) |
 | `exec-and-forget` de AeroSpace no encontraba el binario `sketchybar` | Se usa la ruta absoluta `/usr/local/bin/sketchybar` (ver nota en el [README de AeroSpace](../aerospace/README.md#-nota-técnica-importante-path-en-exec-and-forget)) |
 | `sketchybar --reload` no siempre recarga los módulos Lua | Se usa `brew services restart sketchybar` para un reinicio completo |
-| Los workspaces no aparecen al reiniciar (los ítems `space.*` no se crean) | Sketchybar arranca sin el PATH del shell; `io.popen("aerospace ...)"` falla silenciosamente. Solución: ruta absoluta `"/usr/local/bin/aerospace"` en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua). Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
+| Los workspaces no aparecen al reiniciar (los ítems `space.*` no se crean) | Sketchybar arranca sin el PATH del shell; `io.popen("aerospace ...")"` falla silenciosamente. Solución: ruta absoluta `"/usr/local/bin/aerospace"` en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua). Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
+| AeroSpace no estaba listo al arrancar (race condition) — los workspaces aparecen vacíos | Auto-retry timer en `aerospace.lua`: consulta AeroSpace cada 3s (máx 10 intentos). Cuando responde, espera 1s y ejecuta `sketchybar --reload`. Cero overhead si AeroSpace ya estaba listo. Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md#fix-workspaces-vacíos-al-arrancar--auto-retry-timer) |
 
 #### Componentes
 
@@ -160,9 +161,16 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 ### "Los workspaces no aparecen después de reiniciar el sistema"
 - **Causa conocida**: Sketchybar arranca sin el PATH del shell; el binario `aerospace` no se encuentra desde Lua.
 - **Verificación**: `sketchybar --query space.U` → si devuelve `not found`, el bug está activo.
-- **Solución**: ya aplicada en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua) usando ruta absoluta.
+- **Solución principal**: ruta absoluta en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua).
+- **Solución complementaria**: auto-retry timer que detecta cuando AeroSpace está listo y hace `sketchybar --reload` automáticamente.
 - **Detalle completo**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 ### "El indicador de modo [S] no aparece al entrar a modo servicio"
 - Verifica que `aerospace.toml` usa la ruta absoluta: `/usr/local/bin/sketchybar --set aerospace_mode drawing=on`.
 - Si cambiaste la ubicación de Sketchybar, actualizá la ruta con `which sketchybar`.
+
+### ⛔ "Se congeló la máquina después de modificar aerospace.toml"
+- **Causa**: Se usó `after-startup-command` con `sketchybar --reload`, creando un loop de reload exponencial.
+- **NUNCA hacer esto** — ver [TROUBLESHOOTING.md — Sección PELIGRO](TROUBLESHOOTING.md#-peligro-lo-que-nunca-hay-que-hacer).
+- **Recovery**: Mantener el botón de encendido ~10s para apagar. Revertir con `git checkout -- aerospace/aerospace.toml`.
+

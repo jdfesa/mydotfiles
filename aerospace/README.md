@@ -249,7 +249,7 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 
 ### Fase 4 — "Personalización avanzada" *(opcional)*
 
-- [ ] **`after-startup-command`**: Ejecutar comandos al iniciar AeroSpace (ej: lanzar Sketchybar).
+- [ ] **`after-startup-command`**: Ejecutar comandos al iniciar AeroSpace. ⛔ **PELIGRO**: NO usar con `sketchybar --reload` ni comandos que puedan re-disparar `reload-config` — causa un loop de reload que **congela macOS**. Ver [TROUBLESHOOTING de Sketchybar](../sketchybar/TROUBLESHOOTING.md#-peligro-lo-que-nunca-hay-que-hacer).
 - [ ] **`automatically-unhide-macos-hidden-apps`**: Prevenir que `Cmd+H` oculte apps accidentalmente.
 - [ ] **Gaps personalizados**: Agregar separación visual entre ventanas para estética.
 - [ ] **Accordion padding**: Configurar cuánto padding muestra el modo accordion.

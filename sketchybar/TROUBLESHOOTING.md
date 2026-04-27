@@ -61,3 +61,91 @@ Cualquier `io.popen(...)` o `SBAR.exec(...)` dentro de la config Lua de Sketchyb
 | Otros (`jq`, etc.) | verificar con `which <binario>` |
 
 ---
+
+## [FIX] Workspaces vacíos al arrancar — Auto-retry timer
+
+**Síntoma**: La barra carga pero los workspaces (U, I, O, P, Y, N) aparecen vacíos o sin iconos de apps. Después de unos segundos, aparecen correctamente sin intervención manual.
+
+**Causa**: Sketchybar arranca (vía LaunchAgent `RunAtLoad`) **antes** que AeroSpace. Cuando `aerospace.lua` se ejecuta, `aerospace list-workspaces --all` devuelve una lista vacía porque el binario aún no está disponible o no terminó de inicializar.
+
+### Solución aplicada
+
+Se implementó un **retry timer interno** en `aerospace.lua` que:
+
+1. Al cargar, intenta obtener los workspaces con `get_workspaces()`.
+2. Si la lista está vacía (`INIT_DONE = false`), crea un item invisible `aerospace_retry` que se ejecuta cada **3 segundos**.
+3. En cada tick, consulta a AeroSpace. Si responde (lista de workspaces no vacía):
+   - Detiene el timer (`update_freq = 0`)
+   - Espera **1 segundo** y ejecuta `sketchybar --reload` (el mismo reload que antes se hacía a mano)
+4. **Máximo 10 intentos** (30 segundos). Si AeroSpace nunca responde, deja de intentar.
+5. Si AeroSpace **ya estaba listo** al arrancar (`INIT_DONE = true`), el timer nunca se crea — cero overhead.
+
+```lua
+-- Fragmento clave en aerospace.lua:
+local INIT_DONE = (#aerospace_workspaces > 0)
+
+-- En init():
+if INIT_DONE then
+  self:update_space_labels()   -- flujo normal
+else
+  -- Crear retry timer (3s × 10 intentos máximo)
+  -- Al detectar AeroSpace → sleep 1 && sketchybar --reload
+end
+```
+
+**Comportamiento visible**: La barra aparece primero sin los workspaces (o con indicadores vacíos), y ~3-9 segundos después se completa automáticamente.
+
+**Riesgo**: Nulo. Si falla, el peor caso es que los workspaces no aparecen (igual que antes). El timer se autodestruye tras 10 intentos. No toca `aerospace.toml` ni ningún componente del sistema.
+
+---
+
+## ⛔ PELIGRO: Lo que NUNCA hay que hacer
+
+> [!CAUTION]
+> Las siguientes acciones pueden **congelar macOS** y dejar la máquina inutilizable, requiriendo un reinicio forzado (manteniendo el botón de encendido).
+
+### ❌ NUNCA usar `after-startup-command` con `sketchybar --reload` en `aerospace.toml`
+
+```toml
+# ❌ PELIGRO — CAUSA CONGELAMIENTO DE PANTALLA
+after-startup-command = ['exec-and-forget /usr/local/bin/sketchybar --reload']
+```
+
+**Qué pasa**: `aerospace reload-config` re-dispara `after-startup-command` (bug conocido de AeroSpace). Esto genera un **loop de reload exponencial**:
+
+```
+aerospace reload-config
+  → re-ejecuta after-startup-command
+    → sketchybar --reload
+      → aerospace.lua consulta AeroSpace
+        → exec-on-workspace-change dispara scripts
+          → los scripts llaman a sketchybar
+            → posible re-trigger → LOOP
+```
+
+Cada iteración spawna procesos nuevos vía `exec-and-forget` (sin control). Los procesos se acumulan exponencialmente → CPU al 100% → **macOS se congela**.
+
+**Por qué es crítico**: AeroSpace es un **window manager** — controla el input de teclado y mouse de toda la máquina. Si entra en un loop de reload:
+- No puede procesar eventos de input (teclado, mouse)
+- macOS WindowServer se satura con reposicionamientos
+- **La pantalla se congela**, sin poder hacer nada salvo reiniciar forzado
+
+### ❌ NUNCA ejecutar `aerospace reload-config` justo después de agregar hooks de startup
+
+Si necesitás agregar un hook como `after-startup-command` o `after-login-command`, **no recargues la config en caliente**. Hacé un reinicio manual controlado donde puedas forzar quit si algo falla.
+
+### Regla general: archivos de riesgo crítico
+
+| Archivo | Riesgo | Por qué |
+|---------|--------|---------|
+| `aerospace.toml` | 🔴 **CRÍTICO** | Controla el window manager. Un error congela la pantalla. |
+| LaunchAgents (`~/Library/LaunchAgents/`) | 🔴 **CRÍTICO** | Se ejecutan al login. Un loop puede impedir el arranque. |
+| `sketchybarrc` / `init.lua` | 🟡 **ALTO** | Corre como daemon. Un crash reinicia en loop (por `KeepAlive`). |
+
+### Cómo recuperarse si la pantalla se congela
+
+1. **Opción 1**: Mantener el botón de encendido ~10 segundos para forzar apagado.
+2. **Opción 2**: Si SSH está habilitado, conectarse desde otro dispositivo y matar los procesos: `killall AeroSpace && killall sketchybar`.
+3. **Opción 3**: Si podés abrir Terminal (Cmd+Opt+Esc → Force Quit), revertir el cambio: `git checkout -- aerospace/aerospace.toml` en el repo de dotfiles.
+
+---
