@@ -1,0 +1,52 @@
+{
+  "localStorage": {
+    "aiToolsDisplayStatus": "flex",
+    "timeformatField": "inactive",
+    "shortcutsDisplayStatus": "flex",
+    "todoLastUpdateDate": "5/7/2025",
+    "todoListCheckboxState": "checked",
+    "weatherParsedLocation": "Suzhou",
+    "motivationalQuotesVisible": "true",
+    "proxybypassField": "active",
+    "digitalCheckboxState": "unchecked",
+    "googleAppsCheckboxState": "checked",
+    "selectedSearchEngine": "engine1",
+    "selectedLanguage": "en",
+    "activeSearchMode": "search-with",
+    "weatherParsedLang": "en",
+    "weatherParsedData": "{\"location\":{\"name\":\"Suzhou\"},\"current\":{\"condition\":{\"text\":\"Clear\",\"icon\":\"//cdn.weatherapi.com/weather/64x64/night/113.png\"},\"temp_c\":19.6,\"temp_f\":67.4,\"humidity\":54,\"feelslike_c\":19.6,\"feelslike_f\":67.4},\"forecast\":{\"forecastday\":[{\"day\":{\"mintemp_c\":12.6,\"maxtemp_c\":30.9,\"mintemp_f\":54.6,\"maxtemp_f\":87.6}}]}}",
+    "useGPS": "false",
+    "bookmarkGridCheckboxState": "checked",
+    "bookmarksCheckboxState": "checked",
+    "adaptiveIconField": "active",
+    "googleAppsDisplayStatus": "flex",
+    "weatherLocation": "Suzhou",
+    "todoListDisplayStatus": "flex",
+    "shortcutAmount": "6",
+    "weatherParsedTime": "1746633173193",
+    "LoadingScreenColor": "rgb(4, 8, 12)",
+    "shortcutEditField": "active",
+    "micIconVisible": "true",
+    "selectedSearchEngine-search-with": "engine3",
+    "todoList": "{}",
+    "customThemeColor": "#18e299",
+    "greetingEnabled": "true",
+    "bookmarksDisplayStatus": "flex",
+    "shortcutsCheckboxState": "checked",
+    "clocktype": "digital",
+    "adaptiveIconToggle": "checked",
+    "enableDarkModeCheckboxState": "checked",
+    "searchsuggestionscheckboxState": "checked",
+    "greetingField": "inactive",
+    "showShortcutSwitch": "false",
+    "aiToolsCheckboxState": "checked"
+  },
+  "indexedDB": {
+    "imageType": "upload",
+    "lastUpdateTime": "2026-04-27T06:27:37.126Z",
+    "backgroundImage": {
+      "blob": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiIHZpZXdCb3g9IjAgMCAxOTIwIDEwODAiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwMzA3MGIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjUyIiBzdG9wLWNvbG9yPSIjMDgxMzFhIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAyMDUwNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8cGF0aCBkPSJNMzYgMEgwVjM2IiBmaWxsPSJub25lIiBzdHJva2U9IiMxMjM1MjQiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC4zNSIvPgogICAgPC9wYXR0ZXJuPgogICAgPGZpbHRlciBpZD0ic29mdEdsb3ciIHg9Ii00MCUiIHk9Ii00MCUiIHdpZHRoPSIxODAlIiBoZWlnaHQ9IjE4MCUiPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIzIiByZXN1bHQ9ImJsdXIiLz4KICAgICAgPGZlTWVyZ2U+PGZlTWVyZ2VOb2RlIGluPSJibHVyIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPgogICAgPC9maWx0ZXI+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiIGZpbGw9InVybCgjYmcpIi8+CiAgPHJlY3Qgd2lkdGg9IjE5MjAiIGhlaWdodD0iMTA4MCIgZmlsbD0idXJsKCNncmlkKSIvPgogIDxnIG9wYWNpdHk9IjAuMzQiIHN0cm9rZT0iIzE4ZTI5OSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIj4KICAgIDxwYXRoIGQ9Ik04MCAxOTBIMzIwVjI2MEg0NzBWMzYwIi8+CiAgICA8cGF0aCBkPSJNMTYwMCAxNDBIMTQ5MFYzMTBIMTM1MCIvPgogICAgPHBhdGggZD0iTTI1MCA4ODBINDcwVjgwMEg2NjAiLz4KICAgIDxwYXRoIGQ9Ik0xNjYwIDgyMEgxNDYwVjcyMEgxMjgwIi8+CiAgICA8Y2lyY2xlIGN4PSI4MCIgY3k9IjE5MCIgcj0iNiIgZmlsbD0iIzE4ZTI5OSIvPgogICAgPGNpcmNsZSBjeD0iNDcwIiBjeT0iMzYwIiByPSI2IiBmaWxsPSIjMThlMjk5Ii8+CiAgICA8Y2lyY2xlIGN4PSIxNjAwIiBjeT0iMTQwIiByPSI2IiBmaWxsPSIjMThlMjk5Ii8+CiAgICA8Y2lyY2xlIGN4PSIxMjgwIiBjeT0iNzIwIiByPSI2IiBmaWxsPSIjMThlMjk5Ii8+CiAgPC9nPgogIDxnIGZvbnQtZmFtaWx5PSJKZXRCcmFpbnMgTW9ubywgdWktbW9ub3NwYWNlLCBTRk1vbm8tUmVndWxhciwgTWVubG8sIG1vbm9zcGFjZSIgZmlsdGVyPSJ1cmwoI3NvZnRHbG93KSI+CiAgICA8cmVjdCB4PSIxMzUiIHk9IjEyNSIgd2lkdGg9IjY1MCIgaGVpZ2h0PSIzNjAiIHJ4PSIxNCIgZmlsbD0iIzA1MGEwZiIgb3BhY2l0eT0iMC44NiIgc3Ryb2tlPSIjMWY2ZjQzIi8+CiAgICA8Y2lyY2xlIGN4PSIxNjgiIGN5PSIxNTQiIHI9IjciIGZpbGw9IiNlZjQ0NDQiIG9wYWNpdHk9IjAuNzUiLz4KICAgIDxjaXJjbGUgY3g9IjE5NCIgY3k9IjE1NCIgcj0iNyIgZmlsbD0iI2VhYjMwOCIgb3BhY2l0eT0iMC43NSIvPgogICAgPGNpcmNsZSBjeD0iMjIwIiBjeT0iMTU0IiByPSI3IiBmaWxsPSIjMjJjNTVlIiBvcGFjaXR5PSIwLjc1Ii8+CiAgICA8dGV4dCB4PSIxNjUiIHk9IjIxMCIgZmlsbD0iIzE4ZTI5OSIgZm9udC1zaXplPSIyNCI+fi9kZXYvYnJvd3NlcjwvdGV4dD4KICAgIDx0ZXh0IHg9IjE2NSIgeT0iMjU4IiBmaWxsPSIjZDFmYWU1IiBmb250LXNpemU9IjIyIj4kIGdpdCBzdGF0dXMgLS1zaG9ydDwvdGV4dD4KICAgIDx0ZXh0IHg9IjE2NSIgeT0iMzAyIiBmaWxsPSIjN2RkM2ZjIiBmb250LXNpemU9IjIwIj5NICBjaHJvbWUvbmV3LXRhYi5qc29uPC90ZXh0PgogICAgPHRleHQgeD0iMTY1IiB5PSIzMzgiIGZpbGw9IiM5NGEzYjgiIGZvbnQtc2l6ZT0iMjAiPkEgIGFzc2V0cy90ZXJtaW5hbC1iZy5zdmc8L3RleHQ+CiAgICA8dGV4dCB4PSIxNjUiIHk9IjQwMiIgZmlsbD0iI2QxZmFlNSIgZm9udC1zaXplPSIyMiI+JCBwbnBtIGRldiAtLWhvc3QgMTI3LjAuMC4xPC90ZXh0PgogICAgPHRleHQgeD0iMTY1IiB5PSI0NDYiIGZpbGw9IiMxOGUyOTkiIGZvbnQtc2l6ZT0iMjAiPnJlYWR5IGluIDMxOCBtczwvdGV4dD4KCiAgICA8cmVjdCB4PSIxMTMwIiB5PSIxNTUiIHdpZHRoPSI2MTAiIGhlaWdodD0iMzEwIiByeD0iMTQiIGZpbGw9IiMwNTBhMGYiIG9wYWNpdHk9IjAuNzgiIHN0cm9rZT0iIzE2NGUzNiIvPgogICAgPHRleHQgeD0iMTE3MCIgeT0iMjE1IiBmaWxsPSIjN2RkM2ZjIiBmb250LXNpemU9IjIyIj5mdW5jdGlvbiBmb2N1cygpIHs8L3RleHQ+CiAgICA8dGV4dCB4PSIxMjEwIiB5PSIyNjAiIGZpbGw9IiNkMWZhZTUiIGZvbnQtc2l6ZT0iMjEiPmNvbnN0IG1vZGUgPSAiZGVlcC13b3JrIjs8L3RleHQ+CiAgICA8dGV4dCB4PSIxMjEwIiB5PSIzMDUiIGZpbGw9IiNkMWZhZTUiIGZvbnQtc2l6ZT0iMjEiPnJldHVybiBzaGlwKG1vZGUpOzwvdGV4dD4KICAgIDx0ZXh0IHg9IjExNzAiIHk9IjM1MCIgZmlsbD0iIzdkZDNmYyIgZm9udC1zaXplPSIyMiI+fTwvdGV4dD4KICAgIDx0ZXh0IHg9IjExNzAiIHk9IjQxMCIgZmlsbD0iIzE4ZTI5OSIgZm9udC1zaXplPSIyMCI+Ly8gYnVpbGQgc21hbGwsIGtlZXAgaXQgc2hhcnA8L3RleHQ+CgogICAgPHJlY3QgeD0iNjkwIiB5PSI2NTAiIHdpZHRoPSI1NjAiIGhlaWdodD0iMjU1IiByeD0iMTQiIGZpbGw9IiMwNTBhMGYiIG9wYWNpdHk9IjAuNzgiIHN0cm9rZT0iIzFmNmY0MyIvPgogICAgPHRleHQgeD0iNzMwIiB5PSI3MTAiIGZpbGw9IiMxOGUyOTkiIGZvbnQtc2l6ZT0iMjIiPiQgY3VybCBsb2NhbGhvc3Q6MzAwMC9oZWFsdGg8L3RleHQ+CiAgICA8dGV4dCB4PSI3MzAiIHk9Ijc2MCIgZmlsbD0iI2QxZmFlNSIgZm9udC1zaXplPSIyMSI+eyAib2siOiB0cnVlLCAibGF0ZW5jeSI6ICI5bXMiIH08L3RleHQ+CiAgICA8dGV4dCB4PSI3MzAiIHk9IjgzMCIgZmlsbD0iIzE4ZTI5OSIgZm9udC1zaXplPSIyMiI+JCBfPC90ZXh0PgogIDwvZz4KICA8ZyBvcGFjaXR5PSIwLjE4IiBmaWxsPSJub25lIiBzdHJva2U9IiM3ZGQzZmMiIHN0cm9rZS13aWR0aD0iMyI+CiAgICA8cGF0aCBkPSJNOTEwIDE1NWwtOTUgOTUgOTUgOTUiLz4KICAgIDxwYXRoIGQ9Ik0xMDEwIDE1NWw5NSA5NS05NSA5NSIvPgogICAgPHBhdGggZD0iTTkzNSAzNzBsNTAtMjUwIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik0xMjAgOTcwSDE4MDAiIHN0cm9rZT0iIzE4ZTI5OSIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjU1Ii8+CiAgPHBhdGggZD0iTTEyMCA5ODJIMTgwMCIgc3Ryb2tlPSIjN2RkM2ZjIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuMjgiLz4KPC9zdmc+",
+      "isBlob": true
+    }
+  }
+}
