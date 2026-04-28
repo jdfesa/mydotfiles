@@ -5,7 +5,7 @@ Para problemas genéricos de instalación, ver el [README](README.md#-troublesho
 
 ---
 
-## [BUG] Los workspaces de AeroSpace no aparecen después de reiniciar
+## Problema: Los workspaces de AeroSpace no aparecen después de reiniciar
 
 **Síntoma**: La barra carga, pero los ítems `space.U`, `space.I`, etc. no se crean. En su lugar aparecen ítems genéricos (`item_0`, `item_1`...) sin letra ni iconos de apps. Funciona si se recarga manualmente con `sketchybar --reload` o `brew services restart sketchybar` *después* de que el sistema ya cargó.
 
@@ -25,7 +25,7 @@ El módulo Lua [`items/spaces/window_managers/aerospace.lua`](items/spaces/windo
 > Este es el mismo principio documentado en AeroSpace para `exec-and-forget`, pero en dirección opuesta (Sketchybar → AeroSpace).
 > Ver: [`aerospace/README.md` — Nota Técnica: PATH en exec-and-forget](../aerospace/README.md#️-nota-técnica-importante-path-en-exec-and-forget)
 
-### Solución aplicada
+### Implementación actual
 
 Definir una constante con la ruta absoluta al binario y usarla en todas las llamadas:
 
@@ -62,15 +62,15 @@ Cualquier `io.popen(...)` o `SBAR.exec(...)` dentro de la config Lua de Sketchyb
 
 ---
 
-## [FIX] Workspaces vacíos al arrancar — Auto-retry timer
+## Manejo de Workspaces vacíos al arrancar (Race Condition)
 
 **Síntoma**: La barra carga pero los workspaces (U, I, O, P, Y, N) aparecen vacíos o sin iconos de apps. Después de unos segundos, aparecen correctamente sin intervención manual.
 
-**Causa**: Sketchybar arranca (vía LaunchAgent `RunAtLoad`) **antes** que AeroSpace. Cuando `aerospace.lua` se ejecuta, `aerospace list-workspaces --all` devuelve una lista vacía porque el binario aún no está disponible o no terminó de inicializar.
+**Causa**: Sketchybar arranca (vía LaunchAgent `RunAtLoad` o brew) **antes** que AeroSpace. Cuando `aerospace.lua` se ejecuta, `aerospace list-workspaces --all` devuelve una lista vacía porque el binario aún no está disponible o no terminó de inicializar.
 
-### Solución aplicada
+### Estado actual de la configuración
 
-Se implementó un **retry timer interno** en `aerospace.lua` que:
+Actualmente se utiliza un **retry timer interno** en `aerospace.lua` que:
 
 1. Al cargar, intenta obtener los workspaces con `get_workspaces()`.
 2. Si la lista está vacía (`INIT_DONE = false`), crea un item invisible `aerospace_retry` que se ejecuta cada **3 segundos**.
