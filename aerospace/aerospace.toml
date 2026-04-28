@@ -2,11 +2,11 @@
 # ║                    AeroSpace — Fase 1: Navegación                    ║
 # ║                                                                      ║
 # ║  Modificadores:                                                      ║
-# ║    Alt            → Navegación (ir a workspace, foco)                ║
-# ║    Meh (hold key) → Acción (mover ventana)                           ║
+# ║    Hyper (cmd-ctrl-alt-shift) → Navegación (ir a workspace, foco)    ║
+# ║    Meh   (ctrl-alt-shift)     → Acción (mover ventana)               ║
 # ║                                                                      ║
 # ║  Workspaces por LETRAS (mano derecha, sin fila numérica)             ║
-# ║  Alt = meñique izquierdo | Letra = mano derecha                      ║
+# ║  Hyper = pulgar derecho | Letra = mano derecha                       ║
 # ╚═══════════════════════════════════════════════════════════════════════╝
 
 config-version = 2
@@ -56,7 +56,7 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
 # ═════════════════════════════════════════════════════════════════════
 #
 # LÓGICA:
-#   Alt + letra   → IR al workspace (navegación)
+#   Hyper + letra → IR al workspace (navegación)
 #   Meh + letra   → MOVER ventana al workspace (acción)
 #
 # Todas las letras de workspace están en la MANO DERECHA:
@@ -66,13 +66,13 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
 # ═════════════════════════════════════════════════════════════════════
 [mode.main.binding]
 
-    # ─── WORKSPACE: Ir (Alt + letra) ───────────────────────────────
-    alt-u = 'workspace U'       # Uno (principal)
-    alt-i = 'workspace I'       # Internet
-    alt-o = 'workspace O'       # Obsidian/notas
-    alt-p = 'workspace P'       # Personal/chat
-    alt-y = 'workspace Y'       # YouTube/música
-    alt-n = 'workspace N'       # Navegador/archivos
+    # ─── WORKSPACE: Ir (Hyper + letra) ───────────────────────────────
+    cmd-alt-ctrl-shift-u = 'workspace U'       # Uno (principal)
+    cmd-alt-ctrl-shift-i = 'workspace I'       # Internet
+    cmd-alt-ctrl-shift-o = 'workspace O'       # Obsidian/notas
+    cmd-alt-ctrl-shift-p = 'workspace P'       # Personal/chat
+    cmd-alt-ctrl-shift-y = 'workspace Y'       # YouTube/música
+    cmd-alt-ctrl-shift-n = 'workspace N'       # Navegador/archivos
 
     # ─── WORKSPACE: Mover ventana (Meh + letra) ───────────────────
     alt-ctrl-shift-u = 'move-node-to-workspace U'
@@ -82,11 +82,11 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     alt-ctrl-shift-y = 'move-node-to-workspace Y'
     alt-ctrl-shift-n = 'move-node-to-workspace N'
 
-    # ─── FOCO: Navegar entre ventanas (Alt + H/J/K/L) ─────────────
-    alt-h = 'focus left'
-    alt-j = 'focus down'
-    alt-k = 'focus up'
-    alt-l = 'focus right'
+    # ─── FOCO: Navegar entre ventanas (Hyper + H/J/K/L) ─────────────
+    cmd-alt-ctrl-shift-h = 'focus left'
+    cmd-alt-ctrl-shift-j = 'focus down'
+    cmd-alt-ctrl-shift-k = 'focus up'
+    cmd-alt-ctrl-shift-l = 'focus right'
 
     # ─── MOVER: Reposicionar ventana (Meh + H/J/K/L) ──────────────
     alt-ctrl-shift-h = 'move left'
@@ -95,8 +95,8 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     alt-ctrl-shift-l = 'move right'
 
     # ─── UTILIDADES ────────────────────────────────────────────────
-    alt-tab = 'workspace-back-and-forth'    # Volver al workspace anterior
-    alt-f = 'fullscreen'                     # Toggle fullscreen
+    cmd-alt-ctrl-shift-tab = 'workspace-back-and-forth'    # Volver al workspace anterior
+    cmd-alt-ctrl-shift-f = 'fullscreen'                    # Toggle fullscreen
 
     # ─── Modo Servicio (Meh + ;) ──────────────────────────────────
     alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=on']

@@ -65,7 +65,7 @@ Algunas ventanas pueden "flotar" sobre el mosaico (como en macOS normal). AeroSp
 ## ⌨️ Atajos Activos (Fase 1)
 
 **Dos modificadores, una lógica:**
-- `Alt` (meñique izquierdo en Silakka54) = **Navegación** — ir, mirar
+- `Hyper` (hold en Enter del Silakka54) = **Navegación** — ir, mirar
 - `Meh` (hold en home row derecha del Silakka54) = **Acción** — mover, enviar
 
 > **Meh** = `Ctrl+Alt+Shift` combinados. En el Silakka54 se activa manteniendo **una sola tecla**. En `aerospace.toml` se escribe como `alt-ctrl-shift`.
@@ -74,7 +74,7 @@ Algunas ventanas pueden "flotar" sobre el mosaico (como en macOS normal). AeroSp
 
 ### Workspaces por Letra (mano derecha)
 
-Todos los workspaces usan la mano derecha. La mano izquierda sostiene `Alt` fijo — nunca se mueve. Las letras se eligieron por dos criterios: **alcance ergonómico** (fila superior, sin levantar la mano del home row) y **mnemónico en inglés** (cada letra ancla una palabra que describe el propósito del workspace).
+Todos los workspaces usan la mano derecha. La mano derecha sostiene `Hyper` fijo en el pulgar (tecla Enter mantenida) y usa los dedos en la misma mano para las letras. Las letras se eligieron por dos criterios: **alcance ergonómico** (fila superior, sin levantar la mano del home row) y **mnemónico en inglés** (cada letra ancla una palabra que describe el propósito del workspace).
 
 ```
 Mano derecha en el Silakka54:
@@ -102,13 +102,13 @@ Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
 
 | Atajo | Palabra ancla | Propósito | Apps candidatas |
 |---|---|---|---|
-| `Alt + U` | **Universe** | Hub principal. Dev, código, terminal | Ghostty, VS Code, Cursor |
-| `Alt + I` | **Internet** | Web y navegación. Browsing, referencias | Chrome, Firefox |
-| `Alt + O` | **Organize** | Gestión del conocimiento. Notas, PKM | Obsidian |
-| `Alt + P` | **People** | Comunicación. Todo lo que involucra otras personas | Telegram, Discord, Mail |
-| `Alt + Y` | **Yield** | Descanso activo. Media, música, entretenimiento | Spotify, VLC |
-| `Alt + N` | **Navigate** | Sistema operativo. Archivos, utilidades | Finder |
-| `Alt + Tab` | — | Volver al workspace anterior (back & forth) | — |
+| `Hyper + U` | **Universe** | Hub principal. Dev, código, terminal | Ghostty, VS Code, Cursor |
+| `Hyper + I` | **Internet** | Web y navegación. Browsing, referencias | Chrome, Firefox |
+| `Hyper + O` | **Organize** | Gestión del conocimiento. Notas, PKM | Obsidian |
+| `Hyper + P` | **People** | Comunicación. Todo lo que involucra otras personas | Telegram, Discord, Mail |
+| `Hyper + Y` | **Yield** | Descanso activo. Media, música, entretenimiento | Spotify, VLC |
+| `Hyper + N` | **Navigate** | Sistema operativo. Archivos, utilidades | Finder |
+| `Hyper + Tab` | — | Volver al workspace anterior (back & forth) | — |
 
 > **Yield** es intencionalmente agnóstico a la plataforma: tanto Spotify como YouTube van aquí.
 > La columna *Apps candidatas* es la base para el ruteo automático con `on-window-detected` (Fase 3).
@@ -119,14 +119,14 @@ Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
 |---|---|
 | `Meh + U/I/O/P/Y/N` | Enviar ventana al workspace correspondiente |
 
-### Navegar entre Ventanas (Alt + H/J/K/L)
+### Navegar entre Ventanas (Hyper + H/J/K/L)
 
 | Atajo | Acción |
 |---|---|
-| `Alt + H` | Foco a la ventana de la **izquierda** |
-| `Alt + J` | Foco a la ventana de **abajo** |
-| `Alt + K` | Foco a la ventana de **arriba** |
-| `Alt + L` | Foco a la ventana de la **derecha** |
+| `Hyper + H` | Foco a la ventana de la **izquierda** |
+| `Hyper + J` | Foco a la ventana de **abajo** |
+| `Hyper + K` | Foco a la ventana de **arriba** |
+| `Hyper + L` | Foco a la ventana de la **derecha** |
 
 ### Mover Ventana de Posición (Meh + H/J/K/L)
 
@@ -141,7 +141,7 @@ Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
 
 | Atajo | Acción |
 |---|---|
-| `Alt + F` | **Toggle fullscreen** — La ventana ocupa todo el workspace. Las demás siguen ahí pero ocultas. Presionar de nuevo para volver al mosaico. |
+| `Hyper + F` | **Toggle fullscreen** — La ventana ocupa todo el workspace. Las demás siguen ahí pero ocultas. Presionar de nuevo para volver al mosaico. |
 
 ### Modo Servicio (mantenimiento)
 
