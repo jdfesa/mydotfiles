@@ -159,10 +159,10 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 - Verifica que AeroSpace está corriendo: `aerospace list-workspaces --all`.
 
 ### "Los workspaces no aparecen después de reiniciar el sistema"
-- **Causa conocida**: Sketchybar arranca sin el PATH del shell; el binario `aerospace` no se encuentra desde Lua.
+- **Causa conocida**: Sketchybar arranca sin el PATH del shell; el binario `aerospace` no se encuentra desde Lua. O bien ocurre una "race condition" durante el arranque de macOS.
+- **Estado de Pruebas**: Se implementó una solución (auto-retry timer) que funcionó con éxito en el arranque actual, logrando que AeroSpace cargue y al final Sketchybar se actualice con la información correcta de los workspaces. **IMPORTANTE:** Se debe probar este comportamiento durante N arranques para confirmar que siempre sea funcional de manera consistente y no dependa de otros factores aleatorios del arranque.
 - **Verificación**: `sketchybar --query space.U` → si devuelve `not found`, el bug está activo.
-- **Implementación principal**: ruta absoluta en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua).
-- **Implementación complementaria**: auto-retry timer que detecta cuando AeroSpace está listo y hace `sketchybar --reload` automáticamente.
+- **Implementación principal**: ruta absoluta en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua) y auto-retry timer.
 - **Detalle completo**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 ### "El indicador de modo [S] no aparece al entrar a modo servicio"

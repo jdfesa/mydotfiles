@@ -68,7 +68,7 @@ Cualquier `io.popen(...)` o `SBAR.exec(...)` dentro de la config Lua de Sketchyb
 
 **Causa**: Sketchybar arranca (vía LaunchAgent `RunAtLoad` o brew) **antes** que AeroSpace. Cuando `aerospace.lua` se ejecuta, `aerospace list-workspaces --all` devuelve una lista vacía porque el binario aún no está disponible o no terminó de inicializar.
 
-### Estado actual de la configuración
+### Estado actual de la configuración (En Pruebas)
 
 Actualmente se utiliza un **retry timer interno** en `aerospace.lua` que:
 
@@ -94,6 +94,8 @@ end
 ```
 
 **Comportamiento visible**: La barra aparece primero sin los workspaces (o con indicadores vacíos), y ~3-9 segundos después se completa automáticamente.
+
+**Fase de Evaluación**: Aunque en un arranque de prueba ha funcionado perfectamente (logrando que AeroSpace se cargue primero y al último Sketchybar obtenga la información de los workspaces de forma exitosa), **se requiere probar esta solución durante N arranques**. El objetivo es garantizar que esta secuencia de inicio sea siempre funcional y no dependa de otros factores aleatorios de la carga de macOS.
 
 **Riesgo**: Nulo. Si falla, el peor caso es que los workspaces no aparecen (igual que antes). El timer se autodestruye tras 10 intentos. No toca `aerospace.toml` ni ningún componente del sistema.
 
