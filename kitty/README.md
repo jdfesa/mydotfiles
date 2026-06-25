@@ -2,6 +2,8 @@
 
 Configuration for [Kitty](https://sw.kovidgoyal.net/kitty/), a fast GPU-based terminal emulator with image support, sessions, remote control, and an extensive theme system.
 
+This configuration started as a copied/personalized setup from another developer's dotfiles. It is a working base, but should be adapted gradually to this repo's workflow.
+
 ## Structure
 
 - **Location**: `~/mydotfiles/kitty/`
@@ -26,18 +28,28 @@ To change it, edit `active-theme.conf` directly or replace it with one of the fi
 
 ### 1. Install Kitty
 
+Official installer:
+
+```bash
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+```
+
+Homebrew alternative:
+
 ```bash
 brew install --cask kitty
 ```
 
-### 2. Apply this configuration
+### 2. Apply this configuration and CLI symlinks
 
 ```bash
 mkdir -p ~/.config
 ln -s ~/mydotfiles/kitty ~/.config/kitty
+ln -s /Applications/kitty.app/Contents/MacOS/kitty /usr/local/bin/kitty
+ln -s /Applications/kitty.app/Contents/MacOS/kitten /usr/local/bin/kitten
 ```
 
-If `~/.config/kitty` already exists, back it up or remove it before creating the symlink.
+If `~/.config/kitty` already exists, back it up or remove it before creating the symlink. The `/usr/local/bin` links make `kitty` and `kitten` available from any terminal.
 
 ## See Themes
 
