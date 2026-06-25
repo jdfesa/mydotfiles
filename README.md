@@ -81,7 +81,10 @@ Si clonas este repositorio en una nueva máquina:
     ln -s ~/mydotfiles/ghostty/config ~/.config/ghostty/config
 
     # Kitty
+    mkdir -p ~/.config
     ln -s ~/mydotfiles/kitty ~/.config/kitty
+    ln -s /Applications/kitty.app/Contents/MacOS/kitty /usr/local/bin/kitty
+    ln -s /Applications/kitty.app/Contents/MacOS/kitten /usr/local/bin/kitten
 
     # Fastfetch
     ln -s ~/mydotfiles/fastfetch ~/.config/fastfetch
