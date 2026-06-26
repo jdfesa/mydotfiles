@@ -10,7 +10,7 @@
 # https://sw.kovidgoyal.net/kitty/layouts/#arrange-windows
 layout tall
 
-cd /System/Volumes/Data/mnt/github_nfs/linkarzu.github.io
+cd ~/mydotfiles
 
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'

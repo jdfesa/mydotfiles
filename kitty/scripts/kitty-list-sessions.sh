@@ -24,20 +24,20 @@ set_cursor_bar() {
 trap 'set_cursor_bar' EXIT
 
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
-colorscheme_file="$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
+colorscheme_file="$HOME/mydotfiles/colorscheme/active/active-colorscheme.sh"
 
 if [[ -f "$colorscheme_file" ]]; then
   # shellcheck disable=SC1090
   source "$colorscheme_file"
 fi
 
-hex_base="${linkarzu_color03#\#}"
+hex_base="${jd_color03#\#}"
 base_r=$((16#${hex_base:0:2}))
 base_g=$((16#${hex_base:2:2}))
 base_b=$((16#${hex_base:4:2}))
 base_color="\033[38;2;${base_r};${base_g};${base_b}m"
 
-hex_current="${linkarzu_color02#\#}"
+hex_current="${jd_color02#\#}"
 current_r=$((16#${hex_current:0:2}))
 current_g=$((16#${hex_current:2:2}))
 current_b=$((16#${hex_current:4:2}))
@@ -45,16 +45,16 @@ current_color="\033[38;2;${current_r};${current_g};${current_b}m"
 
 reset_color="\033[0m"
 
-fzf_colors="bg:${linkarzu_color10},fg:${linkarzu_color14}"
-fzf_colors+=",hl:${linkarzu_color03},hl+:${linkarzu_color03}"
-fzf_colors+=",info:${linkarzu_color09},header:${linkarzu_color09}"
-fzf_colors+=",prompt:${linkarzu_color02}"
-fzf_colors+=",pointer:${linkarzu_color11}"
-fzf_colors+=",marker:${linkarzu_color12}"
-fzf_colors+=",spinner:${linkarzu_color13}"
-fzf_colors+=",fg+:${linkarzu_color14}"
-fzf_colors+=",bg+:${linkarzu_color13}"
-fzf_colors+=",gutter:${linkarzu_color10}"
+fzf_colors="bg:${jd_color10},fg:${jd_color14}"
+fzf_colors+=",hl:${jd_color03},hl+:${jd_color03}"
+fzf_colors+=",info:${jd_color09},header:${jd_color09}"
+fzf_colors+=",prompt:${jd_color02}"
+fzf_colors+=",pointer:${jd_color11}"
+fzf_colors+=",marker:${jd_color12}"
+fzf_colors+=",spinner:${jd_color13}"
+fzf_colors+=",fg+:${jd_color14}"
+fzf_colors+=",bg+:${jd_color13}"
+fzf_colors+=",gutter:${jd_color10}"
 
 # Requirements
 if ! command -v fzf >/dev/null 2>&1; then
@@ -74,7 +74,17 @@ if [[ ! -x "$kitty_bin" ]]; then
   exit 1
 fi
 
-sock="$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh || true)"
+find_kitty_socket() {
+  local socket=""
+  for socket in /tmp/kitty-* "${TMPDIR:-/tmp}"/kitty-*; do
+    [[ -S "$socket" ]] || continue
+    printf "%s" "$socket"
+    return 0
+  done
+  return 1
+}
+
+sock="$(find_kitty_socket || true)"
 if [[ -z "${sock:-}" ]]; then
   echo "No kitty sockets found in /tmp (kitty not running, or remote control not available)."
   exit 1

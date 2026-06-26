@@ -13,8 +13,8 @@ set -euo pipefail
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
 script_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/$(basename -- "${BASH_SOURCE[0]}")"
 work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
-colorscheme_file="$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
-fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
+colorscheme_file="$HOME/mydotfiles/colorscheme/active/active-colorscheme.sh"
+fzf_colors_file="$HOME/mydotfiles/colorscheme/active/active-fzf-colors.sh"
 
 if [[ -f "$work_env_file" ]]; then
   # shellcheck disable=SC1090
@@ -50,7 +50,17 @@ if [[ ! -x "$kitty_bin" ]]; then
   exit 1
 fi
 
-sock="$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh || true)"
+find_kitty_socket() {
+  local socket=""
+  for socket in /tmp/kitty-* "${TMPDIR:-/tmp}"/kitty-*; do
+    [[ -S "$socket" ]] || continue
+    printf "%s" "$socket"
+    return 0
+  done
+  return 1
+}
+
+sock="$(find_kitty_socket || true)"
 if [[ -z "${sock:-}" ]]; then
   echo "No kitty sockets found in /tmp (kitty not running, or remote control not available)."
   exit 1
@@ -89,7 +99,7 @@ if [[ -n "${work_main_dir:-}" ]]; then
   work_main_dir="$(normalize_path "$work_main_dir")"
 fi
 
-hex="${linkarzu_color03#\#}"
+hex="${jd_color03#\#}"
 r=$((16#${hex:0:2}))
 g=$((16#${hex:2:2}))
 b=$((16#${hex:4:2}))
@@ -383,7 +393,7 @@ fzf_out="$(
     --bind 'esc:abort' \
     --bind "start:reload:${script_path} --reload \"{q}\"" \
     --bind "change:reload:${script_path} --reload \"{q}\"" \
-    ${linkarzu_fzf_colors:+--color="$linkarzu_fzf_colors"}
+    ${jd_fzf_colors:+--color="$jd_fzf_colors"}
 )"
 fzf_rc=$?
 set -e
