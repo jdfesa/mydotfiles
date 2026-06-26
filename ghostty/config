@@ -1,8 +1,7 @@
 # To get the default values
-# ghostty +show-config --default --docs > ~/github/dotfiles-latest/ghostty/config-default
+# ghostty +show-config --default --docs > ~/mydotfiles/ghostty/config-default
 
-# To get syntax highlighting in neovim, see
-# ~/github/dotfiles-latest/neovim/neobean/lua/plugins/ghostty.lua
+# Keep Ghostty config local to ~/mydotfiles.
 
 # HACK: How to setup the Ghostty terminal, is it just hype? READ PINNED MESSAGE
 # https://youtu.be/rCiq5CyFFhA
@@ -104,7 +103,7 @@ custom-shader = shaders/cursor_smear.glsl
 #
 # This assumes you installed tmux through brew if using macos
 # command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then tmux attach || tmux; else zsh; fi"
-command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then $HOME/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh $HOME/github/dotfiles-latest || (tmux attach 2>/dev/null || tmux); else exec zsh; fi"
+command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then $HOME/mydotfiles/tmux/tools/prime/tmux-sessionizer.sh $HOME/mydotfiles || (tmux attach 2>/dev/null || tmux); else exec zsh; fi"
 
 # Horizontal window padding. This applies padding between the terminal cells
 # and the left and right window borders. The value is in points, meaning that
