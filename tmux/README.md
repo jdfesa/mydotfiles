@@ -7,7 +7,7 @@ Configuracion para [tmux](https://github.com/tmux/tmux), pensada como siguiente 
 Importado y separado en dos niveles:
 
 - `tmux.conf`: base adaptada a `~/mydotfiles`, mas segura para probar.
-- `tmux.conf.sh`: referencia original importada desde `dotfiles-latest-main 2`; no usar directamente sin revisar, porque contiene muchas rutas personales y dependencias externas.
+- `tmux.conf.sh`: nota local que reemplaza la referencia importada original, porque no queremos conservar rutas personales o dependencias externas.
 
 ## Que queremos rescatar
 
