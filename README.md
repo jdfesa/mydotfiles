@@ -36,6 +36,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[VS Code](vscode/README.md)**: Configuración visual y funcional del editor.
 - **[Browser](browser/README.md)**: Temas y ajustes del navegador.
 - **[Btop](btop/README.md)**: Monitor de sistema en terminal.
+- **[Yazi](yazi/README.md)**: File manager terminal.
 
 ### Herramientas en evaluación
 
@@ -43,7 +44,6 @@ Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. N
 
 - **[Homebrew](brew/README.md)**: Brewfiles por capas para instalar herramientas de forma reproducible.
 - **[Lazygit](lazygit/README.md)**: UI terminal para Git con soporte para `git-delta`.
-- **[Yazi](yazi/README.md)**: File manager terminal.
 - **[Tmux](tmux/README.md)**: Sesiones persistentes, layouts y flujo terminal.
 - **[Sesh](sesh/README.md)**: Selector de sesiones para tmux.
 - **[Colorscheme](colorscheme/README.md)**: Referencia para un futuro selector global de colores.
@@ -66,7 +66,7 @@ mydotfiles/
 ├── starship/     # Prompt multiplataforma
 ├── tmux/         # Multiplexor terminal (en evaluación)
 ├── vscode/       # Configuración de VS Code
-├── yazi/         # File manager terminal (en evaluación)
+├── yazi/         # File manager terminal
 └── README.md
 ```
 
@@ -134,6 +134,9 @@ Si clonas este repositorio en una nueva máquina:
 
     # Btop
     ln -s ~/mydotfiles/btop ~/.config/btop
+
+    # Yazi
+    ln -s ~/mydotfiles/yazi ~/.config/yazi
     ```
 
 ### 🧪 Activación de herramientas en evaluación
@@ -144,9 +147,6 @@ Las herramientas nuevas se agregan primero al repo, con README propio, y solo se
 # Lazygit
 mkdir -p "$HOME/Library/Application Support/lazygit"
 ln -s ~/mydotfiles/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
-
-# Yazi
-ln -s ~/mydotfiles/yazi ~/.config/yazi
 
 # Tmux
 ln -s ~/mydotfiles/tmux/tmux.conf ~/.tmux.conf

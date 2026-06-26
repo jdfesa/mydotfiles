@@ -4,7 +4,7 @@ Configuracion para [Yazi](https://yazi-rs.github.io/), un gestor de archivos en 
 
 ## Estado
 
-Importado como herramienta candidata. No esta activo hasta crear el symlink.
+Activo y enlazado desde `~/.config/yazi` hacia `~/mydotfiles/yazi`.
 
 ## Que aporta
 
@@ -24,9 +24,17 @@ brew install yazi
 ln -s ~/mydotfiles/yazi ~/.config/yazi
 ```
 
-Si ya existe `~/.config/yazi`, respaldarlo antes.
+En esta maquina no habia una config previa en `~/.config/yazi`, asi que el enlace se puede crear directamente. La fuente de verdad queda en `~/mydotfiles/yazi`.
+
+## Keymaps iniciales
+
+- `<Esc>`: salir de Yazi.
+- `o`: crear archivo o carpeta.
+- `dd`: enviar seleccion a la papelera.
+- `yy`: copiar seleccion.
 
 ## Pendiente
 
 - Adaptar keymaps a tu flujo real.
 - Evaluar si conviene integrarlo con Kitty/Ghostty o con scripts de proyectos.
+- Revisar previews avanzados en una terminal real; `yazi --debug` funciona, pero algunos adaptadores dependen del emulador y de utilidades opcionales.
