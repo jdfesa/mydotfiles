@@ -38,14 +38,15 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Btop](btop/README.md)**: Monitor de sistema en terminal.
 - **[Yazi](yazi/README.md)**: File manager terminal.
 - **[Lazygit](lazygit/README.md)**: Interfaz terminal para Git.
+- **[Sesh](sesh/README.md)**: Selector de sesiones para proyectos y herramientas.
 
 ### Herramientas en evaluación
 
 Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. No deben enlazarse al sistema hasta revisar su README interno:
 
 - **[Homebrew](brew/README.md)**: Brewfiles por capas para instalar herramientas de forma reproducible.
+- **[Zoxide](zoxide/README.md)**: Navegacion inteligente por carpetas, pendiente de activar en Zsh.
 - **[Tmux](tmux/README.md)**: Sesiones persistentes, layouts y flujo terminal.
-- **[Sesh](sesh/README.md)**: Selector de sesiones para tmux.
 - **[Colorscheme](colorscheme/README.md)**: Referencia para un futuro selector global de colores.
 - **[Scripts](scripts/README.md)**: Inventario de scripts utiles a adaptar, sin activar dependencias invasivas.
 
@@ -60,13 +61,14 @@ mydotfiles/
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
 ├── lazygit/      # Git TUI
 ├── scripts/      # Inventario de scripts a adaptar
-├── sesh/         # Sesiones para tmux (en evaluación)
+├── sesh/         # Selector de sesiones
 ├── silakka54/    # Teclado Silakka54
 ├── sketchybar/   # Configuración de Sketchybar
 ├── starship/     # Prompt multiplataforma
 ├── tmux/         # Multiplexor terminal (en evaluación)
 ├── vscode/       # Configuración de VS Code
 ├── yazi/         # File manager terminal
+├── zoxide/       # Navegacion inteligente (en evaluación)
 └── README.md
 ```
 
@@ -141,6 +143,9 @@ Si clonas este repositorio en una nueva máquina:
     # Lazygit
     mkdir -p "$HOME/Library/Application Support/lazygit"
     ln -s ~/mydotfiles/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
+
+    # Sesh
+    ln -s ~/mydotfiles/sesh ~/.config/sesh
     ```
 
 ### 🧪 Activación de herramientas en evaluación
@@ -151,8 +156,6 @@ Las herramientas nuevas se agregan primero al repo, con README propio, y solo se
 # Tmux
 ln -s ~/mydotfiles/tmux/tmux.conf ~/.tmux.conf
 
-# Sesh
-ln -s ~/mydotfiles/sesh ~/.config/sesh
 ```
 
 Antes de crear cualquiera de estos enlaces, respaldar una config existente si la hubiera.
