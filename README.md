@@ -5,6 +5,18 @@ Aquí se encuentran las "fuentes de la verdad" de mis configuraciones, las cuale
 
 ---
 
+## 🧭 Convenciones de Adaptacion
+
+- **Usuario local**: `jd`.
+- **Ruta principal del repo**: `~/mydotfiles`.
+- Toda herramienta nueva debe vivir en su propia carpeta y tener su propio `README.md`.
+- Las rutas copiadas desde otros dotfiles deben adaptarse a `$HOME`, `~` o `~/mydotfiles`; no deben quedar rutas activas a `/Users/linkarzu`, `/Users/krishna` ni `~/github/dotfiles-latest`.
+- Si una configuracion importada conserva rutas, keymaps o nombres del autor original, se considera **referencia upstream** y no se enlaza al sistema.
+- Tu teclado base es **Silakka54**. No se importan keymaps de Karabiner, Kanata, skhd ni BTT hasta redisenarlos para tu flujo.
+- AeroSpace sigue siendo el window manager activo; cualquier idea basada en Yabai se adapta manualmente antes de usarla.
+
+---
+
 ## 📂 Estructura del Repositorio
 
 Actualmente el repo se divide en dos grupos:
