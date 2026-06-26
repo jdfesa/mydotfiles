@@ -8,16 +8,16 @@ if [[ -f "$colorscheme_file" ]]; then
   source "$colorscheme_file"
 fi
 
-# Las paletas importadas aun usan linkarzu_* como namespace interno.
-linkarzu_fzf_colors="bg:${linkarzu_color10:-#000000},fg:${linkarzu_color14:-#ffffff}"
-linkarzu_fzf_colors+=",hl:${linkarzu_color03:-#66ff99},hl+:${linkarzu_color03:-#66ff99}"
-linkarzu_fzf_colors+=",info:${linkarzu_color09:-#888888},header:${linkarzu_color09:-#888888}"
-linkarzu_fzf_colors+=",prompt:${linkarzu_color02:-#00e65c}"
-linkarzu_fzf_colors+=",pointer:${linkarzu_color11:-#c96d00}"
-linkarzu_fzf_colors+=",marker:${linkarzu_color12:-#d98a00}"
-linkarzu_fzf_colors+=",spinner:${linkarzu_color13:-#183818}"
-linkarzu_fzf_colors+=",fg+:${linkarzu_color14:-#ffffff}"
-linkarzu_fzf_colors+=",bg+:${linkarzu_color13:-#183818}"
-linkarzu_fzf_colors+=",gutter:${linkarzu_color10:-#000000}"
+# Las paletas importadas aun usan jd_* como namespace interno.
+jd_fzf_colors="bg:${jd_color10:-#000000},fg:${jd_color14:-#ffffff}"
+jd_fzf_colors+=",hl:${jd_color03:-#66ff99},hl+:${jd_color03:-#66ff99}"
+jd_fzf_colors+=",info:${jd_color09:-#888888},header:${jd_color09:-#888888}"
+jd_fzf_colors+=",prompt:${jd_color02:-#00e65c}"
+jd_fzf_colors+=",pointer:${jd_color11:-#c96d00}"
+jd_fzf_colors+=",marker:${jd_color12:-#d98a00}"
+jd_fzf_colors+=",spinner:${jd_color13:-#183818}"
+jd_fzf_colors+=",fg+:${jd_color14:-#ffffff}"
+jd_fzf_colors+=",bg+:${jd_color13:-#183818}"
+jd_fzf_colors+=",gutter:${jd_color10:-#000000}"
 
-export linkarzu_fzf_colors
+export jd_fzf_colors

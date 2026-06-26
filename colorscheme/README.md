@@ -16,7 +16,7 @@ Parcialmente adaptado. El selector local ya solo actualiza `colorscheme/active/a
 ## Riesgos actuales
 
 - El flujo original recargaba Sketchybar, tocaba wallpaper y reiniciaba Yabai; eso no se importa.
-- Varias paletas conservan variables internas `linkarzu_colorXX`. Por ahora son solo nombres de variables heredados, no rutas ni usuario activo.
+- Las paletas usan variables internas `jd_colorXX` para compartir colores entre scripts.
 - Todavia falta generar archivos concretos para Kitty, Ghostty, Btop o Starship.
 
 ## Plan de adaptacion

@@ -35,8 +35,8 @@ if (( ${#schemes[@]} == 0 )); then
 fi
 
 fzf_args=(--height=100% --reverse --header="Type or move using arrows" --prompt="Select a colorscheme > ")
-if [[ -n "${linkarzu_fzf_colors:-}" ]]; then
-  fzf_args+=(--color="$linkarzu_fzf_colors")
+if [[ -n "${jd_fzf_colors:-}" ]]; then
+  fzf_args+=(--color="$jd_fzf_colors")
 fi
 
 selected_scheme="$(printf "%s\n" "${schemes[@]}" | fzf "${fzf_args[@]}")" || {
@@ -50,8 +50,6 @@ mkdir -p "$(dirname "$ACTIVE_COLORSCHEME_FILE")"
   printf '# Active colorscheme generated for jd/mydotfiles from %s.\n\n' "$selected_scheme"
   sed \
     -e '1{/^#!\/usr\/bin\/env bash$/d;}' \
-    -e '/^# Filename: ~\/github\/dotfiles-latest/d' \
-    -e '/^# ~\/github\/dotfiles-latest/d' \
     "$COLORSCHEME_DIR/$selected_scheme"
 } > "$ACTIVE_COLORSCHEME_FILE"
 

@@ -11,55 +11,55 @@
 # C (#37f499) becomes when darkened 4 steps to the right.
 #
 # Markdown heading 1 - color04
-linkarzu_color18=#494949
+jd_color18=#494949
 # Markdown heading 2 - color02
-linkarzu_color19=#2a2a2a
+jd_color19=#2a2a2a
 # Markdown heading 3 - color03
-linkarzu_color20=#1a1a1a
+jd_color20=#1a1a1a
 # Markdown heading 4 - color01
-linkarzu_color21=#645313
+jd_color21=#645313
 # Markdown heading 5 - color05
-linkarzu_color22=#2f363d
+jd_color22=#2f363d
 # Markdown heading 6 - color08
-linkarzu_color23=#999999
+jd_color23=#999999
 # Markdown heading foreground
 # usually set to color10 which is the terminal background
-linkarzu_color26=#000000
+jd_color26=#000000
 
-linkarzu_color04=#b2b2b2
-linkarzu_color02=#939393
-linkarzu_color03=#d1d1d1
-linkarzu_color01=#a88a1f
-linkarzu_color05=#4f5b66
-linkarzu_color08=#ffffff
-linkarzu_color06=#027085
+jd_color04=#b2b2b2
+jd_color02=#939393
+jd_color03=#d1d1d1
+jd_color01=#a88a1f
+jd_color05=#4f5b66
+jd_color08=#ffffff
+jd_color06=#027085
 
 # Colors to the right from https://www.colorhexa.com
 # Terminal and neovim background
-linkarzu_color10=#000000
+jd_color10=#000000
 # Lualine across, 1 color to the right of background
-linkarzu_color17=#0a0a0a
+jd_color17=#0a0a0a
 # Markdown codeblock, 2 to the right of background
-linkarzu_color07=#141414
+jd_color07=#141414
 # Background of inactive tmux pane, 3 to the right of background
-linkarzu_color25=#1f1f1f
+jd_color25=#1f1f1f
 # line across cursor, 5 to the right of background
-linkarzu_color13=#333333
+jd_color13=#333333
 # Tmux inactive windows, 7 colors to the right of background
-linkarzu_color15=#474747
+jd_color15=#474747
 
 # Comments
-linkarzu_color09=#5f7f89
+jd_color09=#5f7f89
 # Underline spellbad
-linkarzu_color11=#ff7676
+jd_color11=#ff7676
 # Underline spellcap
-linkarzu_color12=#b7a54c
+jd_color12=#b7a54c
 # Cursor and tmux windows text
-linkarzu_color14=#ffffff
+jd_color14=#ffffff
 # Selected text
-linkarzu_color16=#0390ac
+jd_color16=#0390ac
 # Cursor color
-linkarzu_color24=#04d1f9
+jd_color24=#04d1f9
 
 # Wallpaper for this colorscheme
 wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/batman/batman-darker.png"

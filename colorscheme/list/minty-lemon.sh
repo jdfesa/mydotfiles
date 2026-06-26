@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Filename: ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
-# ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
 
 # These files have to be executable
 
@@ -14,56 +12,56 @@
 # C (#37f499) becomes when darkened 4 steps to the right.
 #
 # Markdown heading 1 - color04
-linkarzu_color18=#20925b
+jd_color18=#20925b
 # Markdown heading 2 - color02
-linkarzu_color19=#027d95
+jd_color19=#027d95
 # Markdown heading 3 - color03
-linkarzu_color20=#4d9472
+jd_color20=#4d9472
 # Markdown heading 4 - color01
-linkarzu_color21=#2f8696
+jd_color21=#2f8696
 # Markdown heading 5 - color05
-linkarzu_color22=#029494
+jd_color22=#029494
 # Markdown heading 6 - color08
 # Also inactive tmux window, make it 6 darker to the right
-linkarzu_color23=#1f645e
+jd_color23=#1f645e
 # Markdown heading foreground
 # usually set to color10 which is the terminal background
-linkarzu_color26=#0D1116
+jd_color26=#0D1116
 
-linkarzu_color04=#37f499
-linkarzu_color02=#04d1f9
-linkarzu_color03=#81f8bf
-linkarzu_color01=#4fe0fc
-linkarzu_color05=#04F9F8
-linkarzu_color08=#4ffced
-linkarzu_color06=#9deefd
+jd_color04=#37f499
+jd_color02=#04d1f9
+jd_color03=#81f8bf
+jd_color01=#4fe0fc
+jd_color05=#04F9F8
+jd_color08=#4ffced
+jd_color06=#9deefd
 
 # Colors to the right from https://www.colorhexa.com
 # Terminal and neovim background
-linkarzu_color10=#000000
+jd_color10=#000000
 # Lualine across, 1 color to the right of background
-linkarzu_color17=#141b22
+jd_color17=#141b22
 # Markdown codeblock, 2 to the right of background
-linkarzu_color07=#1c242f
+jd_color07=#1c242f
 # Background of inactive tmux pane, 3 to the right of background
-linkarzu_color25=#232e3b
+jd_color25=#232e3b
 # line across cursor, 5 to the right of background
-linkarzu_color13=#314154
+jd_color13=#314154
 # Tmux inactive windows, 7 colors to the right of background
-linkarzu_color15=#013e4a
+jd_color15=#013e4a
 
 # Comments
-linkarzu_color09=#a5afc2
+jd_color09=#a5afc2
 # Underline spellbad, color02 7 tones to the left in colorhexa
-linkarzu_color11=#026072
+jd_color11=#026072
 # Underline spellcap, color04 7 tones to the left in colorhexa
-linkarzu_color12=#089954
+jd_color12=#089954
 # Cursor and tmux windows text
-linkarzu_color14=#ebfafa
+jd_color14=#ebfafa
 # Selected text
-linkarzu_color16=#ccfce5
+jd_color16=#ccfce5
 # Cursor color, color04 9 tones to the left in colorhexa
-linkarzu_color24=#06743f
+jd_color24=#06743f
 
 # Wallpaper for this colorscheme
 # wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/minty-lemon.jpg"
