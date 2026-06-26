@@ -1,0 +1,46 @@
+[[session]]
+name = "Downloads"
+path = "~/Downloads"
+startup_command = "ls"
+
+[[session]]
+name = "mydotfiles"
+path = "~/mydotfiles"
+startup_command = "ls"
+preview_command = "bat --color=always ~/mydotfiles/README.md"
+
+[[session]]
+name = "tmux config"
+path = "~/mydotfiles/tmux"
+startup_command = "nvim tmux.conf"
+preview_command = "bat --color=always ~/mydotfiles/tmux/tmux.conf"
+
+[[session]]
+name = "sesh config"
+path = "~/mydotfiles/sesh"
+startup_command = "nvim sesh.toml"
+preview_command = "bat --color=always ~/mydotfiles/sesh/sesh.toml"
+
+[[session]]
+name = "aerospace config"
+path = "~/mydotfiles/aerospace"
+startup_command = "nvim aerospace.toml"
+preview_command = "bat --color=always ~/mydotfiles/aerospace/aerospace.toml"
+
+[[session]]
+name = "sketchybar config"
+path = "~/mydotfiles/sketchybar"
+startup_command = "nvim init.lua"
+preview_command = "bat --color=always ~/mydotfiles/sketchybar/README.md"
+
+[[session]]
+name = "kitty config"
+path = "~/mydotfiles/kitty"
+startup_command = "nvim kitty.conf"
+preview_command = "bat --color=always ~/mydotfiles/kitty/kitty.conf"
+
+[[session]]
+name = "brew files"
+path = "~/mydotfiles/brew"
+startup_command = "ls"
+preview_command = "bat --color=always ~/mydotfiles/brew/README.md"
