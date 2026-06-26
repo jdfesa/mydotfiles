@@ -1,0 +1,31 @@
+# Scripts
+
+Esta carpeta documenta scripts utiles vistos en `dotfiles-latest-main 2`. No copie el arbol completo porque muchos scripts dependen de Yabai, Karabiner, Kanata, BetterTouchTool, OBS, rutas privadas o LaunchAgents.
+
+## Candidatos para adaptar
+
+- `misc/240-systemTask.sh`: abre un selector `fzf` para ejecutar scripts. Buena idea para un menu propio de mantenimiento.
+- `misc/200-micMute.sh`: mute/unmute de microfono con `SwitchAudioSource`, `osascript` y Sketchybar. Interesante, pero hay que adaptarlo a tu Sketchybar Lua.
+- `300-micSelector.sh` y `301-audioSelector.sh`: selectores de audio. Utiles si usas varios dispositivos.
+- `misc/500-switchApp.sh`: cambia/focaliza apps usando Yabai. No sirve directo porque tu window manager es AeroSpace, pero la idea se puede reescribir para `open -a` o AeroSpace.
+- `misc/550-skhdSession.sh`: abre sesiones de Kitty desde atajos. Puede servir si seguimos desarrollando tu flujo de Kitty.
+- `misc/549-kittyMainSocket.sh`: detecta el socket principal de Kitty para remote control. Relevante porque tu Kitty ya usa `allow_remote_control`.
+- `701-ipFinder.sh`: utilidad simple para IP/red; candidato de baja friccion.
+- `600-testNotification.sh`: prueba de notificaciones; puede servir para debug de Sketchybar/scripts.
+
+## Scripts que no conviene copiar todavia
+
+- Scripts de Yabai: no se adaptan mientras uses AeroSpace.
+- Scripts de OBS/streaming: dependen de escenas, nombres y rutas privadas.
+- `400-autoPushGithub.sh`: automatiza pushes via LaunchAgent; demasiado invasivo para este repo por ahora.
+- Scripts que llaman `btt://`: dependen de BetterTouchTool.
+- Scripts que usan `sudo -u linkarzu`: dependen del usuario original.
+
+## Regla de adopcion
+
+Cada script que entre a este repo debe:
+
+1. Tener rutas basadas en `~/mydotfiles` o variables.
+2. Tener README o comentario de uso.
+3. No depender de Yabai/Karabiner/Kanata/skhd/BTT salvo que se indique explicitamente.
+4. Poder ejecutarse manualmente antes de conectarlo a atajos o servicios.
