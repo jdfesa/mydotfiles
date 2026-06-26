@@ -1,5 +1,5 @@
-# Filename: ~/github/dotfiles-latest/brew/00-base/Brewfile
-# https://github.com/linkarzu/dotfiles-latest/blob/main/brew/00-base/Brewfile
+# Filename: ~/mydotfiles/brew/00-base/Brewfile
+# Adapted from: https://github.com/linkarzu/dotfiles-latest/blob/main/brew/00-base/Brewfile
 
 # Adding taps (repos) on top as I was getting errors
 tap "homebrew/bundle"
@@ -37,4 +37,3 @@ cask "coconutbattery"
 
 brew "jq"
 brew "sketchybar"
-
