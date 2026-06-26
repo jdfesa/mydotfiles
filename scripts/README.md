@@ -19,7 +19,7 @@ Esta carpeta documenta scripts utiles vistos en `dotfiles-latest-main 2`. No cop
 - Scripts de OBS/streaming: dependen de escenas, nombres y rutas privadas.
 - `400-autoPushGithub.sh`: automatiza pushes via LaunchAgent; demasiado invasivo para este repo por ahora.
 - Scripts que llaman `btt://`: dependen de BetterTouchTool.
-- Scripts que usan `sudo -u linkarzu`: dependen del usuario original.
+- Scripts que usan `sudo -u linkarzu`: dependen del usuario original y deben reescribirse para `jd` o, mejor, para `$USER`.
 
 ## Regla de adopcion
 
@@ -29,3 +29,4 @@ Cada script que entre a este repo debe:
 2. Tener README o comentario de uso.
 3. No depender de Yabai/Karabiner/Kanata/skhd/BTT salvo que se indique explicitamente.
 4. Poder ejecutarse manualmente antes de conectarlo a atajos o servicios.
+5. No traer rutas activas de `/Users/linkarzu`, `/Users/krishna` ni `~/github/dotfiles-latest`.
