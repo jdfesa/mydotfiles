@@ -7,7 +7,11 @@ Aquí se encuentran las "fuentes de la verdad" de mis configuraciones, las cuale
 
 ## 📂 Estructura del Repositorio
 
-Actualmente gestiono las siguientes herramientas:
+Actualmente el repo se divide en dos grupos:
+
+### Herramientas activas
+
+Estas son las configuraciones que ya forman parte del setup diario o estan integradas con tu flujo actual:
 
 - **[Aerospace](https://github.com/nikitabobko/AeroSpace)**: Tiling Window Manager para macOS.
 - **[Sketchybar](https://felixkratz.github.io/SketchyBar/)**: Barra de estado personalizada.
@@ -17,16 +21,40 @@ Actualmente gestiono las siguientes herramientas:
 - **[Fastfetch](fastfetch/README.md)**: Información del sistema con tema de Serial Experiments Lain.
 - **[Silakka54](silakka54/README.md)**: Configuración y visualización automática del teclado.
 - **[Starship](starship/README.md)**: Prompt para la terminal moderno, rápido y multiplataforma.
+- **[VS Code](vscode/README.md)**: Configuración visual y funcional del editor.
+- **[Browser](browser/README.md)**: Temas y ajustes del navegador.
+
+### Herramientas en evaluación
+
+Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. No deben enlazarse al sistema hasta revisar su README interno:
+
+- **[Homebrew](brew/README.md)**: Brewfiles por capas para instalar herramientas de forma reproducible.
+- **[Lazygit](lazygit/README.md)**: UI terminal para Git con soporte para `git-delta`.
+- **[Yazi](yazi/README.md)**: File manager terminal.
+- **[Btop](btop/README.md)**: Monitor de sistema en terminal.
+- **[Tmux](tmux/README.md)**: Sesiones persistentes, layouts y flujo terminal.
+- **[Sesh](sesh/README.md)**: Selector de sesiones para tmux.
+- **[Colorscheme](colorscheme/README.md)**: Referencia para un futuro selector global de colores.
+- **[Scripts](scripts/README.md)**: Inventario de scripts utiles a adaptar, sin activar dependencias invasivas.
+
 ```bash
 mydotfiles/
-├── aerospace/   # Configuración de AeroSpace
-├── borders/     # Configuración de JankyBorders
-├── ghostty/     # Terminal Ghostty (Config, Temas, Shaders)
-├── kitty/       # Terminal Kitty (Config, Temas, Sesiones)
-├── fastfetch/   # Configuración de Fastfetch (Tema Lain)
-├── silakka54/   # Teclado Silakka54 (Ver README interno)
-├── sketchybar/  # Configuración de Sketchybar
-├── starship/    # Prompt (Multiplataforma)
+├── aerospace/    # Configuración de AeroSpace
+├── borders/      # Configuración de JankyBorders
+├── brew/         # Brewfiles por capas (en evaluación)
+├── btop/         # Monitor de sistema terminal (en evaluación)
+├── colorscheme/  # Selector/paletas de colores (referencia)
+├── ghostty/      # Terminal Ghostty (config, temas, shaders)
+├── kitty/        # Terminal Kitty (config, temas, sesiones)
+├── lazygit/      # Git TUI (en evaluación)
+├── scripts/      # Inventario de scripts a adaptar
+├── sesh/         # Sesiones para tmux (en evaluación)
+├── silakka54/    # Teclado Silakka54
+├── sketchybar/   # Configuración de Sketchybar
+├── starship/     # Prompt multiplataforma
+├── tmux/         # Multiplexor terminal (en evaluación)
+├── vscode/       # Configuración de VS Code
+├── yazi/         # File manager terminal (en evaluación)
 └── README.md
 ```
 
@@ -92,6 +120,30 @@ Si clonas este repositorio en una nueva máquina:
     # Starship
     ln -s ~/mydotfiles/starship/starship.toml ~/.config/starship.toml
     ```
+
+### 🧪 Activación de herramientas en evaluación
+
+Las herramientas nuevas se agregan primero al repo, con README propio, y solo se activan cuando ya fueron revisadas. Ejemplos:
+
+```bash
+# Lazygit
+mkdir -p "$HOME/Library/Application Support/lazygit"
+ln -s ~/mydotfiles/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
+
+# Yazi
+ln -s ~/mydotfiles/yazi ~/.config/yazi
+
+# Btop
+ln -s ~/mydotfiles/btop ~/.config/btop
+
+# Tmux
+ln -s ~/mydotfiles/tmux/tmux.conf ~/.tmux.conf
+
+# Sesh
+ln -s ~/mydotfiles/sesh ~/.config/sesh
+```
+
+Antes de crear cualquiera de estos enlaces, respaldar una config existente si la hubiera.
 
 ### 🛡️ Protección contra modificaciones accidentales (Blindaje)
 
