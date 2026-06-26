@@ -16,11 +16,12 @@ brew "git"
 brew "node"
 brew "starship"
 brew "tmux"
+brew "sesh"
 brew "tree"
 brew "watch"
 # karabiner uses yarn to install depencencies
 brew "yarn"
-# Switched from z.lua to zoxide as its more maintaned
+# Smart cd replacement used optionally by sesh and Kitty session scripts
 # brew "z.lua"
 brew "zoxide"
 # Cat with wings
