@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Filename: ~/github/dotfiles-latest/colorscheme/list/retro-phosphor.sh
-# ~/github/dotfiles-latest/colorscheme/list/retro-phosphor.sh
+# Active colorscheme for jd/mydotfiles.
+# Source palette: retro-phosphor.sh
 
 # These files have to be executable
 

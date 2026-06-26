@@ -1,42 +1,58 @@
 #!/usr/bin/env bash
 
-# Filename: ~/github/dotfiles-latest/colorscheme/colorscheme-selector.sh
+set -euo pipefail
 
-# Path to the directory containing color scheme scripts
-COLORSCHEME_DIR=~/github/dotfiles-latest/colorscheme/list
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/mydotfiles}"
+COLORSCHEME_DIR="${COLORSCHEME_DIR:-$DOTFILES_DIR/colorscheme/list}"
+ACTIVE_COLORSCHEME_FILE="${ACTIVE_COLORSCHEME_FILE:-$DOTFILES_DIR/colorscheme/active/active-colorscheme.sh}"
+FZF_COLORS_FILE="${FZF_COLORS_FILE:-$DOTFILES_DIR/colorscheme/active/active-fzf-colors.sh}"
 
-# Path to the colorscheme-set.sh script
-COLORSCHEME_SET_SCRIPT=~/github/dotfiles-latest/zshrc/colorscheme-set.sh
-FZF_COLORS_FILE=~/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh
-
-# Ensure fzf is installed
 if ! command -v fzf &>/dev/null; then
   echo "fzf is not installed. Please install it first."
   exit 1
 fi
 
-if [[ -f "$FZF_COLORS_FILE" ]]; then
-  # shellcheck disable=SC1090
-  source "$FZF_COLORS_FILE"
+if [[ ! -d "$COLORSCHEME_DIR" ]]; then
+  echo "Colorscheme directory not found: $COLORSCHEME_DIR"
+  exit 1
 fi
 
-# List available color scheme scripts
-schemes=($(ls "$COLORSCHEME_DIR"/*.sh | xargs -n 1 basename))
+if [[ -f "$FZF_COLORS_FILE" ]]; then
+  set +u
+  # shellcheck disable=SC1090
+  source "$FZF_COLORS_FILE"
+  set -u
+fi
 
-# Check if any schemes are available
-if [ ${#schemes[@]} -eq 0 ]; then
+schemes=()
+while IFS= read -r scheme; do
+  schemes+=("$(basename "$scheme")")
+done < <(find "$COLORSCHEME_DIR" -maxdepth 1 -type f -name "*.sh" | sort)
+
+if (( ${#schemes[@]} == 0 )); then
   echo "No color scheme scripts found in $COLORSCHEME_DIR."
   exit 1
 fi
 
-# Use fzf to select a scheme
-selected_scheme=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a colorscheme > " ${linkarzu_fzf_colors:+--color="$linkarzu_fzf_colors"})
-
-# Check if a selection was made
-if [ -z "$selected_scheme" ]; then
-  echo "No color scheme selected."
-  exit 0
+fzf_args=(--height=100% --reverse --header="Type or move using arrows" --prompt="Select a colorscheme > ")
+if [[ -n "${linkarzu_fzf_colors:-}" ]]; then
+  fzf_args+=(--color="$linkarzu_fzf_colors")
 fi
 
-# Apply the selected color scheme
-"$COLORSCHEME_SET_SCRIPT" "$selected_scheme"
+selected_scheme="$(printf "%s\n" "${schemes[@]}" | fzf "${fzf_args[@]}")" || {
+  echo "No color scheme selected."
+  exit 0
+}
+
+mkdir -p "$(dirname "$ACTIVE_COLORSCHEME_FILE")"
+{
+  printf '#!/usr/bin/env bash\n\n'
+  printf '# Active colorscheme generated for jd/mydotfiles from %s.\n\n' "$selected_scheme"
+  sed \
+    -e '1{/^#!\/usr\/bin\/env bash$/d;}' \
+    -e '/^# Filename: ~\/github\/dotfiles-latest/d' \
+    -e '/^# ~\/github\/dotfiles-latest/d' \
+    "$COLORSCHEME_DIR/$selected_scheme"
+} > "$ACTIVE_COLORSCHEME_FILE"
+
+echo "Active colorscheme set to $selected_scheme"
