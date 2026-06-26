@@ -1,5 +1,6 @@
-# Filename: ~/github/dotfiles-latest/tmux/tmux.conf.sh
-# ~/github/dotfiles-latest/tmux/tmux.conf.sh
+# UPSTREAM REFERENCE ONLY.
+# Use ~/mydotfiles/tmux/tmux.conf for jd/mydotfiles.
+# This file still contains original paths and keybindings kept for study.
 
 source "$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
 
