@@ -1,5 +1,5 @@
 # Filename: ~/mydotfiles/brew/10-essential/Brewfile
-# Adapted from: https://github.com/linkarzu/dotfiles-latest/blob/main/brew/10-essential/Brewfile
+# Local essential package list.
 
 # Best editor of all times Neovim
 
@@ -70,4 +70,3 @@ cask "spotify"
 cask "hot"
 brew "fastfetch"
 cask "kindavim"
-

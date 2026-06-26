@@ -4,7 +4,7 @@ Esta carpeta guarda Brewfiles para reproducir instalaciones de macOS por capas. 
 
 ## Estado
 
-Importado como base desde `dotfiles-latest-main 2` y pendiente de curado para este equipo.
+Importado como base externa y pendiente de curado para este equipo.
 
 ## Capas
 
