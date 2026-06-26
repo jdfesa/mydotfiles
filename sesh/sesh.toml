@@ -1,46 +1,64 @@
 [[session]]
 name = "Downloads"
 path = "~/Downloads"
-startup_command = "ls"
+startup_command = "pwd"
 
 [[session]]
 name = "mydotfiles"
 path = "~/mydotfiles"
-startup_command = "ls"
-preview_command = "bat --color=always ~/mydotfiles/README.md"
+startup_command = "git status --short"
+preview_command = "sed -n '1,120p' ~/mydotfiles/README.md"
 
 [[session]]
-name = "tmux config"
-path = "~/mydotfiles/tmux"
-startup_command = "nvim tmux.conf"
-preview_command = "bat --color=always ~/mydotfiles/tmux/tmux.conf"
+name = "git mydotfiles"
+path = "~/mydotfiles"
+startup_command = "lazygit"
+preview_command = "git -C ~/mydotfiles status --short"
 
 [[session]]
-name = "sesh config"
-path = "~/mydotfiles/sesh"
-startup_command = "nvim sesh.toml"
-preview_command = "bat --color=always ~/mydotfiles/sesh/sesh.toml"
+name = "files mydotfiles"
+path = "~/mydotfiles"
+startup_command = "yazi"
+preview_command = "find ~/mydotfiles -maxdepth 2 -type d | sed -n '1,80p'"
+
+[[session]]
+name = "system monitor"
+path = "~"
+startup_command = "btop"
+preview_command = "printf 'Open btop system monitor'"
 
 [[session]]
 name = "aerospace config"
 path = "~/mydotfiles/aerospace"
-startup_command = "nvim aerospace.toml"
-preview_command = "bat --color=always ~/mydotfiles/aerospace/aerospace.toml"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/aerospace/aerospace.toml"
 
 [[session]]
 name = "sketchybar config"
 path = "~/mydotfiles/sketchybar"
-startup_command = "nvim init.lua"
-preview_command = "bat --color=always ~/mydotfiles/sketchybar/README.md"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/sketchybar/README.md"
 
 [[session]]
 name = "kitty config"
 path = "~/mydotfiles/kitty"
-startup_command = "nvim kitty.conf"
-preview_command = "bat --color=always ~/mydotfiles/kitty/kitty.conf"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/kitty/kitty.conf"
 
 [[session]]
 name = "brew files"
 path = "~/mydotfiles/brew"
 startup_command = "ls"
-preview_command = "bat --color=always ~/mydotfiles/brew/README.md"
+preview_command = "sed -n '1,120p' ~/mydotfiles/brew/README.md"
+
+[[session]]
+name = "sesh config"
+path = "~/mydotfiles/sesh"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/sesh/sesh.toml"
+
+[[session]]
+name = "tmux config"
+path = "~/mydotfiles/tmux"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/tmux/tmux.conf"
