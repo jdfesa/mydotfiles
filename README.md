@@ -35,6 +35,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Starship](starship/README.md)**: Prompt para la terminal moderno, rápido y multiplataforma.
 - **[VS Code](vscode/README.md)**: Configuración visual y funcional del editor.
 - **[Browser](browser/README.md)**: Temas y ajustes del navegador.
+- **[Btop](btop/README.md)**: Monitor de sistema en terminal.
 
 ### Herramientas en evaluación
 
@@ -43,7 +44,6 @@ Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. N
 - **[Homebrew](brew/README.md)**: Brewfiles por capas para instalar herramientas de forma reproducible.
 - **[Lazygit](lazygit/README.md)**: UI terminal para Git con soporte para `git-delta`.
 - **[Yazi](yazi/README.md)**: File manager terminal.
-- **[Btop](btop/README.md)**: Monitor de sistema en terminal.
 - **[Tmux](tmux/README.md)**: Sesiones persistentes, layouts y flujo terminal.
 - **[Sesh](sesh/README.md)**: Selector de sesiones para tmux.
 - **[Colorscheme](colorscheme/README.md)**: Referencia para un futuro selector global de colores.
@@ -54,7 +54,7 @@ mydotfiles/
 ├── aerospace/    # Configuración de AeroSpace
 ├── borders/      # Configuración de JankyBorders
 ├── brew/         # Brewfiles por capas (en evaluación)
-├── btop/         # Monitor de sistema terminal (en evaluación)
+├── btop/         # Monitor de sistema terminal
 ├── colorscheme/  # Selector/paletas de colores (referencia)
 ├── ghostty/      # Terminal Ghostty (config, temas, shaders)
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
@@ -131,6 +131,9 @@ Si clonas este repositorio en una nueva máquina:
 
     # Starship
     ln -s ~/mydotfiles/starship/starship.toml ~/.config/starship.toml
+
+    # Btop
+    ln -s ~/mydotfiles/btop ~/.config/btop
     ```
 
 ### 🧪 Activación de herramientas en evaluación
@@ -144,9 +147,6 @@ ln -s ~/mydotfiles/lazygit/config.yml "$HOME/Library/Application Support/lazygit
 
 # Yazi
 ln -s ~/mydotfiles/yazi ~/.config/yazi
-
-# Btop
-ln -s ~/mydotfiles/btop ~/.config/btop
 
 # Tmux
 ln -s ~/mydotfiles/tmux/tmux.conf ~/.tmux.conf

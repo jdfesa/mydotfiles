@@ -4,7 +4,7 @@ Configuracion para [btop](https://github.com/aristocratos/btop), monitor de sist
 
 ## Estado
 
-Importado como candidato listo para probar. No esta enlazado al sistema todavia.
+Activo y enlazado desde `~/.config/btop` hacia `~/mydotfiles/btop`.
 
 ## Que aporta
 
@@ -25,8 +25,8 @@ brew install btop
 ln -s ~/mydotfiles/btop ~/.config/btop
 ```
 
-Si ya existe `~/.config/btop`, respaldarlo antes.
+En esta maquina la carpeta previa quedo respaldada en `~/.config/btop.bak-before-mydotfiles`. La fuente de verdad queda en `~/mydotfiles/btop`.
 
 ## Notas
 
-`show_cpu_watts = true` puede no mostrar datos en todos los equipos. Si molesta o genera warnings, se puede desactivar en `btop.conf`.
+`show_cpu_watts = false` queda desactivado para evitar warnings o permisos extra en macOS. Se puede activar mas adelante si el equipo lo soporta bien.
