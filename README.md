@@ -39,13 +39,14 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Yazi](yazi/README.md)**: File manager terminal.
 - **[Lazygit](lazygit/README.md)**: Interfaz terminal para Git.
 - **[Sesh](sesh/README.md)**: Selector de sesiones para proyectos y herramientas.
+- **[Zoxide](zoxide/README.md)**: Navegacion inteligente por carpetas, activada en Zsh.
+- **[Zsh](zsh/README.md)**: Notas para reconstruir `~/.zshrc` y sus integraciones activas.
 
 ### Herramientas en evaluación
 
 Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. No deben enlazarse al sistema hasta revisar su README interno:
 
 - **[Homebrew](brew/README.md)**: Brewfiles por capas para instalar herramientas de forma reproducible.
-- **[Zoxide](zoxide/README.md)**: Navegacion inteligente por carpetas, pendiente de activar en Zsh.
 - **[Tmux](tmux/README.md)**: Sesiones persistentes, layouts y flujo terminal.
 - **[Colorscheme](colorscheme/README.md)**: Referencia para un futuro selector global de colores.
 - **[Scripts](scripts/README.md)**: Inventario de scripts utiles a adaptar, sin activar dependencias invasivas.
@@ -68,7 +69,7 @@ mydotfiles/
 ├── tmux/         # Multiplexor terminal (en evaluación)
 ├── vscode/       # Configuración de VS Code
 ├── yazi/         # File manager terminal
-├── zoxide/       # Navegacion inteligente (en evaluación)
+├── zoxide/       # Navegacion inteligente activada en Zsh
 └── README.md
 ```
 
@@ -147,6 +148,17 @@ Si clonas este repositorio en una nueva máquina:
     # Sesh
     ln -s ~/mydotfiles/sesh ~/.config/sesh
     ```
+
+3.  Reaplica las integraciones que viven en archivos del home y no usan symlink:
+
+    ```bash
+    # Zoxide al final de ~/.zshrc
+    if command -v zoxide >/dev/null 2>&1; then
+      eval "$(zoxide init zsh)"
+    fi
+    ```
+
+    Ver [`zsh/README.md`](zsh/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
 
 ### 🧪 Activación de herramientas en evaluación
 
