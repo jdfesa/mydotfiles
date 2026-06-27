@@ -40,9 +40,10 @@
   - Instalación: `brew install ripgrep`
   - **Por qué probarlo:** Si trabajás con proyectos Java/Python, sentís la diferencia al buscar texto en miles de archivos. Respeta `.gitignore` automáticamente.
 
-- [ ] **`zoxide`** — Reemplaza `cd` con saltos inteligentes basados en tu historial de uso.
+- [x] **`zoxide`** — Reemplaza `cd` con saltos inteligentes basados en tu historial de uso.
   - Instalación: `brew install zoxide`
-  - Config en `.zshrc`: `eval "$(zoxide init zsh)"`
+  - Config en `.zshrc`: bloque protegido al final del archivo con `eval "$(zoxide init zsh)"`
+  - Estado: instalado y activado en Zsh.
   - **Por qué probarlo:** Escribís `z poo` y te lleva directo a `~/Development/poo-2026`. Aprende tus carpetas frecuentes solo.
 
 - [ ] **`fzf`** — Fuzzy finder interactivo para archivos, historial de comandos y procesos.
