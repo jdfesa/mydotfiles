@@ -39,6 +39,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Yazi](yazi/README.md)**: File manager terminal.
 - **[Lazygit](lazygit/README.md)**: Interfaz terminal para Git.
 - **[Sesh](sesh/README.md)**: Selector de sesiones para proyectos y herramientas.
+- **[Fzf](fzf/README.md)**: Selector fuzzy para historial, archivos, carpetas y sesiones.
 - **[Zoxide](zoxide/README.md)**: Navegacion inteligente por carpetas, activada en Zsh.
 - **[Zsh](zsh/README.md)**: Notas para reconstruir `~/.zshrc` y sus integraciones activas.
 
@@ -58,6 +59,7 @@ mydotfiles/
 ├── brew/         # Brewfiles por capas (en evaluación)
 ├── btop/         # Monitor de sistema terminal
 ├── colorscheme/  # Selector/paletas de colores (referencia)
+├── fzf/          # Selector fuzzy integrado con Zsh
 ├── ghostty/      # Terminal Ghostty (config, temas, shaders)
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
 ├── lazygit/      # Git TUI
@@ -152,13 +154,18 @@ Si clonas este repositorio en una nueva máquina:
 3.  Reaplica las integraciones que viven en archivos del home y no usan symlink:
 
     ```bash
+    # Fzf antes de Zoxide en ~/.zshrc
+    if command -v fzf >/dev/null 2>&1; then
+      source <(fzf --zsh)
+    fi
+
     # Zoxide al final de ~/.zshrc
     if command -v zoxide >/dev/null 2>&1; then
       eval "$(zoxide init zsh)"
     fi
     ```
 
-    Ver [`zsh/README.md`](zsh/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
+    Ver [`zsh/README.md`](zsh/README.md), [`fzf/README.md`](fzf/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
 
 ### 🧪 Activación de herramientas en evaluación
 

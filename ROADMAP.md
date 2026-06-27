@@ -46,9 +46,10 @@
   - Estado: instalado y activado en Zsh.
   - **Por qué probarlo:** Escribís `z poo` y te lleva directo a `~/Development/poo-2026`. Aprende tus carpetas frecuentes solo.
 
-- [ ] **`fzf`** — Fuzzy finder interactivo para archivos, historial de comandos y procesos.
+- [x] **`fzf`** — Fuzzy finder interactivo para archivos, historial de comandos y procesos.
   - Instalación: `brew install fzf`
-  - Config en `.zshrc`: `source <(fzf --zsh)`
+  - Config en `.zshrc`: bloque protegido con `source <(fzf --zsh)`, antes de `zoxide`
+  - Estado: instalado y activado en Zsh.
   - **Por qué probarlo:** Se integra con `zoxide`, `bat` y el `Ctrl+R` de Zsh. Es la pieza que une todo el stack.
 
 ### Git desde la terminal

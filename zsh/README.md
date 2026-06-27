@@ -11,6 +11,7 @@ Actualmente incluye:
 - `starship`, desactivado solamente cuando la terminal viene desde NetBeans.
 - `zsh-autosuggestions` y `zsh-syntax-highlighting`.
 - rutas locales de herramientas (`~/.local/bin`, GHCup/Cabal, Android, Java, Antigravity, opencode).
+- `fzf`, inicializado con `source <(fzf --zsh)` para historial y selectores interactivos.
 - `zoxide`, inicializado al final del archivo con `eval "$(zoxide init zsh)"`.
 
 Para validar una terminal nueva:
@@ -18,6 +19,8 @@ Para validar una terminal nueva:
 ```bash
 type z
 type zi
+type __fzf_select
+bindkey '^R'
 ```
 
 Si aparecen como `not found`, recargar la sesion:
@@ -26,7 +29,7 @@ Si aparecen como `not found`, recargar la sesion:
 source ~/.zshrc
 ```
 
-Ver tambien [`../zoxide/README.md`](../zoxide/README.md) para el caso de uso, instalacion y restauracion en otra maquina.
+Ver tambien [`../fzf/README.md`](../fzf/README.md) y [`../zoxide/README.md`](../zoxide/README.md) para los casos de uso, instalacion y restauracion en otra maquina.
 
 ## netbeans_fix.zsh
 
