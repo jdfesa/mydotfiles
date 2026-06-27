@@ -73,6 +73,11 @@ if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
 fi
 
+# Direnv: load project-local environment variables after explicit approval.
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+
 # Zoxide: smart directory jumping.
 # Keep this at the end so its chpwd hook remains intact.
 if command -v zoxide >/dev/null 2>&1; then

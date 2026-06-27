@@ -55,6 +55,7 @@ brew install zoxide
 brew install fzf
 brew install starship
 brew install sesh
+brew install direnv
 brew install bat
 brew install eza
 ```
@@ -71,7 +72,7 @@ En resumen: Homebrew es la herramienta que instala paquetes; los Brewfiles son l
 
 ## Que se guarda aca
 
-- `brew "zoxide"`: herramientas de terminal instaladas por Homebrew.
+- `brew "zoxide"` y `brew "direnv"`: herramientas de terminal instaladas por Homebrew.
 - `cask "ghostty"`: apps de macOS instaladas por Homebrew Cask.
 - `tap "FelixKratz/formulae"`: repositorios extra de formulas.
 - `vscode "ms-python.python"`: extensiones de VS Code, cuando corresponde.
@@ -82,7 +83,7 @@ En resumen: Homebrew es la herramienta que instala paquetes; los Brewfiles son l
 - Historial local, bases de datos o caches.
 - Preferencias personales generadas por apps despues de usarlas.
 
-Por ejemplo: `brew/00-base/Brewfile` instala `zoxide`, pero la activacion de `zoxide` vive en `~/.zshrc` y esta explicada en `../zoxide/README.md`.
+Por ejemplo: `brew/00-base/Brewfile` instala `zoxide` y `direnv`, pero sus activaciones viven en `~/.zshrc` y estan explicadas en `../zoxide/README.md` y `../direnv/README.md`.
 
 ## Pendiente
 

@@ -36,6 +36,7 @@ Actualmente incluye:
 - `eza`, usado mediante aliases para `ls`, `ll`, `la` y `lt`.
 - `ripgrep`, usado mediante aliases para busqueda rapida con `rg`.
 - `fzf`, inicializado con `source <(fzf --zsh)` para historial y selectores interactivos.
+- `direnv`, inicializado de forma opcional para cargar variables por proyecto solo despues de aprobar `.envrc`.
 - `zoxide`, inicializado al final del archivo con `eval "$(zoxide init zsh)"`.
 
 Para validar una terminal nueva:
@@ -49,6 +50,7 @@ type ls
 type ll
 type rgi
 type rgl
+type direnv
 type __fzf_select
 bindkey '^R'
 ```
@@ -59,7 +61,7 @@ Si aparecen como `not found`, recargar la sesion:
 source ~/.zshrc
 ```
 
-Ver tambien [`../bat/README.md`](../bat/README.md), [`../eza/README.md`](../eza/README.md), [`../fzf/README.md`](../fzf/README.md), [`../ripgrep/README.md`](../ripgrep/README.md) y [`../zoxide/README.md`](../zoxide/README.md) para los casos de uso, instalacion y restauracion en otra maquina.
+Ver tambien [`../bat/README.md`](../bat/README.md), [`../direnv/README.md`](../direnv/README.md), [`../eza/README.md`](../eza/README.md), [`../fzf/README.md`](../fzf/README.md), [`../ripgrep/README.md`](../ripgrep/README.md) y [`../zoxide/README.md`](../zoxide/README.md) para los casos de uso, instalacion y restauracion en otra maquina.
 
 ## Activacion en esta maquina
 

@@ -17,6 +17,7 @@ brew "node"
 brew "starship"
 brew "tmux"
 brew "sesh"
+brew "direnv"
 brew "tree"
 brew "watch"
 # karabiner uses yarn to install depencencies

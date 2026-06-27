@@ -40,6 +40,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Yazi](yazi/README.md)**: File manager terminal.
 - **[Lazygit](lazygit/README.md)**: Interfaz terminal para Git.
 - **[Sesh](sesh/README.md)**: Selector de sesiones para proyectos y herramientas.
+- **[Direnv](direnv/README.md)**: Variables de entorno por proyecto, cargadas solo despues de aprobar `.envrc`.
 - **[Eza](eza/README.md)**: Reemplazo moderno de `ls` con iconos, Git y vista de arbol.
 - **[Fzf](fzf/README.md)**: Selector fuzzy para historial, archivos, carpetas y sesiones.
 - **[Ripgrep](ripgrep/README.md)**: Busqueda ultrarrapida de texto y archivos con `rg`.
@@ -63,6 +64,7 @@ mydotfiles/
 ├── brew/         # Brewfiles por capas (en evaluación)
 ├── btop/         # Monitor de sistema terminal
 ├── colorscheme/  # Selector/paletas de colores (referencia)
+├── direnv/       # Variables de entorno por proyecto
 ├── eza/          # Reemplazo moderno de ls
 ├── fzf/          # Selector fuzzy integrado con Zsh
 ├── ghostty/      # Terminal Ghostty (config, temas, shaders)
@@ -159,11 +161,14 @@ Si clonas este repositorio en una nueva máquina:
 
     # Sesh
     ln -s ~/mydotfiles/sesh ~/.config/sesh
+
+    # Direnv
+    # No requiere symlink: se instala con Homebrew y se activa desde zsh/zshrc.
     ```
 
 3.  Crea `~/mydotfiles/zsh/local.zsh` a partir de `zsh/local.zsh.example` para rutas especificas de esa maquina.
 
-    Ver [`zsh/README.md`](zsh/README.md), [`bat/README.md`](bat/README.md), [`eza/README.md`](eza/README.md), [`fzf/README.md`](fzf/README.md), [`ripgrep/README.md`](ripgrep/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
+    Ver [`zsh/README.md`](zsh/README.md), [`bat/README.md`](bat/README.md), [`direnv/README.md`](direnv/README.md), [`eza/README.md`](eza/README.md), [`fzf/README.md`](fzf/README.md), [`ripgrep/README.md`](ripgrep/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
 
 ### 🧪 Activación de herramientas en evaluación
 
