@@ -2,6 +2,32 @@
 
 Esta carpeta contiene scripts y configuraciones modulares respaldadas para la terminal Zsh.
 
+## Integraciones activas en ~/.zshrc
+
+El archivo real `~/.zshrc` vive fuera del repo, pero las decisiones importantes quedan documentadas aca para poder reconstruir la maquina despues de un formateo.
+
+Actualmente incluye:
+
+- `starship`, desactivado solamente cuando la terminal viene desde NetBeans.
+- `zsh-autosuggestions` y `zsh-syntax-highlighting`.
+- rutas locales de herramientas (`~/.local/bin`, GHCup/Cabal, Android, Java, Antigravity, opencode).
+- `zoxide`, inicializado al final del archivo con `eval "$(zoxide init zsh)"`.
+
+Para validar una terminal nueva:
+
+```bash
+type z
+type zi
+```
+
+Si aparecen como `not found`, recargar la sesion:
+
+```bash
+source ~/.zshrc
+```
+
+Ver tambien [`../zoxide/README.md`](../zoxide/README.md) para el caso de uso, instalacion y restauracion en otra maquina.
+
 ## netbeans_fix.zsh
 
 Este script soluciona los problemas visuales al usar la terminal integrada del antiguo IDE de Java **Apache NetBeans**, salvaguardando al mismo tiempo la experiencia premium en el resto de tu computadora.
