@@ -87,6 +87,8 @@ Por ejemplo: `brew/00-base/Brewfile` instala `zoxide` y `direnv`, pero sus activ
 
 `gh-dash` es un caso distinto: no se instala con `brew install`, sino como extension de GitHub CLI con `gh extension install dlvhdr/gh-dash`. Su configuracion vive en [`../gh-dash/README.md`](../gh-dash/README.md).
 
+`hammerspoon` se instala como cask porque es una app de macOS. La configuracion versionada vive en [`../hammerspoon/README.md`](../hammerspoon/README.md) y se activa apuntando Hammerspoon a `~/.config/hammerspoon/init.lua`.
+
 ## Pendiente
 
 - Quitar apps que no uso.
