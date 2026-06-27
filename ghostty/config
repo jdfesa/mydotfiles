@@ -3,9 +3,6 @@
 
 # Keep Ghostty config local to ~/mydotfiles.
 
-# HACK: How to setup the Ghostty terminal, is it just hype? READ PINNED MESSAGE
-# https://youtu.be/rCiq5CyFFhA
-
 # No way of reloading config via command yet, only via keymap cmd+shift+,
 # Created a script to do it so that its reloaded with my colorscheme selector
 
