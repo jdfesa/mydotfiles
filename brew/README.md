@@ -85,6 +85,8 @@ En resumen: Homebrew es la herramienta que instala paquetes; los Brewfiles son l
 
 Por ejemplo: `brew/00-base/Brewfile` instala `zoxide` y `direnv`, pero sus activaciones viven en `~/.zshrc` y estan explicadas en `../zoxide/README.md` y `../direnv/README.md`.
 
+`gh-dash` es un caso distinto: no se instala con `brew install`, sino como extension de GitHub CLI con `gh extension install dlvhdr/gh-dash`. Su configuracion vive en [`../gh-dash/README.md`](../gh-dash/README.md).
+
 ## Pendiente
 
 - Quitar apps que no uso.

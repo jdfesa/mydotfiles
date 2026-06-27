@@ -39,6 +39,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Btop](btop/README.md)**: Monitor de sistema en terminal.
 - **[Yazi](yazi/README.md)**: File manager terminal.
 - **[Lazygit](lazygit/README.md)**: Interfaz terminal para Git.
+- **[Gh Dash](gh-dash/README.md)**: Dashboard terminal para GitHub, PRs, issues y notificaciones.
 - **[Sesh](sesh/README.md)**: Selector de sesiones para proyectos y herramientas.
 - **[Direnv](direnv/README.md)**: Variables de entorno por proyecto, cargadas solo despues de aprobar `.envrc`.
 - **[Eza](eza/README.md)**: Reemplazo moderno de `ls` con iconos, Git y vista de arbol.
@@ -67,6 +68,7 @@ mydotfiles/
 ├── direnv/       # Variables de entorno por proyecto
 ├── eza/          # Reemplazo moderno de ls
 ├── fzf/          # Selector fuzzy integrado con Zsh
+├── gh-dash/      # Dashboard terminal para GitHub
 ├── ghostty/      # Terminal Ghostty (config, temas, shaders)
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
 ├── lazygit/      # Git TUI
@@ -159,6 +161,10 @@ Si clonas este repositorio en una nueva máquina:
     mkdir -p "$HOME/Library/Application Support/lazygit"
     ln -s ~/mydotfiles/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
 
+    # Gh Dash
+    mkdir -p ~/.config/gh-dash
+    ln -s ~/mydotfiles/gh-dash/config.yml ~/.config/gh-dash/config.yml
+
     # Sesh
     ln -s ~/mydotfiles/sesh ~/.config/sesh
 
@@ -168,7 +174,7 @@ Si clonas este repositorio en una nueva máquina:
 
 3.  Crea `~/mydotfiles/zsh/local.zsh` a partir de `zsh/local.zsh.example` para rutas especificas de esa maquina.
 
-    Ver [`zsh/README.md`](zsh/README.md), [`bat/README.md`](bat/README.md), [`direnv/README.md`](direnv/README.md), [`eza/README.md`](eza/README.md), [`fzf/README.md`](fzf/README.md), [`ripgrep/README.md`](ripgrep/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
+    Ver [`zsh/README.md`](zsh/README.md), [`bat/README.md`](bat/README.md), [`direnv/README.md`](direnv/README.md), [`eza/README.md`](eza/README.md), [`fzf/README.md`](fzf/README.md), [`gh-dash/README.md`](gh-dash/README.md), [`ripgrep/README.md`](ripgrep/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
 
 ### 🧪 Activación de herramientas en evaluación
 
