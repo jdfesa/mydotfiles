@@ -81,5 +81,5 @@ brew bundle --file ~/mydotfiles/brew/00-base/Brewfile
 ## Pendiente
 
 - Decidir si conviene personalizar colores para que sigan el selector global de `colorscheme/`.
-- Evaluar previews con `bat` cuando `bat` este instalado.
+- Evaluar si conviene activar previews con `bat` en flujos concretos de busqueda.
 - Integrarlo con scripts concretos de `sesh`, `tmux`, Kitty o Ghostty solo si mejora el flujo diario.

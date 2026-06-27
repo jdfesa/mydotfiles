@@ -35,6 +35,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Starship](starship/README.md)**: Prompt para la terminal moderno, rápido y multiplataforma.
 - **[VS Code](vscode/README.md)**: Configuración visual y funcional del editor.
 - **[Browser](browser/README.md)**: Temas y ajustes del navegador.
+- **[Bat](bat/README.md)**: Lectura enriquecida de archivos en terminal sin reemplazar `cat`.
 - **[Btop](btop/README.md)**: Monitor de sistema en terminal.
 - **[Yazi](yazi/README.md)**: File manager terminal.
 - **[Lazygit](lazygit/README.md)**: Interfaz terminal para Git.
@@ -56,6 +57,7 @@ Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. N
 ```bash
 mydotfiles/
 ├── aerospace/    # Configuración de AeroSpace
+├── bat/          # Lectura enriquecida de archivos
 ├── borders/      # Configuración de JankyBorders
 ├── brew/         # Brewfiles por capas (en evaluación)
 ├── btop/         # Monitor de sistema terminal
@@ -164,6 +166,13 @@ Si clonas este repositorio en una nueva máquina:
       alias lt='eza --tree --icons=auto --group-directories-first'
     fi
 
+    if command -v bat >/dev/null 2>&1; then
+      alias b='bat'
+      alias bp='bat --paging=always'
+      alias catp='bat --style=plain --paging=never'
+      alias preview='bat --style=numbers,changes --paging=always'
+    fi
+
     if command -v fzf >/dev/null 2>&1; then
       source <(fzf --zsh)
     fi
@@ -174,7 +183,7 @@ Si clonas este repositorio en una nueva máquina:
     fi
     ```
 
-    Ver [`zsh/README.md`](zsh/README.md), [`eza/README.md`](eza/README.md), [`fzf/README.md`](fzf/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
+    Ver [`zsh/README.md`](zsh/README.md), [`bat/README.md`](bat/README.md), [`eza/README.md`](eza/README.md), [`fzf/README.md`](fzf/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
 
 ### 🧪 Activación de herramientas en evaluación
 

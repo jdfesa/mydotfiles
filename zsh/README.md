@@ -11,6 +11,7 @@ Actualmente incluye:
 - `starship`, desactivado solamente cuando la terminal viene desde NetBeans.
 - `zsh-autosuggestions` y `zsh-syntax-highlighting`.
 - rutas locales de herramientas (`~/.local/bin`, GHCup/Cabal, Android, Java, Antigravity, opencode).
+- `bat`, usado mediante aliases seguros para lectura enriquecida de archivos sin reemplazar `cat`.
 - `eza`, usado mediante aliases para `ls`, `ll`, `la` y `lt`.
 - `fzf`, inicializado con `source <(fzf --zsh)` para historial y selectores interactivos.
 - `zoxide`, inicializado al final del archivo con `eval "$(zoxide init zsh)"`.
@@ -20,6 +21,8 @@ Para validar una terminal nueva:
 ```bash
 type z
 type zi
+type b
+type preview
 type ls
 type ll
 type __fzf_select
@@ -32,7 +35,7 @@ Si aparecen como `not found`, recargar la sesion:
 source ~/.zshrc
 ```
 
-Ver tambien [`../eza/README.md`](../eza/README.md), [`../fzf/README.md`](../fzf/README.md) y [`../zoxide/README.md`](../zoxide/README.md) para los casos de uso, instalacion y restauracion en otra maquina.
+Ver tambien [`../bat/README.md`](../bat/README.md), [`../eza/README.md`](../eza/README.md), [`../fzf/README.md`](../fzf/README.md) y [`../zoxide/README.md`](../zoxide/README.md) para los casos de uso, instalacion y restauracion en otra maquina.
 
 ## netbeans_fix.zsh
 

@@ -32,9 +32,10 @@
   - Estado: instalado y activado en Zsh.
   - **Por qué probarlo:** Compatible directo con tu Nerd Font. Impacto visual inmediato en cada `ls` que ejecutés.
 
-- [ ] **`bat`** — Reemplaza `cat` con syntax highlighting, números de línea e integración Git.
+- [x] **`bat`** — Lectura enriquecida de archivos con syntax highlighting, números de línea e integración Git.
   - Instalación: `brew install bat`
-  - Config en `.zshrc`: `alias cat='bat'`
+  - Config en `.zshrc`: aliases seguros `b`, `bp`, `catp` y `preview`; no reemplaza `cat` todavia.
+  - Estado: instalado y activado en Zsh.
   - **Por qué probarlo:** Lo usás imperceptiblemente, pero hace la terminal 10x más legible al leer archivos.
 
 - [ ] **`ripgrep (rg)`** — Búsqueda en código ultrarrápida. Reemplaza `grep`.
