@@ -38,8 +38,10 @@
   - Estado: instalado y activado en Zsh.
   - **Por qué probarlo:** Lo usás imperceptiblemente, pero hace la terminal 10x más legible al leer archivos.
 
-- [ ] **`ripgrep (rg)`** — Búsqueda en código ultrarrápida. Reemplaza `grep`.
+- [x] **`ripgrep (rg)`** — Búsqueda en código ultrarrápida. Complementa `grep`.
   - Instalación: `brew install ripgrep`
+  - Config en `.zshrc`: aliases protegidos `rgi`, `rgl` y `rgp`; no reemplaza `grep` todavia.
+  - Estado: instalado y activado en Zsh.
   - **Por qué probarlo:** Si trabajás con proyectos Java/Python, sentís la diferencia al buscar texto en miles de archivos. Respeta `.gitignore` automáticamente.
 
 - [x] **`zoxide`** — Reemplaza `cd` con saltos inteligentes basados en tu historial de uso.

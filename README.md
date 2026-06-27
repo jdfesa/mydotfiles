@@ -42,6 +42,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Sesh](sesh/README.md)**: Selector de sesiones para proyectos y herramientas.
 - **[Eza](eza/README.md)**: Reemplazo moderno de `ls` con iconos, Git y vista de arbol.
 - **[Fzf](fzf/README.md)**: Selector fuzzy para historial, archivos, carpetas y sesiones.
+- **[Ripgrep](ripgrep/README.md)**: Busqueda ultrarrapida de texto y archivos con `rg`.
 - **[Zoxide](zoxide/README.md)**: Navegacion inteligente por carpetas, activada en Zsh.
 - **[Zsh](zsh/README.md)**: Notas para reconstruir `~/.zshrc` y sus integraciones activas.
 
@@ -67,6 +68,7 @@ mydotfiles/
 ├── ghostty/      # Terminal Ghostty (config, temas, shaders)
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
 ├── lazygit/      # Git TUI
+├── ripgrep/      # Busqueda ultrarrapida con rg
 ├── scripts/      # Inventario de scripts a adaptar
 ├── sesh/         # Selector de sesiones
 ├── silakka54/    # Teclado Silakka54
@@ -76,6 +78,7 @@ mydotfiles/
 ├── vscode/       # Configuración de VS Code
 ├── yazi/         # File manager terminal
 ├── zoxide/       # Navegacion inteligente activada en Zsh
+├── zsh/          # Configuracion principal de Zsh
 └── README.md
 ```
 
@@ -141,6 +144,9 @@ Si clonas este repositorio en una nueva máquina:
     # Starship
     ln -s ~/mydotfiles/starship/starship.toml ~/.config/starship.toml
 
+    # Zsh
+    ln -s ~/mydotfiles/zsh/zshrc ~/.zshrc
+
     # Btop
     ln -s ~/mydotfiles/btop ~/.config/btop
 
@@ -155,35 +161,9 @@ Si clonas este repositorio en una nueva máquina:
     ln -s ~/mydotfiles/sesh ~/.config/sesh
     ```
 
-3.  Reaplica las integraciones que viven en archivos del home y no usan symlink:
+3.  Crea `~/mydotfiles/zsh/local.zsh` a partir de `zsh/local.zsh.example` para rutas especificas de esa maquina.
 
-    ```bash
-    # Integraciones de Zsh que no usan symlink
-    if command -v eza >/dev/null 2>&1; then
-      alias ls='eza --icons=auto --group-directories-first'
-      alias ll='eza -la --icons=auto --git --group-directories-first'
-      alias la='eza -la --icons=auto --group-directories-first'
-      alias lt='eza --tree --icons=auto --group-directories-first'
-    fi
-
-    if command -v bat >/dev/null 2>&1; then
-      alias b='bat'
-      alias bp='bat --paging=always'
-      alias catp='bat --style=plain --paging=never'
-      alias preview='bat --style=numbers,changes --paging=always'
-    fi
-
-    if command -v fzf >/dev/null 2>&1; then
-      source <(fzf --zsh)
-    fi
-
-    # Zoxide al final de ~/.zshrc
-    if command -v zoxide >/dev/null 2>&1; then
-      eval "$(zoxide init zsh)"
-    fi
-    ```
-
-    Ver [`zsh/README.md`](zsh/README.md), [`bat/README.md`](bat/README.md), [`eza/README.md`](eza/README.md), [`fzf/README.md`](fzf/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
+    Ver [`zsh/README.md`](zsh/README.md), [`bat/README.md`](bat/README.md), [`eza/README.md`](eza/README.md), [`fzf/README.md`](fzf/README.md), [`ripgrep/README.md`](ripgrep/README.md) y [`zoxide/README.md`](zoxide/README.md) para los casos de uso y validacion.
 
 ### 🧪 Activación de herramientas en evaluación
 
