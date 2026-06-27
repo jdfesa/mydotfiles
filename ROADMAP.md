@@ -26,9 +26,10 @@
 
 ### CLI Esencial
 
-- [ ] **`eza`** — Reemplaza el viejo `ls` con colores, íconos de Git y vista de árbol.
+- [x] **`eza`** — Reemplaza el viejo `ls` con colores, íconos de Git y vista de árbol.
   - Instalación: `brew install eza`
-  - Config en `.zshrc`: `alias ls='eza --icons'`
+  - Config en `.zshrc`: aliases protegidos para `ls`, `ll`, `la` y `lt`
+  - Estado: instalado y activado en Zsh.
   - **Por qué probarlo:** Compatible directo con tu Nerd Font. Impacto visual inmediato en cada `ls` que ejecutés.
 
 - [ ] **`bat`** — Reemplaza `cat` con syntax highlighting, números de línea e integración Git.
