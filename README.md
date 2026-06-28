@@ -38,6 +38,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Bat](bat/README.md)**: Lectura enriquecida de archivos en terminal sin reemplazar `cat`.
 - **[Btop](btop/README.md)**: Monitor de sistema en terminal.
 - **[Yazi](yazi/README.md)**: File manager terminal.
+- **[Git](git/README.md)**: Identidad de commits y privacidad del correo en GitHub.
 - **[Lazygit](lazygit/README.md)**: Interfaz terminal para Git.
 - **[Gh Dash](gh-dash/README.md)**: Dashboard terminal para GitHub, PRs, issues y notificaciones.
 - **[Hammerspoon](hammerspoon/README.md)**: Automatizaciones y notificaciones programables de macOS con Lua.
@@ -70,6 +71,7 @@ mydotfiles/
 ├── eza/          # Reemplazo moderno de ls
 ├── fzf/          # Selector fuzzy integrado con Zsh
 ├── gh-dash/      # Dashboard terminal para GitHub
+├── git/          # Identidad Git y privacidad de correo
 ├── hammerspoon/  # Notificaciones y automatizaciones macOS
 ├── ghostty/      # Terminal Ghostty (config, temas, shaders)
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
