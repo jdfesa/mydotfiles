@@ -97,6 +97,7 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     # ─── UTILIDADES ────────────────────────────────────────────────
     cmd-alt-ctrl-shift-tab = 'workspace-back-and-forth'    # Volver al workspace anterior
     cmd-alt-ctrl-shift-f = 'fullscreen'                    # Toggle fullscreen
+    cmd-alt-ctrl-shift-a = 'layout tiles accordion'         # Toggle accordion
 
     # ─── Modo Servicio (Meh + ;) ──────────────────────────────────
     alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=on']
