@@ -53,7 +53,7 @@ MODULES = {
   cpu = { enable = true },
   mem = { enable = true },
   weather = { enable = true },
-  music = { enable = true },
+  music = { enable = false },
 }
 
 SPACES = {
