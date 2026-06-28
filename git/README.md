@@ -51,11 +51,10 @@ Casos en los que protege:
 
 ## Bootstrap de Git en una maquina nueva
 
-Esto se hace una vez despues de instalar Git por primera vez en macOS:
+Esto se hace una vez despues de instalar Git por primera vez:
 
 ```bash
 git config --global init.defaultBranch main
-git config --global credential.helper osxkeychain
 git config --global user.name "Jose David"
 git config --global user.email "<id+usuario@users.noreply.github.com>"
 ```
@@ -65,7 +64,6 @@ Verificacion base:
 ```bash
 git config --global --list
 git config --global --get init.defaultBranch
-git config --global --get credential.helper
 git config --global --get user.name
 git config --global --get user.email
 ```
@@ -74,7 +72,6 @@ Valores esperados:
 
 ```text
 init.defaultBranch=main
-credential.helper=osxkeychain
 user.name=Jose David
 user.email=<id+usuario@users.noreply.github.com>
 ```
@@ -82,9 +79,47 @@ user.email=<id+usuario@users.noreply.github.com>
 Notas:
 
 - `init.defaultBranch=main` evita que nuevos repos nazcan con `master`.
-- `credential.helper=osxkeychain` guarda credenciales/tokens en el llavero de macOS.
 - `user.email` debe usar el `noreply` de GitHub si el repo puede ser publico.
 - La configuracion local de un repo puede pisar la global; verificar con `git config --show-origin --get-all user.email` si algo no cuadra.
+
+## Credenciales por sistema operativo
+
+La identidad (`user.name`, `user.email`) y `init.defaultBranch` son portables entre macOS, Linux y Windows. Lo que cambia segun el sistema operativo es el `credential.helper`, es decir, donde Git guarda o recupera credenciales/tokens.
+
+### macOS
+
+```bash
+git config --global credential.helper osxkeychain
+```
+
+Usa el llavero de macOS.
+
+### Linux
+
+Preferir Git Credential Manager si esta instalado:
+
+```bash
+git config --global credential.helper manager
+```
+
+Si no esta disponible, alternativas comunes:
+
+```bash
+git config --global credential.helper cache
+git config --global credential.helper store
+```
+
+`store` guarda credenciales en texto plano, asi que usarlo solo si se entiende el riesgo.
+
+### Windows
+
+Con Git for Windows normalmente conviene usar Git Credential Manager:
+
+```bash
+git config --global credential.helper manager
+```
+
+En instalaciones antiguas puede aparecer como `manager-core`.
 
 ## Configuracion local de Git
 
