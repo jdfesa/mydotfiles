@@ -143,6 +143,12 @@ Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
 |---|---|
 | `Hyper + F` | **Toggle fullscreen** — La ventana ocupa todo el workspace. Las demás siguen ahí pero ocultas. Presionar de nuevo para volver al mosaico. |
 
+### Accordion
+
+| Atajo | Acción |
+|---|---|
+| `Hyper + A` | **Toggle accordion** — Alterna el workspace entre mosaico (`tiles`) y acordeón (`accordion`). En acordeón ves una ventana principal y pasás entre ventanas con `Hyper + H/J/K/L`. |
+
 ### Modo Servicio (mantenimiento)
 
 | Atajo | Acción |
@@ -234,7 +240,7 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 ### Fase 2 — "Puedo ajustar" *(cuando domines la Fase 1)*
 
 - [ ] **Resize mode**: Modo dedicado para redimensionar ventanas con `H/J/K/L`. Solo funciona si hay 2+ ventanas en el workspace (una se agranda, otra se achica).
-- [ ] **Toggle layout**: Cambiar entre tiles y accordion con un atajo.
+- [x] **Toggle layout**: Cambiar entre tiles y accordion con `Hyper + A`.
 - [ ] **Join-with**: Forzar que dos ventanas se combinen en un contenedor con orientación específica. Útil para crear layouts complejos.
 - [ ] **Resize smart**: Atajo rápido para agrandar/achicar sin entrar a un modo dedicado.
 
