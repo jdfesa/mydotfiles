@@ -32,6 +32,8 @@ local brew_details = SBAR.add("item", "brew.details", {
   },
 })
 
+local rendered_package_count = 0
+
 -- 获取 brew item 数量
 local function get_brew_count()
   local result = brew:query()
@@ -70,7 +72,10 @@ local function render_bar_item(count)
 end
 
 local function render_popup(outdated)
-  SBAR.remove("/brew.package\\..*/")
+  if rendered_package_count > 0 then
+    SBAR.remove("/brew.package\\..*/")
+    rendered_package_count = 0
+  end
 
   if outdated and outdated ~= "" then
     local counter = 0
@@ -89,13 +94,14 @@ local function render_popup(outdated)
         counter = counter + 1
       end
     end
+    rendered_package_count = counter
   end
 end
 
 local function update(sender)
   local prev_count = get_brew_count()
   -- before checking outdated, run brew update
-  SBAR.exec("/bin/zsh -lc 'brew update 1>/dev/null && brew outdated'", function(outdated)
+  SBAR.exec("/bin/zsh -lc '/usr/local/bin/brew update >/dev/null 2>&1 && /usr/local/bin/brew outdated 2>/dev/null'", function(outdated)
     local count = 0
     if outdated and outdated ~= "" then
       for _ in outdated:gmatch("[^\r\n]+") do
