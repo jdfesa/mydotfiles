@@ -101,6 +101,106 @@ end
 
 ---
 
+## Problema: El log de Sketchybar crece hasta llenar el disco
+
+**Síntoma**: El sistema empieza a quedarse sin espacio sin una causa evidente. Sketchybar sigue funcionando, pero el archivo de log crece de forma silenciosa durante horas o días.
+
+**Caso real detectado**: `sketchybar.out.log` llegó a ocupar **22 GB**.
+
+**Archivos involucrados**:
+```bash
+/usr/local/var/log/sketchybar/sketchybar.out.log
+/usr/local/var/log/sketchybar/sketchybar.err.log
+```
+
+El `LaunchAgent` de Homebrew para Sketchybar redirige stdout y stderr a esos archivos:
+
+```bash
+~/Library/LaunchAgents/homebrew.mxcl.sketchybar.plist
+```
+
+### Verificación rápida
+
+```bash
+du -sh /usr/local/var/log/sketchybar/*.log
+ls -lh /usr/local/var/log/sketchybar/*.log
+tail -n 80 /usr/local/var/log/sketchybar/sketchybar.out.log
+df -h /usr/local/var/log/sketchybar
+```
+
+Si el log contiene muchas líneas como esta:
+
+```text
+[i] sketchybar: [?] Regex: No match found for regex '/brew.package\..*/'
+```
+
+el ruido viene del módulo de Brew intentando borrar ítems `brew.package.*` aunque no existan.
+
+También se detectó ruido desde el módulo de música cuando `media-control get` devolvía `null`, generando errores repetidos sobre `music.anchor` y artwork ausente.
+
+### Causas observadas
+
+1. El módulo `brew` ejecutaba `brew update && brew outdated` y dejaba que parte del output terminara en el log de Sketchybar.
+2. `SBAR.remove("/brew.package\\..*/")` generaba una línea de log cada vez que no había ítems que coincidieran con ese regex.
+3. El módulo `music` consultaba `media-control` cada segundo. Si no había reproducción activa o `media-control` respondía `null`, el módulo intentaba pintar valores inválidos y ensuciaba el log.
+
+### Solución aplicada
+
+1. Vaciar el log gigante sin borrar el archivo:
+
+```bash
+truncate -s 0 /usr/local/var/log/sketchybar/sketchybar.out.log
+truncate -s 0 /usr/local/var/log/sketchybar/sketchybar.err.log
+```
+
+No usar `rm` para esto: mantener el archivo evita problemas con el `LaunchAgent` que ya tiene esa ruta abierta.
+
+2. Desactivar módulos ruidosos o de bajo valor:
+
+```lua
+-- settings.lua
+music = { enable = false },
+```
+
+3. En el módulo Brew, silenciar `brew update` / `brew outdated` y evitar llamar a `SBAR.remove(...)` si antes no se renderizaron paquetes:
+
+```lua
+local rendered_package_count = 0
+
+local function render_popup(outdated)
+  if rendered_package_count > 0 then
+    SBAR.remove("/brew.package\\..*/")
+    rendered_package_count = 0
+  end
+  ...
+end
+
+SBAR.exec("/bin/zsh -lc '/usr/local/bin/brew update >/dev/null 2>&1 && /usr/local/bin/brew outdated 2>/dev/null'", function(outdated)
+  ...
+end)
+```
+
+4. Recargar solo Sketchybar para probar:
+
+```bash
+sketchybar --reload
+```
+
+**No tocar AeroSpace para este problema.** No agregar hooks de reload en `aerospace.toml`.
+
+### Confirmación
+
+Después de vaciar logs, recargar Sketchybar y esperar unos segundos:
+
+```bash
+du -sh /usr/local/var/log/sketchybar/*.log
+tail -n 40 /usr/local/var/log/sketchybar/sketchybar.out.log
+```
+
+El resultado esperado es que los logs queden en `0B` o unos pocos KB y no vuelvan a crecer con el mismo patrón repetitivo.
+
+---
+
 ## ⛔ PELIGRO: Lo que NUNCA hay que hacer
 
 > [!CAUTION]
