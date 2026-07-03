@@ -1,8 +1,10 @@
 # 🪟 AeroSpace — Tiling Window Manager
 
-> **Fase actual: 1 — Navegación Básica**
+> **Fase actual: 2 — Navegación + Ajuste**
 >
 > Esta configuración está diseñada para adopción incremental. Empezamos con lo mínimo funcional y vamos sumando features cuando domines las anteriores.
+>
+> **Regla de mantenimiento**: cada mejora que se agregue a `aerospace.toml` debe actualizar este README en el mismo cambio.
 
 ---
 
@@ -62,7 +64,7 @@ Algunas ventanas pueden "flotar" sobre el mosaico (como en macOS normal). AeroSp
 
 ---
 
-## ⌨️ Atajos Activos (Fase 1)
+## ⌨️ Atajos Activos (Fase 2)
 
 **Dos modificadores, una lógica:**
 - `Hyper` (hold en Enter del Silakka54) = **Navegación** — ir, mirar
@@ -102,16 +104,16 @@ Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
 
 | Atajo | Palabra ancla | Propósito | Apps candidatas |
 |---|---|---|---|
-| `Hyper + U` | **Universe** | Hub principal. Dev, código, terminal | Ghostty, VS Code, Cursor |
-| `Hyper + I` | **Internet** | Web y navegación. Browsing, referencias | Chrome, Firefox |
-| `Hyper + O` | **Organize** | Gestión del conocimiento. Notas, PKM | Obsidian |
-| `Hyper + P` | **People** | Comunicación. Todo lo que involucra otras personas | Telegram, Discord, Mail |
-| `Hyper + Y` | **Yield** | Descanso activo. Media, música, entretenimiento | Spotify, VLC |
-| `Hyper + N` | **Navigate** | Sistema operativo. Archivos, utilidades | Finder |
+| `Hyper + U` | **Universe** | Hub principal. Dev, código, terminal | Codex, Ghostty, kitty, Terminal, VS Code, Kiro, Antigravity IDE |
+| `Hyper + I` | **Internet** | Web y navegación. Browsing, referencias | Chrome, Safari |
+| `Hyper + O` | **Organize** | Gestión del conocimiento, escritura y documentos | Obsidian, Notes, Typora, TeXShop, PDFelement |
+| `Hyper + P` | **People / Planning** | Comunicación y planificación | Telegram, Discord, Calendar |
+| `Hyper + Y` | **Yield** | Descanso activo. Música y video | YouTube Music, VLC |
+| `Hyper + N` | **Navigate** | Sistema operativo, archivos, utilidades y entornos auxiliares | Finder, Activity Monitor, Windows App, Vial, CrossOver |
 | `Hyper + Tab` | — | Volver al workspace anterior (back & forth) | — |
 
-> **Yield** es intencionalmente agnóstico a la plataforma: tanto Spotify como YouTube van aquí.
-> La columna *Apps candidatas* es la base para el ruteo automático con `on-window-detected` (Fase 3).
+> **Yield** queda reservado para consumo activo de audio/video. No se agregan apps candidatas genéricas si no forman parte del uso real.
+> La columna *Apps candidatas* refleja apps usadas o confirmadas y es la base del ruteo automático con `on-window-detected`.
 
 ### Mover Ventana a Workspace (Meh + letra)
 
@@ -149,6 +151,20 @@ Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
 |---|---|
 | `Hyper + A` | **Toggle accordion** — Alterna el workspace entre mosaico (`tiles`) y acordeón (`accordion`). En acordeón ves una ventana principal y pasás entre ventanas con `Hyper + H/J/K/L`. |
 
+### Modo Resize (ajuste de tamaños)
+
+`Meh + M` entra al modo resize. La `M` ancla **Measure/Medir**: ajustar cuánto espacio ocupa la ventana enfocada.
+
+| Atajo | Acción |
+|---|---|
+| `Meh + M` | Entrar al modo resize. Sketchybar muestra `[R]` mientras está activo. |
+| `H` (en modo resize) | Achicar ancho de la ventana enfocada |
+| `L` (en modo resize) | Agrandar ancho de la ventana enfocada |
+| `J` (en modo resize) | Agrandar alto de la ventana enfocada |
+| `K` (en modo resize) | Achicar alto de la ventana enfocada |
+| `B` (en modo resize) | Balancear tamaños del workspace actual |
+| `Esc` / `Enter` | Volver al modo principal |
+
 ### Modo Servicio (mantenimiento)
 
 | Atajo | Acción |
@@ -158,6 +174,7 @@ Por eso **U** es el workspace principal y **Y / N** los menos prioritarios.
 | `Enter` (en modo servicio) | Volver sin recargar |
 | `R` (en modo servicio) | Resetear layout (aplanar árbol) |
 | `F` (en modo servicio) | Toggle floating ↔ tiling |
+| `B` (en modo servicio) | Balancear tamaños y volver |
 
 ---
 
@@ -198,30 +215,31 @@ AeroSpace está integrado con Sketchybar para reemplazar los Spaces nativos de m
   Este script usa el CLI directo de Sketchybar para actualizar el color (highlight) de manera 100% confiable, puenteando los eventos Lua que a veces fallan.
   > 📖 **Para más detalles técnicos**, consulta el documento [**SCRIPTS.md**](SCRIPTS.md).
 
-### 2. Indicador de Modo Activo (`[S]` en rojo)
+### 2. Indicador de Modo Activo (`[S]` / `[R]`)
 
-AeroSpace soporta **modos custom** (como i3). Cada modo cambia qué atajos de teclado están activos. Actualmente tenemos `main` (normal) y `service` (mantenimiento), pero se pueden agregar más (ej: `resize`).
+AeroSpace soporta **modos custom** (como i3). Cada modo cambia qué atajos de teclado están activos. Actualmente tenemos `main` (normal), `service` (mantenimiento) y `resize` (ajuste de tamaños).
 
 El indicador de modo funciona así:
 - Se crea un ítem `aerospace_mode` en el módulo Lua con `drawing = false` (oculto por defecto).
-- **AeroSpace controla directamente el ítem vía CLI** — no usa eventos Lua (fallaban silenciosamente).
-- Al entrar a un modo: `sketchybar --set aerospace_mode drawing=on`
-- Al salir del modo: `sketchybar --set aerospace_mode drawing=off`
-- Si se agregan más modos en el futuro, cada uno debe incluir el `exec-and-forget` correspondiente en su binding.
+- **AeroSpace controla directamente el ítem vía CLI** llamando a `scripts/update_mode_indicator.sh`.
+- Al entrar a modo servicio: muestra `[S]`.
+- Al entrar a modo resize: muestra `[R]`.
+- Al volver a `main`: oculta el indicador.
+- Si se agregan más modos en el futuro, cada uno debe llamar al mismo script con un nombre de modo nuevo.
 
 ### ⚠️ Nota Técnica Importante: PATH en `exec-and-forget`
 
 El comando `exec-and-forget` de AeroSpace **no hereda el PATH del shell del usuario**. Esto significa que binarios instalados por Homebrew (como `sketchybar`) no se encuentran con solo poner su nombre.
 
 ```toml
-# ❌ NO funciona — no encuentra sketchybar
+# ❌ Riesgoso — puede no encontrar sketchybar si depende del PATH
 'exec-and-forget sketchybar --set aerospace_mode drawing=on'
 
-# ✅ SÍ funciona — ruta absoluta
+# ✅ Más robusto — ruta absoluta o script propio con rutas absolutas adentro
 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=on'
 ```
 
-El hook `exec-on-workspace-change` **sí** usa `/bin/bash -c`, que carga el PATH, por eso ese sí funciona con solo `sketchybar`. En cambio, `exec-and-forget` ejecuta el comando directamente sin shell.
+Para mantener el TOML limpio, los modos ahora llaman a `scripts/update_mode_indicator.sh`, que usa `/usr/local/bin/sketchybar` internamente.
 
 ### Troubleshooting Sketchybar
 
@@ -239,17 +257,17 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 
 ### Fase 2 — "Puedo ajustar" *(cuando domines la Fase 1)*
 
-- [ ] **Resize mode**: Modo dedicado para redimensionar ventanas con `H/J/K/L`. Solo funciona si hay 2+ ventanas en el workspace (una se agranda, otra se achica).
+- [x] **Resize mode**: Modo dedicado para redimensionar ventanas con `H/J/K/L`. `Meh + M` entra al modo, `B` balancea tamaños.
 - [x] **Toggle layout**: Cambiar entre tiles y accordion con `Hyper + A`.
 - [ ] **Join-with**: Forzar que dos ventanas se combinen en un contenedor con orientación específica. Útil para crear layouts complejos.
 - [ ] **Resize smart**: Atajo rápido para agrandar/achicar sin entrar a un modo dedicado.
 
 ### Fase 3 — "Tengo superpoderes" *(cuando domines la Fase 2)*
 
-- [ ] **App routing (`on-window-detected`)**: Automatizar que ciertas apps siempre abran en un workspace específico (ej: Ghostty → U, Chrome → I, Spotify → Y).
+- [x] **App routing (`on-window-detected`)**: Apps principales ruteadas por uso real y mnemotecnia (ej: Ghostty → U, Chrome → I, YouTube Music → Y).
 - [ ] **Modos con colores en borders**: Cambiar el color del borde según el modo activo (resize = rojo, layout = verde). Usa el script `borders_mode.sh` existente.
 - [x] **Integración Sketchybar — Workspaces**: ✅ La barra muestra las letras de cada workspace y resalta el activo.
-- [x] **Integración Sketchybar — Indicador de modo**: ✅ Aparece `[S]` en rojo cuando estás en modo servicio. Se oculta al volver a `main`. Usa CLI directo (`--set`) en vez de eventos Lua.
+- [x] **Integración Sketchybar — Indicador de modo**: ✅ Aparece `[S]` en modo servicio y `[R]` en modo resize. Se oculta al volver a `main`.
 - [ ] **Move workspace to monitor**: Mover un workspace completo a otro monitor.
 - [ ] **Workspace-to-monitor assignment**: Asignar workspaces fijos a monitores específicos.
 
@@ -268,9 +286,10 @@ Funcionalidades disponibles en AeroSpace para ir agregando progresivamente. Marc
 
 | Archivo | Descripción |
 |---|---|
-| `aerospace.toml` | Configuración activa de AeroSpace (Fase 1) |
+| `aerospace.toml` | Configuración activa de AeroSpace (Fase 2) |
 | `README.md` | Este documento |
-| `scripts/borders_mode.sh` | Script para cambiar color de bordes según modo. **No activo en Fase 1**, se reintegra en Fase 3 |
+| `scripts/update_mode_indicator.sh` | Actualiza el indicador de modo en Sketchybar (`[S]`, `[R]`, oculto en `main`) |
+| `scripts/borders_mode.sh` | Script para cambiar color de bordes según modo. **No activo en Fase 2**, se reintegra en Fase 3 |
 
 ### Symlink
 
@@ -288,7 +307,7 @@ AeroSpace busca su configuración en `~/.config/aerospace/aerospace.toml`.
 
 ### "Solo veo 1 workspace"
 - **Causa**: No tenías `persistent-workspaces` configurados. AeroSpace solo muestra workspaces que tienen ventanas.
-- **Solución**: La Fase 1 ya incluye `persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]`.
+- **Solución**: La configuración ya incluye `persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]`.
 
 ### "Las ventanas desaparecieron"
 - AeroSpace las movió a la esquina inferior de la pantalla (así es como emula workspaces). Ejecutá `aerospace list-windows --all` en la terminal para ver dónde están.
@@ -317,6 +336,11 @@ aerospace list-windows --all
 # Ver los monitores detectados
 aerospace list-monitors
 ```
+
+### "AeroSpace está corriendo, pero la CLI dice `server is not running`"
+- Primero verificá si la app realmente está viva: `ps -axo comm | grep AeroSpace`.
+- Si la app aparece, el problema no es que AeroSpace esté cerrado: el cliente CLI no pudo conectar con el server/socket de esa sesión.
+- En ese caso, probá recargar desde el ícono de la barra de menú de AeroSpace o reiniciar la app antes de confiar en `aerospace list-*`.
 
 ---
 

@@ -38,7 +38,7 @@ brew install sketchybar sketchybar-system-stats
 # - lua: Lenguaje de la configuración
 # - jq: Procesador JSON (vital para el clima)
 # - switchaudio-osx: Cambiar dispositivos de audio
-# - media-control: Controlar música (Spotify/Music)
+    # - media-control: Controlar reproducción multimedia
 # - imagemagick: Procesamiento de imágenes de iconos
 brew install lua jq switchaudio-osx media-control imagemagick
 ```
@@ -131,7 +131,7 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 #### Componentes
 
 1. **Workspaces (U, I, O, P, Y, N)**: Ítems a la izquierda de la barra que muestran cada workspace con su letra e íconos de las apps que contiene. El workspace activo se resalta en color lavanda.
-2. **Indicador de modo (`aerospace_mode`)**: Ítem oculto por defecto (`drawing = false`). AeroSpace lo muestra/oculta directamente con `--set drawing=on/off` desde `aerospace.toml` al entrar/salir de modos (ej: servicio). Muestra `[S]` en rojo para el modo servicio.
+2. **Indicador de modo (`aerospace_mode`)**: Ítem oculto por defecto (`drawing = false`). AeroSpace lo muestra/oculta con `aerospace/scripts/update_mode_indicator.sh` al entrar/salir de modos. Muestra `[S]` para servicio y `[R]` para resize.
 
 ---
 
@@ -165,12 +165,11 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 - **Implementación principal**: ruta absoluta en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua) y auto-retry timer.
 - **Detalle completo**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
-### "El indicador de modo [S] no aparece al entrar a modo servicio"
-- Verifica que `aerospace.toml` usa la ruta absoluta: `/usr/local/bin/sketchybar --set aerospace_mode drawing=on`.
+### "El indicador de modo [S]/[R] no aparece al entrar a un modo"
+- Verifica que `aerospace.toml` llama a `aerospace/scripts/update_mode_indicator.sh`.
 - Si cambiaste la ubicación de Sketchybar, actualizá la ruta con `which sketchybar`.
 
 ### ⛔ "Se congeló la máquina después de modificar aerospace.toml"
 - **Causa**: Se usó `after-startup-command` con `sketchybar --reload`, creando un loop de reload exponencial.
 - **NUNCA hacer esto** — ver [TROUBLESHOOTING.md — Sección PELIGRO](TROUBLESHOOTING.md#-peligro-lo-que-nunca-hay-que-hacer).
 - **Recovery**: Mantener el botón de encendido ~10s para apagar. Revertir con `git checkout -- aerospace/aerospace.toml`.
-

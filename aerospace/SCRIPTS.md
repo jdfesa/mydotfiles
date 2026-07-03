@@ -23,3 +23,31 @@ Se eliminó la dependencia del evento Lua para el highlight. En su lugar, el scr
 4. El script itera sobre todos los workspaces conocidos (U, I, O, P, Y, N) y usa `sketchybar --set` para encender el highlight del activo y apagar el de los demás.
 
 > **Nota sobre íconos**: El script solo actualiza el **highlight**. La actualización de los íconos de las aplicaciones dentro del workspace sigue estando a cargo de un watcher periódico (routine) en el código Lua de Sketchybar.
+
+---
+
+## 2. `update_mode_indicator.sh`
+
+**Propósito**: Actualiza el indicador de modo activo de AeroSpace en Sketchybar.
+
+### Contexto y Decisión Técnica
+
+Antes el TOML llamaba directamente a `sketchybar --set aerospace_mode drawing=on/off`. Eso funcionaba para un solo modo, pero al agregar `resize` empezaba a duplicar comandos y dejaba el icono fijo en `[S]`.
+
+**La Solución**:
+Centralizar el comportamiento en un script pequeño. AeroSpace solo indica el modo (`SERVICE`, `RESIZE` o `NORMAL`) y el script decide icono, color y visibilidad.
+
+### Modos soportados
+
+| Modo | Indicador | Color | Acción |
+|---|---|---|---|
+| `SERVICE` | `[S]` | Rosa | Muestra el indicador de mantenimiento |
+| `RESIZE` | `[R]` | Rojo | Muestra el indicador de ajuste de tamaños |
+| `NORMAL` | — | — | Oculta el indicador |
+
+### Funcionamiento
+
+1. Un binding de AeroSpace entra a un modo custom.
+2. El binding llama a `scripts/update_mode_indicator.sh` con el nombre del modo.
+3. El script usa `/usr/local/bin/sketchybar` directamente para evitar depender del PATH.
+4. Al volver a `main`, AeroSpace llama al script con `NORMAL` y el indicador se oculta.
