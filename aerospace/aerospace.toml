@@ -1,5 +1,5 @@
 # ╔═══════════════════════════════════════════════════════════════════════╗
-# ║                    AeroSpace — Fase 1: Navegación                    ║
+# ║              AeroSpace — Fase 2: Navegación + Ajuste                 ║
 # ║                                                                      ║
 # ║  Modificadores:                                                      ║
 # ║    Hyper (cmd-ctrl-alt-shift) → Navegación (ir a workspace, foco)    ║
@@ -33,9 +33,9 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 # U = Uno (principal, IDE/editor)
 # I = Internet (Chrome, browsers)
 # O = Obsidian (notas, estudio)
-# P = Personal (Telegram, Discord, chat)
-# Y = YouTube/música (Spotify, media)
-# N = Navegador de archivos (Finder, sistema)
+# P = People/Planning (Telegram, Discord, calendario)
+# Y = YouTube/música (YouTube Music, VLC)
+# N = Navigate (Finder, sistema, utilidades)
 persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
 
 # ─── Gaps ─────────────────────────────────────────────────────────────
@@ -70,9 +70,9 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     cmd-alt-ctrl-shift-u = 'workspace U'       # Uno (principal)
     cmd-alt-ctrl-shift-i = 'workspace I'       # Internet
     cmd-alt-ctrl-shift-o = 'workspace O'       # Obsidian/notas
-    cmd-alt-ctrl-shift-p = 'workspace P'       # Personal/chat
+    cmd-alt-ctrl-shift-p = 'workspace P'       # People/Planning
     cmd-alt-ctrl-shift-y = 'workspace Y'       # YouTube/música
-    cmd-alt-ctrl-shift-n = 'workspace N'       # Navegador/archivos
+    cmd-alt-ctrl-shift-n = 'workspace N'       # Navigate/sistema
 
     # ─── WORKSPACE: Mover ventana (Meh + letra) ───────────────────
     alt-ctrl-shift-u = 'move-node-to-workspace U'
@@ -99,17 +99,33 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     cmd-alt-ctrl-shift-f = 'fullscreen'                    # Toggle fullscreen
     cmd-alt-ctrl-shift-a = 'layout tiles accordion'         # Toggle accordion
 
+    # ─── Modo Resize (Meh + M = Measure/Medir) ─────────────
+    alt-ctrl-shift-m = ['mode resize', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh RESIZE']
+
     # ─── Modo Servicio (Meh + ;) ──────────────────────────────────
-    alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=on']
+    alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh SERVICE']
 
 # ═════════════════════════════════════════════════════════════════════
 # Modo Servicio — Mantenimiento rápido
 # ═════════════════════════════════════════════════════════════════════
 [mode.service.binding]
-    esc = ['reload-config', 'mode main', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=off']
-    enter = ['mode main', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=off']
-    r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=off']
-    f = ['layout floating tiling', 'mode main', 'exec-and-forget /usr/local/bin/sketchybar --set aerospace_mode drawing=off']
+    esc = ['reload-config', 'mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+    enter = ['mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+    r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+    f = ['layout floating tiling', 'mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+    b = ['balance-sizes', 'mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+
+# ═════════════════════════════════════════════════════════════════════
+# Modo Resize — Ajuste de tamaños
+# ═════════════════════════════════════════════════════════════════════
+[mode.resize.binding]
+    esc = ['mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+    enter = ['mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+    h = 'resize width -50'
+    j = 'resize height +50'
+    k = 'resize height -50'
+    l = 'resize width +50'
+    b = 'balance-sizes'
 
 # ═════════════════════════════════════════════════════════════════════
 # Reglas de ruteo de ventanas (App routing)
@@ -182,9 +198,29 @@ run = 'move-node-to-workspace O'
 if.app-id = 'abnerworks.Typora'
 run = 'move-node-to-workspace O'
 
-# ─── P: People / comunicación ───────────────────────────────────────
+[[on-window-detected]]
+if.app-id = 'com.apple.Notes'
+run = 'move-node-to-workspace O'
+
+[[on-window-detected]]
+if.app-id = 'TeXShop'
+run = 'move-node-to-workspace O'
+
+[[on-window-detected]]
+if.app-id = 'com.wondershare.PDFelement'
+run = 'move-node-to-workspace O'
+
+# ─── P: People / planificación ──────────────────────────────────────
 [[on-window-detected]]
 if.app-id = 'com.tdesktop.Telegram'
+run = 'move-node-to-workspace P'
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace P'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iCal'
 run = 'move-node-to-workspace P'
 
 # ─── Y: Yield / media y descanso activo ─────────────────────────────
@@ -200,4 +236,20 @@ run = 'move-node-to-workspace Y'
 # Mandar Finder siempre al workspace N (Navigate)
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
+run = 'move-node-to-workspace N'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = 'move-node-to-workspace N'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.rdc.macos'
+run = 'move-node-to-workspace N'
+
+[[on-window-detected]]
+if.app-id = 'today.vial'
+run = 'move-node-to-workspace N'
+
+[[on-window-detected]]
+if.app-id = 'com.codeweavers.CrossOver'
 run = 'move-node-to-workspace N'
