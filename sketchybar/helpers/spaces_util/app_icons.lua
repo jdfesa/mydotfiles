@@ -7,6 +7,7 @@ return setmetatable({
   -- AI
   ["default"] = ":default:",
   ["ChatGPT"] = ":openai:",
+  ["Codex"] = ":openai:",
 
   -- Office 办公
   ["Canary Mail"] = ":mail:",
@@ -51,6 +52,7 @@ return setmetatable({
 
   -- Media
   ["Spotify"] = ":spotify:",
+  ["YouTube Music"] = ":music:",
   ["Music"] = ":music:",
   ["NetEaseMusic"] = ":music:",
   ["LX Music"] = ":music:",
@@ -59,9 +61,13 @@ return setmetatable({
 
   -- Editor
   ["Typora"] = ":text:",
+  ["TeXShop"] = ":text:",
+  ["PDFelement"] = ":pdf:",
   ["Atom"] = ":atom:",
   ["Obsidian"] = ":obsidian:",
   ["Code"] = ":code:",
+  ["Antigravity IDE"] = ":code:",
+  ["Kiro"] = ":code:",
   ["Code - Insiders"] = ":code:",
   ["VSCodium"] = ":vscodium:",
   ["PyCharm"] = ":pycharm:",
@@ -93,6 +99,8 @@ return setmetatable({
   ["System Preferences"] = ":gear:",
   ["System Settings"] = ":gear:",
   ["Font Book"] = ":book:",
+  ["Windows App"] = ":gear:",
+  ["Vial"] = ":gear:",
 
   -- Developer
   ["Apifox"] = ":apifox:",
@@ -124,6 +132,7 @@ return setmetatable({
   ["Raycast"] = ":raycast:",
   ["Bitwarden"] = ":bit_warden:",
   ["Dropbox"] = ":dropbox:",
+  ["CrossOver Preview"] = ":gear:",
   ["Notion"] = ":notion:",
   ["Bear"] = ":bear:",
   ["Notes"] = ":notes:",
