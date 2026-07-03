@@ -23,7 +23,7 @@ Sketchybar arranca al inicio de sesión (vía Login Items o `launchd`) **antes d
 El módulo Lua [`items/spaces/window_managers/aerospace.lua`](items/spaces/window_managers/aerospace.lua) ejecutaba `io.popen("aerospace list-workspaces --all")` con el nombre relativo `aerospace`. Al no encontrarlo, `io.popen` devuelve una cadena vacía sin error visible. El resultado: la tabla de workspaces queda vacía, el bucle `for i, workspace in ipairs(...)` no itera, y los ítems `space.*` nunca se crean.
 
 > Este es el mismo principio documentado en AeroSpace para `exec-and-forget`, pero en dirección opuesta (Sketchybar → AeroSpace).
-> Ver: [`aerospace/README.md` — Nota Técnica: PATH en exec-and-forget](../aerospace/README.md#️-nota-técnica-importante-path-en-exec-and-forget)
+> Ver: [AeroSpace SCRIPTS.md](../aerospace/SCRIPTS.md), donde se documenta la regla de usar rutas absolutas en scripts y comandos ejecutados por servicios.
 
 ### Implementación actual
 
