@@ -6,6 +6,20 @@ Esta es la documentación de los scripts que se encuentran en `aerospace/scripts
 
 ---
 
+## Regla General: PATH y Rutas Absolutas
+
+Los comandos ejecutados por AeroSpace, Sketchybar o servicios de macOS no siempre heredan el `PATH` del shell interactivo. Por eso, cualquier script que llame a binarios de Homebrew debe preferir rutas absolutas.
+
+| Binario | Ruta usada |
+|---|---|
+| `aerospace` | `/usr/local/bin/aerospace` |
+| `sketchybar` | `/usr/local/bin/sketchybar` |
+| `borders` | `/usr/local/bin/borders` |
+
+Regla practica: si el comando corre desde un hook, daemon, Lua de Sketchybar o `exec-and-forget`, no depender de `which` ni del `PATH` del usuario.
+
+---
+
 ## 1. `update_sketchybar_workspace.sh`
 
 **Propósito**: Actualiza el color de resalte (highlight) del workspace activo en Sketchybar cada vez que el usuario cambia de workspace.
