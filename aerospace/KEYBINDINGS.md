@@ -95,7 +95,7 @@ Meh + M -> L -> L -> H -> Enter
 
 Eso entra a resize, agranda dos pasos, achica uno y sale.
 
-Nota: resize se entiende mejor en layout `tiles`. En `accordion` puede sentirse raro porque no todas las ventanas estan visibles a la vez.
+Nota: resize se entiende mejor en layout `tiles`. En `accordion` puede sentirse raro porque no todas las ventanas estan visibles a la vez. Si una ventana esta en `floating`, AeroSpace no puede redimensionarla con `resize`; volvela a `tiling` desde service mode con `Meh + ; -> F`.
 
 ## Service Mode
 

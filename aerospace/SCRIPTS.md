@@ -65,3 +65,27 @@ Centralizar el comportamiento en un script pequeño. AeroSpace solo indica el mo
 2. El binding llama a `scripts/update_mode_indicator.sh` con el nombre del modo.
 3. El script usa `/usr/local/bin/sketchybar` directamente para evitar depender del PATH.
 4. Al volver a `main`, AeroSpace llama al script con `NORMAL` y el indicador se oculta.
+
+---
+
+## 3. `borders_mode.sh`
+
+**Propósito**: Cambia el color del borde activo segun el modo de teclado de AeroSpace.
+
+### Contexto y Decisión Técnica
+
+`accordion` y `tiles` son layouts, no modos. Por eso este script solo representa estados temporales del teclado: `NORMAL`, `RESIZE` y `SERVICE`. El layout actual queda fuera para que el color siempre responda a una pregunta simple: "en que modo estoy?".
+
+### Modos soportados
+
+| Modo | Color | Uso |
+|---|---|---|
+| `NORMAL` | Azul | Modo diario |
+| `RESIZE` | Rojo | Ajuste de tamanos |
+| `SERVICE` | Rosa | Mantenimiento rapido |
+
+### Funcionamiento
+
+1. Al entrar a `resize` o `service`, el binding de AeroSpace llama a `scripts/borders_mode.sh` con el modo correspondiente.
+2. Al volver a `main`, AeroSpace llama al script con `NORMAL`.
+3. El script usa `/usr/local/bin/borders` directamente para evitar depender del PATH.

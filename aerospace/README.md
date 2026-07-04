@@ -52,6 +52,8 @@ Configuracion personal de [AeroSpace](https://github.com/nikitabobko/AeroSpace) 
 | `Meh + ;` | Entrar a service mode (`[S]`) |
 | `Enter` / `Esc` | Salir del modo activo |
 
+Los modos tambien cambian el color del borde activo: azul en normal, rojo en resize y rosa en service.
+
 En resize mode:
 
 | Tecla | Accion |
@@ -80,7 +82,7 @@ El detalle de apps y bundle IDs esta en [WORKSPACES.md](WORKSPACES.md).
 | [aerospace.toml](aerospace.toml) | Configuracion activa |
 | [scripts/update_sketchybar_workspace.sh](scripts/update_sketchybar_workspace.sh) | Actualiza el workspace activo en Sketchybar |
 | [scripts/update_mode_indicator.sh](scripts/update_mode_indicator.sh) | Muestra `[S]`, `[R]` u oculta el modo |
-| [scripts/borders_mode.sh](scripts/borders_mode.sh) | Preparado para colores de borde por modo |
+| [scripts/borders_mode.sh](scripts/borders_mode.sh) | Actualiza el color del borde activo por modo |
 
 ## Recargar y Validar
 

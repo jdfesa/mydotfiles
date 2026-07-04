@@ -15,6 +15,7 @@ Ya estan activos:
 - Modo resize.
 - Ruteo automatico de apps principales.
 - Integracion con Sketchybar para workspaces e indicador de modo.
+- Colores de borde por modo de teclado.
 
 ## Fase 2: Puedo Ajustar
 
@@ -29,7 +30,7 @@ Ya estan activos:
 - [x] **App routing**: reglas `on-window-detected` para apps reales.
 - [x] **Sketchybar workspaces**: letras persistentes y workspace activo.
 - [x] **Sketchybar mode indicator**: `[S]` y `[R]`.
-- [ ] **Colores de bordes por modo**: usar `scripts/borders_mode.sh`.
+- [x] **Colores de bordes por modo**: usar `scripts/borders_mode.sh`.
 - [ ] **Move workspace to monitor**: mover workspace completo entre monitores.
 - [ ] **Workspace-to-monitor assignment**: asignar workspaces fijos a monitores.
 
