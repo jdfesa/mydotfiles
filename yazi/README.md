@@ -10,7 +10,6 @@ Activo y enlazado desde:
 ~/.config/yazi -> ~/mydotfiles/yazi
 ```
 
-Esta version adopta ideas mas agresivas del repo `dotfiles-main`, pero sin depender de plugins externos para arrancar.
 
 ## Que aporta
 
