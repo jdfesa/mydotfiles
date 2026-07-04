@@ -5,6 +5,14 @@ tap "jesseduffield/lazygit"
 
 
 # Files that I might install
+# Shell/TUI ideas from ~/Downloads/dotfiles-main. Keep commented until tested.
+# brew "atuin"
+# brew "carapace"
+# brew "television"
+# brew "scooter"
+# brew "procs"
+# brew "lla"
+
 cask "brave-browser"
 cask "canva"
 cask "gimp"

@@ -8,9 +8,9 @@ La idea no es instalar todo de golpe, sino convertir la lista de software en alg
 
 ## Estado
 
-Importado como base externa desde `~/Downloads/dotfiles-latest-main 2` y pendiente de curado para este equipo.
+Importado como base externa y pendiente de curado para este equipo.
 
-Estos Brewfiles venian de los dotfiles de otro usuario. Por eso no deben tratarse como una lista final ni ejecutarse a ciegas: son una referencia util para descubrir herramientas y acelerar una instalacion nueva, pero cada paquete tiene que validarse contra este setup.
+Estos Brewfiles incluyen ideas tomadas de dotfiles de otros usuarios. Por eso no deben tratarse como una lista final ni ejecutarse a ciegas: son una referencia util para descubrir herramientas y acelerar una instalacion nueva, pero cada paquete tiene que validarse contra este setup.
 
 La idea practica es:
 
@@ -25,6 +25,8 @@ La idea practica es:
 - `10-essential/Brewfile`: herramientas de desarrollo, fuentes, navegadores y utilidades frecuentes.
 - `15-nice-to-haves/Brewfile`: apps y herramientas convenientes, pero no criticas.
 - `20-optional/Brewfile`: software opcional o dependiente de gustos/proyectos.
+
+Ver [`IDEAS.md`](IDEAS.md) para herramientas vistas en `dotfiles-main` que podrian aportar al flujo de shell mas adelante, como `atuin`, `carapace`, `television`, `scooter`, `procs` y `lla`.
 
 ## Uso recomendado
 
@@ -94,3 +96,4 @@ Por ejemplo: `brew/00-base/Brewfile` instala `zoxide` y `direnv`, pero sus activ
 - Quitar apps que no uso.
 - Separar herramientas realmente esenciales de experimentos.
 - Cruzar esta lista con `apps/macos/software_list.md`.
+- Decidir cuales ideas de [`IDEAS.md`](IDEAS.md) pasan a `20-optional/Brewfile` y cuales merecen carpeta propia.
