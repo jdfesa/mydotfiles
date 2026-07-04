@@ -1,9 +1,15 @@
 alexdauenhauer.catppuccin-noctis-icons
 be5invis.vscode-custom-css
+brandonkirbyson.vscode-animations
+catppuccin.catppuccin-vsc
+catppuccin.catppuccin-vsc-icons
 chadalen.vscode-jetbrains-icon-theme
+dautroc.yazi-vscode
+davidanson.vscode-markdownlint
 esbenp.prettier-vscode
 github.copilot
 github.copilot-chat
+gxl.git-graph-3
 icsharpcode.ilspy-vscode
 impasse52.catppuccin-mocha-darker
 josemurilloc.aura-spirit-dracula
@@ -20,5 +26,7 @@ ms-vscode-remote.remote-containers
 ritwickdey.liveserver
 subframe7536.custom-ui-style
 tomoki1207.pdf
+usernamehw.errorlens
+vspacecode.whichkey
 yesitsfebreeze.smearcursor
 adampan.vibrancy-continued

@@ -1,0 +1,188 @@
+:root {
+  --jd-font-ui: "Maple Mono NF CN";
+  --jd-font-mono: "JetBrainsMono Nerd Font";
+}
+
+/* Command palette: centered, bordered, and easier to scan. */
+.quick-input-widget {
+  transform: translateY(-50%) !important;
+  top: 50% !important;
+  z-index: 100 !important;
+  border: 2px solid var(--vscode-terminal-ansiBlue) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 8px 24px var(--vscode-widget-shadow) !important;
+  padding: 8px !important;
+  font-family: var(--jd-font-ui), var(--jd-font-mono), monospace !important;
+}
+
+.quick-input-widget .monaco-inputbox {
+  border: 2px solid var(--vscode-terminal-ansiBrightMagenta) !important;
+  border-radius: 3px !important;
+  padding: 5px !important;
+}
+
+/* Workbench typography. */
+.monaco-workbench,
+.label-name,
+.windows,
+.monaco-button.monaco-text-button,
+.statusbar {
+  font-family: var(--jd-font-ui), var(--jd-font-mono), monospace !important;
+}
+
+/* Editor canvas and popups. */
+.monaco-editor .scroll-decoration {
+  box-shadow: 0 0 20px var(--vscode-widget-shadow) !important;
+  top: -6px !important;
+}
+
+.monaco-editor-hover,
+.monaco-hover,
+.suggest-widget,
+.suggest-details,
+.editor-widget {
+  z-index: 100 !important;
+  border: 1px solid var(--vscode-terminal-ansiBrightBlue) !important;
+  border-radius: 3px !important;
+  box-shadow: 0 8px 16px var(--vscode-widget-shadow) !important;
+}
+
+.editor-widget.find-widget.visible {
+  height: fit-content !important;
+  align-content: center !important;
+  border: 1px solid var(--vscode-terminal-ansiBrightBlue) !important;
+  border-radius: 3px !important;
+  box-shadow: 0 8px 24px var(--vscode-widget-shadow) !important;
+  padding: 8px !important;
+}
+
+.find-part {
+  margin-right: 25px !important;
+}
+
+/* Sidebar: keep explorer controls visible while learning the setup. */
+.composite.title {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  border-bottom: 1px solid var(--vscode-terminal-ansiBlue) !important;
+}
+
+.composite.title h2 {
+  color: var(--flamingo) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.monaco-tree .monaco-tree-row .label-name,
+.monaco-list .monaco-list-row .monaco-icon-label .label-name {
+  font-family: var(--jd-font-ui), var(--jd-font-mono), monospace !important;
+}
+
+.monaco-scrollable-element > .shadow.top {
+  box-shadow: 0 0 10px var(--vscode-widget-shadow) !important;
+}
+
+.monaco-list-rows {
+  background: transparent !important;
+}
+
+.notifications-toasts .monaco-list-row:hover {
+  background: none !important;
+}
+
+/* Slimmer scrollbars and overview ruler. */
+.slider {
+  position: absolute !important;
+  right: 2px !important;
+  left: auto !important;
+  width: 4px !important;
+  background: #bc9abc !important;
+}
+
+.decorationsOverviewRuler {
+  width: 5px !important;
+}
+
+/* Titlebar cleanup without hiding action icons. */
+.monaco-workbench .part.titlebar
+  > .titlebar-container
+  > .titlebar-center
+  > .window-title
+  > .command-center
+  .action-item.command-center-center {
+  border: none !important;
+  background: transparent !important;
+}
+
+.titlebar-left {
+  justify-content: flex-start !important;
+  flex-grow: 0 !important;
+  width: auto !important;
+}
+
+/* Vim/status bar polish. */
+#status\.host {
+  order: -999 !important;
+}
+
+#status\.scm\.0,
+#status\.scm\.1,
+#status\.editor\.selection {
+  background: var(--vscode-notebook-symbolHighlightBackground) !important;
+  color: var(--vscode-editor-foreground) !important;
+}
+
+#vscodevim\.vim\.primary {
+  order: -997 !important;
+  background: var(--vscode-terminal-ansiBrightBlue) !important;
+  color: var(--vscode-button-foreground) !important;
+  font-weight: 700 !important;
+}
+
+.statusbar-item-label[aria-label*="-- "] {
+  font-size: 0 !important;
+}
+
+.statusbar-item-label[aria-label*="-- "]::before {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.statusbar-item-label[aria-label="-- NORMAL --"]::before {
+  content: "NORMAL";
+}
+
+.statusbar-item-label[aria-label="-- INSERT --"]::before {
+  content: "INSERT";
+}
+
+.statusbar-item-label[aria-label="-- VISUAL --"]::before {
+  content: "VISUAL";
+}
+
+.statusbar-item-label[aria-label="-- VISUAL LINE --"]::before {
+  content: "VISUAL LINE";
+}
+
+.statusbar-item-label[aria-label="-- VISUAL BLOCK --"]::before {
+  content: "VISUAL BLOCK";
+}
+
+.statusbar-item-label[aria-label="-- VIM: DISABLED --"]::before {
+  content: "DISABLED";
+}
+
+#vscodevim\.vim\.primary[aria-label="-- INSERT --"] {
+  background: var(--vscode-terminal-ansiBrightGreen) !important;
+}
+
+#vscodevim\.vim\.primary[aria-label="-- VISUAL --"],
+#vscodevim\.vim\.primary[aria-label="-- VISUAL BLOCK --"],
+#vscodevim\.vim\.primary[aria-label="-- VISUAL LINE --"] {
+  background: var(--vscode-terminal-ansiBrightMagenta) !important;
+}
+
+#vscodevim\.vim\.primary[aria-label="-- VIM: DISABLED --"] {
+  background: var(--vscode-terminal-ansiBrightRed) !important;
+}

@@ -5,7 +5,7 @@
   "workbench.colorCustomizations": {
     "editorCursor.foreground": "#b4befe",
     "editorIndentGuide.activeBackground1": "#F5C2E7",
-    },
+  },
   "editor.tokenColorCustomizations": {
     "textMateRules": [
       {
@@ -34,11 +34,11 @@
       }
     ]
   },
-  "workbench.navigationControl.enabled": false,
-  "workbench.colorTheme": "Dark+",
-  "workbench.preferredLightColorTheme": "Claude Theme",
-  "workbench.iconTheme": "catppuccin noctis icons",
-  "workbench.editor.editorActionsLocation": "hidden",
+  "workbench.navigationControl.enabled": true,
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.preferredLightColorTheme": "Catppuccin Mocha",
+  "workbench.iconTheme": "vs-seti",
+  "workbench.editor.editorActionsLocation": "default",
   "workbench.editor.pinnedTabSizing": "shrink",
   "workbench.editor.tabSizing": "shrink",
   "workbench.editor.pinnedTabsOnSeparateRow": true,
@@ -55,8 +55,8 @@
     "workbench.editors.gettingStartedInput": true
   },
   "workbench.list.defaultFindMode": "filter",
-  "workbench.activityBar.location": "default",
-  "workbench.layoutControl.enabled": false,
+  "workbench.activityBar.location": "top",
+  "workbench.layoutControl.enabled": true,
   "workbench.editorAssociations": {
     "*.copilotmd": "vscode.markdown.preview.editor",
     "*.png": "imagePreview.previewEditor",
@@ -64,7 +64,7 @@
     "*.svg": "hediet.vscode-drawio-text",
     "{git,git-graph}:/**/*.{md,csv,svg}": "default"
   },
-  "workbench.productIconTheme": "fluent-icons",
+  "workbench.productIconTheme": "Default",
   // * ╭───────────────────────────────────────────────────────╮
   // * │                VSCode Editor                          │
   // * ╰───────────────────────────────────────────────────────╯
@@ -143,7 +143,7 @@
   "terminal.integrated.fontLigatures": true,
   "terminal.integrated.cursorStyleInactive": "none",
   "terminal.integrated.cursorWidth": 2,
-  "terminal.integrated.gpuAcceleration": "auto","terminal.integrated.enableImages": true,
+  "terminal.integrated.gpuAcceleration": "auto", "terminal.integrated.enableImages": true,
   "terminal.integrated.env.windows": { },
   "terminal.integrated.shellIntegration.decorationsEnabled": "overviewRuler",
   "terminal.integrated.enableVisualBell": true,
@@ -155,7 +155,6 @@
   // * │                    VSCode MISC                        │
   // * ╰───────────────────────────────────────────────────────╯
   "window.title": " ",
-  "window.commandCenter": false,
   "window.restoreWindows": "one",
   "window.newWindowDimensions": "inherit",
   "window.openFilesInNewWindow": "off",
@@ -249,6 +248,18 @@
   "catppuccin.workbenchMode": "minimal",
   "catppuccin.boldKeywords": true,
   "catppuccin.italicKeywords": true,
+  "animations.Enabled": false,
+  "animations.Active": "Indent",
+  "animations.Install-Method": "Custom UI Style",
+  "animations.Command-Palette": "Scale",
+  "animations.Tabs": "None",
+  "animations.Durations": {
+    "Active": 200,
+    "Scrolling": 200,
+    "Tabs": 200
+  },
+  "custom-ui-style.external.imports": [],
+  "custom-ui-style.external.loadStrategy": "disable",
   // * ╭───────────────────────────────────────────────────────╮
   // * │                 Source Control                        │
   // * ╰───────────────────────────────────────────────────────╯
@@ -1277,6 +1288,7 @@
     "Ruff(F405)",
     "Pylance(reportOptionalMemberAccess)"
   ],
+  "catppuccin-icons.hidesExplorerArrows": false,
   "catppuccin-noctis-icons.hidesExplorerArrows": false,
   "database-client.autoSync": true,
   "debug.showVariableTypes": true,
@@ -1297,7 +1309,7 @@
     "vscodevim.vim": 1
   },
   "vscode-office.pasterImgPath": "assets/${fileName}/${now}.png",
-  "window.autoDetectColorScheme": true,"color-highlight.useARGB": true,
+  "window.autoDetectColorScheme": true, "color-highlight.useARGB": true,
   "python.defaultInterpreterPath": "/usr/bin/python3",
   "inlineChat.enableV2": true,
   "inlineChat.hideOnRequest": true,
@@ -1320,8 +1332,6 @@
   "vim.statusBarColors.replace": "#f9e2af",
   "breadcrumbs.enabled": true,
 
-  "custom-ui-style.stylesheet": {
-    ".monaco-workbench": "font-family: 'Maple Mono NF CN', monospace !important;"
-  },
-  "workbench.preferredDarkColorTheme": "Claude Theme",
-  }
+  "custom-ui-style.stylesheet": {},
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+}
