@@ -1,23 +1,116 @@
-# https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
-
+notARepository: skip
+promptToReturnFromSubprocess: false
 gui:
+  nerdFontsVersion: "3"
+  showIcons: true
+  showFileTree: true
+  scrollHeight: 8
+  scrollPastBottom: true
+  mouseEvents: true
+  sidePanelWidth: 0.3333
+  expandFocusedSidePanel: true
+  enlargedSideViewLocation: top
+  mainPanelSplitMode: flexible
+  showRandomTip: false
+  commitLength:
+    show: true
+  statusPanelView: allBranchesLog
+  commandLogSize: 3
   theme:
+    activeBorderColor:
+      - "#b4befe"
+      - bold
+    inactiveBorderColor:
+      - "#a6adc8"
+    optionsTextColor:
+      - "#89b4fa"
     selectedLineBgColor:
-      # - "#314154"
-      - "#013e4a"
-# # Keybindings
-# keybinding:
-#   universal:
-#     quit: <esc>
+      - "#313244"
+    cherryPickedCommitBgColor:
+      - "#45475a"
+    cherryPickedCommitFgColor:
+      - "#b4befe"
+    unstagedChangesColor:
+      - "#f38ba8"
+    defaultFgColor:
+      - "#cdd6f4"
+    searchingActiveBorderColor:
+      - "#f9e2af"
+  authorColors:
+    "*": "#b4befe"
 git:
+  log:
+    showGraph: always
+    showWholeGraph: false
+  parseEmoji: true
   paging:
     colorArg: always
+    # Enable after `brew install git-delta`:
+    # pager: delta --dark --paging=never --syntax-theme "Catppuccin Mocha" --wrap-max-lines=10
     pager: ""
     useConfig: false
 
-# When git-delta is installed, the pager can be enabled with:
-# git:
-#   paging:
-#     colorArg: always
-#     pager: delta --dark --paging=never --syntax-theme base16-256 -s --wrap-max-lines=10
-#     useConfig: false
+customCommands:
+  - key: "<c-v>"
+    context: "global"
+    description: "Create conventional commit"
+    prompts:
+      - type: "menu"
+        key: "Type"
+        title: "Type of change"
+        options:
+          - name: "feat"
+            description: "A new feature"
+            value: "feat"
+          - name: "fix"
+            description: "A bug fix"
+            value: "fix"
+          - name: "docs"
+            description: "Documentation only"
+            value: "docs"
+          - name: "chore"
+            description: "Maintenance and tooling"
+            value: "chore"
+          - name: "refactor"
+            description: "Code change without feature or fix"
+            value: "refactor"
+          - name: "style"
+            description: "Formatting or style-only changes"
+            value: "style"
+          - name: "test"
+            description: "Tests"
+            value: "test"
+      - type: "input"
+        title: "Scope"
+        key: "Scope"
+        initialValue: ""
+      - type: "menu"
+        key: "Breaking"
+        title: "Breaking change"
+        options:
+          - name: "no"
+            value: ""
+          - name: "yes"
+            value: "!"
+      - type: "input"
+        title: "Message"
+        key: "Message"
+        initialValue: ""
+      - type: "confirm"
+        key: "Confirm"
+        title: "Commit"
+        body: "Create this commit?"
+    command: "git commit --message '{{.Form.Type}}{{ if .Form.Scope }}({{ .Form.Scope }}){{ end }}{{.Form.Breaking}}: {{.Form.Message}}'"
+    loadingText: "Creating conventional commit..."
+  - key: "<c-r>"
+    command: "gh pr create --fill --web"
+    context: "global"
+    loadingText: "Creating pull request on GitHub"
+
+keybinding:
+  universal:
+    copyToClipboard: y
+    confirmInEditor: <c-d>
+
+os:
+  editPreset: nvim

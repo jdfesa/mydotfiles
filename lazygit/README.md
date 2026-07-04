@@ -4,13 +4,24 @@ Configuracion para [lazygit](https://github.com/jesseduffield/lazygit), una inte
 
 ## Estado
 
-Activa y enlazada desde `~/Library/Application Support/lazygit/config.yml` hacia `~/mydotfiles/lazygit/config.yml`.
+Activa y enlazada desde:
+
+```bash
+~/Library/Application Support/lazygit/config.yml -> ~/mydotfiles/lazygit/config.yml
+```
+
+Esta version adopta ideas del repo `dotfiles-main`: tema Catppuccin, iconos, file tree visible, commit graph y una preparacion opcional para diffs con `delta`.
 
 ## Que aporta
 
-- Tema simple para la linea seleccionada.
-- Base conservadora que usa el editor/pager normal de LazyGit.
-- Integracion opcional con `git-delta` para diffs mas legibles.
+- UI mas legible con colores Catppuccin.
+- Iconos Nerd Font y arbol de archivos.
+- Panel lateral expandible cuando esta enfocado.
+- Historial con grafo activado.
+- Diffs con pager conservador por ahora; el bloque de `delta` queda comentado hasta instalar `git-delta`.
+- Copiar al clipboard con `y`.
+- Comando guiado para Conventional Commits con `<C-v>`.
+- Comando para crear PR con GitHub CLI usando `<C-r>`.
 
 ## Instalacion
 
@@ -18,38 +29,96 @@ Activa y enlazada desde `~/Library/Application Support/lazygit/config.yml` hacia
 brew install lazygit
 ```
 
-Opcional para mejores diffs:
+Opcionales:
+
+```bash
+brew install git-delta gh
+```
+
+`git-delta` mejora la lectura de diffs. `gh` solo es necesario para el comando `<C-r>` de crear Pull Request.
+
+## Flujo mental recomendado
+
+Lazygit no reemplaza aprender Git. Lo hace visible:
+
+1. `Files`: revisar cambios y hacer stage parcial.
+2. `Branches`: cambiar o crear ramas.
+3. `Commits`: leer historial, reordenar, squash/fixup o revertir.
+4. `Stash`: guardar cambios temporales.
+5. `Status`: ver estado general del repo.
+
+Para acostumbrarte, conviene empezar con un flujo pequeño:
+
+```text
+abrir lazygit -> revisar diff -> stage -> commit -> push
+```
+
+Despues sumar stage parcial, stash y ramas.
+
+## Custom commands
+
+### `<C-v>` Conventional Commit
+
+Abre un formulario para construir mensajes como:
+
+```text
+feat(vscode): adopt catppuccin ui
+fix(yazi): repair archive opener
+docs(lazygit): add learning sources
+```
+
+### `<C-r>` Crear Pull Request
+
+Ejecuta:
+
+```bash
+gh pr create --fill --web
+```
+
+Esto usa GitHub CLI y abre el flujo web de GitHub.
+
+## Activar delta
+
+Cuando `delta` exista en PATH:
 
 ```bash
 brew install git-delta
 ```
 
-## Activacion
+Editar `lazygit/config.yml` y cambiar:
 
-En macOS lazygit busca su config en `~/Library/Application Support/lazygit/config.yml`.
-
-```bash
-mkdir -p "$HOME/Library/Application Support/lazygit"
-ln -s ~/mydotfiles/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
+```yaml
+pager: ""
 ```
 
-Si ya existe un archivo ahi, respaldarlo antes de crear el enlace. En esta maquina se mantiene la fuente de verdad en `~/mydotfiles/lazygit/config.yml`.
+por:
 
-## Para que sirve
+```yaml
+pager: delta --dark --paging=never --syntax-theme "Catppuccin Mocha" --wrap-max-lines=10
+```
 
-LazyGit es una interfaz visual en la terminal para operar sobre un repositorio Git sin recordar todos los comandos. No reemplaza a Git: por debajo ejecuta acciones normales como `git status`, `git add`, `git commit`, `git pull`, `git push`, `git stash`, `git checkout` o `git rebase`, pero las organiza en paneles navegables.
+## Rollback
 
-El flujo tipico es:
+Para volver a la configuracion conservadora anterior:
 
-1. Abres `lazygit` dentro de un repo.
-2. Ves archivos modificados, ramas, commits y stash en paneles.
-3. Seleccionas archivos o hunks para stage.
-4. Escribes el mensaje y haces commit.
-5. Si quieres, haces push/pull desde la misma UI.
+```yaml
+gui:
+  theme:
+    selectedLineBgColor:
+      - "#013e4a"
+git:
+  paging:
+    colorArg: always
+    pager: ""
+    useConfig: false
+```
 
-Es especialmente util para revisar cambios antes de commitear, hacer stage parcial, moverte entre ramas, ver historial, manejar stash y resolver operaciones frecuentes sin salir de la terminal.
+Si todavia no hiciste commit:
 
-## Pendiente
+```bash
+git restore lazygit/config.yml lazygit/README.md lazygit/SOURCES.md
+```
 
-- Ajustar colores para que sigan tu paleta principal.
-- Activar `git-delta` cuando este instalado.
+## Fuentes
+
+Ver [SOURCES.md](SOURCES.md) para documentacion oficial y una ruta corta de aprendizaje.
