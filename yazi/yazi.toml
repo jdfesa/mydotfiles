@@ -1,2 +1,75 @@
 [mgr]
+linemode = "size"
+ratio = [1, 4, 3]
+scrolloff = 5
 show_hidden = true
+show_symlink = true
+sort_by = "alphabetical"
+sort_dir_first = true
+sort_reverse = false
+sort_sensitive = false
+
+[preview]
+image_filter = "triangle"
+image_quality = 70
+max_height = 2000
+max_width = 2000
+tab_size = 2
+
+[opener]
+edit = [
+  { run = '${EDITOR:-nvim} "$@"', desc = "$EDITOR", block = true, for = "unix" },
+]
+code = [
+  { run = 'code "$@"', desc = "VS Code", orphan = true, for = "unix" },
+]
+open = [
+  { run = 'open "$@"', desc = "Open", orphan = true, for = "macos" },
+]
+reveal = [
+  { run = 'open -R "$1"', desc = "Reveal in Finder", orphan = true, for = "macos" },
+]
+extract = [
+  { run = '7zz x "$1"', desc = "Extract here", for = "unix" },
+]
+play = [
+  { run = 'open "$@"', desc = "Open media", orphan = true, for = "macos" },
+  { run = 'ffprobe "$1"; echo; echo "Press enter to exit"; read _', desc = "Show media info", block = true, for = "unix" },
+]
+
+[open]
+rules = [
+  { mime = "text/*", use = [ "edit", "code", "reveal" ] },
+  { mime = "application/json", use = [ "edit", "code", "reveal" ] },
+  { mime = "*/javascript", use = [ "edit", "code", "reveal" ] },
+  { mime = "image/*", use = [ "open", "reveal" ] },
+  { mime = "{audio,video}/*", use = [ "play", "reveal" ] },
+  { mime = "application/*zip", use = [ "extract", "reveal" ] },
+  { mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", use = [ "extract", "reveal" ] },
+  { mime = "inode/x-empty", use = [ "edit", "code", "reveal" ] },
+  { mime = "*", use = [ "open", "edit", "code", "reveal" ] },
+]
+
+[tasks]
+image_alloc = 536870912
+macro_workers = 25
+micro_workers = 10
+
+[input]
+cd_origin = "top-center"
+cd_offset = [0, 2, 50, 3]
+create_origin = "top-center"
+create_offset = [0, 2, 50, 3]
+filter_origin = "top-center"
+filter_offset = [0, 2, 50, 3]
+find_origin = "top-center"
+find_offset = [0, 2, 50, 3]
+search_origin = "top-center"
+search_offset = [0, 2, 50, 3]
+shell_origin = "top-center"
+shell_offset = [0, 2, 50, 3]
+
+[which]
+sort_by = "none"
+sort_reverse = false
+sort_sensitive = false
