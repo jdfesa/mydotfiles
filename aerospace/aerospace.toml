@@ -100,27 +100,67 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     cmd-alt-ctrl-shift-a = 'layout tiles accordion'         # Toggle accordion
 
     # ─── Modo Resize (Meh + M = Measure/Medir) ─────────────
-    alt-ctrl-shift-m = ['mode resize', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh RESIZE']
+    alt-ctrl-shift-m = [
+        'mode resize',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh RESIZE',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh RESIZE',
+    ]
 
     # ─── Modo Servicio (Meh + ;) ──────────────────────────────────
-    alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh SERVICE']
+    alt-ctrl-shift-semicolon = [
+        'mode service',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh SERVICE',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh SERVICE',
+    ]
 
 # ═════════════════════════════════════════════════════════════════════
 # Modo Servicio — Mantenimiento rápido
 # ═════════════════════════════════════════════════════════════════════
 [mode.service.binding]
-    esc = ['reload-config', 'mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
-    enter = ['mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
-    r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
-    f = ['layout floating tiling', 'mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
-    b = ['balance-sizes', 'mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+    esc = [
+        'reload-config',
+        'mode main',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+    ]
+    enter = [
+        'mode main',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+    ]
+    r = [
+        'flatten-workspace-tree',
+        'mode main',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+    ]
+    f = [
+        'layout floating tiling',
+        'mode main',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+    ]
+    b = [
+        'balance-sizes',
+        'mode main',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+    ]
 
 # ═════════════════════════════════════════════════════════════════════
 # Modo Resize — Ajuste de tamaños
 # ═════════════════════════════════════════════════════════════════════
 [mode.resize.binding]
-    esc = ['mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
-    enter = ['mode main', 'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL']
+    esc = [
+        'mode main',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+    ]
+    enter = [
+        'mode main',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+    ]
     h = 'resize width -50'
     j = 'resize height +50'
     k = 'resize height -50'
