@@ -21,6 +21,10 @@ brew "gnu-sed"
 brew "jesseduffield/lazygit/lazygit"
 brew "ripgrep"
 brew "fd"
+# Required by Neovim/Mason downloads in some package installers.
+brew "wget"
+# Java LSP for LazyVim. Managed by Homebrew instead of Mason for reproducibility.
+brew "jdtls"
 # Used to check if specific font packages are installed
 brew "fontconfig"
 brew "tree-sitter-cli"
