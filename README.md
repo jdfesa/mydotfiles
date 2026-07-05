@@ -33,6 +33,7 @@ Estas son las configuraciones que ya forman parte del setup diario o estan integ
 - **[Fastfetch](fastfetch/README.md)**: Información del sistema con tema de Serial Experiments Lain.
 - **[Silakka54](silakka54/README.md)**: Configuración y visualización automática del teclado.
 - **[Starship](starship/README.md)**: Prompt para la terminal moderno, rápido y multiplataforma.
+- **[Neovim](nvim/README.md)**: Editor diario basado en LazyVim para notas y programacion.
 - **[VS Code](vscode/README.md)**: Configuración visual y funcional del editor.
 - **[Browser](browser/README.md)**: Temas y ajustes del navegador.
 - **[Bat](bat/README.md)**: Lectura enriquecida de archivos en terminal sin reemplazar `cat`.
@@ -76,6 +77,7 @@ mydotfiles/
 ├── ghostty/      # Terminal Ghostty (config, temas, shaders)
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
 ├── lazygit/      # Git TUI
+├── nvim/         # Neovim basado en LazyVim
 ├── ripgrep/      # Busqueda ultrarrapida con rg
 ├── scripts/      # Inventario de scripts a adaptar
 ├── sesh/         # Selector de sesiones
@@ -145,6 +147,9 @@ Si clonas este repositorio en una nueva máquina:
     ln -s ~/mydotfiles/kitty ~/.config/kitty
     ln -s /Applications/kitty.app/Contents/MacOS/kitty /usr/local/bin/kitty
     ln -s /Applications/kitty.app/Contents/MacOS/kitten /usr/local/bin/kitten
+
+    # Neovim
+    ln -s ~/mydotfiles/nvim ~/.config/nvim
 
     # Fastfetch
     ln -s ~/mydotfiles/fastfetch ~/.config/fastfetch

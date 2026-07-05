@@ -96,13 +96,17 @@
 
 ---
 
+## 🟢 En adopcion gradual
+
+- [x] **Neovim / LazyVim (como editor principal gradual)**
+  - **Decision actual:** La configuracion vive en `nvim/` dentro del repo y debe enlazarse a `~/.config/nvim`.
+  - **Criterio:** Empezar con LazyVim base, Markdown, Python y Java. No copiar configs enormes hasta entender el flujo.
+
+---
+
 ## 🔴 Definitivamente NO tocar aún
 
 > Estas herramientas son poderosas pero su costo/beneficio hoy no tiene sentido para tu flujo.
-
-- [ ] **Neovim (como editor principal)**
-  - **¿Por qué no?** Ya tenés VS Code perfectamente configurado con Vim motions, Claude Theme e integración Git. Neovim como reemplazo total requiere semanas de configuración en Lua.
-  - **Consejo:** Ya estás usando el 80% de sus beneficios via VS Code Vim. Explorarlo como curiosidad en una carpeta separada no hace daño, pero no como editor principal aún.
 
 - [ ] **Yabai (en lugar de Aerospace)**
   - **¿Por qué no?** Aerospace hace exactamente lo mismo sin riesgo. Yabai requiere deshabilitar SIP, una variable de riesgo extra en un Hackintosh. No hay ganancia real.
