@@ -1,4 +1,5 @@
 .DS_Store
+.nvimlog
 sketchybar/secrets.sh
 silakka54/.venv
 tmp/
