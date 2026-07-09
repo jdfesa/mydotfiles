@@ -99,6 +99,18 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     cmd-alt-ctrl-shift-f = 'fullscreen'                    # Toggle fullscreen
     cmd-alt-ctrl-shift-a = 'layout tiles accordion'         # Toggle accordion
 
+    # ─── AJUSTE DIRECTO ────────────────────────────────────────────────
+    # Meh + B = Balance: vuelve el workspace a tiles horizontales y reparte.
+    alt-ctrl-shift-b = [
+        'layout tiling',
+        'flatten-workspace-tree',
+        'layout h_tiles',
+        'balance-sizes',
+    ]
+
+    # Meh + F = Floating: alterna la ventana enfocada entre flotante y mosaico.
+    alt-ctrl-shift-f = 'layout floating tiling'
+
     # ─── Modo Resize (Meh + M = Measure/Medir) ─────────────
     alt-ctrl-shift-m = [
         'mode resize',
