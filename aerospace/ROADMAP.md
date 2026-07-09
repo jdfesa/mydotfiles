@@ -21,6 +21,8 @@ Ya estan activos:
 
 - [x] **Resize mode**: `Meh + M`, luego `H/J/K/L`.
 - [x] **Balance sizes**: `B` dentro de resize o service.
+- [x] **Balance directo**: `Meh + B` aplana, fuerza `h_tiles` y balancea el workspace.
+- [x] **Floating directo**: `Meh + F` alterna la ventana enfocada entre floating y tiling.
 - [x] **Toggle layout**: `Hyper + A`.
 - [ ] **Join-with**: agrupar dos ventanas bajo un contenedor comun.
 - [ ] **Resize smart directo**: atajo rapido para ajustar sin entrar a un modo.

@@ -43,6 +43,8 @@ Configuracion personal de [AeroSpace](https://github.com/nikitabobko/AeroSpace) 
 | `Meh + H/J/K/L` | Mover ventana |
 | `Hyper + A` | Alternar `tiles` / `accordion` |
 | `Hyper + F` | Toggle fullscreen |
+| `Meh + B` | Forzar `tiles` horizontales y balancear tamanos |
+| `Meh + F` | Toggle floating / tiling de la ventana enfocada |
 
 ### Modos
 

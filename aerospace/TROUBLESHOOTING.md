@@ -64,6 +64,7 @@ aerospace reload-config --dry-run --no-gui
 
 - Usar resize principalmente en `tiles`.
 - Cambiar layout con `Hyper + A`.
+- Para el caso comun de comparar dos ventanas, usar `Meh + B` para forzar `tiles` horizontales y balancear.
 - Entrar a resize con `Meh + M`.
 - Probar `H/L` para ancho y `J/K` para alto.
 - Balancear con `B`.
@@ -85,10 +86,10 @@ Eso ejecuta `flatten-workspace-tree` y vuelve a `main`.
 **Solucion**:
 
 ```text
-Meh + ; -> F
+Meh + F
 ```
 
-Eso alterna la ventana enfocada entre `floating` y `tiling`.
+Eso alterna la ventana enfocada entre `floating` y `tiling`. Tambien se puede hacer desde service mode con `Meh + ; -> F`.
 
 ## AeroSpace Corre, Pero la CLI Dice `server is not running`
 

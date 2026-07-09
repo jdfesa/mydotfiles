@@ -76,6 +76,12 @@ Algunas ventanas flotan sobre el mosaico, como dialogos o herramientas auxiliare
 Meh + ; -> F
 ```
 
+Para uso diario, tambien existe el atajo directo:
+
+```text
+Meh + F
+```
+
 Floating sirve para ventanas pequenas, temporales o poco compatibles con tiling. Para trabajo diario, el objetivo es que la mayoria de ventanas importantes sigan en tiling.
 
 ## Sketchybar

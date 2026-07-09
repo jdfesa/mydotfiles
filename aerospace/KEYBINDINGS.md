@@ -66,6 +66,15 @@ Este es el modo normal. Si no ves `[S]` ni `[R]` en Sketchybar, estas en `main`.
 | `Hyper + A` | Alternar `tiles` / `accordion` |
 | `Hyper + F` | Toggle fullscreen de AeroSpace |
 
+### Ajuste Directo
+
+| Atajo | Accion |
+|---|---|
+| `Meh + B` | Forzar `tiles` horizontales y balancear tamanos |
+| `Meh + F` | Alternar la ventana enfocada entre `floating` y `tiling` |
+
+`Meh + B` es el atajo de recuperacion para comparar ventanas: vuelve el workspace actual a `tiles` horizontales, aplana el arbol y reparte los tamanos. Con dos ventanas en tiling, el resultado esperado es 50/50.
+
 ## Resize Mode
 
 Entrar:
@@ -95,7 +104,7 @@ Meh + M -> L -> L -> H -> Enter
 
 Eso entra a resize, agranda dos pasos, achica uno y sale.
 
-Nota: resize se entiende mejor en layout `tiles`. En `accordion` puede sentirse raro porque no todas las ventanas estan visibles a la vez. Si una ventana esta en `floating`, AeroSpace no puede redimensionarla con `resize`; volvela a `tiling` desde service mode con `Meh + ; -> F`.
+Nota: resize se entiende mejor en layout `tiles`. En `accordion` puede sentirse raro porque no todas las ventanas estan visibles a la vez. Si una ventana esta en `floating`, AeroSpace no puede redimensionarla con `resize`; volvela a `tiling` con `Meh + F` o desde service mode con `Meh + ; -> F`.
 
 ## Service Mode
 
@@ -117,7 +126,7 @@ Sketchybar muestra `[S]`. Este modo es para mantenimiento rapido.
 
 ## Letras Especiales
 
-`B` significa **Balance**. No es `Meh + B` directo; solo funciona dentro de `resize` o `service`.
+`B` significa **Balance**. `Meh + B` es el arreglo rapido de 50/50; dentro de `resize` o `service`, `B` balancea sin cambiar de modo primero.
 
 `R` en Sketchybar significa **Resize mode**. No es la tecla `R`; es el indicador visual de modo activo.
 
@@ -126,8 +135,8 @@ Sketchybar muestra `[S]`. Este modo es para mantenimiento rapido.
 ## Practica Recomendada
 
 1. Abrir dos ventanas en el mismo workspace.
-2. Confirmar que el workspace esta en `tiles` con `Hyper + A` si hace falta.
+2. Presionar `Meh + B` para dejarlas lado a lado 50/50.
 3. Entrar a resize con `Meh + M`.
 4. Probar `H` y `L`.
-5. Presionar `B` para balancear.
+5. Presionar `B` para rebalancear si hace falta.
 6. Salir con `Enter`.
