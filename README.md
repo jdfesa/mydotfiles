@@ -21,7 +21,8 @@ Ver tambien [Dotfiles Architecture](docs/ARCHITECTURE.md) para la estrategia mul
 
 ## 📂 Estructura del Repositorio
 
-Actualmente el repo se divide en dos grupos:
+Actualmente el repo combina herramientas compartidas con capas especificas por
+sistema operativo, host o perfil cuando existe una diferencia real.
 
 ### Herramientas activas
 
@@ -62,6 +63,10 @@ Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. N
 - **[Colorscheme](colorscheme/README.md)**: Referencia para un futuro selector global de colores.
 - **[Scripts](scripts/README.md)**: Inventario de scripts utiles a adaptar, sin activar dependencias invasivas.
 
+### Capas especificas
+
+- **[OS](os/)**: configuraciones y utilidades que pertenecen claramente a un sistema operativo, como Linux/X11, macOS o Windows.
+
 ```bash
 mydotfiles/
 ├── aerospace/    # Configuración de AeroSpace
@@ -80,6 +85,7 @@ mydotfiles/
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
 ├── lazygit/      # Git TUI
 ├── nvim/         # Neovim basado en LazyVim
+├── os/           # Capas especificas por sistema operativo
 ├── ripgrep/      # Busqueda ultrarrapida con rg
 ├── scripts/      # Inventario de scripts a adaptar
 ├── sesh/         # Selector de sesiones

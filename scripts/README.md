@@ -30,3 +30,4 @@ Cada script que entre a este repo debe:
 3. No depender de Yabai/Karabiner/Kanata/skhd/BTT salvo que se indique explicitamente.
 4. Poder ejecutarse manualmente antes de conectarlo a atajos o servicios.
 5. No traer rutas activas de otra maquina, usuario o estructura de repo externa.
+6. No guardar secretos, contrasenas, tokens ni claves privadas en Git.
