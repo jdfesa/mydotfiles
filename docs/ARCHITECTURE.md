@@ -64,8 +64,10 @@ mydotfiles/
       dwm/
       i3/
       x11/
-      pacman/
-      yay/
+        scripts/
+      packages/
+        pacman/
+        yay/
     windows/
       powershell/
       windows-terminal/
@@ -205,6 +207,31 @@ migracion a herramientas como `chezmoi` o `stow` se evaluara mas adelante cuando
 existan suficientes diferencias reales entre macOS, Arch Linux, Windows, VMs y
 hosts especificos.
 
+## Runtime Locations
+
+El repositorio es la fuente de verdad versionada, pero no todos los archivos se
+ejecutan o viven directamente desde `~/mydotfiles`.
+
+En GNU/Linux se siguen estas convenciones:
+
+- scripts versionados especificos de Linux: `os/linux/<area>/scripts/`;
+- comandos personales ejecutables: `$HOME/.local/bin`;
+- configuraciones de usuario: `$XDG_CONFIG_HOME`, normalmente
+  `$HOME/.config`;
+- datos persistentes de usuario: `$XDG_DATA_HOME`, normalmente
+  `$HOME/.local/share`;
+- estado/logs persistentes de usuario: `$XDG_STATE_HOME`, normalmente
+  `$HOME/.local/state`;
+- caches y builds regenerables: `$XDG_CACHE_HOME`, normalmente `$HOME/.cache`;
+- scripts locales de sistema: `/usr/local/bin` o `/usr/local/sbin`;
+- secretos y credenciales: fuera de Git.
+
+La raiz `scripts/` se reserva para bootstrap, linking e instalacion transversal
+del repositorio. Los scripts especificos de Linux, macOS o Windows deben vivir
+en la capa correspondiente.
+
+Ver `docs/adr/0004-use-standard-linux-runtime-paths.md`.
+
 ## Migration Strategy
 
 La transicion debe ser incremental:
@@ -225,4 +252,3 @@ Los ADRs viven en `docs/adr/`.
 Se crea un ADR para decisiones que afectan la arquitectura del repositorio o su
 forma de restaurarse en distintas maquinas. No se crea un ADR para cambios
 cotidianos de aliases, temas, keymaps o ajustes menores de una herramienta.
-

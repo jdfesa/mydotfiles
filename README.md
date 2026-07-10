@@ -61,7 +61,7 @@ Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. N
 - **[Homebrew](brew/README.md)**: Brewfiles por capas para instalar herramientas de forma reproducible.
 - **[Tmux](tmux/README.md)**: Sesiones persistentes, layouts y flujo terminal.
 - **[Colorscheme](colorscheme/README.md)**: Referencia para un futuro selector global de colores.
-- **[Scripts](scripts/README.md)**: Inventario de scripts utiles a adaptar, sin activar dependencias invasivas.
+- **[Scripts](scripts/README.md)**: Scripts transversales de bootstrap, linking e instalacion del repo.
 
 ### Capas especificas
 
@@ -87,7 +87,7 @@ mydotfiles/
 ├── nvim/         # Neovim basado en LazyVim
 ├── os/           # Capas especificas por sistema operativo
 ├── ripgrep/      # Busqueda ultrarrapida con rg
-├── scripts/      # Inventario de scripts a adaptar
+├── scripts/      # Bootstrap, linking e instalacion transversal
 ├── sesh/         # Selector de sesiones
 ├── silakka54/    # Teclado Silakka54
 ├── sketchybar/   # Configuración de Sketchybar

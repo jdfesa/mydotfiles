@@ -1,6 +1,22 @@
 # Scripts
 
-Esta carpeta documenta scripts utiles vistos en el paquete importado. No copie el arbol completo porque muchos scripts dependen de Yabai, Karabiner, Kanata, BetterTouchTool, OBS, rutas privadas o LaunchAgents.
+Esta carpeta queda reservada para scripts transversales del repositorio:
+bootstrap, linking, instalacion y mantenimiento general de `~/mydotfiles`.
+
+No usar esta carpeta como deposito general de scripts de macOS, Linux o Windows.
+Los scripts especificos de un sistema operativo deben vivir en su capa:
+
+```text
+os/macos/
+os/linux/
+os/windows/
+```
+
+Ejemplo: un helper de X11 vive en `os/linux/x11/scripts/`, no en `scripts/`.
+
+La lista de abajo es un inventario historico de ideas vistas en un paquete
+importado. No copie el arbol completo porque muchos scripts dependen de Yabai,
+Karabiner, Kanata, BetterTouchTool, OBS, rutas privadas o LaunchAgents.
 
 ## Candidatos para adaptar
 
@@ -25,9 +41,16 @@ Esta carpeta documenta scripts utiles vistos en el paquete importado. No copie e
 
 Cada script que entre a este repo debe:
 
-1. Tener rutas basadas en `~/mydotfiles` o variables.
-2. Tener README o comentario de uso.
-3. No depender de Yabai/Karabiner/Kanata/skhd/BTT salvo que se indique explicitamente.
-4. Poder ejecutarse manualmente antes de conectarlo a atajos o servicios.
-5. No traer rutas activas de otra maquina, usuario o estructura de repo externa.
-6. No guardar secretos, contrasenas, tokens ni claves privadas en Git.
+1. Vivir en la capa correcta: herramienta compartida, `os/`, `hosts/`,
+   `profiles/` o `scripts/` transversal.
+2. Tener rutas basadas en `~/mydotfiles`, `$HOME`, XDG o variables.
+3. Tener README o comentario de uso.
+4. No depender de Yabai/Karabiner/Kanata/skhd/BTT salvo que se indique explicitamente.
+5. Poder ejecutarse manualmente antes de conectarlo a atajos o servicios.
+6. No traer rutas activas de otra maquina, usuario o estructura de repo externa.
+7. No guardar secretos, contrasenas, tokens ni claves privadas en Git.
+
+Ver tambien:
+
+- `docs/ARCHITECTURE.md`
+- `docs/adr/0004-use-standard-linux-runtime-paths.md`
