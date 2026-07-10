@@ -3,6 +3,8 @@
 Repositorio centralizado para gestionar mis configuraciones (dotfiles) de macOS.  
 Aquí se encuentran las "fuentes de la verdad" de mis configuraciones, las cuales se despliegan en el sistema mediante **enlaces simbólicos**.
 
+Ver tambien [Dotfiles Architecture](docs/ARCHITECTURE.md) para la estrategia multi-OS y [Architecture Decision Records](docs/adr/README.md) para las decisiones de arquitectura.
+
 ---
 
 ## 🧭 Convenciones de Adaptacion
