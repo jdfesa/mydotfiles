@@ -66,6 +66,7 @@ Estas carpetas fueron importadas como piezas maduras para adaptar poco a poco. N
 ### Capas especificas
 
 - **[OS](os/)**: configuraciones y utilidades que pertenecen claramente a un sistema operativo, como Linux/X11, macOS o Windows.
+- **[Hosts](hosts/)**: notas y diferencias de maquinas concretas, como la Arch secundaria.
 
 ```bash
 mydotfiles/
@@ -81,6 +82,7 @@ mydotfiles/
 ├── gh-dash/      # Dashboard terminal para GitHub
 ├── git/          # Identidad Git y privacidad de correo
 ├── hammerspoon/  # Notificaciones y automatizaciones macOS
+├── hosts/        # Notas especificas por maquina
 ├── ghostty/      # Terminal Ghostty (config, temas, shaders)
 ├── kitty/        # Terminal Kitty (config, temas, sesiones)
 ├── lazygit/      # Git TUI
