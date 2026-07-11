@@ -41,7 +41,7 @@ La bandera `-c` limita la lista a las sesiones definidas en `~/mydotfiles/sesh/s
 brew install zoxide
 ```
 
-Ya esta incluido en `brew/00-base/Brewfile`.
+Ya esta incluido en `os/macos/packages/homebrew/00-base/Brewfile`.
 
 ## Activacion en Zsh
 
@@ -94,7 +94,8 @@ zoxide query -l    # lista carpetas conocidas
 zoxide remove PATH # elimina una entrada aprendida
 ```
 
-`zi` requiere `fzf`; en este repo ya esta incluido en `brew/00-base/Brewfile`.
+`zi` requiere `fzf`; en este repo ya esta incluido en
+`os/macos/packages/homebrew/00-base/Brewfile`.
 
 ## Carpeta en este repo
 
@@ -113,7 +114,7 @@ Esa base no se versiona porque representa historial local de uso.
 1. Instalar la herramienta desde el Brewfile base o manualmente:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/00-base/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 ```
 
 2. Agregar el bloque de activacion al final de `~/.zshrc`.

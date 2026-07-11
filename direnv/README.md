@@ -27,7 +27,7 @@ brew install direnv
 Tambien queda en la capa base:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/00-base/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 ```
 
 ## Activacion en Zsh

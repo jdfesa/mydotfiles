@@ -41,7 +41,7 @@ No hace falta declararlas manualmente si se instala `jdtls` por Brew.
 Restauracion completa del Brewfile:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/10-essential/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/10-essential/Brewfile
 ```
 
 Restauracion minima para Neovim:

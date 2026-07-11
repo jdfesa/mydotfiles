@@ -35,7 +35,7 @@ Esto tiene impacto directo en el flujo diario porque reduce la friccion de encon
 brew install ripgrep
 ```
 
-Ya esta incluido en `brew/10-essential/Brewfile`.
+Ya esta incluido en `os/macos/packages/homebrew/10-essential/Brewfile`.
 
 ## Activacion en Zsh
 
@@ -88,7 +88,7 @@ Si mas adelante agregamos una configuracion global, por ejemplo `~/.ripgreprc`, 
 1. Instalar la herramienta desde el Brewfile essential o manualmente:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/10-essential/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/10-essential/Brewfile
 ```
 
 2. Agregar el bloque de aliases a `~/.zshrc`.

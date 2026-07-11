@@ -93,7 +93,8 @@ Estos directorios son generados y no deben versionarse:
 - Para cambiar comportamiento del editor: `lua/config/options.lua`.
 - Para nuevos atajos personales: `lua/config/keymaps.lua`.
 - Para reglas por tipo de archivo: `lua/config/autocmds.lua`.
-- Para dependencias OS: `brew/10-essential/Brewfile` y `DEPENDENCIES.md`.
+- Para dependencias de macOS:
+  `os/macos/packages/homebrew/10-essential/Brewfile` y `DEPENDENCIES.md`.
 
 ## Que no tocar
 

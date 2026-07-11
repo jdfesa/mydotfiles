@@ -33,7 +33,7 @@ En macOS, `Alt-C` puede depender de como el emulador de terminal envie la tecla 
 brew install fzf
 ```
 
-Ya esta incluido en `brew/00-base/Brewfile`.
+Ya esta incluido en `os/macos/packages/homebrew/00-base/Brewfile`.
 
 ## Activacion en Zsh
 
@@ -71,7 +71,7 @@ Si mas adelante agregamos opciones como colores, previews o comandos por defecto
 1. Instalar la herramienta desde el Brewfile base o manualmente:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/00-base/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 ```
 
 2. Agregar el bloque de activacion a `~/.zshrc`, antes de `zoxide`.

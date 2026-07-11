@@ -87,7 +87,7 @@
   - **Cuándo considerarlo:** Cuando empieces a trabajar con servidores SSH o necesités sesiones que sobrevivan al cierre de Ghostty. No es urgente con tu setup actual.
 
 - [ ] **`Brewfile`** — Lista reproducible de todas tus dependencias de Homebrew.
-  - Comando para generarlo: `brew bundle dump --describe --file ~/mydotfiles/Brewfile`
+  - Comando para generarlo: `brew bundle dump --describe --file ~/mydotfiles/os/macos/packages/homebrew/Brewfile`
   - **Por qué probarlo:** Tu repo de dotfiles ya está muy ordenado. Un `Brewfile` lo convierte en un setup **100% reproducible** en cualquier Mac nuevo con un solo comando.
 
 - [ ] **`stow`** — Gestor de symlinks para dotfiles. Automatiza los `ln -sf` manuales.

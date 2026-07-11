@@ -26,7 +26,7 @@ git clone https://github.com/jdfesa/mydotfiles.git ~/mydotfiles
 2. Instalar dependencias esenciales:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/10-essential/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/10-essential/Brewfile
 ```
 
 Si no queres instalar todo el Brewfile, el minimo para Neovim es:

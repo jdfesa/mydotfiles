@@ -165,7 +165,8 @@ Si pasa ese filtro:
 
 - Plugins propios: crear/editar archivo en `nvim/lua/plugins/`.
 - Lenguajes soportados por LazyVim: preferir extras en `nvim/lua/plugins/extras.lua`.
-- Dependencias externas: declarar en `brew/10-essential/Brewfile` o documentar Mason.
+- Dependencias externas de macOS: declarar en
+  `os/macos/packages/homebrew/10-essential/Brewfile` o documentar Mason.
 - Decisiones no obvias: agregar nota en `DECISIONS.md`.
 
 ## Que no tocar

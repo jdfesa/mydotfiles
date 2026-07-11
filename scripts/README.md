@@ -3,6 +3,17 @@
 Esta carpeta queda reservada para scripts transversales del repositorio:
 bootstrap, linking, instalacion y mantenimiento general de `~/mydotfiles`.
 
+## Comandos activos
+
+- `scripts/doctor macos-main`: comprueba las fuentes y symlinks declarados por
+  el perfil sin modificar el sistema.
+- `scripts/link --dry-run macos-main`: muestra que enlaces crearia o repararia.
+- `scripts/link --repair macos-main`: crea enlaces ausentes y reemplaza
+  symlinks que apuntan a una fuente anterior. Nunca sobrescribe archivos o
+  directorios reales.
+
+Los manifiestos viven en `profiles/*.links`; ver `profiles/README.md`.
+
 No usar esta carpeta como deposito general de scripts de macOS, Linux o Windows.
 Los scripts especificos de un sistema operativo deben vivir en su capa:
 
@@ -41,8 +52,8 @@ Karabiner, Kanata, BetterTouchTool, OBS, rutas privadas o LaunchAgents.
 
 Cada script que entre a este repo debe:
 
-1. Vivir en la capa correcta: herramienta compartida, `os/`, `hosts/`,
-   `profiles/` o `scripts/` transversal.
+1. Vivir en la capa correcta: `config/`, `os/`, `profiles/`, documentacion de
+   maquinas o `scripts/` transversal.
 2. Tener rutas basadas en `~/mydotfiles`, `$HOME`, XDG o variables.
 3. Tener README o comentario de uso.
 4. No depender de Yabai/Karabiner/Kanata/skhd/BTT salvo que se indique explicitamente.

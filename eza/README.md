@@ -25,7 +25,7 @@ Esto tiene impacto directo en el flujo diario porque cambia como lees carpetas y
 brew install eza
 ```
 
-Ya esta incluido en `brew/00-base/Brewfile`.
+Ya esta incluido en `os/macos/packages/homebrew/00-base/Brewfile`.
 
 ## Activacion en Zsh
 
@@ -70,7 +70,7 @@ Si mas adelante agregamos colores propios, variables de entorno o integracion co
 1. Instalar la herramienta desde el Brewfile base o manualmente:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/00-base/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 ```
 
 2. Agregar el bloque de aliases a `~/.zshrc`.

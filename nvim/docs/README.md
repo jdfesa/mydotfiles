@@ -48,7 +48,7 @@ En esta configuracion, el contrato queda asi:
 |---|---|---|---|
 | Config Neovim | `nvim/` | Si | symlink a `~/.config/nvim` |
 | Plugins Lazy | `nvim/lazy-lock.json` | Si | `nvim --headless "+Lazy! sync" +qa` |
-| Binarios OS | `brew/10-essential/Brewfile` | Si | `brew bundle --file ...` |
+| Binarios macOS | `os/macos/packages/homebrew/10-essential/Brewfile` | Si | `brew bundle --file ...` |
 | Mason | `~/.local/share/nvim/mason` | No | `:MasonInstall ...` |
 | Treesitter parsers | `~/.local/share/nvim/site/parser` | No | comando documentado en `RESTORE.md` |
 | Cache/estado | `~/.cache/nvim`, `~/.local/state/nvim` | No | se regenera |
