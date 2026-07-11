@@ -38,4 +38,5 @@ cask "ghostty"
 cask "coconutbattery"
 
 brew "jq"
+brew "shellcheck"
 brew "sketchybar"

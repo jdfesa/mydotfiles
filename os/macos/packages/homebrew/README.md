@@ -22,6 +22,8 @@ La idea practica es:
 ## Capas
 
 - `00-base/Brewfile`: herramientas CLI y apps base para terminal y dotfiles.
+- `00-base/Basic.Brewfile`: referencia historica de una instalacion minima; no
+  forma parte del flujo principal de restauracion.
 - `10-essential/Brewfile`: herramientas de desarrollo, fuentes, navegadores y utilidades frecuentes.
 - `15-nice-to-haves/Brewfile`: apps y herramientas convenientes, pero no criticas.
 - `20-optional/Brewfile`: software opcional o dependiente de gustos/proyectos.
@@ -103,5 +105,5 @@ activa apuntando Hammerspoon a `~/.config/hammerspoon/init.lua`.
 
 - Quitar apps que no uso.
 - Separar herramientas realmente esenciales de experimentos.
-- Cruzar esta lista con `apps/macos/software_list.md`.
+- Cruzar esta lista con `docs/inventory/macos-software.md`.
 - Decidir cuales ideas de [`IDEAS.md`](IDEAS.md) pasan a `20-optional/Brewfile` y cuales merecen carpeta propia.

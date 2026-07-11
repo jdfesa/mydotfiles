@@ -1,4 +1,4 @@
-# User that wants to install just the basic stuff
+# Referencia historica de una instalacion minima. No es el perfil principal.
 
 tap "homebrew/bundle"
 tap "homebrew/services"
