@@ -1,4 +1,4 @@
-# Filename: ~/mydotfiles/brew/00-base/Brewfile
+# Filename: ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 # Local base package list.
 
 # Adding taps (repos) on top as I was getting errors

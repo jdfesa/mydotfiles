@@ -111,7 +111,7 @@ Meh + ; -> Esc
 La carpeta `aerospace/` debe estar enlazada como configuracion de AeroSpace:
 
 ```bash
-ln -s ~/mydotfiles/aerospace ~/.config/aerospace
+ln -s ~/mydotfiles/os/macos/aerospace ~/.config/aerospace
 ```
 
 AeroSpace busca la config en:
@@ -125,4 +125,4 @@ AeroSpace busca la config en:
 - [AeroSpace Guide](https://nikitabobko.github.io/AeroSpace/guide)
 - [AeroSpace Commands](https://nikitabobko.github.io/AeroSpace/commands)
 - [AeroSpace Goodies](https://nikitabobko.github.io/AeroSpace/goodies)
-- [Configuracion del Silakka54](../silakka54/README.md)
+- [Configuracion del Silakka54](../../../silakka54/README.md)

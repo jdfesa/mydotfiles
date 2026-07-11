@@ -1,4 +1,4 @@
-module github.com/jdfesa/mydotfiles/hammerspoon/gomacal
+module github.com/jdfesa/mydotfiles/os/macos/hammerspoon/gomacal
 
 go 1.22.5
 

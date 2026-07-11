@@ -59,7 +59,7 @@ Compilar el binario local:
 
 ```bash
 mkdir -p ~/.local/bin
-cd ~/mydotfiles/hammerspoon/gomacal
+cd ~/mydotfiles/os/macos/hammerspoon/gomacal
 go build -o ~/.local/bin/gomacal .
 ```
 
@@ -121,7 +121,7 @@ Titulo § starts in 5m § https://meet.google.com/... § event-id
 Editar:
 
 ```bash
-~/mydotfiles/hammerspoon/config.lua
+~/mydotfiles/os/macos/hammerspoon/config.lua
 ```
 
 Cambiar:

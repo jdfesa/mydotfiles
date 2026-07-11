@@ -33,19 +33,19 @@ Ver [`IDEAS.md`](IDEAS.md) para herramientas vistas en `dotfiles-main` que podri
 Revisar antes de ejecutar. Para instalar una capa:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/00-base/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 ```
 
 Para inspeccionar sin instalar:
 
 ```bash
-sed -n '1,220p' ~/mydotfiles/brew/00-base/Brewfile
+sed -n '1,220p' ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 ```
 
 Para comprobar que falta sin instalar automaticamente:
 
 ```bash
-brew bundle check --file ~/mydotfiles/brew/00-base/Brewfile
+brew bundle check --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 ```
 
 ## Por que existe
@@ -65,7 +65,7 @@ brew install eza
 Con Brewfiles, esa decision queda documentada y se puede repetir:
 
 ```bash
-brew bundle --file ~/mydotfiles/brew/00-base/Brewfile
+brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 ```
 
 Esto no reemplaza a Homebrew. Solo usa `brew bundle` para leer la lista e instalar lo que falte.
@@ -85,11 +85,19 @@ En resumen: Homebrew es la herramienta que instala paquetes; los Brewfiles son l
 - Historial local, bases de datos o caches.
 - Preferencias personales generadas por apps despues de usarlas.
 
-Por ejemplo: `brew/00-base/Brewfile` instala `zoxide` y `direnv`, pero sus activaciones viven en `~/.zshrc` y estan explicadas en `../zoxide/README.md` y `../direnv/README.md`.
+Por ejemplo: `00-base/Brewfile` instala `zoxide` y `direnv`, pero sus
+activaciones viven en `~/.zshrc` y estan explicadas en
+[`zoxide/README.md`](../../../../zoxide/README.md) y
+[`direnv/README.md`](../../../../direnv/README.md).
 
-`gh-dash` es un caso distinto: no se instala con `brew install`, sino como extension de GitHub CLI con `gh extension install dlvhdr/gh-dash`. Su configuracion vive en [`../gh-dash/README.md`](../gh-dash/README.md).
+`gh-dash` es un caso distinto: no se instala con `brew install`, sino como
+extension de GitHub CLI con `gh extension install dlvhdr/gh-dash`. Su
+configuracion vive en
+[`gh-dash/README.md`](../../../../gh-dash/README.md).
 
-`hammerspoon` se instala como cask porque es una app de macOS. La configuracion versionada vive en [`../hammerspoon/README.md`](../hammerspoon/README.md) y se activa apuntando Hammerspoon a `~/.config/hammerspoon/init.lua`.
+`hammerspoon` se instala como cask porque es una app de macOS. La configuracion
+versionada vive en [`hammerspoon/README.md`](../../hammerspoon/README.md) y se
+activa apuntando Hammerspoon a `~/.config/hammerspoon/init.lua`.
 
 ## Pendiente
 

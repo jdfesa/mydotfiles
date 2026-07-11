@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ~/.mydotfiles/aerospace/scripts/borders_mode.sh
+# ~/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh
 # Usage: ./borders_mode.sh [MODE_NAME]
 
 set -u

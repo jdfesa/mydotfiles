@@ -74,7 +74,7 @@ Si ya tienes este repositorio clonado en tu máquina, solo necesitas crear el en
 rm -rf ~/.config/sketchybar
 
 # Crea el enlace simbólico (Ajusta la ruta si tus dotfiles están en otro lado)
-ln -sf ~/mydotfiles/sketchybar ~/.config/sketchybar
+ln -sf ~/mydotfiles/os/macos/sketchybar ~/.config/sketchybar
 
 # Reinicia Sketchybar para aplicar cambios
 brew services restart sketchybar

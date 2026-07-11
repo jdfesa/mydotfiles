@@ -6,7 +6,7 @@
 
 Activo:
 
-- recordatorios manuales por fecha desde `hammerspoon/reminders.lua`;
+- recordatorios manuales por fecha desde `os/macos/hammerspoon/reminders.lua`;
 - notificaciones con `hs.notify`;
 - alert visual con `hs.alert` como respaldo;
 - Hammerspoon leyendo esta carpeta desde `~/.config/hammerspoon`.
@@ -56,7 +56,7 @@ No se copio tal cual porque:
 La idea rescatada es el uso de `hs.notify` con timers. La implementacion de este repo vive en:
 
 ```bash
-~/mydotfiles/hammerspoon
+~/mydotfiles/os/macos/hammerspoon
 ```
 
 ## Spoons evaluados
@@ -75,7 +75,9 @@ No se copio directo porque depende de una ruta ajena:
 /Users/omerxx/dotfiles/hammerspoon/calendar-app/calapp
 ```
 
-La idea si se reutilizo: scheduler + notificaciones accionables. Nuestra version inicial usa `hammerspoon/reminders.lua` para fechas concretas. Mas adelante podemos adaptar `GoMaCal` si queremos leer Google Calendar real.
+La idea si se reutilizo: scheduler + notificaciones accionables. Nuestra version
+inicial usa `os/macos/hammerspoon/reminders.lua` para fechas concretas. Mas
+adelante podemos adaptar `GoMaCal` si queremos leer Google Calendar real.
 
 ### AClock.spoon
 
@@ -123,7 +125,7 @@ brew install --cask hammerspoon
 Tambien queda documentado en:
 
 ```bash
-~/mydotfiles/brew/10-essential/Brewfile
+~/mydotfiles/os/macos/packages/homebrew/10-essential/Brewfile
 ```
 
 ## Activacion
@@ -131,14 +133,14 @@ Tambien queda documentado en:
 La fuente de verdad queda en:
 
 ```bash
-~/mydotfiles/hammerspoon
+~/mydotfiles/os/macos/hammerspoon
 ```
 
 Usamos `~/.config/hammerspoon` como ruta visible y reproducible:
 
 ```bash
 mkdir -p ~/.config
-ln -s ~/mydotfiles/hammerspoon ~/.config/hammerspoon
+ln -s ~/mydotfiles/os/macos/hammerspoon ~/.config/hammerspoon
 defaults write org.hammerspoon.Hammerspoon MJConfigFile "$HOME/.config/hammerspoon/init.lua"
 ```
 
@@ -167,7 +169,7 @@ Por ahora no usamos Hammerspoon para mover ventanas, asi que AeroSpace no deberi
 Editar:
 
 ```bash
-~/mydotfiles/hammerspoon/reminders.lua
+~/mydotfiles/os/macos/hammerspoon/reminders.lua
 ```
 
 Ejemplo:
@@ -211,7 +213,7 @@ El sistema actual de `reminders.lua` sirve para fechas escritas manualmente.
 - Requiere autorizar Google Calendar una vez desde navegador.
 - Agrega mas archivos al repo: un Spoon y una herramienta Go local.
 
-Por eso queda apagado en `hammerspoon/config.lua`:
+Por eso queda apagado en `os/macos/hammerspoon/config.lua`:
 
 ```lua
 google_calendar = {
@@ -252,7 +254,8 @@ Para configurarla:
 1. Compilar el binario local siguiendo [`gomacal/README.md`](gomacal/README.md).
 2. Crear `~/.config/gomacal/credentials.json` desde Google Cloud.
 3. Ejecutar `gomacal --next 5m` una vez para autorizar la cuenta.
-4. Cambiar `google_calendar.enabled` a `true` en `hammerspoon/config.lua`.
+4. Cambiar `google_calendar.enabled` a `true` en
+   `os/macos/hammerspoon/config.lua`.
 5. Recargar Hammerspoon.
 
 El Spoon usa `--no-auth` para no abrir navegadores automaticamente durante el trabajo diario. Si falta el token, no notifica hasta que hagas el primer login manual.

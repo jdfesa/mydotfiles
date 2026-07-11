@@ -26,7 +26,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # ─── Integración Sketchybar ──────────────────────────────────────────
 # Notifica a Sketchybar cuando cambiás de workspace para actualizar la barra.
 exec-on-workspace-change = ['/bin/bash', '-c',
-    '$HOME/mydotfiles/aerospace/scripts/update_sketchybar_workspace.sh'
+    '$HOME/mydotfiles/os/macos/aerospace/scripts/update_sketchybar_workspace.sh'
 ]
 
 # ─── Workspaces persistentes (por letra, mnemotécnicos) ──────────────
@@ -114,15 +114,15 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     # ─── Modo Resize (Meh + M = Measure/Medir) ─────────────
     alt-ctrl-shift-m = [
         'mode resize',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh RESIZE',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh RESIZE',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh RESIZE',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh RESIZE',
     ]
 
     # ─── Modo Servicio (Meh + ;) ──────────────────────────────────
     alt-ctrl-shift-semicolon = [
         'mode service',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh SERVICE',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh SERVICE',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh SERVICE',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh SERVICE',
     ]
 
 # ═════════════════════════════════════════════════════════════════════
@@ -132,31 +132,31 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
     esc = [
         'reload-config',
         'mode main',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh NORMAL',
     ]
     enter = [
         'mode main',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh NORMAL',
     ]
     r = [
         'flatten-workspace-tree',
         'mode main',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh NORMAL',
     ]
     f = [
         'layout floating tiling',
         'mode main',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh NORMAL',
     ]
     b = [
         'balance-sizes',
         'mode main',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh NORMAL',
     ]
 
 # ═════════════════════════════════════════════════════════════════════
@@ -165,13 +165,13 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
 [mode.resize.binding]
     esc = [
         'mode main',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh NORMAL',
     ]
     enter = [
         'mode main',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/update_mode_indicator.sh NORMAL',
-        'exec-and-forget $HOME/mydotfiles/aerospace/scripts/borders_mode.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/update_mode_indicator.sh NORMAL',
+        'exec-and-forget $HOME/mydotfiles/os/macos/aerospace/scripts/borders_mode.sh NORMAL',
     ]
     h = 'resize width -50'
     j = 'resize height +50'
