@@ -6,7 +6,7 @@ Date: 2026-07-10
 ## Context
 
 > Esta decision conserva el contexto historico. ADR 0005 mantiene las capas,
-> pero agrupa las configuraciones compartidas bajo `config/` para evitar que la
+> pero agrupa las configuraciones compartidas bajo `shared/` para evitar que la
 > raiz crezca sin limite.
 
 Separar todo por sistema operativo desde la raiz parece ordenado al principio,

@@ -52,7 +52,7 @@ Karabiner, Kanata, BetterTouchTool, OBS, rutas privadas o LaunchAgents.
 
 Cada script que entre a este repo debe:
 
-1. Vivir en la capa correcta: `config/`, `os/`, `profiles/`, documentacion de
+1. Vivir en la capa correcta: `shared/`, `os/`, `profiles/`, documentacion de
    maquinas o `scripts/` transversal.
 2. Tener rutas basadas en `~/mydotfiles`, `$HOME`, XDG o variables.
 3. Tener README o comentario de uso.

@@ -1,17 +1,17 @@
 # source relative to repository|destination below $HOME
 os/macos/aerospace|$HOME/.config/aerospace
 os/macos/borders/bordersrc|$HOME/.config/borders/bordersrc
-btop|$HOME/.config/btop
-fastfetch|$HOME/.config/fastfetch
-gh-dash/config.yml|$HOME/.config/gh-dash/config.yml
-ghostty|$HOME/.config/ghostty
+shared/btop|$HOME/.config/btop
+shared/fastfetch|$HOME/.config/fastfetch
+shared/gh-dash/config.yml|$HOME/.config/gh-dash/config.yml
+shared/ghostty|$HOME/.config/ghostty
 os/macos/hammerspoon|$HOME/.config/hammerspoon
-kitty|$HOME/.config/kitty
-lazygit/config.yml|$HOME/Library/Application Support/lazygit/config.yml
-nvim|$HOME/.config/nvim
-sesh|$HOME/.config/sesh
+shared/kitty|$HOME/.config/kitty
+shared/lazygit/config.yml|$HOME/Library/Application Support/lazygit/config.yml
+shared/nvim|$HOME/.config/nvim
+shared/sesh|$HOME/.config/sesh
 os/macos/sketchybar|$HOME/.config/sketchybar
-starship/starship.toml|$HOME/.config/starship.toml
-vscode/settings.json|$HOME/Library/Application Support/Code/User/settings.json
-yazi|$HOME/.config/yazi
-zsh/zshrc|$HOME/.zshrc
+shared/starship/starship.toml|$HOME/.config/starship.toml
+shared/vscode/settings.json|$HOME/Library/Application Support/Code/User/settings.json
+shared/yazi|$HOME/.config/yazi
+shared/zsh/zshrc|$HOME/.zshrc

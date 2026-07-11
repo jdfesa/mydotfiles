@@ -33,7 +33,7 @@ profiles/macos-main.links
 
 ```text
 mydotfiles/
-  config/                    # configuraciones compartidas
+  shared/                    # herramientas y configuraciones compartidas
     kitty/
     nvim/
     starship/
@@ -80,13 +80,12 @@ mydotfiles/
     machines/
 ```
 
-La migracion hacia esta estructura es incremental. Una carpeta que todavia vive
-en la raiz conserva su comportamiento hasta que su perfil pueda repararse y
-verificarse automaticamente.
+Esta estructura ya esta activa. Las nuevas herramientas deben clasificarse antes
+de agregarse; no se crean carpetas de herramientas directamente en la raiz.
 
 ## Shared Configurations
 
-`config/<tool>/` contiene herramientas que se reutilizan en mas de un sistema o
+`shared/<tool>/` contiene herramientas que se reutilizan en mas de un sistema o
 que tienen una base razonablemente portable.
 
 Ejemplos:
@@ -137,7 +136,7 @@ configuraciones versionadas que justifiquen una jerarquia completa por maquina.
 
 Las responsabilidades se distribuyen asi:
 
-- configuracion reutilizable: `config/` u `os/<system>/`;
+- configuracion reutilizable: `shared/` u `os/<system>/`;
 - seleccion de piezas para una maquina: `profiles/<profile>.links`;
 - inventario, migracion y recuperacion: `docs/machines/<machine>.md`;
 - rutas privadas, secretos y valores puramente locales: archivos ignorados.
@@ -154,7 +153,7 @@ Cada entrada de `profiles/*.links` relaciona una fuente relativa al repositorio
 con un destino bajo `$HOME`. Por ejemplo:
 
 ```text
-config/nvim|$HOME/.config/nvim
+shared/nvim|$HOME/.config/nvim
 os/macos/aerospace|$HOME/.config/aerospace
 ```
 
@@ -226,7 +225,8 @@ futuro no requiere volver a decidir la clasificacion del repositorio.
 1. Inventariar y verificar los enlaces actuales mediante un perfil.
 2. Mover las configuraciones exclusivas de macOS a `os/macos/`.
 3. Reparar los enlaces y validar las aplicaciones afectadas.
-4. Mover configuraciones compartidas a `config/`, una herramienta por vez.
+4. Mantener las configuraciones compartidas bajo `shared/` y verificar sus
+   perfiles.
 5. Mover firmware y perifericos a `hardware/`.
 6. Convertir inventarios de software en documentacion o manifiestos reales.
 7. Crear `os/linux/dwm/` y el perfil `arch-dwm` sin depender de archivos

@@ -1,0 +1,18 @@
+# Copy this file to shared/zsh/local.zsh for machine-specific Zsh settings.
+# shared/zsh/local.zsh is ignored by Git.
+
+# Example: project/runtime paths that should not be assumed on every Mac.
+# export PATH="$HOME/.ghcup/bin:$HOME/.cabal/bin:$PATH"
+
+# Example: NVM.
+# export NVM_DIR="$HOME/.nvm"
+# [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+# [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+
+# Example: Android SDK.
+# export ANDROID_HOME="/usr/local/share/android-commandlinetools"
+# [[ -d "$ANDROID_HOME/cmdline-tools/latest/bin" ]] && export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+# [[ -d "$ANDROID_HOME/platform-tools" ]] && export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+# Example: local IDE/CLI tools.
+# [[ -d "$HOME/.some-tool/bin" ]] && export PATH="$HOME/.some-tool/bin:$PATH"

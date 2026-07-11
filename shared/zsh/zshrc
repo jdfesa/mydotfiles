@@ -1,0 +1,85 @@
+# Main Zsh configuration for jd/mydotfiles.
+# This file is intended to be linked from ~/.zshrc.
+
+# Detect NetBeans' legacy terminal so Starship/TrueColor do not break rendering.
+IS_NETBEANS=false
+if [[ -n "${NETBEANS_USERDIR:-}" ]] || [[ "${__CFBundleIdentifier:-}" == "org.apache.netbeans" ]]; then
+  IS_NETBEANS=true
+fi
+
+# Base paths. Keep Homebrew paths first so Intel and Apple Silicon Macs both work.
+export PATH="/usr/local/bin:/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+
+# Machine-specific config lives here and is ignored by Git.
+if [[ -f "$HOME/mydotfiles/shared/zsh/local.zsh" ]]; then
+  source "$HOME/mydotfiles/shared/zsh/local.zsh"
+fi
+
+# Prompt: Starship everywhere except NetBeans.
+if [[ "$IS_NETBEANS" == false ]] && command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+
+# Zsh quality-of-life plugins from Homebrew, guarded for fresh machines.
+for brew_prefix in /usr/local /opt/homebrew; do
+  if [[ -r "$brew_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+    source "$brew_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    break
+  fi
+done
+
+for brew_prefix in /usr/local /opt/homebrew; do
+  if [[ -r "$brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+    source "$brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    break
+  fi
+done
+
+# Minimal prompt for NetBeans' legacy terminal.
+if [[ "$IS_NETBEANS" == true ]]; then
+  setopt promptsubst
+  autoload -Uz vcs_info
+  zstyle ':vcs_info:*' enable git
+  zstyle ':vcs_info:git:*' formats ' %F{magenta}%f %F{green} %b%f'
+  precmd() { vcs_info }
+  PROMPT='%F{cyan} %1~%f${vcs_info_msg_0_} ➔ '
+fi
+
+# Eza: modern ls replacement with icons, Git and tree view.
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --icons=auto --group-directories-first'
+  alias ll='eza -la --icons=auto --git --group-directories-first'
+  alias la='eza -la --icons=auto --group-directories-first'
+  alias lt='eza --tree --icons=auto --group-directories-first'
+fi
+
+# Bat: enriched file reading without replacing cat.
+if command -v bat >/dev/null 2>&1; then
+  alias b='bat'
+  alias bp='bat --paging=always'
+  alias catp='bat --style=plain --paging=never'
+  alias preview='bat --style=numbers,changes --paging=always'
+fi
+
+# Ripgrep: fast project text/file search.
+if command -v rg >/dev/null 2>&1; then
+  alias rgi='rg -i'
+  alias rgl='rg --files'
+  alias rgp='rg --line-number --context 2'
+fi
+
+# Fzf: fuzzy finder for history, files and directories.
+if command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
+fi
+
+# Direnv: load project-local environment variables after explicit approval.
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+
+# Zoxide: smart directory jumping.
+# Keep this at the end so its chpwd hook remains intact.
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi

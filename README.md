@@ -22,7 +22,7 @@ y las decisiones importantes en [Architecture Decision Records](docs/adr/README.
 
 ```text
 mydotfiles/
-  config/                    # configuraciones compartidas (migracion gradual)
+  shared/                    # herramientas y configuraciones compartidas
   os/
     macos/                   # AeroSpace, Sketchybar, Hammerspoon, Borders
       packages/homebrew/     # manifiestos de Homebrew
@@ -34,15 +34,14 @@ mydotfiles/
   docs/                      # arquitectura, ADR e inventarios
 ```
 
-La migracion esta en curso. Las herramientas compartidas que aun viven en la
-raiz se moveran a `config/<tool>/` una por una, reparando y verificando sus
-enlaces en cada etapa.
+Las herramientas compartidas viven bajo `shared/<tool>/`; la raiz queda
+reservada para categorias estables.
 
 ## Placement Rules
 
 | Tipo | Ubicacion | Ejemplos |
 |---|---|---|
-| Compartido | `config/<tool>/` | Kitty, Neovim, Starship, Yazi |
+| Compartido | `shared/<tool>/` | Kitty, Neovim, Starship, Yazi |
 | Solo macOS | `os/macos/<tool>/` | AeroSpace, Sketchybar, Hammerspoon |
 | Solo Linux | `os/linux/<tool>/` | DWM, i3, X11, Wayland |
 | Solo Windows | `os/windows/<tool>/` | PowerShell, Windows Terminal |
@@ -62,8 +61,8 @@ Arch pertenece a `profiles/`; sus notas operativas viven en `docs/machines/`.
 - [Homebrew](os/macos/packages/homebrew/README.md)
 
 Las herramientas compartidas activas incluyen Kitty, Ghostty, Neovim, Zsh,
-Starship, VS Code, Btop, Yazi, Lazygit, Gh Dash, Sesh y Fastfetch. Todavia
-conservan su ubicacion historica en la raiz hasta su etapa de migracion.
+Starship, VS Code, Btop, Yazi, Lazygit, Gh Dash, Sesh y Fastfetch. Todas viven
+bajo `shared/`.
 
 ## Symlink Workflow
 
@@ -109,8 +108,8 @@ brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
 brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/10-essential/Brewfile
 ```
 
-Los archivos locales ignorados, por ejemplo `zsh/local.zsh`, se crean desde su
-correspondiente ejemplo y nunca deben contener secretos versionados.
+Los archivos locales ignorados, por ejemplo `shared/zsh/local.zsh`, se crean
+desde su correspondiente ejemplo y nunca deben contener secretos versionados.
 
 ## Safe Migration
 

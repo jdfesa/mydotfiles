@@ -87,13 +87,13 @@ En resumen: Homebrew es la herramienta que instala paquetes; los Brewfiles son l
 
 Por ejemplo: `00-base/Brewfile` instala `zoxide` y `direnv`, pero sus
 activaciones viven en `~/.zshrc` y estan explicadas en
-[`zoxide/README.md`](../../../../zoxide/README.md) y
-[`direnv/README.md`](../../../../direnv/README.md).
+[`zoxide/README.md`](../../../../shared/zoxide/README.md) y
+[`direnv/README.md`](../../../../shared/direnv/README.md).
 
 `gh-dash` es un caso distinto: no se instala con `brew install`, sino como
 extension de GitHub CLI con `gh extension install dlvhdr/gh-dash`. Su
 configuracion vive en
-[`gh-dash/README.md`](../../../../gh-dash/README.md).
+[`gh-dash/README.md`](../../../../shared/gh-dash/README.md).
 
 `hammerspoon` se instala como cask porque es una app de macOS. La configuracion
 versionada vive en [`hammerspoon/README.md`](../../hammerspoon/README.md) y se

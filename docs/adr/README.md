@@ -16,7 +16,7 @@ Agregar un ADR cuando la decision:
 - afecta la estructura del repositorio;
 - cambia la estrategia de instalacion o restauracion;
 - define una convencion que varias herramientas deben seguir;
-- separa responsabilidades entre `config/`, `os/`, `profiles/`, documentacion de
+- separa responsabilidades entre `shared/`, `os/`, `profiles/`, documentacion de
   maquinas y valores locales;
 - evita volver a discutir una decision importante en el futuro.
 

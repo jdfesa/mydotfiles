@@ -1,0 +1,64 @@
+[[session]]
+name = "Downloads"
+path = "~/Downloads"
+startup_command = "pwd"
+
+[[session]]
+name = "mydotfiles"
+path = "~/mydotfiles"
+startup_command = "git status --short"
+preview_command = "sed -n '1,120p' ~/mydotfiles/README.md"
+
+[[session]]
+name = "git mydotfiles"
+path = "~/mydotfiles"
+startup_command = "lazygit"
+preview_command = "git -C ~/mydotfiles status --short"
+
+[[session]]
+name = "files mydotfiles"
+path = "~/mydotfiles"
+startup_command = "yazi"
+preview_command = "find ~/mydotfiles -maxdepth 2 -type d | sed -n '1,80p'"
+
+[[session]]
+name = "system monitor"
+path = "~"
+startup_command = "btop"
+preview_command = "printf 'Open btop system monitor'"
+
+[[session]]
+name = "aerospace config"
+path = "~/mydotfiles/os/macos/aerospace"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/os/macos/aerospace/aerospace.toml"
+
+[[session]]
+name = "sketchybar config"
+path = "~/mydotfiles/os/macos/sketchybar"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/os/macos/sketchybar/README.md"
+
+[[session]]
+name = "kitty config"
+path = "~/mydotfiles/shared/kitty"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/shared/kitty/kitty.conf"
+
+[[session]]
+name = "brew files"
+path = "~/mydotfiles/os/macos/packages/homebrew"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/os/macos/packages/homebrew/README.md"
+
+[[session]]
+name = "sesh config"
+path = "~/mydotfiles/shared/sesh"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/shared/sesh/sesh.toml"
+
+[[session]]
+name = "tmux config"
+path = "~/mydotfiles/shared/tmux"
+startup_command = "ls"
+preview_command = "sed -n '1,120p' ~/mydotfiles/shared/tmux/tmux.conf"

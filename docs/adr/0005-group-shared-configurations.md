@@ -1,4 +1,4 @@
-# Group Shared Configurations Under Config
+# Group Shared Configurations Under Shared
 
 Status: Accepted
 Date: 2026-07-10
@@ -21,7 +21,7 @@ sistema, notas de una maquina y combinaciones instalables.
 Usar estas ubicaciones canonicas:
 
 ```text
-config/<tool>/                 # configuracion compartida
+shared/<tool>/                 # configuracion compartida
 os/<system>/<tool>/            # configuracion exclusiva de un sistema
 os/<system>/packages/          # manifiestos del gestor de paquetes
 profiles/<profile>.links       # declaracion de symlinks
@@ -31,18 +31,18 @@ docs/machines/<machine>.md     # notas operativas de una maquina
 docs/                          # arquitectura, ADR e inventarios
 ```
 
-Una herramienta compartida tiene una sola fuente bajo `config/`. Las diferencias
+Una herramienta compartida tiene una sola fuente bajo `shared/`. Las diferencias
 pequenas se resuelven mediante includes, variables o archivos locales. Una
 herramienta exclusiva se coloca bajo su sistema operativo.
 
 DWM vive en `os/linux/dwm/`; AeroSpace vive en `os/macos/aerospace/`; Kitty vive
-en `config/kitty/` mientras siga compartiendo una base entre macOS y Linux.
+en `shared/kitty/` mientras siga compartiendo una base entre macOS y Linux.
 
 Los nombres de carpetas, archivos tecnicos y titulos se escriben en ingles. El
 contenido explicativo se escribe en espanol.
 
 No se crea una capa `hosts/` por anticipado. La configuracion reutilizable vive
-en `config/` u `os/`, la seleccion instalable vive en `profiles/`, las notas de
+en `shared/` u `os/`, la seleccion instalable vive en `profiles/`, las notas de
 una maquina viven en `docs/machines/` y los valores puramente locales quedan
 fuera de Git. Una futura capa por maquina requerira un problema real y una nueva
 decision.
@@ -66,6 +66,7 @@ Costos:
 - los symlinks existentes deben repararse al mover cada carpeta;
 - referencias internas a `~/mydotfiles/<tool>` deben actualizarse;
 - los README historicos necesitan acompañar la migracion;
-- durante la transicion conviviran temporalmente carpetas nuevas y antiguas.
+- cada movimiento estructural exige actualizar perfiles, rutas internas y
+  documentacion en el mismo cambio.
 
 Este ADR reemplaza ADR 0002 como definicion de la estructura canonica.

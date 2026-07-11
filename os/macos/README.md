@@ -11,6 +11,5 @@ Contenido inicial:
 - `sketchybar/`: barra de estado;
 - `packages/homebrew/`: manifiestos de Homebrew.
 
-Las herramientas compartidas con GNU/Linux o Windows pertenecen a `config/`, no
+Las herramientas compartidas con GNU/Linux o Windows pertenecen a `shared/`, no
 a esta carpeta.
-

@@ -1,6 +1,7 @@
 # Brew and Shell Ideas
 
-Ideas tomadas de `~/Downloads/dotfiles-main` para evaluar mas adelante. No estan activadas en `zsh/zshrc` todavia.
+Ideas tomadas de `~/Downloads/dotfiles-main` para evaluar mas adelante. No estan
+activadas en `shared/zsh/zshrc` todavia.
 
 ## Principio
 
