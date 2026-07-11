@@ -1,14 +1,29 @@
 # DWM
 
-Espacio de trabajo para construir una configuracion de DWM limpia y
-reproducible. Los antiguos fuentes compilados en `~/suckless` no son la base de
-esta carpeta: DWM se incorporara aqui desde su origen, con version, parches,
-dependencias y procedimiento de build documentados.
+Configuracion de DWM para construir un window manager limpio y reproducible.
+DWM se mantiene separado de ST, Dmenu y DWMBlocks porque cada proyecto puede
+usarse o reemplazarse de manera independiente.
+
+## Estructura
+
+```text
+dwm/
+  README.md       # decisiones y procedimiento mantenidos por este repo
+  src/            # fuentes y configuracion de DWM
+  scripts/        # utilidades exclusivas de la sesion DWM
+  patches/        # parches conservados por separado, cuando corresponda
+```
+
+El `README.md` que viene con la implementacion importada permanece dentro de
+`src/`; este archivo exterior documenta como se integra DWM en los dotfiles.
 
 ## Estado
 
-DWM todavia no esta administrado por este repositorio. XFCE, SDDM, SSH y XRDP
-deben permanecer disponibles como entorno de recuperacion durante el trabajo.
+Los fuentes personalizados ya fueron importados en `src/`, pero todavia no se
+consideran una instalacion reproducible. Antes de activarlos hay que identificar
+su origen, version, parches, dependencias, configuracion efectiva y proceso de
+build. XFCE, SDDM, SSH y XRDP deben permanecer disponibles como entorno de
+recuperacion durante el trabajo.
 
 `scripts/` conserva utilidades recuperadas de la configuracion anterior. Que un
 script este versionado no significa que DWM o sus dependencias ya deban
