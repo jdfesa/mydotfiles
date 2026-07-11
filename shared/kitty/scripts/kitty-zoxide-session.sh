@@ -31,6 +31,9 @@ if [[ -f "$fzf_colors_file" ]]; then
   source "$fzf_colors_file"
 fi
 
+# Fallback used when the generated palette is unavailable.
+jd_color03="${jd_color03:-#66ff99}"
+
 require_cmd() {
   local cmd="$1"
   local install_hint="$2"
@@ -178,7 +181,6 @@ find_session_by_path() {
 }
 
 print_menu_lines() {
-  local query="${1:-}"
   zoxide query -l 2>/dev/null | awk -v OFS='\t' -v work_dir="${work_main_dir}" -v color="${base_color}" -v reset="${reset_color}" '{
     path=$0
     if (work_dir != "" && (path == work_dir || index(path, work_dir "/") == 1)) next
@@ -301,7 +303,7 @@ print_ssh_menu_lines() {
 }
 
 if [[ "${1:-}" == "--reload" ]]; then
-  print_menu_lines "${2:-}"
+  print_menu_lines
   exit 0
 fi
 

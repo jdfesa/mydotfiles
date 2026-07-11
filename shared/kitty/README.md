@@ -45,11 +45,14 @@ brew install --cask kitty
 ```bash
 mkdir -p ~/.config
 ln -s ~/mydotfiles/shared/kitty ~/.config/kitty
-ln -s /Applications/kitty.app/Contents/MacOS/kitty /usr/local/bin/kitty
-ln -s /Applications/kitty.app/Contents/MacOS/kitten /usr/local/bin/kitten
+mkdir -p ~/.local/bin
+ln -s /Applications/kitty.app/Contents/MacOS/kitty ~/.local/bin/kitty
+ln -s /Applications/kitty.app/Contents/MacOS/kitten ~/.local/bin/kitten
 ```
 
-If `~/.config/kitty` already exists, back it up or remove it before creating the symlink. The `/usr/local/bin` links make `kitty` and `kitten` available from any terminal.
+If `~/.config/kitty` already exists, back it up before creating the symlink. The
+`~/.local/bin` links make `kitty` and `kitten` available without requiring
+administrator permissions.
 
 ## See Themes
 

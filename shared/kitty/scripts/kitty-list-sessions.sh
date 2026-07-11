@@ -31,6 +31,16 @@ if [[ -f "$colorscheme_file" ]]; then
   source "$colorscheme_file"
 fi
 
+# Fallbacks keep the picker usable when the generated palette is unavailable.
+jd_color02="${jd_color02:-#ff9d00}"
+jd_color03="${jd_color03:-#66ff99}"
+jd_color09="${jd_color09:-#4e6f4e}"
+jd_color10="${jd_color10:-#000000}"
+jd_color11="${jd_color11:-#c96d00}"
+jd_color12="${jd_color12:-#d98a00}"
+jd_color13="${jd_color13:-#183818}"
+jd_color14="${jd_color14:-#d8ffd8}"
+
 hex_base="${jd_color03#\#}"
 base_r=$((16#${hex_base:0:2}))
 base_g=$((16#${hex_base:2:2}))
