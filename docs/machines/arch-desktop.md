@@ -1,4 +1,4 @@
-# archlinux
+# Arch Desktop
 
 Notas de la maquina secundaria Arch Linux accesible por SSH en
 `jd@192.168.8.15`.
@@ -64,8 +64,11 @@ Destino probable:
 ```text
 os/linux/x11/scripts/       # helpers generales de X11
 os/linux/dwm/scripts/       # scripts que solo tengan sentido para DWM
-hosts/archlinux/            # notas o wrappers especificos de esta maquina
+docs/machines/              # inventario, historia y tareas de esta maquina
 ```
+
+Si un wrapper solo cambia una ruta local, se prefiere una variable o archivo
+ignorado. No se crea una capa de configuracion completa por maquina.
 
 `~/.xprofile` necesita especial cuidado porque hoy mezcla cosas de DWM con
 arranque general:
