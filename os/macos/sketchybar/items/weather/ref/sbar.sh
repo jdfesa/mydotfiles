@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 POPUP_CLICK_SCRIPT="sketchybar --set weather popup.drawing=toggle"

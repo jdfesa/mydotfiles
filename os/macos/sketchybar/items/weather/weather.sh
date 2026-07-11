@@ -35,7 +35,6 @@ fi
 # Parse Data
 TEMP=$(echo "$DATA" | $JQ -r '.current.temperature_2m // empty')
 CODE=$(echo "$DATA" | $JQ -r '.current.weather_code // empty')
-PRECIP_NOW=$(echo "$DATA" | $JQ -r '.current.precipitation // 0')
 IS_DAY=$(echo "$DATA" | $JQ -r '.current.is_day // 1')
 RAIN_NEXT_2HRS=$(echo "$FORECAST" | $JQ -r '[.hourly.precipitation[0:2][]] | add // 0')
 
