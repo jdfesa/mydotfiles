@@ -29,15 +29,15 @@ preview_command = "printf 'Open btop system monitor'"
 
 [[session]]
 name = "aerospace config"
-path = "~/mydotfiles/aerospace"
+path = "~/mydotfiles/os/macos/aerospace"
 startup_command = "ls"
-preview_command = "sed -n '1,120p' ~/mydotfiles/aerospace/aerospace.toml"
+preview_command = "sed -n '1,120p' ~/mydotfiles/os/macos/aerospace/aerospace.toml"
 
 [[session]]
 name = "sketchybar config"
-path = "~/mydotfiles/sketchybar"
+path = "~/mydotfiles/os/macos/sketchybar"
 startup_command = "ls"
-preview_command = "sed -n '1,120p' ~/mydotfiles/sketchybar/README.md"
+preview_command = "sed -n '1,120p' ~/mydotfiles/os/macos/sketchybar/README.md"
 
 [[session]]
 name = "kitty config"
@@ -47,9 +47,9 @@ preview_command = "sed -n '1,120p' ~/mydotfiles/kitty/kitty.conf"
 
 [[session]]
 name = "brew files"
-path = "~/mydotfiles/brew"
+path = "~/mydotfiles/os/macos/packages/homebrew"
 startup_command = "ls"
-preview_command = "sed -n '1,120p' ~/mydotfiles/brew/README.md"
+preview_command = "sed -n '1,120p' ~/mydotfiles/os/macos/packages/homebrew/README.md"
 
 [[session]]
 name = "sesh config"
