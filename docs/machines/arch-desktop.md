@@ -19,35 +19,57 @@ maquina debe quedar como runtime con symlinks y datos locales.
   `os/linux/x11/README.md`.
 - XFCE, SDDM, SSH y XRDP son el respaldo fuerte. No romperlos mientras se migra
   DWM u otros window managers.
+- Los scripts recuperados se despliegan mediante `profiles/arch-desktop.links`.
+- El antiguo `~/suckless` se retiro de su ruta activa y quedo en cuarentena en
+  `~/.local/share/dotfiles-migration/quarantine/20260710-223627/suckless`.
+- Los binarios antiguos de `/usr/local/bin` permanecen temporalmente porque la
+  entrada DWM de SDDM todavia los referencia.
+
+## Scripts recuperados
+
+Los scripts manuales se incorporaron al repositorio con validaciones y rutas
+portables:
+
+```text
+os/linux/dwm/scripts/wallpaper-rotator.sh
+os/linux/dwm/scripts/status-sensors.sh
+os/linux/x11/scripts/cliphist
+shared/rclone/rclone-sync
+```
+
+El perfil `profiles/arch-desktop.links` los despliega bajo `~/.local/bin/`. El
+script de Rclone hace `--dry-run` salvo que se indique `--apply`; sus
+credenciales permanecen fuera del repositorio.
 
 ## Pendiente inmediato
 
-1. Traer la documentacion nueva en Arch:
+1. Cuando estos cambios esten versionados, sincronizar el clon de Arch desde la
+   rama principal. No ejecutar `git pull` mientras el clon remoto contenga esta
+   migracion sin commit:
 
    ```sh
    cd ~/mydotfiles
    git pull --ff-only
    ```
 
-2. Corregir PATH para que `~/.local/bin` este disponible en shells
-   interactivos. Hoy `~/.bashrc` agrega `~/.local/scripts`, pero no
-   `~/.local/bin`.
+2. La configuracion Bash administrada por el perfil ya agrega `~/.local/bin` al
+   `PATH`. Validar una nueva sesion SSH despues de versionar la migracion.
 
-3. Poner en cuarentena el script viejo inseguro:
+3. El script viejo inseguro ya esta en cuarentena:
 
    ```text
-   ~/start-x11vnc.sh
+   ~/.local/share/dotfiles-migration/quarantine/20260710-223627/manual-scripts/start-x11vnc.sh
    ```
 
    Ese script contiene `-passwd 123456` y no debe usarse.
 
-4. Revisar `~/.vnc/config`. Actualmente contiene `localhost=no`. Si se conserva
-   TigerVNC, debe documentarse y dejarse sin exponer VNC directo a la red.
+4. Las configuraciones antiguas de TigerVNC que usaban DWM y `localhost=no`
+   estan en `legacy-dwm-startup/` dentro de la cuarentena. En `~/.vnc/` solo
+   permanece `passwd`, con modo `0600`, para el `x11vnc` seguro.
 
 ## Archivos importantes a migrar
 
-Estos archivos fueron creados manualmente y pueden contener decisiones utiles.
-No borrarlos sin leerlos y migrarlos primero:
+Estos archivos fueron creados manualmente y se revisaron durante la migracion:
 
 ```text
 ~/.local/bin/wallpaper-rotator.sh
@@ -70,20 +92,19 @@ docs/machines/              # inventario, historia y tareas de esta maquina
 Si un wrapper solo cambia una ruta local, se prefiere una variable o archivo
 ignorado. No se crea una capa de configuracion completa por maquina.
 
-`~/.xprofile` necesita especial cuidado porque hoy mezcla cosas de DWM con
-arranque general:
+El antiguo `~/.xprofile` mezclaba cosas de DWM con arranque general:
 
 - `feh`;
 - `picom`;
 - wallpaper rotator;
 - `dwmblocks`.
 
-La meta es que XFCE quede limpio como respaldo y que DWM tenga su propio
-arranque documentado.
+Fue retirado a `legacy-dwm-startup/` dentro de la cuarentena. XFCE queda limpio
+como respaldo; un futuro DWM tendra su propio arranque documentado.
 
 ## Suckless antiguo
 
-Hay configuraciones antiguas en:
+Las fuentes/configuraciones antiguas se encontraron originalmente en:
 
 ```text
 ~/suckless/
@@ -93,16 +114,16 @@ Hay configuraciones antiguas en:
 /usr/local/bin/dmenu
 ```
 
-Interpretacion actual:
+Estado despues del inventario:
 
-- `~/suckless/` contiene fuentes/configuraciones viejas de DWM, DWMBlocks, ST y
-  Dmenu.
+- `~/suckless/` ya no existe como ruta activa; su contenido esta en la
+  cuarentena fechada indicada arriba.
 - `/usr/local/bin/*` contiene binarios instalados desde esas fuentes.
 - No son la fuente de verdad futura.
 - No se van a migrar como base principal si la intencion es empezar DWM desde
   cero y bien documentado.
 
-Plan:
+Plan restante:
 
 1. Mantener XFCE/RDP como fallback.
 2. Crear una nueva estructura limpia en `os/linux/dwm/`, `os/linux/dwmblocks/`,
@@ -110,8 +131,8 @@ Plan:
    herramienta.
 3. No borrar `/usr/local/bin/dwm` ni los binarios suckless hasta confirmar que
    no se necesitan para entrar a la sesion actual.
-4. Cuando haya reemplazo documentado, mover `~/suckless/` a cuarentena o borrar
-   si ya no contiene nada que valga conservar.
+4. Eliminar la cuarentena solo despues de reconstruir DWM desde cero y confirmar
+   que no se necesita consultar ninguna decision antigua.
 
 ## Candidatos a limpiar mas adelante
 
