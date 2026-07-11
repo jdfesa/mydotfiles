@@ -1,0 +1,31 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    name: ShellCheck and profile smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Show ShellCheck version
+        run: shellcheck --version
+
+      - name: Lint shell scripts
+        run: scripts/lint-shell
+
+      - name: Rebuild macOS profile in an isolated HOME
+        shell: bash
+        run: |
+          test_home=$(mktemp -d)
+          HOME="$test_home" scripts/link macos-main
+          HOME="$test_home" scripts/doctor macos-main
+

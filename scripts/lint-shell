@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_root=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
+cd "$repo_root"
+
+if command -v shellcheck >/dev/null 2>&1; then
+  shellcheck_bin=$(command -v shellcheck)
+elif [[ -x "$HOME/.local/share/nvim/mason/bin/shellcheck" ]]; then
+  shellcheck_bin="$HOME/.local/share/nvim/mason/bin/shellcheck"
+else
+  printf 'ShellCheck is required. Install it with: brew install shellcheck\n' >&2
+  exit 1
+fi
+
+files=(.githooks/pre-commit scripts/link scripts/doctor scripts/lint-shell)
+
+while IFS= read -r file; do
+  [[ -f "$file" ]] || continue
+  case "$file" in
+    # Generated or declarative palettes are sourced as data, not executed.
+    shared/colorscheme/active/active-colorscheme.sh|shared/colorscheme/colorscheme-vars.sh|shared/colorscheme/list/*)
+      continue
+      ;;
+  esac
+  files+=("$file")
+done < <(git ls-files '*.sh')
+
+"$shellcheck_bin" --severity=warning "${files[@]}"
+printf 'ShellCheck passed for %s script(s).\n' "${#files[@]}"

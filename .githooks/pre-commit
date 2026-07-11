@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -u
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root" || exit 1
+
+vil_file="hardware/silakka54/silakka54_main.vil"
+render_script="hardware/silakka54/render.sh"
+svg_file="hardware/silakka54/keymap.svg"
+yaml_file="hardware/silakka54/keymap.yaml"
+
+if git diff --cached --name-only --diff-filter=ACMR | grep -Fxq "$vil_file"; then
+  printf '⌨️  Cambio detectado en layout de teclado. Regenerando imagen...\n'
+
+  if "$render_script"; then
+    printf '✅ Imagen generada. Añadiendo artefactos al commit.\n'
+    git add -- "$svg_file" "$yaml_file"
+  else
+    printf '❌ Error al generar la imagen del teclado. Abortando commit.\n' >&2
+    exit 1
+  fi
+fi
