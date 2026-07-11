@@ -1,0 +1,81 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  printf 'Usage: scripts/doctor <profile>\n'
+}
+
+repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd -P)
+profile=${1:-}
+
+if [ -z "$profile" ] || [ "$#" -ne 1 ]; then
+  usage >&2
+  exit 2
+fi
+
+manifest=$repo_root/profiles/$profile.links
+if [ ! -f "$manifest" ]; then
+  printf 'Profile not found: %s\n' "$manifest" >&2
+  exit 2
+fi
+
+expand_target() {
+  case "$1" in
+    '$HOME/'*) printf '%s/%s\n' "$HOME" "${1#\$HOME/}" ;;
+    *) return 1 ;;
+  esac
+}
+
+ok=0
+warnings=0
+errors=0
+
+while IFS='|' read -r source_rel target_expr; do
+  case "$source_rel" in
+    ''|'#'*) continue ;;
+  esac
+
+  source=$repo_root/$source_rel
+  if ! target=$(expand_target "$target_expr"); then
+    printf 'ERROR invalid target for %s: %s\n' "$source_rel" "$target_expr" >&2
+    errors=$((errors + 1))
+    continue
+  fi
+
+  if [ ! -e "$source" ]; then
+    printf 'ERROR missing source: %s\n' "$source" >&2
+    errors=$((errors + 1))
+    continue
+  fi
+
+  if [ ! -L "$target" ]; then
+    if [ -e "$target" ]; then
+      printf 'ERROR target is not a symlink: %s\n' "$target" >&2
+      errors=$((errors + 1))
+    else
+      printf 'WARN  target is missing: %s\n' "$target"
+      warnings=$((warnings + 1))
+    fi
+    continue
+  fi
+
+  current=$(readlink "$target")
+  if [ "$current" != "$source" ]; then
+    printf 'ERROR wrong target: %s -> %s (expected %s)\n' "$target" "$current" "$source" >&2
+    errors=$((errors + 1))
+    continue
+  fi
+
+  if [ ! -e "$target" ]; then
+    printf 'ERROR broken symlink: %s\n' "$target" >&2
+    errors=$((errors + 1))
+    continue
+  fi
+
+  printf 'OK    %s\n' "$target"
+  ok=$((ok + 1))
+done < "$manifest"
+
+printf 'Doctor result: %s ok, %s warning(s), %s error(s).\n' "$ok" "$warnings" "$errors"
+[ "$errors" -eq 0 ]

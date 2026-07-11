@@ -1,0 +1,147 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/link [--dry-run] [--repair] <profile>
+
+Create the symlinks declared in profiles/<profile>.links.
+
+Options:
+  --dry-run  Show changes without writing anything.
+  --repair   Replace an incorrect symlink atomically.
+
+Real files and directories are never overwritten.
+EOF
+}
+
+repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd -P)
+dry_run=0
+repair=0
+profile=
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --dry-run) dry_run=1 ;;
+    --repair) repair=1 ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -*)
+      printf 'Unknown option: %s\n' "$1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      if [ -n "$profile" ]; then
+        printf 'Only one profile can be selected.\n' >&2
+        exit 2
+      fi
+      profile=$1
+      ;;
+  esac
+  shift
+done
+
+if [ -z "$profile" ]; then
+  usage >&2
+  exit 2
+fi
+
+manifest=$repo_root/profiles/$profile.links
+if [ ! -f "$manifest" ]; then
+  printf 'Profile not found: %s\n' "$manifest" >&2
+  exit 2
+fi
+
+expand_target() {
+  case "$1" in
+    '$HOME/'*) printf '%s/%s\n' "$HOME" "${1#\$HOME/}" ;;
+    *)
+      printf 'Invalid target (must start with $HOME/): %s\n' "$1" >&2
+      return 1
+      ;;
+  esac
+}
+
+run() {
+  if [ "$dry_run" -eq 1 ]; then
+    printf '[dry-run]'
+    for arg in "$@"; do printf ' %s' "$arg"; done
+    printf '\n'
+  else
+    "$@"
+  fi
+}
+
+errors=0
+changed=0
+
+while IFS='|' read -r source_rel target_expr; do
+  case "$source_rel" in
+    ''|'#'*) continue ;;
+  esac
+
+  if [ -z "$target_expr" ]; then
+    printf 'Invalid profile entry (missing target): %s\n' "$source_rel" >&2
+    errors=$((errors + 1))
+    continue
+  fi
+
+  source=$repo_root/$source_rel
+  if [ ! -e "$source" ]; then
+    printf 'Missing source: %s\n' "$source" >&2
+    errors=$((errors + 1))
+    continue
+  fi
+
+  if ! target=$(expand_target "$target_expr"); then
+    errors=$((errors + 1))
+    continue
+  fi
+
+  if [ -L "$target" ]; then
+    current=$(readlink "$target")
+    if [ "$current" = "$source" ]; then
+      printf 'ok      %s\n' "$target"
+      continue
+    fi
+
+    if [ "$repair" -ne 1 ]; then
+      printf 'wrong   %s -> %s (expected %s)\n' "$target" "$current" "$source" >&2
+      errors=$((errors + 1))
+      continue
+    fi
+
+    temporary=$target.dotfiles-link.$$
+    run ln -s "$source" "$temporary"
+    run mv -f "$temporary" "$target"
+    if [ "$dry_run" -eq 1 ]; then
+      printf 'would repair %s -> %s\n' "$target" "$source"
+    else
+      printf 'repaired %s -> %s\n' "$target" "$source"
+    fi
+    changed=$((changed + 1))
+    continue
+  fi
+
+  if [ -e "$target" ]; then
+    printf 'blocked %s exists and is not a symlink\n' "$target" >&2
+    errors=$((errors + 1))
+    continue
+  fi
+
+  run mkdir -p "$(dirname -- "$target")"
+  run ln -s "$source" "$target"
+  if [ "$dry_run" -eq 1 ]; then
+    printf 'would create %s -> %s\n' "$target" "$source"
+  else
+    printf 'created %s -> %s\n' "$target" "$source"
+  fi
+  changed=$((changed + 1))
+done < "$manifest"
+
+printf 'Link result: %s change(s), %s error(s).\n' "$changed" "$errors"
+[ "$errors" -eq 0 ]

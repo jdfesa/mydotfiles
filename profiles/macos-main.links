@@ -1,0 +1,17 @@
+# source relative to repository|destination below $HOME
+os/macos/aerospace|$HOME/.config/aerospace
+os/macos/borders/bordersrc|$HOME/.config/borders/bordersrc
+btop|$HOME/.config/btop
+fastfetch|$HOME/.config/fastfetch
+gh-dash/config.yml|$HOME/.config/gh-dash/config.yml
+ghostty|$HOME/.config/ghostty
+os/macos/hammerspoon|$HOME/.config/hammerspoon
+kitty|$HOME/.config/kitty
+lazygit/config.yml|$HOME/Library/Application Support/lazygit/config.yml
+nvim|$HOME/.config/nvim
+sesh|$HOME/.config/sesh
+os/macos/sketchybar|$HOME/.config/sketchybar
+starship/starship.toml|$HOME/.config/starship.toml
+vscode/settings.json|$HOME/Library/Application Support/Code/User/settings.json
+yazi|$HOME/.config/yazi
+zsh/zshrc|$HOME/.zshrc
