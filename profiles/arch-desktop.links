@@ -1,0 +1,9 @@
+# source relative to repository|destination below $HOME
+
+# Recovered user commands. DWM itself is intentionally not linked yet.
+shared/bash/bashrc|$HOME/.bashrc
+os/linux/dwm/scripts/wallpaper-rotator.sh|$HOME/.local/bin/wallpaper-rotator
+os/linux/dwm/scripts/status-sensors.sh|$HOME/.local/bin/status-sensors
+os/linux/x11/scripts/cliphist|$HOME/.local/bin/cliphist
+os/linux/x11/scripts/start-x11vnc.sh|$HOME/.local/bin/start-x11vnc
+shared/rclone/rclone-sync|$HOME/.local/bin/rclone-sync
