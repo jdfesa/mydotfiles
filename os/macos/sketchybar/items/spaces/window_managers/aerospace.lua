@@ -31,10 +31,9 @@ local function get_current_workspace()
 end
 
 local aerospace_workspaces = get_workspaces()
-local initial_current_workspace = get_current_workspace()
 
 -- Si AeroSpace no estaba corriendo al arrancar (race condition al inicio de macOS),
--- INIT_DONE será false y el retry en init() se encarga de esperar y recargar.
+-- INIT_DONE será false y el retry en init() se encarga de esperar e inicializar.
 local INIT_DONE = (#aerospace_workspaces > 0)
 
 -- Note: workspace highlights are updated via CLI (bash script) from aerospace.toml
@@ -45,48 +44,55 @@ local Window_Manager = {}
 -- Store created workspace items for later updates
 local workspace_items = {}
 
-function Window_Manager:init()
-  for i, workspace in ipairs(aerospace_workspaces) do
-    local selected = workspace == initial_current_workspace
+function Window_Manager:create_workspace_items()
+  local current_workspace = get_current_workspace()
 
-    local space_item = SBAR.add("item", "space." .. workspace, {
-      icon = {
-        string = workspace,
-        padding_left = SPACES.ITEM_PADDING,
-        padding_right = 8,
-        color = selected and COLORS.mauve or COLORS.text,
-        highlight_color = COLORS.mauve,
-        highlight = selected,
-      },
-      label = {
-        padding_right = SPACES.ITEM_PADDING,
-        color = COLORS.subtext0,
-        highlight_color = COLORS.lavender,
-        font = "sketchybar-app-font:Regular:16.0",
-        y_offset = -1,
-        highlight = selected,
-      },
-      padding_right = GROUP_PADDINGS,
-      padding_left = 1,
-      background = {
-        color = COLORS.base,
-        border_width = 2,
-        height = 26,
-        border_color = selected and COLORS.lavender or COLORS.surface1,
-      },
-      position = "left",
-    })
+  for _, workspace in ipairs(aerospace_workspaces) do
+    local selected = workspace == current_workspace
 
-    workspace_items[workspace] = space_item
+    if not workspace_items[workspace] then
+      local space_item = SBAR.add("item", "space." .. workspace, {
+        icon = {
+          string = workspace,
+          padding_left = SPACES.ITEM_PADDING,
+          padding_right = 8,
+          color = selected and COLORS.mauve or COLORS.text,
+          highlight_color = COLORS.mauve,
+          highlight = selected,
+        },
+        label = {
+          padding_right = SPACES.ITEM_PADDING,
+          color = COLORS.subtext0,
+          highlight_color = COLORS.lavender,
+          font = "sketchybar-app-font:Regular:16.0",
+          y_offset = -1,
+          highlight = selected,
+        },
+        padding_right = GROUP_PADDINGS,
+        padding_left = 1,
+        background = {
+          color = COLORS.base,
+          border_width = 2,
+          height = 26,
+          border_color = selected and COLORS.lavender or COLORS.surface1,
+        },
+        position = "left",
+      })
 
+      workspace_items[workspace] = space_item
 
-    -- Click to switch workspace
-    space_item:subscribe("mouse.clicked", function(env)
-      if env.BUTTON == "left" then
-        SBAR.exec("aerospace workspace " .. workspace)
-      end
-    end)
+      -- Click to switch workspace
+      space_item:subscribe("mouse.clicked", function(env)
+        if env.BUTTON == "left" then
+          SBAR.exec(AEROSPACE .. " workspace " .. workspace)
+        end
+      end)
+    end
   end
+end
+
+function Window_Manager:init()
+  self:create_workspace_items()
 
   -- Mode indicator — hidden by default.
   -- AeroSpace controls this directly via `sketchybar --set` in aerospace.toml.
@@ -116,10 +122,11 @@ function Window_Manager:init()
     self:update_space_labels()
   else
     -- AeroSpace no estaba listo al arrancar (race condition).
-    -- Timer que reintenta cada 3s. Cuando AeroSpace responda,
-    -- espera 1s y recarga Sketchybar. Máximo 10 intentos (30s).
+    -- Timer que reintenta cada 3s. Cuando AeroSpace responda, crea los items
+    -- directamente y se elimina. No vuelve a ejecutar toda la configuracion.
     local retry_count = 0
     local MAX_RETRIES = 10
+    local retry_done = false
     local retry_watcher = SBAR.add("item", "aerospace_retry", {
       drawing = false,
       updates = true,
@@ -127,16 +134,22 @@ function Window_Manager:init()
     })
 
     retry_watcher:subscribe("routine", function()
+      if retry_done then
+        return
+      end
+
       retry_count = retry_count + 1
       local ws = get_workspaces()
 
       if #ws > 0 then
-        -- AeroSpace respondió. Detener timer y recargar en 1 segundo.
-        retry_watcher:set({ update_freq = 0 })
-        SBAR.exec("sleep 1 && /usr/local/bin/sketchybar --reload")
+        retry_done = true
+        aerospace_workspaces = ws
+        self:create_workspace_items()
+        self:update_space_labels()
+        SBAR.remove("aerospace_retry")
       elseif retry_count >= MAX_RETRIES then
-        -- No respondió en 30s. Dejar de intentar.
-        retry_watcher:set({ update_freq = 0 })
+        retry_done = true
+        SBAR.remove("aerospace_retry")
       end
     end)
   end

@@ -68,16 +68,17 @@ Cualquier `io.popen(...)` o `SBAR.exec(...)` dentro de la config Lua de Sketchyb
 
 **Causa**: Sketchybar arranca (vía LaunchAgent `RunAtLoad` o brew) **antes** que AeroSpace. Cuando `aerospace.lua` se ejecuta, `aerospace list-workspaces --all` devuelve una lista vacía porque el binario aún no está disponible o no terminó de inicializar.
 
-### Estado actual de la configuración (En Pruebas)
+### Estado actual de la configuración
 
 Actualmente se utiliza un **retry timer interno** en `aerospace.lua` que:
 
 1. Al cargar, intenta obtener los workspaces con `get_workspaces()`.
 2. Si la lista está vacía (`INIT_DONE = false`), crea un item invisible `aerospace_retry` que se ejecuta cada **3 segundos**.
 3. En cada tick, consulta a AeroSpace. Si responde (lista de workspaces no vacía):
-   - Detiene el timer (`update_freq = 0`)
-   - Espera **1 segundo** y ejecuta `sketchybar --reload` (el mismo reload que antes se hacía a mano)
-4. **Máximo 10 intentos** (30 segundos). Si AeroSpace nunca responde, deja de intentar.
+   - Crea los items de workspace directamente en el proceso actual.
+   - Actualiza sus iconos.
+   - Elimina el watcher `aerospace_retry`.
+4. **Máximo 10 intentos** (30 segundos). Si AeroSpace nunca responde, elimina el watcher y deja de intentar.
 5. Si AeroSpace **ya estaba listo** al arrancar (`INIT_DONE = true`), el timer nunca se crea — cero overhead.
 
 ```lua
@@ -86,18 +87,23 @@ local INIT_DONE = (#aerospace_workspaces > 0)
 
 -- En init():
 if INIT_DONE then
-  self:update_space_labels()   -- flujo normal
+  self:create_workspace_items()
+  self:update_space_labels()
 else
   -- Crear retry timer (3s × 10 intentos máximo)
-  -- Al detectar AeroSpace → sleep 1 && sketchybar --reload
+  -- Al detectar AeroSpace → crear items y eliminar el timer
 end
 ```
 
 **Comportamiento visible**: La barra aparece primero sin los workspaces (o con indicadores vacíos), y ~3-9 segundos después se completa automáticamente.
 
-**Fase de Evaluación**: Aunque en un arranque de prueba ha funcionado perfectamente (logrando que AeroSpace se cargue primero y al último Sketchybar obtenga la información de los workspaces de forma exitosa), **se requiere probar esta solución durante N arranques**. El objetivo es garantizar que esta secuencia de inicio sea siempre funcional y no dependa de otros factores aleatorios de la carga de macOS.
+**Por qué no usa reload**: en este caso, `sketchybar --reload` desde el callback
+volvia a ejecutar la configuracion repetidamente. Cada ciclo intentaba crear otra
+vez todos los items, generaba mensajes `Item already exists` y hacia crecer
+`sketchybar.out.log` continuamente. La inicializacion diferida evita recargar la
+configuracion completa.
 
-**Riesgo**: Nulo. Si falla, el peor caso es que los workspaces no aparecen (igual que antes). El timer se autodestruye tras 10 intentos. No toca `aerospace.toml` ni ningún componente del sistema.
+**Fallback**: Si AeroSpace no responde durante los 10 intentos, los workspaces no se crean en ese arranque. El resto de la barra sigue disponible y un reinicio controlado del servicio permite reintentar.
 
 ---
 

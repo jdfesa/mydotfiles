@@ -126,7 +126,7 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 | `exec-and-forget` de AeroSpace no encontraba el binario `sketchybar` | Se usa la ruta absoluta `/usr/local/bin/sketchybar` (ver [SCRIPTS.md](../aerospace/SCRIPTS.md)) |
 | `sketchybar --reload` no siempre recarga los módulos Lua | Se usa `brew services restart sketchybar` para un reinicio completo |
 | Los workspaces no aparecen al reiniciar (los ítems `space.*` no se crean) | Sketchybar arranca sin el PATH del shell; `io.popen("aerospace ...")"` falla silenciosamente. Solución: ruta absoluta `"/usr/local/bin/aerospace"` en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua). Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
-| AeroSpace no estaba listo al arrancar (race condition) — los workspaces aparecen vacíos | Auto-retry timer en `aerospace.lua`: consulta AeroSpace cada 3s (máx 10 intentos). Cuando responde, espera 1s y ejecuta `sketchybar --reload`. Cero overhead si AeroSpace ya estaba listo. Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md#manejo-de-workspaces-vacíos-al-arrancar-race-condition) |
+| AeroSpace no estaba listo al arrancar (race condition) — los workspaces aparecen vacíos | Auto-retry timer en `aerospace.lua`: consulta AeroSpace cada 3s (máx. 10 intentos), crea los items cuando responde y luego se elimina. No ejecuta `sketchybar --reload`. Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md#manejo-de-workspaces-vacíos-al-arrancar-race-condition) |
 
 #### Componentes
 
