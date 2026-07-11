@@ -1,16 +1,20 @@
 # source relative to repository|destination below $HOME
+
+# macOS-only desktop layer
 os/macos/aerospace|$HOME/.config/aerospace
 os/macos/borders/bordersrc|$HOME/.config/borders/bordersrc
+os/macos/hammerspoon|$HOME/.config/hammerspoon
+os/macos/sketchybar|$HOME/.config/sketchybar
+
+# Shared terminal and CLI tools
 shared/btop|$HOME/.config/btop
 shared/fastfetch|$HOME/.config/fastfetch
 shared/gh-dash/config.yml|$HOME/.config/gh-dash/config.yml
 shared/ghostty|$HOME/.config/ghostty
-os/macos/hammerspoon|$HOME/.config/hammerspoon
 shared/kitty|$HOME/.config/kitty
 shared/lazygit/config.yml|$HOME/Library/Application Support/lazygit/config.yml
 shared/nvim|$HOME/.config/nvim
 shared/sesh|$HOME/.config/sesh
-os/macos/sketchybar|$HOME/.config/sketchybar
 shared/starship/starship.toml|$HOME/.config/starship.toml
 shared/vscode/settings.json|$HOME/Library/Application Support/Code/User/settings.json
 shared/yazi|$HOME/.config/yazi

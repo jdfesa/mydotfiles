@@ -6,7 +6,7 @@ usage() {
   printf 'Usage: scripts/doctor <profile>\n'
 }
 
-repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd -P)
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)
 profile=${1:-}
 
 if [ -z "$profile" ] || [ "$#" -ne 1 ]; then
