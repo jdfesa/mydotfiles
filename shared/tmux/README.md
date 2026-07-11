@@ -41,7 +41,9 @@ Recomendacion para este setup: activar primero `tmux` de forma simple, porque ya
 Importado y separado en dos niveles:
 
 - `tmux.conf`: base adaptada a `~/mydotfiles`, mas segura para probar.
-- `tmux.conf.sh`: nota local que reemplaza la referencia importada original, porque no queremos conservar rutas personales o dependencias externas.
+- `REMOVED_REFERENCE.md`: nota local que reemplaza la referencia importada
+  original, porque no queremos conservar rutas personales o dependencias
+  externas.
 
 ## Que queremos rescatar
 
