@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+remote="${RCLONE_REMOTE:-gdrive:/}"
+local_dir="${RCLONE_LOCAL_DIR:-$HOME/MyDrive}"
+direction="${1:-}"
+apply="${2:-}"
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") pull|push [--apply]
+
+Without --apply, rclone runs with --dry-run.
+
+Environment:
+  RCLONE_REMOTE     Remote path (default: gdrive:/)
+  RCLONE_LOCAL_DIR Local path  (default: \$HOME/MyDrive)
+EOF
+}
+
+case "$direction" in
+  pull)
+    source_path=$remote
+    destination_path=$local_dir
+    ;;
+  push)
+    source_path=$local_dir
+    destination_path=$remote
+    ;;
+  -h|--help|'')
+    usage
+    exit 0
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+if ! command -v rclone >/dev/null 2>&1; then
+  printf 'rclone-sync: rclone is required\n' >&2
+  exit 127
+fi
+
+case "$apply" in
+  '') mode_args=(--dry-run) ;;
+  --apply) mode_args=() ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+printf 'Source:      %s\nDestination: %s\nMode:        %s\n' \
+  "$source_path" "$destination_path" "${apply:---dry-run}"
+
+rclone sync "$source_path" "$destination_path" \
+  --progress \
+  "${mode_args[@]}"
