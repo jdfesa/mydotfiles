@@ -28,6 +28,8 @@ Ejemplos de infraestructura:
 ## Que pertenece a esta capa
 
 - DWM, i3 y otros window managers de Linux;
+- ST, Dmenu y otras herramientas graficas de Linux que pueden reutilizarse
+  entre varios window managers;
 - X11 y Wayland;
 - Pacman, Yay y paquetes del sistema;
 - servicios o scripts que dependan de una sesion grafica Linux.
@@ -48,8 +50,17 @@ Las credenciales locales deben vivir fuera del repo, por ejemplo en `~/.vnc/`,
 linux/
   dwm/              # DWM como herramienta principal
     README.md
+    src/
     patches/
     scripts/
+
+  st/               # terminal suckless, independiente de DWM
+    README.md
+    src/
+
+  dmenu/            # lanzador suckless, independiente de DWM
+    README.md
+    src/
 
   i3/               # futuro i3 si se prueba
     README.md

@@ -51,6 +51,9 @@ mydotfiles/
         homebrew/
     linux/
       dwm/
+      st/
+      dmenu/
+      dwmblocks/
       i3/
       x11/
       wayland/
@@ -139,6 +142,8 @@ paquetes que solo tienen sentido en ese sistema.
 ### GNU/Linux
 
 - DWM, i3 y otros window managers;
+- ST, Dmenu, DWMBlocks y otras herramientas Linux reutilizables entre
+  distintos window managers;
 - X11 y Wayland;
 - systemd user services;
 - Pacman, Makepkg y helpers de AUR.
