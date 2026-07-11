@@ -73,8 +73,12 @@ mydotfiles/
     doctor
     bootstrap
 
+  .githooks/                 # hooks de Git versionados
+    pre-commit
+
   docs/
     ARCHITECTURE.md
+    RESTORE.md
     adr/
     inventory/
     machines/
@@ -82,6 +86,25 @@ mydotfiles/
 
 Esta estructura ya esta activa. Las nuevas herramientas deben clasificarse antes
 de agregarse; no se crean carpetas de herramientas directamente en la raiz.
+
+## Deployment Flow
+
+```mermaid
+flowchart LR
+    Shared["shared/&lt;tool&gt;/"] --> Profile["profiles/&lt;profile&gt;.links"]
+    OS["os/&lt;system&gt;/"] --> Profile
+    Hardware["hardware/&lt;device&gt;/"] --> Profile
+
+    Profile --> Link["scripts/link"]
+    Link --> Home["Destinos bajo $HOME"]
+
+    Profile --> Doctor["scripts/doctor"]
+    Home --> Doctor
+```
+
+El perfil relaciona cada fuente versionada con su destino. `scripts/link` crea o
+repara los symlinks y `scripts/doctor` comprueba que el sistema siga apuntando a
+las fuentes correctas.
 
 ## Shared Configurations
 
@@ -219,6 +242,17 @@ ubicacion interna antigua porque `profiles/*.links` funciona como manifiesto y
 Stow o Chezmoi se evaluaran cuando macOS, Arch y Windows aporten diferencias
 reales que el linker simple no pueda manejar limpiamente. Adoptarlos en el
 futuro no requiere volver a decidir la clasificacion del repositorio.
+
+## Continuous Verification
+
+`.github/workflows/lint.yml` protege dos contratos en cada push y pull request:
+
+1. `scripts/lint-shell` ejecuta ShellCheck sobre los scripts operativos;
+2. el perfil `macos-main` se aplica dentro de un `$HOME` temporal y luego se
+   valida con `scripts/doctor`.
+
+Las paletas de `shared/colorscheme/list/` se cargan como datos y no se ejecutan
+como programas independientes; por eso no forman parte del lint operativo.
 
 ## Migration Sequence
 

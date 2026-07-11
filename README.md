@@ -1,11 +1,31 @@
 # mydotfiles
 
+[![Lint](https://github.com/jdfesa/mydotfiles/actions/workflows/lint.yml/badge.svg)](https://github.com/jdfesa/mydotfiles/actions/workflows/lint.yml)
+
 Repositorio central de configuraciones reproducibles para macOS, GNU/Linux y
 Windows. Los archivos versionados son la fuente de verdad y se despliegan en las
 rutas esperadas por cada aplicacion mediante symlinks.
 
-La arquitectura completa esta en [Dotfiles Architecture](docs/ARCHITECTURE.md)
-y las decisiones importantes en [Architecture Decision Records](docs/adr/README.md).
+> Una fuente de verdad para reconstruir el entorno, entender por que existe cada
+> configuracion y detectar enlaces rotos antes de que se conviertan en problemas.
+
+## Quick Access
+
+| Necesidad | Documento o comando |
+|---|---|
+| Restaurar la Mac desde cero | [Restore macOS](docs/RESTORE.md) |
+| Entender la estructura | [Dotfiles Architecture](docs/ARCHITECTURE.md) |
+| Consultar decisiones | [Architecture Decision Records](docs/adr/README.md) |
+| Ver los enlaces de macOS | [`profiles/macos-main.links`](profiles/macos-main.links) |
+| Diagnosticar los symlinks | `scripts/doctor macos-main` |
+
+## Platform Status
+
+| Plataforma | Estado |
+|---|---|
+| macOS | Activa: 16 symlinks declarados y verificados |
+| Arch Linux | En desarrollo: X11 remoto documentado; DWM pendiente |
+| Windows | Planificada; sin perfil activo todavia |
 
 ## Conventions
 
@@ -94,18 +114,17 @@ respaldo manual.
 
 ## Restore macOS
 
+La guia completa, incluidos paquetes, archivos locales, permisos y validacion,
+esta en [Restore macOS](docs/RESTORE.md).
+
 ```sh
 git clone https://github.com/jdfesa/mydotfiles.git ~/mydotfiles
 cd ~/mydotfiles
+brew bundle --file os/macos/packages/homebrew/00-base/Brewfile
+brew bundle --file os/macos/packages/homebrew/10-essential/Brewfile
 scripts/link --dry-run macos-main
 scripts/link macos-main
-```
-
-Luego se instalan los paquetes necesarios:
-
-```sh
-brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/00-base/Brewfile
-brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/10-essential/Brewfile
+scripts/doctor macos-main
 ```
 
 Los archivos locales ignorados, por ejemplo `shared/zsh/local.zsh`, se crean

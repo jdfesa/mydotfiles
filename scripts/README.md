@@ -11,8 +11,13 @@ bootstrap, linking, instalacion y mantenimiento general de `~/mydotfiles`.
 - `scripts/link --repair macos-main`: crea enlaces ausentes y reemplaza
   symlinks que apuntan a una fuente anterior. Nunca sobrescribe archivos o
   directorios reales.
+- `scripts/lint-shell`: ejecuta ShellCheck sobre los scripts operativos. Excluye
+  paletas declarativas que se cargan como datos.
 
 Los manifiestos viven en `profiles/*.links`; ver `profiles/README.md`.
+
+Los hooks de Git viven en `.githooks/` para que tambien sean reproducibles. Se
+activan una vez por clon con `git config core.hooksPath .githooks`.
 
 No usar esta carpeta como deposito general de scripts de macOS, Linux o Windows.
 Los scripts especificos de un sistema operativo deben vivir en su capa:

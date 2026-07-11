@@ -24,3 +24,5 @@ Perfiles iniciales:
 - `macos-main.links`: configuracion activa de la Mac principal;
 - `arch-dwm.links`: se agregara cuando DWM tenga configuracion reproducible.
 
+La restauracion completa del perfil actual esta documentada en
+[`docs/RESTORE.md`](../docs/RESTORE.md).
