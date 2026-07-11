@@ -1,6 +1,6 @@
 .DS_Store
 .nvimlog
-sketchybar/secrets.sh
-silakka54/.venv
+os/macos/sketchybar/secrets.sh
+hardware/silakka54/.venv
 tmp/
-zsh/local.zsh
+shared/zsh/local.zsh
