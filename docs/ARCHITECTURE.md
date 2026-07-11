@@ -1,254 +1,242 @@
 # Dotfiles Architecture
 
-Este documento describe la arquitectura objetivo del repositorio de dotfiles.
-La intencion es mantener una fuente de verdad unica que pueda crecer desde el
-setup actual de macOS hacia Linux, Windows y maquinas especificas sin duplicar
-configuraciones compartidas.
+Este documento describe la arquitectura objetivo del repositorio. La meta es
+mantener una unica fuente de verdad reproducible para macOS, GNU/Linux y
+Windows sin duplicar configuraciones compartidas.
 
 ## Principles
 
 - Un solo repositorio central para los dotfiles personales.
-- Configuraciones compartidas por defecto; separacion por sistema operativo solo
-  cuando exista una diferencia real.
-- Diferencias por maquina aisladas en archivos locales o en una capa `hosts/`.
-- Rutas portables usando `$HOME`, `~`, variables de entorno o mecanismos XDG.
-- Secretos, tokens, credenciales y rutas privadas concretas quedan fuera de Git.
-- Los cambios grandes de arquitectura se documentan con ADRs livianos.
+- Una configuracion tiene una unica ubicacion canonica.
+- Las configuraciones compartidas se separan de las exclusivas de un sistema.
+- Las diferencias de una maquina no se confunden con las del sistema operativo.
+- Los perfiles declaran que piezas se despliegan juntas.
+- El repositorio guarda fuentes; el sistema usa symlinks y rutas estandar.
+- Secretos, caches, builds y estado generado quedan fuera de Git.
+- Los cambios estructurales se realizan de forma incremental y verificable.
 
-## Current Shape
+## Naming Convention
 
-El repositorio actual esta organizado principalmente por herramienta:
+Los nombres de carpetas, archivos tecnicos y titulos se escriben en ingles. El
+contenido explicativo se escribe en espanol.
+
+Ejemplos:
 
 ```text
-mydotfiles/
-  nvim/
-  zsh/
-  starship/
-  tmux/
-  kitty/
-  ghostty/
-  yazi/
-  btop/
-  lazygit/
-  aerospace/
-  sketchybar/
-  hammerspoon/
-  apps/
+docs/ARCHITECTURE.md
+docs/adr/0005-group-shared-configurations.md
+os/linux/dwm/
+profiles/macos-main.links
 ```
 
-Esta forma es una buena base porque evita duplicar herramientas que existen en
-varios sistemas operativos, como Neovim, Git, Starship, Tmux, Yazi o Lazygit.
-
-## Target Layers
-
-La estructura objetivo se piensa por capas:
+## Canonical Structure
 
 ```text
 mydotfiles/
-  nvim/
-  tmux/
-  starship/
-  git/
-  lazygit/
-  yazi/
-  btop/
-  zsh/
+  config/                    # configuraciones compartidas
+    kitty/
+    nvim/
+    starship/
+    tmux/
+    yazi/
+    zsh/
 
-  os/
+  os/                        # configuraciones exclusivas por sistema
     macos/
       aerospace/
-      sketchybar/
+      borders/
       hammerspoon/
-      brew/
+      sketchybar/
+      packages/
+        homebrew/
     linux/
       dwm/
       i3/
       x11/
-        scripts/
+      wayland/
       packages/
-        pacman/
-        yay/
     windows/
       powershell/
       windows-terminal/
-      winget/
+      packages/
 
-  hosts/
-    macbook-jd/
-    arch-desktop/
-    win11-ssd/
+  profiles/                  # manifiestos instalables
+    macos-main.links
+    arch-dwm.links
+    windows-native.links
 
-  profiles/
-    minimal/
-    desktop/
-    macos-main/
-    arch-dwm/
-    arch-i3/
-    windows-native/
+  hardware/                  # firmware y configuracion de perifericos
+    silakka54/
 
-  scripts/
-    bootstrap
+  scripts/                   # automatizacion transversal del repositorio
     link
-    install-packages
+    doctor
+    bootstrap
+
+  docs/
+    ARCHITECTURE.md
+    adr/
+    inventory/
+    machines/
 ```
 
-No es necesario migrar todo de inmediato. La regla inicial es mantener estables
-las carpetas activas y usar las nuevas capas para configuraciones nuevas o para
-separaciones que ya sean necesarias.
+La migracion hacia esta estructura es incremental. Una carpeta que todavia vive
+en la raiz conserva su comportamiento hasta que su perfil pueda repararse y
+verificarse automaticamente.
 
-## Shared Tooling
+## Shared Configurations
 
-Las herramientas que pueden vivir en varios sistemas operativos deben quedarse
-como carpetas principales por herramienta, salvo que una diferencia concreta
-obligue a crear una variante.
+`config/<tool>/` contiene herramientas que se reutilizan en mas de un sistema o
+que tienen una base razonablemente portable.
 
 Ejemplos:
 
-- `nvim/`
-- `zsh/`
-- `starship/`
-- `tmux/`
-- `git/`
-- `lazygit/`
-- `yazi/`
-- `btop/`
-- `fzf/`
-- `ripgrep/`
-- `zoxide/`
+- Kitty y Ghostty entre macOS y GNU/Linux;
+- Neovim, Git, Starship, Tmux, Lazygit, Yazi, Btop, Fzf y Ripgrep;
+- VS Code cuando la configuracion comun evita rutas absolutas del sistema;
+- Zsh entre macOS y GNU/Linux.
 
-Si una herramienta necesita matices por sistema, primero se intentara resolver
-con variables de entorno, deteccion del sistema operativo o archivos locales
-ignorados por Git. Solo despues se creara una variante por sistema.
-
-## OS-Specific Tooling
-
-Las herramientas que pertenecen claramente a un sistema operativo deben vivir en
+Una pequena diferencia de plataforma no justifica duplicar una configuracion
+completa. Se prefieren includes, variables de entorno o archivos locales
+ignorados. Si la implementacion entera pertenece a un solo sistema, vive en
 `os/<system>/`.
 
-Ejemplos:
+## Operating System Layers
 
-- macOS: AeroSpace, Sketchybar, Hammerspoon, Homebrew.
-- Linux: DWM, i3, X11, Wayland, Pacman, Yay.
-- Windows: PowerShell, Windows Terminal, Winget.
+`os/<system>/` contiene configuraciones, scripts, servicios y administracion de
+paquetes que solo tienen sentido en ese sistema.
 
-Durante la transicion, algunas herramientas macOS pueden seguir en la raiz si ya
-estan activas y enlazadas. Moverlas no es prioritario hasta que exista un script
-de instalacion o un gestor de enlaces que haga la migracion segura.
+### macOS
 
-## Hosts
+- AeroSpace;
+- Sketchybar;
+- Hammerspoon;
+- JankyBorders;
+- Homebrew y servicios de macOS.
 
-La capa `hosts/` se reserva para diferencias de una maquina concreta:
+### GNU/Linux
 
-- nombre de host;
-- rutas fisicas especiales;
-- monitores;
-- GPU o perifericos;
-- teclado conectado;
-- detalles de una VM;
-- comportamiento temporal de una maquina experimental.
+- DWM, i3 y otros window managers;
+- X11 y Wayland;
+- systemd user services;
+- Pacman, Makepkg y helpers de AUR.
 
-La capa de host no debe duplicar una configuracion completa si solo necesita
-cambiar una ruta o una opcion. En esos casos se prefiere usar variables locales.
+DWM comienza directamente en `os/linux/dwm/`; no se crea una carpeta DWM en la
+raiz ni dentro de la documentacion de una maquina.
+
+### Windows
+
+- PowerShell cuando la configuracion sea exclusivamente nativa;
+- Windows Terminal;
+- Winget y ajustes propios de Windows.
+
+## Machine-Specific State
+
+No existe una capa `hosts/` en la estructura actual porque todavia no hay
+configuraciones versionadas que justifiquen una jerarquia completa por maquina.
+
+Las responsabilidades se distribuyen asi:
+
+- configuracion reutilizable: `config/` u `os/<system>/`;
+- seleccion de piezas para una maquina: `profiles/<profile>.links`;
+- inventario, migracion y recuperacion: `docs/machines/<machine>.md`;
+- rutas privadas, secretos y valores puramente locales: archivos ignorados.
+
+Si aparecen diferencias versionables que no puedan expresarse con estas capas,
+se documentara el caso real antes de agregar una categoria nueva.
 
 ## Profiles
 
-La capa `profiles/` describe combinaciones de herramientas que forman una
-experiencia instalable.
+Los perfiles declaran que fuentes se enlazan para formar un entorno. No
+contienen configuraciones.
 
-Ejemplos:
+Cada entrada de `profiles/*.links` relaciona una fuente relativa al repositorio
+con un destino bajo `$HOME`. Por ejemplo:
 
-- `minimal`: shell, Git, Neovim y herramientas CLI basicas.
-- `desktop`: base grafica comun.
-- `macos-main`: setup principal actual de macOS.
-- `arch-dwm`: Arch Linux con DWM.
-- `arch-i3`: Arch Linux con i3.
-- `windows-native`: configuracion nativa de Windows.
+```text
+config/nvim|$HOME/.config/nvim
+os/macos/aerospace|$HOME/.config/aerospace
+```
 
-Un perfil no deberia contener configuraciones completas. Su funcion es declarar
-que piezas se activan juntas.
+Herramientas activas:
 
-## Paths And Usernames
+```sh
+scripts/doctor macos-main
+scripts/link --dry-run macos-main
+scripts/link --repair macos-main
+```
 
-Se intentara usar `jd` como usuario principal en nuevas instalaciones cuando sea
-practico, especialmente en macOS y Linux. Aun asi, los dotfiles no deben depender
-de un nombre de usuario fijo.
+El linker nunca reemplaza automaticamente un archivo o directorio real.
+
+## Packages And Inventories
+
+La instalacion de paquetes vive bajo el sistema que la administra:
+
+```text
+os/macos/packages/homebrew/
+os/linux/packages/
+os/windows/packages/
+```
+
+Las listas informativas que no son instalables viven en `docs/inventory/`. No
+se mezclan inventarios deseados, configuraciones activas y manifiestos de
+paquetes reproducibles.
+
+## Paths And Local Data
 
 Preferir:
 
 ```sh
 $HOME/.config/nvim
-~/mydotfiles
 $XDG_CONFIG_HOME
+$HOME/mydotfiles
 ```
 
-Evitar:
+Evitar en configuraciones compartidas:
 
 ```sh
 /Users/jd/.config/nvim
-/home/joe/.config/nvim
+/home/otro-usuario/.config/nvim
 ```
 
-Las rutas personales, como la ubicacion real de una boveda de Obsidian en
-Dropbox, deben exponerse mediante variables de entorno:
+Rutas personales variables se exponen mediante variables de entorno o archivos
+locales ignorados. Secretos, tokens, claves privadas y credenciales quedan fuera
+de Git.
 
-```sh
-export OBSIDIAN_VAULT="$HOME/Dropbox/path/to/vault"
-```
+En GNU/Linux se respetan las rutas XDG:
 
-La configuracion compartida debe consumir la variable y no asumir una ruta fija.
+- configuracion: `$XDG_CONFIG_HOME` o `$HOME/.config`;
+- ejecutables personales: `$HOME/.local/bin`;
+- datos: `$XDG_DATA_HOME` o `$HOME/.local/share`;
+- estado: `$XDG_STATE_HOME` o `$HOME/.local/state`;
+- cache: `$XDG_CACHE_HOME` o `$HOME/.cache`.
 
 ## Linking Strategy
 
-La estrategia actual sigue siendo usar symlinks manuales desde el repositorio
-hacia las rutas esperadas por cada aplicacion.
+Los symlinks siguen siendo la estrategia activa. Los destinos no dependen de la
+ubicacion interna antigua porque `profiles/*.links` funciona como manifiesto y
+`scripts/link` puede crearlos o repararlos.
 
-Esto se mantiene porque el setup principal actual es macOS y ya funciona. La
-migracion a herramientas como `chezmoi` o `stow` se evaluara mas adelante cuando
-existan suficientes diferencias reales entre macOS, Arch Linux, Windows, VMs y
-hosts especificos.
+Stow o Chezmoi se evaluaran cuando macOS, Arch y Windows aporten diferencias
+reales que el linker simple no pueda manejar limpiamente. Adoptarlos en el
+futuro no requiere volver a decidir la clasificacion del repositorio.
 
-## Runtime Locations
+## Migration Sequence
 
-El repositorio es la fuente de verdad versionada, pero no todos los archivos se
-ejecutan o viven directamente desde `~/mydotfiles`.
+1. Inventariar y verificar los enlaces actuales mediante un perfil.
+2. Mover las configuraciones exclusivas de macOS a `os/macos/`.
+3. Reparar los enlaces y validar las aplicaciones afectadas.
+4. Mover configuraciones compartidas a `config/`, una herramienta por vez.
+5. Mover firmware y perifericos a `hardware/`.
+6. Convertir inventarios de software en documentacion o manifiestos reales.
+7. Crear `os/linux/dwm/` y el perfil `arch-dwm` sin depender de archivos
+   manuales de la maquina remota.
+8. Incorporar Windows cuando exista un entorno real para probarlo.
 
-En GNU/Linux se siguen estas convenciones:
-
-- scripts versionados especificos de Linux: `os/linux/<area>/scripts/`;
-- comandos personales ejecutables: `$HOME/.local/bin`;
-- configuraciones de usuario: `$XDG_CONFIG_HOME`, normalmente
-  `$HOME/.config`;
-- datos persistentes de usuario: `$XDG_DATA_HOME`, normalmente
-  `$HOME/.local/share`;
-- estado/logs persistentes de usuario: `$XDG_STATE_HOME`, normalmente
-  `$HOME/.local/state`;
-- caches y builds regenerables: `$XDG_CACHE_HOME`, normalmente `$HOME/.cache`;
-- scripts locales de sistema: `/usr/local/bin` o `/usr/local/sbin`;
-- secretos y credenciales: fuera de Git.
-
-La raiz `scripts/` se reserva para bootstrap, linking e instalacion transversal
-del repositorio. Los scripts especificos de Linux, macOS o Windows deben vivir
-en la capa correspondiente.
-
-Ver `docs/adr/0004-use-standard-linux-runtime-paths.md`.
-
-## Migration Strategy
-
-La transicion debe ser incremental:
-
-1. Documentar arquitectura y decisiones.
-2. Crear `os/`, `hosts/` y `profiles/` cuando haya contenido real para ellos.
-3. Agregar configuraciones nuevas directamente en la capa correcta.
-4. Eliminar rutas absolutas hardcodeadas de configs compartidas.
-5. Probar Arch Linux en maquina secundaria o VM.
-6. Evaluar `chezmoi` o `stow` con evidencia practica.
-7. Mover carpetas activas solo cuando el beneficio sea claro y el rollback sea
-   sencillo.
+Cada etapa debe dejar `scripts/doctor <profile>` sin errores y un rollback claro.
 
 ## ADR Policy
 
-Los ADRs viven en `docs/adr/`.
-
-Se crea un ADR para decisiones que afectan la arquitectura del repositorio o su
-forma de restaurarse en distintas maquinas. No se crea un ADR para cambios
-cotidianos de aliases, temas, keymaps o ajustes menores de una herramienta.
+Los ADR viven en `docs/adr/`. Se agrega uno cuando una decision cambia la
+estructura, la restauracion o las convenciones compartidas del repositorio. No
+se agrega un ADR para temas, aliases o ajustes internos de una sola herramienta.

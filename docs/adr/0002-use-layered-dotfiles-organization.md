@@ -1,9 +1,13 @@
 # Use Layered Dotfiles Organization
 
-Status: Accepted
+Status: Superseded by ADR 0005
 Date: 2026-07-10
 
 ## Context
+
+> Esta decision conserva el contexto historico. ADR 0005 mantiene las capas,
+> pero agrupa las configuraciones compartidas bajo `config/` para evitar que la
+> raiz crezca sin limite.
 
 Separar todo por sistema operativo desde la raiz parece ordenado al principio,
 pero duplica configuraciones compartidas. Separar todo solo por herramienta
@@ -50,4 +54,3 @@ Las configuraciones especificas tendran un lugar predecible:
 
 Esto permite experimentar con Arch Linux sin romper el setup actual de macOS y
 sin crear repositorios separados.
-
