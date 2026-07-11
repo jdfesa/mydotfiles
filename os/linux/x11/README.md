@@ -12,6 +12,14 @@ x11/
 Las configuraciones de window managers deben vivir como herramientas propias
 dentro de `os/linux/`, por ejemplo `os/linux/dwm/`, aunque dependan de X11.
 
+## Clipboard history
+
+`scripts/cliphist` conserva texto copiado en X11 y permite recuperarlo con
+`dmenu`. Guarda el estado en `${XDG_CACHE_HOME:-$HOME/.cache}/cliphist/history`;
+el historial personal nunca se versiona.
+
+Dependencias: `xclip`, `dmenu` y, opcionalmente, `notify-send`.
+
 ## x11vnc
 
 `scripts/start-x11vnc.sh` comparte la sesion fisica X11, por ejemplo `:0`, usando

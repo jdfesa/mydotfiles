@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cache_home="${XDG_CACHE_HOME:-$HOME/.cache}"
+histfile="${CLIPHIST_FILE:-$cache_home/cliphist/history}"
+placeholder='<NEWLINE>'
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") add|out|sel
+
+  add  Copy the X11 primary selection to the clipboard and save it.
+  out  Read stdin into the clipboard and save it.
+  sel  Select a saved entry with dmenu and copy it to the clipboard.
+
+History: $histfile
+EOF
+}
+
+require() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    printf 'cliphist: required command not found: %s\n' "$1" >&2
+    exit 127
+  fi
+}
+
+prepare_history() {
+  mkdir -p "$(dirname "$histfile")"
+  touch "$histfile"
+  chmod 600 "$histfile"
+}
+
+save_clip() {
+  local clip=$1 encoded
+  [[ -n "$clip" ]] || return 0
+  encoded="${clip//$'\n'/$placeholder}"
+  grep -Fqx -- "$encoded" "$histfile" || printf '%s\n' "$encoded" >>"$histfile"
+}
+
+mode="${1:-}"
+case "$mode" in
+  add)
+    require xclip
+    prepare_history
+    clip="$(xclip -o -selection primary)"
+    printf '%s' "$clip" | xclip -i -selection clipboard
+    save_clip "$clip"
+    ;;
+  out)
+    require xclip
+    prepare_history
+    clip="$(cat)"
+    printf '%s' "$clip" | xclip -i -selection clipboard
+    save_clip "$clip"
+    ;;
+  sel)
+    require dmenu
+    require xclip
+    prepare_history
+    selection="$(tac "$histfile" | dmenu -b -l 8 -i -p 'Clipboard history:')"
+    [[ -n "$selection" ]] || exit 0
+    selection="${selection//$placeholder/$'\n'}"
+    printf '%s' "$selection" | xclip -i -selection clipboard
+    if command -v notify-send >/dev/null 2>&1; then
+      notify-send 'Copied to clipboard'
+    fi
+    ;;
+  -h|--help|'')
+    usage
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
