@@ -758,34 +758,42 @@ void
 readxresources(void) {
 	XrmInitialize();
 
+	fonts[0] = estrdup(fonts[0]);
+	colors[SchemeNorm][ColBg] = estrdup(colors[SchemeNorm][ColBg]);
+	colors[SchemeNorm][ColFg] = estrdup(colors[SchemeNorm][ColFg]);
+	colors[SchemeSel][ColBg] = estrdup(colors[SchemeSel][ColBg]);
+	colors[SchemeSel][ColFg] = estrdup(colors[SchemeSel][ColFg]);
+
 	char* xrm;
 	if ((xrm = XResourceManagerString(drw->dpy))) {
 		char *type;
 		XrmDatabase xdb = XrmGetStringDatabase(xrm);
 		XrmValue xval;
 
-		if (XrmGetResource(xdb, "dmenu.font", "*", &type, &xval))
-			fonts[0] = strdup(xval.addr);
-		else
-			fonts[0] = strdup(fonts[0]);
-		if (XrmGetResource(xdb, "dmenu.background", "*", &type, &xval))
-			colors[SchemeNorm][ColBg] = strdup(xval.addr);
-		else
-			colors[SchemeNorm][ColBg] = strdup(colors[SchemeNorm][ColBg]);
-		if (XrmGetResource(xdb, "dmenu.foreground", "*", &type, &xval))
-			colors[SchemeNorm][ColFg] = strdup(xval.addr);
-		else
-			colors[SchemeNorm][ColFg] = strdup(colors[SchemeNorm][ColFg]);
-		if (XrmGetResource(xdb, "dmenu.selbackground", "*", &type, &xval))
-			colors[SchemeSel][ColBg] = strdup(xval.addr);
-		else
-			colors[SchemeSel][ColBg] = strdup(colors[SchemeSel][ColBg]);
-		if (XrmGetResource(xdb, "dmenu.selforeground", "*", &type, &xval))
-			colors[SchemeSel][ColFg] = strdup(xval.addr);
-		else
-			colors[SchemeSel][ColFg] = strdup(colors[SchemeSel][ColFg]);
+		if (xdb) {
+			if (XrmGetResource(xdb, "dmenu.font", "*", &type, &xval)) {
+				free(fonts[0]);
+				fonts[0] = estrdup(xval.addr);
+			}
+			if (XrmGetResource(xdb, "dmenu.background", "*", &type, &xval)) {
+				free(colors[SchemeNorm][ColBg]);
+				colors[SchemeNorm][ColBg] = estrdup(xval.addr);
+			}
+			if (XrmGetResource(xdb, "dmenu.foreground", "*", &type, &xval)) {
+				free(colors[SchemeNorm][ColFg]);
+				colors[SchemeNorm][ColFg] = estrdup(xval.addr);
+			}
+			if (XrmGetResource(xdb, "dmenu.selbackground", "*", &type, &xval)) {
+				free(colors[SchemeSel][ColBg]);
+				colors[SchemeSel][ColBg] = estrdup(xval.addr);
+			}
+			if (XrmGetResource(xdb, "dmenu.selforeground", "*", &type, &xval)) {
+				free(colors[SchemeSel][ColFg]);
+				colors[SchemeSel][ColFg] = estrdup(xval.addr);
+			}
 
-		XrmDestroyDatabase(xdb);
+			XrmDestroyDatabase(xdb);
+		}
 	}
 }
 
@@ -847,16 +855,26 @@ main(int argc, char *argv[])
 	drw = drw_create(dpy, screen, root, wa.width, wa.height);
 	readxresources();
 	/* Now we check whether to override xresources with commandline parameters */
-	if ( tempfonts )
-	   fonts[0] = strdup(tempfonts);
-	if ( colortemp[0])
-	   colors[SchemeNorm][ColBg] = strdup(colortemp[0]);
-	if ( colortemp[1])
-	   colors[SchemeNorm][ColFg] = strdup(colortemp[1]);
-	if ( colortemp[2])
-	   colors[SchemeSel][ColBg]  = strdup(colortemp[2]);
-	if ( colortemp[3])
-	   colors[SchemeSel][ColFg]  = strdup(colortemp[3]);
+	if (tempfonts) {
+		free(fonts[0]);
+		fonts[0] = estrdup(tempfonts);
+	}
+	if (colortemp[0]) {
+		free(colors[SchemeNorm][ColBg]);
+		colors[SchemeNorm][ColBg] = estrdup(colortemp[0]);
+	}
+	if (colortemp[1]) {
+		free(colors[SchemeNorm][ColFg]);
+		colors[SchemeNorm][ColFg] = estrdup(colortemp[1]);
+	}
+	if (colortemp[2]) {
+		free(colors[SchemeSel][ColBg]);
+		colors[SchemeSel][ColBg] = estrdup(colortemp[2]);
+	}
+	if (colortemp[3]) {
+		free(colors[SchemeSel][ColFg]);
+		colors[SchemeSel][ColFg] = estrdup(colortemp[3]);
+	}
 
 	if (!drw_fontset_create(drw, (const char**)fonts, LENGTH(fonts)))
 		die("no fonts could be loaded.");

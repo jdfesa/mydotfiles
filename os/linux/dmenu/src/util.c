@@ -35,3 +35,13 @@ ecalloc(size_t nmemb, size_t size)
 		die("calloc:");
 	return p;
 }
+
+char *
+estrdup(const char *str)
+{
+	char *copy;
+
+	if (!(copy = strdup(str)))
+		die("strdup:");
+	return copy;
+}
