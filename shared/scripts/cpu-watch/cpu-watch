@@ -1,0 +1,448 @@
+#!/usr/bin/env python3
+"""Monitor interactivo de CPU para macOS y Linux, sin dependencias externas."""
+
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import signal
+import subprocess
+import sys
+import time
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+
+
+@dataclass(frozen=True)
+class ProcessInfo:
+    pid: int
+    ppid: int
+    user: str
+    cpu: float
+    memory: float
+    elapsed: str
+    command: str
+
+
+def _number(value: str) -> float:
+    """Convierte números de herramientas del sistema aun si usan coma decimal."""
+    return float(value.replace(",", "."))
+
+
+def parse_processes(output: str) -> List[ProcessInfo]:
+    processes: List[ProcessInfo] = []
+    for line in output.splitlines():
+        fields = line.strip().split(None, 6)
+        if len(fields) != 7:
+            continue
+        try:
+            processes.append(
+                ProcessInfo(
+                    pid=int(fields[0]),
+                    ppid=int(fields[1]),
+                    user=fields[2],
+                    cpu=_number(fields[3]),
+                    memory=_number(fields[4]),
+                    elapsed=fields[5],
+                    command=fields[6],
+                )
+            )
+        except ValueError:
+            continue
+    return sorted(processes, key=lambda process: process.cpu, reverse=True)
+
+
+def process_snapshot() -> List[ProcessInfo]:
+    command = [
+        "ps",
+        "-axo",
+        "pid=,ppid=,user=,pcpu=,pmem=,etime=,command=",
+    ]
+    environment = dict(os.environ)
+    environment["LC_ALL"] = "C"
+    result = subprocess.run(
+        command,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=environment,
+    )
+    return parse_processes(result.stdout)
+
+
+class CpuUsageReader:
+    """Obtiene el uso global. /proc da deltas en Linux; top lo hace en macOS."""
+
+    def __init__(self) -> None:
+        self._previous_linux: Optional[Tuple[int, int]] = None
+
+    def sample(self, processes: Sequence[ProcessInfo]) -> Optional[float]:
+        if sys.platform.startswith("linux"):
+            return self._sample_linux()
+        if sys.platform == "darwin":
+            result = self._sample_macos()
+            if result is not None:
+                return result
+
+        # Aproximación portable: ps expresa 100 % por cada núcleo ocupado.
+        cores = os.cpu_count() or 1
+        return min(100.0, sum(process.cpu for process in processes) / cores)
+
+    def _sample_linux(self) -> Optional[float]:
+        try:
+            with open("/proc/stat", "r", encoding="ascii") as cpu_file:
+                fields = cpu_file.readline().split()[1:]
+            ticks = [int(field) for field in fields]
+        except (OSError, ValueError):
+            return None
+
+        idle = ticks[3] + (ticks[4] if len(ticks) > 4 else 0)
+        total = sum(ticks)
+        current = (total, idle)
+        previous = self._previous_linux
+        self._previous_linux = current
+        if previous is None:
+            return None
+
+        total_delta = total - previous[0]
+        idle_delta = idle - previous[1]
+        if total_delta <= 0:
+            return None
+        return max(0.0, min(100.0, 100.0 * (1.0 - idle_delta / total_delta)))
+
+    @staticmethod
+    def _sample_macos() -> Optional[float]:
+        environment = dict(os.environ)
+        environment["LC_ALL"] = "C"
+        try:
+            # La segunda muestra refleja el intervalo reciente; la primera puede
+            # representar el promedio desde el arranque.
+            result = subprocess.run(
+                ["top", "-l", "2", "-s", "1", "-n", "0"],
+                check=True,
+                capture_output=True,
+                text=True,
+                env=environment,
+            )
+        except (OSError, subprocess.CalledProcessError):
+            return None
+
+        matches = re.findall(
+            r"CPU usage:.*?([0-9]+(?:[.,][0-9]+)?)% idle", result.stdout
+        )
+        if not matches:
+            return None
+        return max(0.0, min(100.0, 100.0 - _number(matches[-1])))
+
+
+def shortened(command: str, width: int = 78) -> str:
+    if len(command) <= width:
+        return command
+    return command[: width - 1] + "…"
+
+
+def display_report(
+    total_cpu: Optional[float],
+    processes: Sequence[ProcessInfo],
+    limit: int,
+    reason: Optional[str] = None,
+) -> None:
+    timestamp = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
+    cpu_text = "no disponible" if total_cpu is None else f"{total_cpu:.1f}%"
+    cores = os.cpu_count() or 1
+    print(f"\n[{timestamp}] Uso global de CPU: {cpu_text}")
+    if reason:
+        print(f"Motivo de la alerta: {reason}")
+    print(
+        f"Núcleos lógicos: {cores}. CPU% usa 100% por núcleo; "
+        "TOTAL% estima el aporte sobre toda la máquina."
+    )
+    print()
+    print(
+        f"{'PID':>7} {'CPU%':>7} {'TOTAL%':>7} {'MEM%':>7} "
+        f"{'USUARIO':<12} {'TIEMPO':>11}  COMANDO"
+    )
+    print("-" * 122)
+    for process in processes[:limit]:
+        total_share = process.cpu / cores
+        print(
+            f"{process.pid:>7} {process.cpu:>7.1f} {total_share:>7.1f} "
+            f"{process.memory:>7.1f} {process.user[:12]:<12} "
+            f"{process.elapsed:>11}  {shortened(process.command, 68)}"
+        )
+
+
+def find_process(processes: Iterable[ProcessInfo], pid: int) -> Optional[ProcessInfo]:
+    return next((process for process in processes if process.pid == pid), None)
+
+
+def process_ancestors(processes: Sequence[ProcessInfo]) -> set:
+    parents: Dict[int, int] = {process.pid: process.ppid for process in processes}
+    ancestors = set()
+    current = os.getpid()
+    while current in parents and parents[current] not in ancestors:
+        current = parents[current]
+        ancestors.add(current)
+    return ancestors
+
+
+def same_process(expected: ProcessInfo) -> Optional[ProcessInfo]:
+    """Evita actuar si el PID desapareció o fue reutilizado por otro comando."""
+    current = find_process(process_snapshot(), expected.pid)
+    if current is None or current.command != expected.command:
+        return None
+    return current
+
+
+def process_exists(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+
+
+def ask_yes_no(question: str) -> bool:
+    return input(f"{question} [s/N]: ").strip().lower() in {"s", "si", "sí", "y", "yes"}
+
+
+def send_signal(target: ProcessInfo, force: bool, grace_seconds: float) -> None:
+    if target.pid in {0, 1, os.getpid()}:
+        print("Ese PID está protegido por seguridad.")
+        return
+
+    try:
+        current = same_process(target)
+    except (OSError, subprocess.CalledProcessError) as error:
+        print(f"No pude volver a verificar el proceso: {error}")
+        return
+    if current is None:
+        print("El proceso ya terminó o ese PID ahora pertenece a otro comando; no hice nada.")
+        return
+
+    selected_signal = signal.SIGKILL if force else signal.SIGTERM
+    signal_name = "SIGKILL (forzado)" if force else "SIGTERM (cierre ordenado)"
+    if not ask_yes_no(
+        f"¿Enviar {signal_name} al PID {current.pid}: {shortened(current.command, 60)}?"
+    ):
+        print("Cancelado.")
+        return
+
+    try:
+        os.kill(current.pid, selected_signal)
+    except ProcessLookupError:
+        print("El proceso terminó antes de recibir la señal.")
+        return
+    except PermissionError:
+        print("Permiso denegado. Si es un proceso del sistema, ejecutá el monitor con sudo solo si entendés el riesgo.")
+        return
+
+    print(f"Señal enviada al PID {current.pid}.")
+    if force:
+        return
+
+    deadline = time.monotonic() + grace_seconds
+    while time.monotonic() < deadline and process_exists(current.pid):
+        time.sleep(0.25)
+    if not process_exists(current.pid):
+        print("El proceso finalizó.")
+    elif ask_yes_no(f"El PID {current.pid} sigue activo. ¿Forzar con SIGKILL?"):
+        try:
+            verified = same_process(current)
+            if verified is None:
+                print("El proceso ya terminó o el PID fue reutilizado; no envié SIGKILL.")
+                return
+            os.kill(verified.pid, signal.SIGKILL)
+            print("SIGKILL enviado.")
+        except ProcessLookupError:
+            print("El proceso ya había terminado.")
+        except PermissionError:
+            print("Permiso denegado.")
+        except (OSError, subprocess.CalledProcessError) as error:
+            print(f"No pude volver a verificar el proceso: {error}")
+
+
+def interactive_action(processes: Sequence[ProcessInfo]) -> bool:
+    while True:
+        answer = input(
+            "\nEnter=seguir | PID=terminar | !PID=forzar | q=salir: "
+        ).strip()
+        if not answer:
+            return True
+        if answer.lower() == "q":
+            return False
+        force = answer.startswith("!")
+        pid_text = answer[1:].strip() if force else answer
+        try:
+            pid = int(pid_text)
+        except ValueError:
+            print("Opción inválida. Escribí un PID, !PID, q o Enter.")
+            continue
+
+        target = find_process(processes, pid)
+        if target is None:
+            print("Ese PID no estaba en la captura mostrada; refrescá antes de actuar.")
+            continue
+
+        if pid in process_ancestors(processes):
+            print("Aviso: ese proceso es un ancestro del monitor; terminarlo podría cerrar esta terminal.")
+        send_signal(target, force=force, grace_seconds=5.0)
+        return True
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Detecta picos de CPU, muestra los procesos responsables y permite terminarlos.",
+    )
+    parser.add_argument(
+        "--threshold",
+        "--umbral",
+        dest="threshold",
+        type=float,
+        default=75.0,
+        help="porcentaje global de CPU que dispara una alerta (default: 75)",
+    )
+    parser.add_argument(
+        "--interval",
+        "--intervalo",
+        dest="interval",
+        type=float,
+        default=2.0,
+        help="segundos entre mediciones (default: 2)",
+    )
+    parser.add_argument(
+        "--process-threshold",
+        "--umbral-proceso",
+        dest="process_threshold",
+        type=float,
+        default=0.0,
+        help=(
+            "CPU de un proceso que también dispara una alerta; 100 equivale "
+            "a un núcleo y 0 desactiva esta condición (default: 0)"
+        ),
+    )
+    parser.add_argument(
+        "--samples",
+        "--muestras",
+        dest="samples",
+        type=int,
+        default=1,
+        help="mediciones altas consecutivas antes de alertar (default: 1)",
+    )
+    parser.add_argument(
+        "--top",
+        type=int,
+        default=10,
+        help="cantidad de procesos a mostrar (default: 10)",
+    )
+    parser.add_argument(
+        "--cooldown",
+        type=float,
+        default=15.0,
+        help="espera mínima entre alertas si el pico continúa (default: 15)",
+    )
+    parser.add_argument(
+        "--once",
+        "--una-vez",
+        dest="once",
+        action="store_true",
+        help="muestra una captura inmediata y ofrece actuar, sin monitoreo continuo",
+    )
+    return parser
+
+
+def validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
+    if not 0.0 <= args.threshold <= 100.0:
+        parser.error("--threshold/--umbral debe estar entre 0 y 100")
+    if args.process_threshold < 0:
+        parser.error("--process-threshold/--umbral-proceso no puede ser negativo")
+    if args.interval <= 0 or args.cooldown < 0:
+        parser.error("los intervalos deben ser positivos")
+    if args.samples < 1 or args.top < 1:
+        parser.error("--samples/--muestras y --top deben ser al menos 1")
+
+
+def main() -> int:
+    parser = build_parser()
+    args = parser.parse_args()
+    validate_args(parser, args)
+    reader = CpuUsageReader()
+
+    if args.once:
+        print("Tomando una captura de CPU y procesos…")
+    else:
+        process_alert = (
+            "individual desactivada"
+            if args.process_threshold == 0
+            else f"proceso {args.process_threshold:.1f}% de un núcleo"
+        )
+        print(
+            f"Vigilando CPU (global {args.threshold:.1f}%, {process_alert}, "
+            f"cada {args.interval:g}s). Ctrl+C para salir."
+        )
+    high_samples = 0
+    last_alert = float("-inf")
+
+    try:
+        processes = process_snapshot()
+        total_cpu = reader.sample(processes)
+
+        # En Linux hacen falta dos lecturas de /proc/stat para calcular el delta.
+        if total_cpu is None:
+            time.sleep(args.interval)
+            processes = process_snapshot()
+            total_cpu = reader.sample(processes)
+
+        if args.once:
+            display_report(total_cpu, processes, args.top)
+            interactive_action(processes)
+            return 0
+
+        while True:
+            global_high = total_cpu is not None and total_cpu >= args.threshold
+            process_high = (
+                args.process_threshold > 0
+                and bool(processes)
+                and processes[0].cpu >= args.process_threshold
+            )
+            if global_high or process_high:
+                high_samples += 1
+            else:
+                high_samples = 0
+
+            now = time.monotonic()
+            if high_samples >= args.samples and now - last_alert >= args.cooldown:
+                reasons = []
+                if global_high and total_cpu is not None:
+                    reasons.append(
+                        f"CPU global {total_cpu:.1f}% ≥ {args.threshold:.1f}%"
+                    )
+                if process_high:
+                    process = processes[0]
+                    total_share = process.cpu / (os.cpu_count() or 1)
+                    reasons.append(
+                        f"PID {process.pid} en {process.cpu:.1f}% de un núcleo "
+                        f"({total_share:.1f}% del total) ≥ {args.process_threshold:.1f}%"
+                    )
+                display_report(total_cpu, processes, args.top, "; ".join(reasons))
+                if not interactive_action(processes):
+                    return 0
+                last_alert = time.monotonic()
+
+            time.sleep(args.interval)
+            processes = process_snapshot()
+            total_cpu = reader.sample(processes)
+    except KeyboardInterrupt:
+        print("\nMonitor detenido.")
+        return 0
+    except (OSError, subprocess.CalledProcessError) as error:
+        print(f"Error al consultar los procesos: {error}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
