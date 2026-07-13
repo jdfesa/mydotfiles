@@ -13,6 +13,7 @@ aunque dependan de X11 o Wayland.
 Ejemplos:
 
 - `dwm/`: configuracion, fuentes, parches, scripts de build y notas de DWM;
+- `display-managers/`: decision y diagnostico de SDDM, LightDM, GDM y sesiones;
 - `i3/`: configuracion, scripts y notas de i3;
 - `bspwm/`, `openbox/`, `sway/` o similares si se prueban mas adelante.
 
@@ -62,6 +63,9 @@ linux/
     README.md
     src/
 
+  display-managers/ # login grafico y descubrimiento de sesiones
+    README.md
+
   i3/               # futuro i3 si se prueba
     README.md
     config
@@ -95,6 +99,8 @@ ejecutar, configurar, cachear o guardar estado:
 ~/.cache/                     # caches y builds regenerables
 /usr/local/bin/               # comandos locales de sistema
 /usr/local/sbin/              # comandos locales administrativos
+/usr/local/libexec/           # launchers locales invocados por el sistema
+/usr/local/share/xsessions/   # sesiones X11 instaladas localmente
 ```
 
 Reglas practicas:
