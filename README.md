@@ -43,6 +43,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 ```text
 mydotfiles/
   shared/                    # herramientas y configuraciones compartidas
+    scripts/                 # utilidades portables de uso personal
   os/
     macos/                   # AeroSpace, Sketchybar, Hammerspoon, Borders
       packages/homebrew/     # manifiestos de Homebrew
@@ -54,14 +55,16 @@ mydotfiles/
   docs/                      # arquitectura, ADR e inventarios
 ```
 
-Las herramientas compartidas viven bajo `shared/<tool>/`; la raiz queda
-reservada para categorias estables.
+Las configuraciones compartidas viven bajo `shared/<tool>/`; los scripts
+portables se agrupan en `shared/scripts/<name>/`. La raiz queda reservada para
+categorias estables.
 
 ## Placement Rules
 
 | Tipo | Ubicacion | Ejemplos |
 |---|---|---|
 | Compartido | `shared/<tool>/` | Kitty, Neovim, Starship, Yazi |
+| Script portable | `shared/scripts/<name>/` | CPU Watch y futuras utilidades personales |
 | Solo macOS | `os/macos/<tool>/` | AeroSpace, Sketchybar, Hammerspoon |
 | Solo Linux | `os/linux/<tool>/` | DWM, i3, X11, Wayland |
 | Solo Windows | `os/windows/<tool>/` | PowerShell, Windows Terminal |

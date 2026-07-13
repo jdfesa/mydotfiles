@@ -40,6 +40,8 @@ mydotfiles/
     tmux/
     yazi/
     zsh/
+    scripts/                 # utilidades portables de uso personal
+      cpu-watch/
 
   os/                        # configuraciones exclusivas por sistema
     macos/
@@ -111,8 +113,18 @@ las fuentes correctas.
 
 ## Shared Configurations
 
-`shared/<tool>/` contiene herramientas que se reutilizan en mas de un sistema o
-que tienen una base razonablemente portable.
+`shared/<tool>/` contiene configuraciones de herramientas que se reutilizan en
+mas de un sistema o que tienen una base razonablemente portable.
+
+Los comandos personales portables se agrupan en
+`shared/scripts/<name>/`. Esta categoria evita mezclar al mismo nivel carpetas
+de configuracion, como `nvim/` o `zsh/`, con una cantidad creciente de scripts.
+Cada script independiente o pequeña suite conserva su propio directorio para
+alojar README, pruebas y archivos auxiliares sin contaminar a los demas.
+
+La carpeta `scripts/` de la raiz no contiene utilidades personales: esta
+reservada para mantenimiento transversal del repositorio, como linking,
+bootstrap y diagnostico de perfiles.
 
 Ejemplos:
 
