@@ -22,7 +22,9 @@ Reglas:
 Perfiles iniciales:
 
 - `macos-main.links`: configuracion activa de la Mac principal;
-- `arch-dwm.links`: se agregara cuando DWM tenga configuracion reproducible.
+- `arch-desktop.links`: comandos de usuario y autostart aislado de DWM en la
+  maquina Arch; los binarios y la sesion de sistema se instalan con
+  `os/linux/dwm/scripts/install-session`.
 
 La restauracion completa del perfil actual esta documentada en
 [`docs/RESTORE.md`](../docs/RESTORE.md).

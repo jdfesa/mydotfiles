@@ -24,7 +24,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 | Plataforma | Estado |
 |---|---|
 | macOS | Activa: 16 symlinks declarados y verificados |
-| Arch Linux | En desarrollo: X11 remoto documentado; DWM pendiente |
+| Arch Linux | Activa: XFCE de respaldo y sesion DWM reproducible en SDDM |
 | Windows | Planificada; sin perfil activo todavia |
 
 ## Conventions
@@ -47,7 +47,7 @@ mydotfiles/
   os/
     macos/                   # AeroSpace, Sketchybar, Hammerspoon, Borders
       packages/homebrew/     # manifiestos de Homebrew
-    linux/                   # DWM, X11, Wayland, paquetes de Linux
+    linux/                   # DWM, display managers, X11 y paquetes de Linux
     windows/                 # configuracion nativa futura
   profiles/                  # manifiestos de symlinks instalables
   hardware/                  # teclados y otros perifericos

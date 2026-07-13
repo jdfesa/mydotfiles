@@ -1,142 +1,160 @@
 # Arch Desktop
 
-Notas de la maquina secundaria Arch Linux accesible por SSH en
+Notas operativas de la maquina Arch Linux accesible por SSH en
 `jd@192.168.8.15`.
 
 ## Objetivo
 
 Usar esta maquina para probar Arch, window managers y configuraciones Linux sin
-ensuciar el setup principal. La fuente de verdad debe ser `~/mydotfiles`; la
-maquina debe quedar como runtime con symlinks y datos locales.
+comprometer el entorno de recuperacion. La fuente de verdad es
+`~/mydotfiles`; la maquina actua como runtime con symlinks, builds en cache y
+datos locales fuera de Git.
 
-## Estado actual seguro
+## Estado verificado el 2026-07-13
 
-- `~/mydotfiles` ya existe en la maquina.
-- `~/.local/bin/start-x11vnc` apunta a
-  `~/mydotfiles/os/linux/x11/scripts/start-x11vnc.sh`.
-- `x11vnc` nuevo usa `~/.vnc/passwd` y `-localhost`.
-- Jump Desktop desde macOS debe conectarse por tunel SSH. Ver
+- Arch Linux usa `graphical.target` y SDDM 0.21 como display manager.
+- SDDM, SSH y XRDP estan habilitados y activos.
+- XFCE 4.20 permanece instalado y aparece como sesion X11 y Wayland.
+- DWM y dmenu se compilan desde los snapshots versionados en
+  `os/linux/{dwm,dmenu}/src`, no desde clones sueltos bajo `$HOME`.
+- `xorg-server-xephyr` y `xorg-server-xvfb` estan instalados para pruebas
+  visuales y headless, respectivamente.
+- La sesion `DWM (dotfiles)` se instala en `/usr/local/share/xsessions/` y usa
+  un launcher de `/usr/local/libexec/`.
+- El autostart de DWM es independiente de XFCE: no se usa `~/.xprofile` para
+  iniciar `picom`, `dwmblocks` o el rotador de wallpapers.
+- Los binarios y archivos manuales anteriores quedan respaldados antes de cada
+  instalacion reproducible.
+- Jump Desktop desde macOS debe conectarse mediante el tunel SSH documentado en
   `os/linux/x11/README.md`.
-- XFCE, SDDM, SSH y XRDP son el respaldo fuerte. No romperlos mientras se migra
-  DWM u otros window managers.
-- Los scripts recuperados se despliegan mediante `profiles/arch-desktop.links`.
-- El antiguo `~/suckless` se retiro de su ruta activa y quedo en cuarentena en
-  `~/.local/share/dotfiles-migration/quarantine/20260710-223627/suckless`.
-- Los binarios antiguos de `/usr/local/bin` permanecen temporalmente porque la
-  entrada DWM de SDDM todavia los referencia.
 
-## Scripts recuperados
+## Display manager y sesiones disponibles
 
-Los scripts manuales se incorporaron al repositorio con validaciones y rutas
-portables:
+SDDM es el programa de login. DWM y XFCE son sesiones seleccionables dentro de
+SDDM; no son distintas variantes de SDDM.
 
 ```text
-os/linux/dwm/scripts/wallpaper-rotator.sh
-os/linux/dwm/scripts/status-sensors.sh
-os/linux/x11/scripts/cliphist
-shared/rclone/rclone-sync
+SDDM
+  -> DWM (dotfiles), X11 experimental
+  -> XFCE Session, X11 de recuperacion
+  -> XFCE on Wayland, alternativa empaquetada
 ```
 
-El perfil `profiles/arch-desktop.links` los despliega bajo `~/.local/bin/`. El
-script de Rclone hace `--dry-run` salvo que se indique `--apply`; sus
+No se cambia a LightDM, GDM ni otro display manager durante esta etapa. La
+comparacion y los comandos de diagnostico estan en
+`os/linux/display-managers/README.md`.
+
+Para salir normalmente de DWM y volver al selector se usa
+`Mod+Shift+Backspace`. Si la sesion grafica queda inutilizable, entrar por SSH o
+`Ctrl+Alt+F3` y reiniciar SDDM. Ese reinicio cierra cualquier sesion grafica:
+
+```sh
+sudo systemctl restart sddm
+```
+
+## Fuente y flujo DWM/dmenu
+
+Los arboles bajo `os/linux/dwm/src` y `os/linux/dmenu/src` son las fuentes
+propias. Sus versiones, parches y modificaciones se documentan en el mismo
+repositorio; no se usa la identidad ni el commit de otro usuario como referencia
+operativa.
+
+La configuracion propia se modifica en cada `src/config.def.h`. Flujo seguro:
+
+```sh
+cd ~/mydotfiles
+os/linux/dwm/scripts/build
+os/linux/dmenu/scripts/build
+
+# Ejecutar desde una terminal de XFCE X11, no desde SSH sin DISPLAY:
+os/linux/dwm/scripts/test-nested
+
+# Despues de validar la prueba:
+os/linux/dwm/scripts/install-session
+```
+
+El test anidado requiere `xorg-server-xephyr`. La instalacion crea primero un
+archivo de rollback bajo:
+
+```text
+~/.local/state/mydotfiles/backups/dwm-session/<fecha>/
+```
+
+La primera instalacion reproducible termino correctamente y su respaldo
+verificado es:
+
+```text
+~/.local/state/mydotfiles/backups/dwm-session/20260713-140717/
+```
+
+La revision que elimina las colisiones de atajos genero un segundo respaldo
+verificado antes de instalar el binario final:
+
+```text
+~/.local/state/mydotfiles/backups/dwm-session/20260713-141540/
+```
+
+Las builds instaladas coinciden por SHA-256 con las compiladas en cache. DWM
+6.5 y dmenu 5.4 permanecieron activos juntos sobre Xvfb durante el smoke test;
+SDDM se reinicio despues y volvio a estado `active` con el greeter operativo.
+
+El procedimiento detallado, los atajos iniciales y el rollback se documentan
+en `os/linux/dwm/README.md`.
+
+## Perfil y scripts de usuario
+
+`profiles/arch-desktop.links` despliega:
+
+```text
+shared/bash/bashrc                         -> ~/.bashrc
+os/linux/dwm/session/autostart.sh          -> ~/.config/dwm/autostart.sh
+os/linux/dwm/scripts/wallpaper-rotator.sh  -> ~/.local/bin/wallpaper-rotator
+os/linux/dwm/scripts/status-sensors.sh     -> ~/.local/bin/status-sensors
+os/linux/x11/scripts/cliphist              -> ~/.local/bin/cliphist
+os/linux/x11/scripts/start-x11vnc.sh       -> ~/.local/bin/start-x11vnc
+shared/rclone/rclone-sync                  -> ~/.local/bin/rclone-sync
+```
+
+El linker no reemplaza archivos reales automaticamente. Comprobar y aplicar:
+
+```sh
+scripts/link --dry-run --repair arch-desktop
+scripts/link --repair arch-desktop
+scripts/doctor arch-desktop
+```
+
+El wrapper de Rclone hace `--dry-run` salvo que se indique `--apply`; sus
 credenciales permanecen fuera del repositorio.
 
-## Pendiente inmediato
+## Historial de migracion y recuperacion
 
-1. Cuando estos cambios esten versionados, sincronizar el clon de Arch desde la
-   rama principal. No ejecutar `git pull` mientras el clon remoto contenga esta
-   migracion sin commit:
-
-   ```sh
-   cd ~/mydotfiles
-   git pull --ff-only
-   ```
-
-2. La configuracion Bash administrada por el perfil ya agrega `~/.local/bin` al
-   `PATH`. Validar una nueva sesion SSH despues de versionar la migracion.
-
-3. El script viejo inseguro ya esta en cuarentena:
-
-   ```text
-   ~/.local/share/dotfiles-migration/quarantine/20260710-223627/manual-scripts/start-x11vnc.sh
-   ```
-
-   Ese script contiene `-passwd 123456` y no debe usarse.
-
-4. Las configuraciones antiguas de TigerVNC que usaban DWM y `localhost=no`
-   estan en `legacy-dwm-startup/` dentro de la cuarentena. En `~/.vnc/` solo
-   permanece `passwd`, con modo `0600`, para el `x11vnc` seguro.
-
-## Archivos importantes a migrar
-
-Estos archivos fueron creados manualmente y se revisaron durante la migracion:
+El antiguo `~/suckless` se retiro de su ruta activa y quedo en cuarentena en:
 
 ```text
-~/.local/bin/wallpaper-rotator.sh
-~/.local/scripts/status-sensors.sh
-~/.local/scripts/cliphist
-~/.vnc/xstartup
-~/.vnc/xstartup.d/01-dwm.sh
-~/.xprofile
-~/rclone-sync.sh
+~/.local/share/dotfiles-migration/quarantine/20260710-223627/suckless
 ```
 
-Destino probable:
+La migracion anterior que estaba sin commit en el clon remoto se guardo antes
+de actualizar `main`:
 
 ```text
-os/linux/x11/scripts/       # helpers generales de X11
-os/linux/dwm/scripts/       # scripts que solo tengan sentido para DWM
-docs/machines/              # inventario, historia y tareas de esta maquina
+stash: pre-dwm-session-20260713-135544
 ```
 
-Si un wrapper solo cambia una ruta local, se prefiere una variable o archivo
-ignorado. No se crea una capa de configuracion completa por maquina.
+Su contenido coincide con commits que ya existen en `main`; el stash se
+conserva temporalmente como segunda red de seguridad.
 
-El antiguo `~/.xprofile` mezclaba cosas de DWM con arranque general:
+El antiguo `~/.xprofile`, los archivos TigerVNC que iniciaban DWM y el script
+que contenia una clave VNC embebida quedaron en la cuarentena fechada. En
+`~/.vnc/` solo debe permanecer `passwd` con modo `0600` para x11vnc.
 
-- `feh`;
-- `picom`;
-- wallpaper rotator;
-- `dwmblocks`.
-
-Fue retirado a `legacy-dwm-startup/` dentro de la cuarentena. XFCE queda limpio
-como respaldo; un futuro DWM tendra su propio arranque documentado.
-
-## Suckless antiguo
-
-Las fuentes/configuraciones antiguas se encontraron originalmente en:
-
-```text
-~/suckless/
-/usr/local/bin/dwm
-/usr/local/bin/dwmblocks
-/usr/local/bin/st
-/usr/local/bin/dmenu
-```
-
-Estado despues del inventario:
-
-- `~/suckless/` ya no existe como ruta activa; su contenido esta en la
-  cuarentena fechada indicada arriba.
-- `/usr/local/bin/*` contiene binarios instalados desde esas fuentes.
-- No son la fuente de verdad futura.
-- No se van a migrar como base principal si la intencion es empezar DWM desde
-  cero y bien documentado.
-
-Plan restante:
-
-1. Mantener XFCE/RDP como fallback.
-2. Crear una nueva estructura limpia en `os/linux/dwm/`, `os/linux/dwmblocks/`,
-   `os/linux/st/` y `os/linux/dmenu/` solo cuando se empiece a trabajar en cada
-   herramienta.
-3. No borrar `/usr/local/bin/dwm` ni los binarios suckless hasta confirmar que
-   no se necesitan para entrar a la sesion actual.
-4. Eliminar la cuarentena solo despues de reconstruir DWM desde cero y confirmar
-   que no se necesita consultar ninguna decision antigua.
+Los ejecutables historicos de `/usr/local/bin` no se borran sin respaldo. El
+instalador reproducible los incluye en su `system-files.tar` antes de
+reemplazarlos.
 
 ## Candidatos a limpiar mas adelante
 
-No borrar todavia; revisar cuando la migracion este documentada:
+No borrar todavia; revisar cuando DWM lleve suficiente tiempo estable:
 
 ```text
 ~/.cache/yay
@@ -148,14 +166,15 @@ backup_full_sistema/
 ~/.bash_history-*.tmp
 ```
 
-`~/.cache/yay` es cache/build regenerable. Los clones `~/yay` y `~/yay-bin`
-parecen arboles AUR usados para instalar paquetes, no configuraciones
-permanentes.
+Tambien deben conservarse por ahora la cuarentena de `suckless` y el stash de
+preinstalacion. Solo se retiran despues de probar build, login, salida a SDDM,
+XFCE, SSH y XRDP.
 
 ## Regla para continuar
 
-- No borrar primero: poner en cuarentena.
-- Migrar una pieza por vez.
-- Cada pieza migrada debe tener README, destino claro y symlink documentado.
-- XFCE/RDP/SSH quedan como salida de emergencia hasta que DWM sea reproducible.
-- Nada con passwords, tokens, claves privadas o rutas sensibles entra a Git.
+- Cambiar una sola pieza de DWM o dmenu por iteracion.
+- Compilar sin `sudo`; usar privilegios solo para instalar una build validada.
+- Probar primero en Xephyr y despues como sesion real.
+- Mantener XFCE, SDDM, SSH y XRDP como salida de emergencia.
+- No borrar primero: respaldar o poner en cuarentena.
+- No versionar passwords, tokens, claves privadas, caches, builds ni logs.
