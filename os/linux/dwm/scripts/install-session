@@ -1,0 +1,119 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: os/linux/dwm/scripts/install-session [--dry-run]
+
+Build and install the repository snapshots of dmenu and DWM, install the DWM
+X11 session for display managers, and preserve a rollback archive.
+EOF
+}
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+repo_root=$(CDPATH='' cd -- "$script_dir/../../../.." && pwd -P)
+cache_home=${XDG_CACHE_HOME:-$HOME/.cache}
+state_home=${XDG_STATE_HOME:-$HOME/.local/state}
+dwm_build=$cache_home/mydotfiles-build/dwm
+dmenu_build=$cache_home/mydotfiles-build/dmenu
+session_dir=$repo_root/os/linux/dwm/session
+dry_run=0
+
+if [ "${1:-}" = "--dry-run" ]; then
+  dry_run=1
+  shift
+fi
+
+if [ "$#" -ne 0 ]; then
+  usage >&2
+  exit 2
+fi
+
+if [ "$(uname -s)" != Linux ]; then
+  printf 'DWM install: GNU/Linux is required\n' >&2
+  exit 1
+fi
+
+for command_name in make cc sudo tar sha256sum; do
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    printf 'DWM install: required command not found: %s\n' "$command_name" >&2
+    exit 127
+  fi
+done
+
+"$repo_root/os/linux/dmenu/scripts/build"
+"$repo_root/os/linux/dwm/scripts/build"
+
+if [ "$dry_run" -eq 1 ]; then
+  cat <<EOF
+[dry-run] sudo make -C $dmenu_build install
+[dry-run] sudo make -C $dwm_build install
+[dry-run] install $session_dir/dwm-session in /usr/local/libexec/
+[dry-run] install $session_dir/dwm.desktop in /usr/local/share/xsessions/
+[dry-run] retire the unowned legacy files under /usr/share after backing them up
+EOF
+  exit 0
+fi
+
+sudo -v
+
+timestamp=$(date +%Y%m%d-%H%M%S)
+backup_dir=$state_home/mydotfiles/backups/dwm-session/$timestamp
+archive=$backup_dir/system-files.tar
+file_list=$backup_dir/system-files.txt
+mkdir -p "$backup_dir"
+chmod 700 "$backup_dir"
+: > "$file_list"
+
+managed_paths='
+usr/local/bin/dwm
+usr/local/share/man/man1/dwm.1
+usr/local/bin/dmenu
+usr/local/bin/dmenu_path
+usr/local/bin/dmenu_run
+usr/local/bin/stest
+usr/local/share/man/man1/dmenu.1
+usr/local/share/man/man1/stest.1
+usr/local/libexec/dotfiles-dwm-session
+usr/local/share/xsessions/dwm.desktop
+usr/share/xsessions/dwm.desktop
+usr/share/sddm/scripts/dwm-session
+'
+
+printf '%s\n' "$managed_paths" | while IFS= read -r path; do
+  [ -n "$path" ] || continue
+  if [ -e "/$path" ] || [ -L "/$path" ]; then
+    printf '%s\n' "$path" >> "$file_list"
+  fi
+done
+
+tar -C / -cpf "$archive" -T "$file_list"
+(cd "$backup_dir" && sha256sum system-files.tar > system-files.tar.sha256)
+
+sudo make -C "$dmenu_build" install
+sudo make -C "$dwm_build" install
+sudo install -Dm755 "$session_dir/dwm-session" \
+  /usr/local/libexec/dotfiles-dwm-session
+sudo install -Dm644 "$session_dir/dwm.desktop" \
+  /usr/local/share/xsessions/dwm.desktop
+
+for legacy_path in \
+  /usr/share/xsessions/dwm.desktop \
+  /usr/share/sddm/scripts/dwm-session
+do
+  if [ ! -e "$legacy_path" ] && [ ! -L "$legacy_path" ]; then
+    continue
+  fi
+
+  if command -v pacman >/dev/null 2>&1 \
+    && pacman -Qo "$legacy_path" >/dev/null 2>&1; then
+    printf 'DWM install: keeping package-owned legacy path: %s\n' \
+      "$legacy_path" >&2
+    continue
+  fi
+
+  sudo rm -f -- "$legacy_path"
+done
+
+printf 'DWM session installed. Rollback archive: %s\n' "$backup_dir"

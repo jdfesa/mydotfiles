@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -eu
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+repo_root=$(CDPATH='' cd -- "$script_dir/../../../.." && pwd -P)
+cache_home=${XDG_CACHE_HOME:-$HOME/.cache}
+dwm_build=$cache_home/mydotfiles-build/dwm
+dmenu_build=$cache_home/mydotfiles-build/dmenu
+nested_display=${DWM_TEST_DISPLAY:-:8}
+screen=${DWM_TEST_SCREEN:-1280x720}
+xephyr_pid=
+
+cleanup() {
+  if [ -n "$xephyr_pid" ] && kill -0 "$xephyr_pid" 2>/dev/null; then
+    kill "$xephyr_pid" 2>/dev/null || true
+    wait "$xephyr_pid" 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT HUP INT TERM
+
+if [ -z "${DISPLAY:-}" ]; then
+  printf 'DWM nested test: run this from a terminal inside an X11 session such as XFCE\n' >&2
+  exit 1
+fi
+
+if ! command -v Xephyr >/dev/null 2>&1; then
+  printf 'DWM nested test: Xephyr is missing; install xorg-server-xephyr\n' >&2
+  exit 127
+fi
+
+"$repo_root/os/linux/dmenu/scripts/build"
+"$repo_root/os/linux/dwm/scripts/build"
+
+Xephyr "$nested_display" -ac -br -noreset -screen "$screen" &
+xephyr_pid=$!
+sleep 1
+
+if ! kill -0 "$xephyr_pid" 2>/dev/null; then
+  printf 'DWM nested test: Xephyr failed to start on %s\n' "$nested_display" >&2
+  exit 1
+fi
+
+printf 'DWM nested test running on %s. Close the Xephyr window to finish.\n' \
+  "$nested_display"
+DISPLAY=$nested_display PATH=$dmenu_build:$PATH "$dwm_build/dwm"

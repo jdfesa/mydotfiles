@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=DWM (dotfiles)
+Comment=Personal DWM X11 session managed by mydotfiles
+Exec=/usr/local/libexec/dotfiles-dwm-session
+TryExec=/usr/local/bin/dwm
+Type=Application
+DesktopNames=dwm

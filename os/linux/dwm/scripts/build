@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -eu
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+source_dir=$(CDPATH='' cd -- "$script_dir/../src" && pwd -P)
+cache_home=${XDG_CACHE_HOME:-$HOME/.cache}
+build_dir=$cache_home/mydotfiles-build/dwm
+staging_dir=$build_dir.tmp.$$
+previous_dir=$build_dir.previous.$$
+
+cleanup() {
+  rm -rf -- "$staging_dir" "$previous_dir"
+}
+trap cleanup EXIT HUP INT TERM
+
+case $(uname -s) in
+  Linux) ;;
+  *)
+    printf 'DWM build: GNU/Linux with X11 development headers is required\n' >&2
+    exit 1
+    ;;
+esac
+
+mkdir -p "$(dirname -- "$build_dir")"
+rm -rf -- "$staging_dir"
+mkdir -p "$staging_dir"
+cp -R "$source_dir/." "$staging_dir/"
+
+make -C "$staging_dir" clean
+make -C "$staging_dir" all
+
+if [ -e "$build_dir" ]; then
+  mv "$build_dir" "$previous_dir"
+fi
+
+if ! mv "$staging_dir" "$build_dir"; then
+  if [ -e "$previous_dir" ]; then
+    mv "$previous_dir" "$build_dir"
+  fi
+  exit 1
+fi
+
+rm -rf -- "$previous_dir"
+trap - EXIT HUP INT TERM
+
+printf 'DWM build ready: %s/dwm\n' "$build_dir"

@@ -1,0 +1,37 @@
+#!/bin/sh
+
+set -u
+
+state_home=${XDG_STATE_HOME:-$HOME/.local/state}
+log_dir=$state_home/mydotfiles
+log_file=$log_dir/dwm-session.log
+autostart=${DWM_AUTOSTART:-$HOME/.config/dwm/autostart.sh}
+
+umask 077
+mkdir -p "$log_dir"
+export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin
+
+{
+  printf '\n=== DWM session %s ===\n' "$(date -Is)"
+  printf 'DISPLAY=%s\n' "${DISPLAY:-unset}"
+} >> "$log_file"
+
+if command -v xsetroot >/dev/null 2>&1; then
+  xsetroot -solid '#222219' >> "$log_file" 2>&1 || true
+fi
+
+if [ -r "$HOME/.Xresources" ] && command -v xrdb >/dev/null 2>&1; then
+  xrdb -merge "$HOME/.Xresources" >> "$log_file" 2>&1 || true
+fi
+
+if [ -x "$autostart" ]; then
+  "$autostart" >> "$log_file" 2>&1 &
+fi
+
+if [ ! -x /usr/local/bin/dwm ]; then
+  printf 'DWM session: /usr/local/bin/dwm is missing or not executable\n' \
+    >> "$log_file"
+  exit 127
+fi
+
+exec /usr/local/bin/dwm >> "$log_file" 2>&1

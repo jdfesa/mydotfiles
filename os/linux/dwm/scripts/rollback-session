@@ -1,0 +1,42 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  printf 'Usage: os/linux/dwm/scripts/rollback-session <backup-directory>\n'
+}
+
+backup_dir=${1:-}
+if [ -z "$backup_dir" ] || [ "$#" -ne 1 ]; then
+  usage >&2
+  exit 2
+fi
+
+archive=$backup_dir/system-files.tar
+checksum=$archive.sha256
+
+if [ ! -r "$archive" ] || [ ! -r "$checksum" ]; then
+  printf 'DWM rollback: incomplete backup directory: %s\n' "$backup_dir" >&2
+  exit 1
+fi
+
+(cd "$backup_dir" && sha256sum -c "$(basename -- "$checksum")")
+sudo -v
+
+for path in \
+  /usr/local/bin/dwm \
+  /usr/local/share/man/man1/dwm.1 \
+  /usr/local/bin/dmenu \
+  /usr/local/bin/dmenu_path \
+  /usr/local/bin/dmenu_run \
+  /usr/local/bin/stest \
+  /usr/local/share/man/man1/dmenu.1 \
+  /usr/local/share/man/man1/stest.1 \
+  /usr/local/libexec/dotfiles-dwm-session \
+  /usr/local/share/xsessions/dwm.desktop
+do
+  sudo rm -f -- "$path"
+done
+
+sudo tar -C / -xpf "$archive"
+printf 'DWM session rollback restored: %s\n' "$backup_dir"
