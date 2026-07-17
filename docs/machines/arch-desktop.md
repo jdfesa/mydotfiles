@@ -103,6 +103,22 @@ SDDM se reinicio despues y volvio a estado `active` con el greeter operativo.
 El procedimiento detallado, los atajos iniciales y el rollback se documentan
 en `os/linux/dwm/README.md`.
 
+La build que agrega el power menu en `Super+Shift+p` genero este respaldo:
+
+```text
+~/.local/state/mydotfiles/backups/dwm-session/20260717-202007/
+```
+
+La build en cache y `/usr/local/bin/dwm` coincidieron con SHA-256:
+
+```text
+70ccd7c0713cfdcbd56773c7724e36dbefa5993f04d9fe6b98a93b7ac5753990
+```
+
+DWM se reinicio mediante `restartsig` sin cerrar las aplicaciones. El menu se
+abrio en `DISPLAY=:0` y una prueba con timeout lo cancelo sin seleccionar lock,
+suspend, logout, reboot ni power off. El perfil termino con 8 enlaces validos.
+
 ### DWMBlocks
 
 La barra historica se recupero desde el respaldo de la maquina. Su base es
