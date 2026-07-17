@@ -19,6 +19,12 @@ antes de ser reemplazados o liberados. Esto corrige el ownership del parche
 Xresources cuando el servidor X no tiene una base de recursos cargada y elimina
 las advertencias de tipos que aparecian al compilar con `-Wall`.
 
+Navegacion local:
+
+- `Up` y `Down` recorren los resultados circularmente;
+- `j` y `k` sin modificadores siguen disponibles para escribir y filtrar;
+- `Tab` completa el texto con la opcion seleccionada; no navega.
+
 ## Personalizacion y build
 
 Los defaults viven en `src/config.def.h`: posicion, ancho, fuentes y colores.

@@ -164,9 +164,11 @@ historial. `Super+v` abre la seleccion del historial mediante dmenu.
 - `Reboot`;
 - `Power off`.
 
-El menu es vertical. `Up` y `Down` recorren las opciones; escribir filtra la
-lista y `Tab` no se usa para navegar. `Cancel` aparece primero, por lo que Enter
-sin mover la seleccion no ejecuta ninguna accion. Escape tambien cancela.
+El menu es vertical. `Up` y `Down` recorren las opciones de forma circular;
+desde `Cancel`, subir selecciona directamente `Power off`. Escribir filtra la
+lista y `Tab` completa el texto con la opcion seleccionada, no navega. `Cancel`
+aparece primero, por lo que Enter sin mover la seleccion no ejecuta ninguna
+accion. Escape tambien cancela.
 
 Suspend, logout, reboot y power off requieren una segunda confirmacion vertical.
 `No` aparece primero para que Enter accidental no confirme.
