@@ -7,6 +7,7 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
+tap "rtk-ai/tap"
 
 # I'll install the following fonts from neovim script
 cask "font-meslo-lg-nerd-font"
@@ -61,6 +62,8 @@ cask "keycastr"
 cask "upscayl"
 brew "ast-grep"
 brew "1password-cli"
+# Compacta salidas de terminal antes de incorporarlas al contexto de Codex.
+brew "rtk-ai/tap/rtk"
 
 # Not essentials, but added them here, as I install them all the time ;)
 cask "google-chrome"
