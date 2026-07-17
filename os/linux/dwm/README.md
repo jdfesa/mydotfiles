@@ -163,7 +163,8 @@ y sesiones esta documentada en `os/linux/display-managers/README.md`.
 - `wallpaper-rotator.sh`: rota imagenes mediante `feh` sin romper rutas que
   contienen espacios.
 - `status-sensors.sh`: genera el bloque de CPU, memoria y GPU usado por
-  `dwmblocks`; admite un lector de carga AMD configurable.
+  `dwmblocks`; detecta automaticamente la utilizacion publicada por `amdgpu`
+  en sysfs y admite un lector configurable como override.
 
 Sus dependencias se validan en tiempo de ejecucion y no se instalan
 automaticamente.

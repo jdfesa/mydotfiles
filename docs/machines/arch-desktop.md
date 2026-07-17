@@ -131,6 +131,12 @@ El proceso se reinicio de forma aislada, sin cerrar DWM ni sus ventanas. Tras
 mas de un intervalo completo de 30 segundos, el log de la sesion no recibio
 errores nuevos y la barra continuo activa en `DISPLAY=:0`.
 
+La Radeon RX 550 usa el driver `amdgpu` y publica su utilizacion en
+`/sys/class/drm/card1/device/gpu_busy_percent`. El script no fija `card1`:
+descubre dinamicamente la tarjeta controlada por `amdgpu`, por lo que conserva
+el comportamiento si el orden de DRM cambia en una reinstalacion. No requiere
+`radeontop`, `rocm-smi`, `nvtop` ni otro proceso de monitoreo residente.
+
 ## Perfil y scripts de usuario
 
 `profiles/arch-desktop.links` despliega:

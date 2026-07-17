@@ -42,7 +42,8 @@ if command -v free >/dev/null 2>&1; then
   mem_use="$(free -m | awk '/^Mem:/ { printf "%.1f", $3 / 1024 }')"
 fi
 
-# Point this at a command that prints only the AMD GPU utilization percentage.
+# Point this at a command that prints only the AMD GPU utilization percentage
+# to override automatic detection.
 # Example: AMDGPU_LOAD_COMMAND="$HOME/.local/bin/read-amdgpu-load"
 if [[ -n "${AMDGPU_LOAD_COMMAND:-}" ]]; then
   if [[ -x "$AMDGPU_LOAD_COMMAND" ]]; then
@@ -51,6 +52,18 @@ if [[ -n "${AMDGPU_LOAD_COMMAND:-}" ]]; then
     printf 'status-sensors: AMDGPU_LOAD_COMMAND is not executable: %s\n' \
       "$AMDGPU_LOAD_COMMAND" >&2
   fi
+else
+  drm_class_dir=${DRM_CLASS_DIR:-/sys/class/drm}
+  for busy_file in "$drm_class_dir"/card[0-9]*/device/gpu_busy_percent; do
+    [[ -r "$busy_file" ]] || continue
+    device_dir=${busy_file%/gpu_busy_percent}
+    driver=$(basename -- "$(readlink -f "$device_dir/driver")")
+    [[ "$driver" == amdgpu ]] || continue
+
+    gpu_use=$(<"$busy_file")
+    [[ "$gpu_use" =~ ^[0-9]+$ ]] || gpu_use=N/A
+    break
+  done
 fi
 
 cpu_temp="${cpu_temp:-N/A}"

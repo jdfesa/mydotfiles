@@ -35,6 +35,12 @@ En tiempo de ejecucion, el bloque de sensores usa las dependencias documentadas
 por `../dwm/scripts/status-sensors.sh`. La ausencia de un sensor opcional no
 debe impedir que DWMBlocks muestre los demas datos.
 
+En equipos con el driver `amdgpu`, `status-sensors` busca
+`gpu_busy_percent` bajo `/sys/class/drm` y muestra la utilizacion sin instalar
+un monitor residente ni fijar el numero de tarjeta. `AMDGPU_LOAD_COMMAND`
+permanece disponible para reemplazar esa deteccion cuando una GPU no exponga
+la interfaz del kernel.
+
 ## Build e instalacion
 
 Compilar sin modificar `src/`:
