@@ -10,7 +10,7 @@ comprometer el entorno de recuperacion. La fuente de verdad es
 `~/mydotfiles`; la maquina actua como runtime con symlinks, builds en cache y
 datos locales fuera de Git.
 
-## Estado verificado el 2026-07-13
+## Estado verificado el 2026-07-17
 
 - Arch Linux usa `graphical.target` y SDDM 0.21 como display manager.
 - SDDM, SSH y XRDP estan habilitados y activos.
@@ -114,6 +114,22 @@ La configuracion anterior llamaba a la ruta obsoleta
 comando `status-sensors`, resuelto desde `~/.local/bin` por el launcher de la
 sesion. Build, instalacion y rollback se documentan en
 `os/linux/dwmblocks/README.md`.
+
+La primera instalacion reproducible de DWMBlocks creo y verifico este respaldo:
+
+```text
+~/.local/state/mydotfiles/backups/dwmblocks/20260717-192314/
+```
+
+La build en cache y `/usr/local/bin/dwmblocks` coincidieron con SHA-256:
+
+```text
+0f19a7e8fd51686040d6dc15db84349925d380e52fec0eac95ac29e875f5bbde
+```
+
+El proceso se reinicio de forma aislada, sin cerrar DWM ni sus ventanas. Tras
+mas de un intervalo completo de 30 segundos, el log de la sesion no recibio
+errores nuevos y la barra continuo activa en `DISPLAY=:0`.
 
 ## Perfil y scripts de usuario
 
