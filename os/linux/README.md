@@ -13,6 +13,7 @@ aunque dependan de X11 o Wayland.
 Ejemplos:
 
 - `dwm/`: configuracion, fuentes, parches, scripts de build y notas de DWM;
+- `dwmblocks/`: barra de estado compilada, configuracion y scripts de instalacion;
 - `display-managers/`: decision y diagnostico de SDDM, LightDM, GDM y sesiones;
 - `i3/`: configuracion, scripts y notas de i3;
 - `bspwm/`, `openbox/`, `sway/` o similares si se prueban mas adelante.
@@ -62,6 +63,11 @@ linux/
   dmenu/            # lanzador suckless, independiente de DWM
     README.md
     src/
+
+  dwmblocks/        # barra de estado modular, independiente de DWM
+    README.md
+    src/
+    scripts/
 
   display-managers/ # login grafico y descubrimiento de sesiones
     README.md

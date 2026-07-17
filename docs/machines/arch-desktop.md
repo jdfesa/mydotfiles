@@ -17,6 +17,8 @@ datos locales fuera de Git.
 - XFCE 4.20 permanece instalado y aparece como sesion X11 y Wayland.
 - DWM y dmenu se compilan desde los snapshots versionados en
   `os/linux/{dwm,dmenu}/src`, no desde clones sueltos bajo `$HOME`.
+- DWMBlocks se mantiene como snapshot independiente en
+  `os/linux/dwmblocks/src`; su build regenerable vive fuera de Git.
 - `xorg-server-xephyr` y `xorg-server-xvfb` estan instalados para pruebas
   visuales y headless, respectivamente.
 - La sesion `DWM (dotfiles)` se instala en `/usr/local/share/xsessions/` y usa
@@ -100,6 +102,18 @@ SDDM se reinicio despues y volvio a estado `active` con el greeter operativo.
 
 El procedimiento detallado, los atajos iniciales y el rollback se documentan
 en `os/linux/dwm/README.md`.
+
+### DWMBlocks
+
+La barra historica se recupero desde el respaldo de la maquina. Su base es
+`torrinfail/dwmblocks` en el commit `8cedd22`, con ajustes menores para una
+compilacion limpia y dos bloques: sensores y fecha/hora.
+
+La configuracion anterior llamaba a la ruta obsoleta
+`~/.local/scripts/status-sensors.sh`. La configuracion versionada usa ahora el
+comando `status-sensors`, resuelto desde `~/.local/bin` por el launcher de la
+sesion. Build, instalacion y rollback se documentan en
+`os/linux/dwmblocks/README.md`.
 
 ## Perfil y scripts de usuario
 

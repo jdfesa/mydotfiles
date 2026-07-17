@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  printf 'Usage: os/linux/dwmblocks/scripts/rollback <backup-directory>\n'
+}
+
+backup_dir=${1:-}
+if [ -z "$backup_dir" ] || [ "$#" -ne 1 ]; then
+  usage >&2
+  exit 2
+fi
+
+archive=$backup_dir/system-files.tar
+checksum=$archive.sha256
+
+if [ ! -r "$archive" ] || [ ! -r "$checksum" ]; then
+  printf 'DWMBlocks rollback: incomplete backup directory: %s\n' \
+    "$backup_dir" >&2
+  exit 1
+fi
+
+(cd "$backup_dir" && sha256sum -c "$(basename -- "$checksum")")
+sudo -v
+sudo rm -f -- /usr/local/bin/dwmblocks
+sudo tar -C / -xpf "$archive"
+
+printf 'DWMBlocks rollback restored: %s\n' "$backup_dir"
+printf 'Log out of DWM and back in to start the restored binary.\n'

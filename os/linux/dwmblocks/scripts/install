@@ -1,0 +1,72 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: os/linux/dwmblocks/scripts/install [--dry-run]
+
+Build and install the repository snapshot of DWMBlocks, preserving the current
+system binary in a rollback archive.
+EOF
+}
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+repo_root=$(CDPATH='' cd -- "$script_dir/../../../.." && pwd -P)
+cache_home=${XDG_CACHE_HOME:-$HOME/.cache}
+state_home=${XDG_STATE_HOME:-$HOME/.local/state}
+build_dir=$cache_home/mydotfiles-build/dwmblocks
+dry_run=0
+
+if [ "${1:-}" = "--dry-run" ]; then
+  dry_run=1
+  shift
+fi
+
+if [ "$#" -ne 0 ]; then
+  usage >&2
+  exit 2
+fi
+
+if [ "$(uname -s)" != Linux ]; then
+  printf 'DWMBlocks install: GNU/Linux is required\n' >&2
+  exit 1
+fi
+
+for command_name in make cc sudo tar sha256sum; do
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    printf 'DWMBlocks install: required command not found: %s\n' \
+      "$command_name" >&2
+    exit 127
+  fi
+done
+
+"$repo_root/os/linux/dwmblocks/scripts/build"
+
+if [ "$dry_run" -eq 1 ]; then
+  printf '[dry-run] sudo make -C %s install\n' "$build_dir"
+  printf '[dry-run] back up /usr/local/bin/dwmblocks before installation\n'
+  exit 0
+fi
+
+sudo -v
+
+timestamp=$(date +%Y%m%d-%H%M%S)
+backup_dir=$state_home/mydotfiles/backups/dwmblocks/$timestamp
+archive=$backup_dir/system-files.tar
+file_list=$backup_dir/system-files.txt
+mkdir -p "$backup_dir"
+chmod 700 "$backup_dir"
+: > "$file_list"
+
+if [ -e /usr/local/bin/dwmblocks ] || [ -L /usr/local/bin/dwmblocks ]; then
+  printf '%s\n' usr/local/bin/dwmblocks > "$file_list"
+fi
+
+tar -C / -cpf "$archive" -T "$file_list"
+(cd "$backup_dir" && sha256sum system-files.tar > system-files.tar.sha256)
+
+sudo make -C "$build_dir" install
+
+printf 'DWMBlocks installed. Rollback archive: %s\n' "$backup_dir"
+printf 'Log out of DWM and back in to start the new binary.\n'
