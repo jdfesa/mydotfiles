@@ -3,6 +3,9 @@
 Configuracion y documentacion para paquetes en Arch Linux: `pacman`, helpers de
 AUR como `yay`, `makepkg` y listas reproducibles de paquetes.
 
+`MAINTENANCE.md` define el procedimiento de actualizacion, verificacion y
+recuperacion que debe probarse antes de usar Arch como maquina principal.
+
 ## Regla principal
 
 El repo puede documentar que instalar y como reconstruirlo, pero no debe guardar

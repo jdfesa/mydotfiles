@@ -214,3 +214,10 @@ XFCE, SSH y XRDP.
 - Mantener XFCE, SDDM, SSH y XRDP como salida de emergencia.
 - No borrar primero: respaldar o poner en cuarentena.
 - No versionar passwords, tokens, claves privadas, caches, builds ni logs.
+
+## Manuales operativos
+
+- `os/linux/dwm/KEYBINDINGS.md`: todos los atajos efectivos, estado y riesgos;
+- `os/linux/dwm/CONCEPTS.md`: modelo mental, tags, layouts y adopcion gradual;
+- `os/linux/packages/MAINTENANCE.md`: actualizaciones, recuperación y auditoria
+  de preparación antes de migrar el trabajo principal.

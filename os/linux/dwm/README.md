@@ -25,6 +25,11 @@ Primeras modificaciones locales de atajos:
 DWM, ST, dmenu y DWMBlocks siguen siendo proyectos independientes. Que la
 sesion DWM use esos comandos no convierte sus fuentes en una sola aplicacion.
 
+Documentacion de uso:
+
+- `KEYBINDINGS.md`: referencia completa y estado real de cada atajo;
+- `CONCEPTS.md`: tags, layouts, filosofia y comparacion con AeroSpace.
+
 ## Estructura
 
 ```text
@@ -95,7 +100,7 @@ La configuracion efectiva versionada es `src/config.def.h`. No editar el
 5. Cerrar la sesion grafica, elegir `DWM (dotfiles)` en SDDM y entrar. XFCE
    queda disponible en el mismo selector.
 
-Atajos basicos de la base importada:
+Atajos basicos:
 
 | Atajo | Accion |
 |---|---|
@@ -110,6 +115,10 @@ La base upstream contiene muchos atajos para programas personales del autor.
 Los que no existan en esta maquina son candidatos a eliminar o reasignar. Antes
 de agregar un atajo hay que buscar combinaciones duplicadas en `keys[]`; DWM
 ejecuta todas las entradas que coinciden.
+
+La referencia completa, incluidos atajos heredados, acciones peligrosas y
+gestos de mouse, vive en `KEYBINDINGS.md` y debe actualizarse junto con
+`src/config.def.h`.
 
 ## Integracion con SDDM sin contaminar XFCE
 
