@@ -47,6 +47,7 @@ dwm/
     rollback-session      # restaura un backup creado por el instalador
     wallpaper-rotator.sh
     status-sensors.sh
+    power-menu
 ```
 
 ## Dependencias en Arch Linux
@@ -174,6 +175,8 @@ y sesiones esta documentada en `os/linux/display-managers/README.md`.
 - `status-sensors.sh`: genera el bloque de CPU, memoria y GPU usado por
   `dwmblocks`; detecta automaticamente la utilizacion publicada por `amdgpu`
   en sysfs y admite un lector configurable como override.
+- `power-menu`: menu dmenu con lock, suspend, logout, reboot y power off;
+  confirma las acciones que interrumpen la sesion o el sistema.
 
 Sus dependencias se validan en tiempo de ejecucion y no se instalan
 automaticamente.

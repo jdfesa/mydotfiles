@@ -1,0 +1,110 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: power-menu
+       power-menu --dry-run "Lock|Suspend|Log out|Reboot|Power off"
+
+Open a minimal dmenu power menu. Dry-run prints the selected action without
+changing the graphical session or system state.
+EOF
+}
+
+dry_run=0
+choice=
+
+case $# in
+  0) ;;
+  2)
+    if [ "$1" != "--dry-run" ]; then
+      usage >&2
+      exit 2
+    fi
+    dry_run=1
+    choice=$2
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+require() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    printf 'power-menu: required command not found: %s\n' "$1" >&2
+    exit 127
+  fi
+}
+
+select_from_menu() {
+  prompt=$1
+  shift
+  printf '%s\n' "$@" | dmenu -i -p "$prompt" || true
+}
+
+confirm() {
+  message=$1
+  if [ "$dry_run" -eq 1 ]; then
+    printf '[dry-run] confirmation required: %s\n' "$message"
+    return 0
+  fi
+
+  answer=$(select_from_menu "$message" No Yes)
+  [ "$answer" = Yes ] || exit 0
+}
+
+run() {
+  if [ "$dry_run" -eq 1 ]; then
+    printf '[dry-run]'
+    for argument in "$@"; do
+      printf ' %s' "$argument"
+    done
+    printf '\n'
+    return 0
+  fi
+
+  "$@"
+}
+
+if [ "$dry_run" -ne 1 ]; then
+  require dmenu
+  choice=$(select_from_menu 'Power:' \
+    Lock Suspend 'Log out' Reboot 'Power off')
+fi
+
+case $choice in
+  Lock)
+    [ "$dry_run" -eq 1 ] || require slock
+    run slock
+    ;;
+  Suspend)
+    [ "$dry_run" -eq 1 ] || require slock
+    [ "$dry_run" -eq 1 ] || require systemctl
+    confirm 'Suspend?'
+    run slock systemctl suspend -i
+    ;;
+  'Log out')
+    [ "$dry_run" -eq 1 ] || require pkill
+    confirm 'Log out?'
+    run pkill -TERM -u "$(id -u)" -x dwm
+    ;;
+  Reboot)
+    [ "$dry_run" -eq 1 ] || require systemctl
+    confirm 'Reboot?'
+    run systemctl reboot
+    ;;
+  'Power off')
+    [ "$dry_run" -eq 1 ] || require systemctl
+    confirm 'Power off?'
+    run systemctl poweroff
+    ;;
+  '')
+    exit 0
+    ;;
+  *)
+    printf 'power-menu: unknown selection: %s\n' "$choice" >&2
+    exit 2
+    ;;
+esac

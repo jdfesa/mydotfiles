@@ -233,6 +233,7 @@ static const Key keys[] = {
 	{ MODKEY,			XK_n,          spawn,      {.v = (const char*[]){ "st", "-e", "nvim", NULL } } },
 	{ MODKEY|ShiftMask,	XK_h,          spawn,      {.v = (const char*[]){ "st", "-e", "htop", NULL } } },
 	{ MODKEY,			XK_p,          spawn,      {.v = (const char*[]){ "darktable", NULL } } },
+	{ MODKEY|ShiftMask,	XK_p,          spawn,      {.v = (const char*[]){ "power-menu", NULL } } },
 
 
 /* script launch bindings */

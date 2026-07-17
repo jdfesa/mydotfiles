@@ -26,6 +26,7 @@ ambas teclas. No mantener `Enter`, porque entonces el teclado emite `Hyper`.
 | `Super+Enter` | Abrir ST | Funciona |
 | `Super+d` | Abrir dmenu | Funciona |
 | `Super+n` | Abrir Neovim dentro de ST | Funciona |
+| `Super+Shift+p` | Abrir el menu de energia | Funciona |
 | `Super+q` | Cerrar la ventana enfocada | Funciona; descarta el proceso |
 | `Super+Shift+Backspace` | Terminar DWM y volver a SDDM | Funciona; cierra la sesion |
 | `Super+Ctrl+Shift+q` | Reiniciar DWM sin cerrar la sesion | Funciona |
@@ -151,6 +152,20 @@ historial. `Super+v` abre la seleccion del historial mediante dmenu.
 | `Super+F5` | Bajar volumen 5% | Disponible |
 | `Super+F7` | Iniciar status timer | Comando ausente |
 | `Super+Shift+F7` | Limpiar status timer | Comando ausente |
+
+### Power menu
+
+`Super+Shift+p` abre un menu dmenu en ingles:
+
+- `Lock`;
+- `Suspend`;
+- `Log out`;
+- `Reboot`;
+- `Power off`.
+
+Suspend, logout, reboot y power off requieren una segunda confirmacion. `No`
+aparece primero para que presionar Enter accidentalmente no confirme. Escape
+cancela cualquiera de los dos menus.
 
 ## Atajos heredados sin comando
 

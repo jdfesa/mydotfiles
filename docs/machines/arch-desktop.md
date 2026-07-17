@@ -146,6 +146,7 @@ shared/bash/bashrc                         -> ~/.bashrc
 os/linux/dwm/session/autostart.sh          -> ~/.config/dwm/autostart.sh
 os/linux/dwm/scripts/wallpaper-rotator.sh  -> ~/.local/bin/wallpaper-rotator
 os/linux/dwm/scripts/status-sensors.sh     -> ~/.local/bin/status-sensors
+os/linux/dwm/scripts/power-menu            -> ~/.local/bin/power-menu
 os/linux/x11/scripts/cliphist              -> ~/.local/bin/cliphist
 os/linux/x11/scripts/start-x11vnc.sh       -> ~/.local/bin/start-x11vnc
 shared/rclone/rclone-sync                  -> ~/.local/bin/rclone-sync

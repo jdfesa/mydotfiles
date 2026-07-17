@@ -4,6 +4,7 @@
 shared/bash/bashrc|$HOME/.bashrc
 os/linux/dwm/scripts/wallpaper-rotator.sh|$HOME/.local/bin/wallpaper-rotator
 os/linux/dwm/scripts/status-sensors.sh|$HOME/.local/bin/status-sensors
+os/linux/dwm/scripts/power-menu|$HOME/.local/bin/power-menu
 os/linux/dwm/session/autostart.sh|$HOME/.config/dwm/autostart.sh
 os/linux/x11/scripts/cliphist|$HOME/.local/bin/cliphist
 os/linux/x11/scripts/start-x11vnc.sh|$HOME/.local/bin/start-x11vnc
