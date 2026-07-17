@@ -15,6 +15,11 @@ Esta carpeta contiene configuraciones activas, documentacion de herramientas
 CLI reutilizables y la coleccion `scripts/`. Las piezas exclusivas de una
 plataforma viven en `os/`.
 
+## Herramientas documentadas
+
+- [`rtk/`](rtk/README.md): proxy local que reduce el ruido de comandos antes de
+  incorporarlo al contexto de Codex.
+
 ## Scripts portables
 
 `shared/scripts/` contiene comandos personales que pueden funcionar en mas de

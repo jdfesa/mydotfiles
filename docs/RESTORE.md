@@ -95,6 +95,23 @@ brew bundle --file ~/mydotfiles/os/macos/packages/homebrew/20-optional/Brewfile
 No abrir todavía las aplicaciones recién instaladas: algunas crean una
 configuracion por defecto que luego bloquearia el linker.
 
+### Configurar RTK para Codex
+
+La capa `10-essential` instala RTK para reducir la salida ruidosa de tests,
+builds, Git y otras herramientas antes de incorporarla al contexto de Codex.
+Inicializarlo despues de instalar los paquetes:
+
+```sh
+rtk telemetry disable
+rtk init --global --codex
+rtk --version
+rtk telemetry status
+```
+
+`rtk init` genera sus instrucciones bajo `~/.codex`; no modifica credenciales
+ni requiere versionar esos archivos. La decision, el uso y los limites estan
+documentados en [`shared/rtk/README.md`](../shared/rtk/README.md).
+
 ## 4. Recreate Local Files
 
 Crear la configuracion local de Zsh desde la plantilla:
