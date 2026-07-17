@@ -5,7 +5,7 @@ set -eu
 usage() {
   cat <<'EOF'
 Usage: power-menu
-       power-menu --dry-run "Lock|Suspend|Log out|Reboot|Power off"
+       power-menu --dry-run "Cancel|Lock|Suspend|Log out|Reboot|Power off"
 
 Open a minimal dmenu power menu. Dry-run prints the selected action without
 changing the graphical session or system state.
@@ -40,8 +40,9 @@ require() {
 
 select_from_menu() {
   prompt=$1
-  shift
-  printf '%s\n' "$@" | dmenu -i -p "$prompt" || true
+  lines=$2
+  shift 2
+  printf '%s\n' "$@" | dmenu -i -l "$lines" -p "$prompt" || true
 }
 
 confirm() {
@@ -51,7 +52,7 @@ confirm() {
     return 0
   fi
 
-  answer=$(select_from_menu "$message" No Yes)
+  answer=$(select_from_menu "$message" 2 No Yes)
   [ "$answer" = Yes ] || exit 0
 }
 
@@ -70,11 +71,14 @@ run() {
 
 if [ "$dry_run" -ne 1 ]; then
   require dmenu
-  choice=$(select_from_menu 'Power:' \
-    Lock Suspend 'Log out' Reboot 'Power off')
+  choice=$(select_from_menu 'Power menu:' 6 \
+    Cancel Lock Suspend 'Log out' Reboot 'Power off')
 fi
 
 case $choice in
+  Cancel|'')
+    exit 0
+    ;;
   Lock)
     [ "$dry_run" -eq 1 ] || require slock
     run slock
@@ -99,9 +103,6 @@ case $choice in
     [ "$dry_run" -eq 1 ] || require systemctl
     confirm 'Power off?'
     run systemctl poweroff
-    ;;
-  '')
-    exit 0
     ;;
   *)
     printf 'power-menu: unknown selection: %s\n' "$choice" >&2

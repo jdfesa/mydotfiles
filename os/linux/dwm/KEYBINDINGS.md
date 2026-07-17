@@ -157,15 +157,19 @@ historial. `Super+v` abre la seleccion del historial mediante dmenu.
 
 `Super+Shift+p` abre un menu dmenu en ingles:
 
+- `Cancel`;
 - `Lock`;
 - `Suspend`;
 - `Log out`;
 - `Reboot`;
 - `Power off`.
 
-Suspend, logout, reboot y power off requieren una segunda confirmacion. `No`
-aparece primero para que presionar Enter accidentalmente no confirme. Escape
-cancela cualquiera de los dos menus.
+El menu es vertical. `Up` y `Down` recorren las opciones; escribir filtra la
+lista y `Tab` no se usa para navegar. `Cancel` aparece primero, por lo que Enter
+sin mover la seleccion no ejecuta ninguna accion. Escape tambien cancela.
+
+Suspend, logout, reboot y power off requieren una segunda confirmacion vertical.
+`No` aparece primero para que Enter accidental no confirme.
 
 ## Atajos heredados sin comando
 

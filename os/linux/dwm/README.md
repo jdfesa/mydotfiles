@@ -176,7 +176,8 @@ y sesiones esta documentada en `os/linux/display-managers/README.md`.
   `dwmblocks`; detecta automaticamente la utilizacion publicada por `amdgpu`
   en sysfs y admite un lector configurable como override.
 - `power-menu`: menu dmenu con lock, suspend, logout, reboot y power off;
-  confirma las acciones que interrumpen la sesion o el sistema.
+  muestra `Cancel` como opcion inicial y confirma las acciones que interrumpen
+  la sesion o el sistema.
 
 Sus dependencias se validan en tiempo de ejecucion y no se instalan
 automaticamente.
