@@ -119,6 +119,24 @@ DWM se reinicio mediante `restartsig` sin cerrar las aplicaciones. El menu se
 abrio en `DISPLAY=:0` y una prueba con timeout lo cancelo sin seleccionar lock,
 suspend, logout, reboot ni power off. El perfil termino con 8 enlaces validos.
 
+La revision que hace circular la navegacion vertical de dmenu genero este
+respaldo antes de instalarse:
+
+```text
+~/.local/state/mydotfiles/backups/dwm-session/20260717-204223/
+```
+
+La build en cache y `/usr/local/bin/dmenu` coincidieron con SHA-256:
+
+```text
+91710f628dbc9b0df2171b50519cef434279d09d2ba4648ee4705790136fb364
+```
+
+La prueba sobre el binario instalado verifico que `Up` pasa de `Cancel` a
+`Power off`, que `Down` vuelve de la ultima opcion a `Cancel` y que escribir
+`j` sigue filtrando texto. No se agregaron atajos de Vim ni modificadores. El
+hash de DWM no cambio durante esta instalacion.
+
 ### DWMBlocks
 
 La barra historica se recupero desde el respaldo de la maquina. Su base es
