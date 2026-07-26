@@ -122,7 +122,9 @@ Nota: dentro de entornos con sandbox puede fallar la conexion al socket aunque A
 **Solucion**:
 
 ```bash
-brew services restart sketchybar
+open -a AeroSpace
+aerospace list-workspaces --all
+launchctl kickstart -k gui/$(id -u)/homebrew.mxcl.sketchybar
 ```
 
 Verificacion:
@@ -131,7 +133,11 @@ Verificacion:
 sketchybar --query space.U
 ```
 
-El detalle de la integracion esta en [SCRIPTS.md](SCRIPTS.md) y en [../sketchybar/TROUBLESHOOTING.md](../sketchybar/TROUBLESHOOTING.md).
+Si `aerospace list-workspaces --all` ya responde, no es necesario volver a abrir
+AeroSpace. El detalle de la recuperacion, incluida la deteccion de procesos Lua
+duplicados, esta en
+[Sketchybar TROUBLESHOOTING.md](../sketchybar/TROUBLESHOOTING.md#rescate-solo-aparece-la-app-actual-y-faltan-los-workspaces).
+El detalle de la integracion esta en [SCRIPTS.md](SCRIPTS.md).
 
 ## Despues de Editar el TOML
 
