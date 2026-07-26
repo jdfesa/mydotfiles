@@ -107,6 +107,110 @@ configuracion completa.
 
 ---
 
+## Rescate: solo aparece la app actual y faltan los workspaces
+
+**Síntoma confirmado**: Sketchybar carga `front_app` y otros widgets, pero no
+muestra `U`, `I`, `O`, `P`, `Y` ni `N`. Ejecutar `sketchybar --reload` no lo
+resuelve o deja la barra vacía durante el nuevo arranque.
+
+Este caso puede combinar dos problemas:
+
+1. AeroSpace no está corriendo, por lo que el módulo Lua no puede obtener la
+   lista de workspaces.
+2. Varias recargas dejaron procesos `lua .../sketchybarrc` anteriores vivos.
+   Cada proceso intenta administrar los mismos ítems y el log se llena de
+   mensajes `Item already exists`.
+
+### Recuperación comprobada
+
+1. Confirmar que AeroSpace responde **antes** de tocar Sketchybar:
+
+```bash
+pgrep -fl AeroSpace
+aerospace list-workspaces --all
+```
+
+El segundo comando debe devolver los seis workspaces:
+
+```text
+I
+N
+O
+P
+U
+Y
+```
+
+Si devuelve `Can't connect to AeroSpace server`, abrir la aplicación y volver a
+consultar:
+
+```bash
+open -a AeroSpace
+aerospace list-workspaces --all
+```
+
+No recargar Sketchybar hasta que este comando responda correctamente.
+
+2. Comprobar si hay configuraciones antiguas acumuladas:
+
+```bash
+ps ax -o pid,ppid,lstart,command | rg 'sketchybar|sketchybarrc'
+```
+
+El estado problemático muestra varios procesos hermanos
+`lua ~/.config/sketchybar/sketchybarrc`, con distintas horas de inicio y el
+daemon de Sketchybar como `PPID`. Un arranque limpio tiene un único árbol de
+configuración; SbarLua puede crear un proceso Lua hijo dentro de ese mismo árbol.
+
+3. Reiniciar el **LaunchAgent completo**, no volver a ejecutar `--reload`:
+
+```bash
+launchctl kickstart -k gui/$(id -u)/homebrew.mxcl.sketchybar
+```
+
+Este comando termina el daemon y todos sus procesos de configuración antiguos,
+y luego inicia una sola instancia desde el LaunchAgent de Homebrew. Es
+preferible para este caso a matar PIDs manualmente.
+
+Como alternativa, si Homebrew permite cargar la fórmula:
+
+```bash
+brew services restart sketchybar
+```
+
+Si Homebrew rechaza el comando porque el tap de Sketchybar no está marcado como
+confiable, usar `launchctl kickstart` evita modificar la política de confianza
+solo para reiniciar un servicio ya instalado.
+
+4. Esperar unos segundos y verificar:
+
+```bash
+aerospace list-workspaces --all
+sketchybar --query space.U
+sketchybar --query space.I
+sketchybar --query space.O
+sketchybar --query space.P
+sketchybar --query space.Y
+sketchybar --query space.N
+```
+
+Cada consulta debe devolver un objeto con `"type": "item"` y
+`"drawing": "on"`.
+
+### Qué no hacer
+
+- No insistir con `sketchybar --reload` si AeroSpace no responde.
+- No ejecutar `killall lua`: puede terminar procesos Lua ajenos a Sketchybar.
+- No ejecutar `lua sketchybarrc` como solución permanente. Sirve para
+  diagnóstico, pero deja otro event loop fuera del árbol del LaunchAgent.
+- No agregar un hook de AeroSpace que recargue Sketchybar automáticamente.
+
+Si hubo muchas recargas, revisar también el tamaño de
+`/usr/local/var/log/sketchybar/sketchybar.out.log`. La sección siguiente explica
+cómo limpiar el log sin borrarlo.
+
+---
+
 ## Problema: El log de Sketchybar crece hasta llenar el disco
 
 **Síntoma**: El sistema empieza a quedarse sin espacio sin una causa evidente. Sketchybar sigue funcionando, pero el archivo de log crece de forma silenciosa durante horas o días.
