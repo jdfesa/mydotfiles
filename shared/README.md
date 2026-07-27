@@ -17,6 +17,8 @@ plataforma viven en `os/`.
 
 ## Herramientas documentadas
 
+- [`engram/`](engram/README.md): memoria persistente local y por proyecto para
+  Codex y otros agentes compatibles con MCP.
 - [`rtk/`](rtk/README.md): proxy local que reduce el ruido de comandos antes de
   incorporarlo al contexto de Codex.
 

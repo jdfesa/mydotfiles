@@ -84,8 +84,8 @@ Arch pertenece a `profiles/`; sus notas operativas viven en `docs/machines/`.
 - [Homebrew](os/macos/packages/homebrew/README.md)
 
 Las herramientas compartidas activas incluyen Kitty, Ghostty, Neovim, Zsh,
-Starship, VS Code, Btop, Yazi, Lazygit, Gh Dash, Sesh y Fastfetch. Todas viven
-bajo `shared/`.
+Starship, VS Code, Btop, Yazi, Lazygit, Gh Dash, Sesh, Fastfetch, RTK y Engram.
+Todas viven bajo `shared/`.
 
 ## Symlink Workflow
 

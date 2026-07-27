@@ -112,6 +112,26 @@ rtk telemetry status
 ni requiere versionar esos archivos. La decision, el uso y los limites estan
 documentados en [`shared/rtk/README.md`](../shared/rtk/README.md).
 
+### Configurar Engram para Codex
+
+La capa `10-essential` instala Engram como memoria persistente local para Codex.
+Inicializar la integracion global despues de instalar los paquetes:
+
+```sh
+engram setup codex
+engram version
+engram doctor
+engram stats
+codex plugin list
+```
+
+Cerrar y volver a abrir Codex despues del setup. La configuracion MCP, las
+instrucciones generadas y la base `~/.engram/engram.db` son estado local
+administrado por Engram: no se enlazan ni se versionan. El alcance
+multiplataforma, las rutas de Windows, la verificacion y los limites estan
+documentados en
+[`shared/engram/README.md`](../shared/engram/README.md).
+
 ## 4. Recreate Local Files
 
 Crear la configuracion local de Zsh desde la plantilla:
