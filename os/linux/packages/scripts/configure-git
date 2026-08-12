@@ -13,7 +13,7 @@ if [[ ${1-} == '--execute' ]]; then
 fi
 [[ $# -eq 0 ]] || usage
 
-name='Jose David'
+name='Jose Sandoval'
 email='92765822+jdfesa@users.noreply.github.com'
 
 printf 'Git identity: %s <%s>\n' "$name" "$email"

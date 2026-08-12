@@ -55,7 +55,7 @@ Esto se hace una vez despues de instalar Git por primera vez:
 
 ```bash
 git config --global init.defaultBranch main
-git config --global user.name "Jose David"
+git config --global user.name "Jose Sandoval"
 git config --global user.email "<id+usuario@users.noreply.github.com>"
 ```
 
@@ -72,7 +72,7 @@ Valores esperados:
 
 ```text
 init.defaultBranch=main
-user.name=Jose David
+user.name=Jose Sandoval
 user.email=<id+usuario@users.noreply.github.com>
 ```
 
@@ -126,14 +126,14 @@ En instalaciones antiguas puede aparecer como `manager-core`.
 Global, para todos los repositorios:
 
 ```bash
-git config --global user.name "Jose David"
+git config --global user.name "Jose Sandoval"
 git config --global user.email "<id+usuario@users.noreply.github.com>"
 ```
 
 Solo para este repo:
 
 ```bash
-git config user.name "Jose David"
+git config user.name "Jose Sandoval"
 git config user.email "<id+usuario@users.noreply.github.com>"
 ```
 
