@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+PACKAGE='helium-browser-bin'
+VERSION='0.15.4.1-1'
+AUR_COMMIT='108cb9ad9251ed783070620165efae38bd8765e2'
+PKGBUILD_SHA256='b3e95550c99aee41d147d40d0eaf63fb9d89634fd2c77530ea8849c6ee1aff70'
+SRCINFO_SHA256='8116c841bfecff6ec0e01ebba00ffdc605a5bd149d54bfdcc72656e3746f2032'
+SIGNING_KEY='BE677C1989D35EAB2C5F26C9351601AD01D6378E'
+AUR_URL='https://aur.archlinux.org/helium-browser-bin.git'
+CACHE_ROOT=${XDG_CACHE_HOME:-"$HOME/.cache"}
+REPOSITORY="$CACHE_ROOT/mydotfiles/aur/$PACKAGE"
+EXECUTE=0
+
+[[ ${1-} == '--execute' ]] && EXECUTE=1
+if (( $# > 1 )) || (( $# == 1 && EXECUTE == 0 )); then
+  printf 'Usage: %s [--execute]\n' "$0" >&2
+  exit 2
+fi
+
+die() {
+  printf 'ERROR: %s\n' "$*" >&2
+  exit 1
+}
+
+printf 'Package: %s %s\n' "$PACKAGE" "$VERSION"
+printf 'Reviewed AUR commit: %s\n' "$AUR_COMMIT"
+printf 'Upstream signing key: %s\n' "$SIGNING_KEY"
+printf 'Build user: %s (UID %s)\n' "$USER" "$EUID"
+printf 'Build directory: %s\n' "$REPOSITORY"
+printf 'Default browser: helium.desktop\n'
+
+if (( EXECUTE == 0 )); then
+  printf '\nPLAN_ONLY: no source, package, or default application changed.\n'
+  exit 0
+fi
+
+[[ $EUID -ne 0 ]] || die 'Build AUR packages as a regular user, not root.'
+for command in git gpg makepkg pacman sha256sum xdg-mime xdg-settings; do
+  command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
+done
+
+install -d -m 0755 "$(dirname "$REPOSITORY")"
+if [[ -d $REPOSITORY/.git ]]; then
+  [[ $(git -C "$REPOSITORY" remote get-url origin) == "$AUR_URL" ]] ||
+    die 'Existing cache has an unexpected Git remote.'
+  [[ -z $(git -C "$REPOSITORY" status --porcelain) ]] ||
+    die 'Existing AUR cache contains local changes.'
+else
+  [[ ! -e $REPOSITORY ]] || die 'Cache path exists but is not a Git repository.'
+  git clone "$AUR_URL" "$REPOSITORY"
+fi
+
+git -C "$REPOSITORY" fetch --quiet origin "$AUR_COMMIT"
+git -C "$REPOSITORY" checkout --quiet --detach "$AUR_COMMIT"
+[[ $(git -C "$REPOSITORY" rev-parse HEAD) == "$AUR_COMMIT" ]] ||
+  die 'AUR commit mismatch.'
+
+printf '%s  %s\n' "$PKGBUILD_SHA256" "$REPOSITORY/PKGBUILD" |
+  sha256sum --check --status || die 'PKGBUILD checksum mismatch.'
+printf '%s  %s\n' "$SRCINFO_SHA256" "$REPOSITORY/.SRCINFO" |
+  sha256sum --check --status || die '.SRCINFO checksum mismatch.'
+
+if ! gpg --batch --list-keys "$SIGNING_KEY" >/dev/null 2>&1; then
+  gpg --batch --keyserver hkps://keyserver.ubuntu.com --recv-keys "$SIGNING_KEY"
+fi
+fingerprint=$(gpg --batch --with-colons --fingerprint "$SIGNING_KEY" |
+  awk -F: '$1 == "fpr" { print $10; exit }')
+[[ $fingerprint == "$SIGNING_KEY" ]] || die 'Helium signing-key fingerprint mismatch.'
+
+(
+  cd "$REPOSITORY"
+  makepkg --verifysource
+  makepkg --cleanbuild --clean --force
+)
+
+artifact="$REPOSITORY/$PACKAGE-$VERSION-x86_64.pkg.tar.zst"
+[[ -s $artifact ]] || die "Expected package was not built: $artifact"
+[[ $(pacman -Qip "$artifact" | awk -F: '$1 ~ /^Name / { gsub(/[[:space:]]/, "", $2); print $2 }') == "$PACKAGE" ]] ||
+  die 'Built package name mismatch.'
+[[ $(pacman -Qip "$artifact" | awk -F: '$1 ~ /^Version / { gsub(/[[:space:]]/, "", $2); print $2 }') == "$VERSION" ]] ||
+  die 'Built package version mismatch.'
+
+printf '\nBuilt package SHA-256:\n'
+sha256sum "$artifact"
+sudo pacman -U --needed -- "$artifact"
+
+[[ -x /usr/bin/helium-browser ]] || die 'Helium executable is missing after installation.'
+[[ -f /usr/share/applications/helium.desktop ]] || die 'Helium desktop entry is missing.'
+
+xdg-mime default helium.desktop text/html
+xdg-mime default helium.desktop x-scheme-handler/http
+xdg-mime default helium.desktop x-scheme-handler/https
+xdg-settings set default-web-browser helium.desktop
+
+[[ $(xdg-mime query default x-scheme-handler/https) == helium.desktop ]] ||
+  die 'HTTPS default handler is not Helium.'
+[[ $(xdg-settings get default-web-browser) == helium.desktop ]] ||
+  die 'Default browser is not Helium.'
+
+printf '\nHELIUM_INSTALL_OK\n'
+pacman -Q "$PACKAGE"
+printf 'default-browser=%s\n' "$(xdg-settings get default-web-browser)"

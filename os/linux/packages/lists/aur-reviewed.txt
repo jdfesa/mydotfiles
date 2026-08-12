@@ -1,4 +1,4 @@
-# package|reviewed version|reviewed AUR commit|reason
-helium-browser-bin|0.15.4.1-1|108cb9ad9251ed783070620165efae38bd8765e2|Default browser; packages Helium's signed upstream Linux tarball
-xrdp|0.10.6.1-1|29669f7baa3f9c80ebe50a19c8cf0f1200559b63|RDP server for Jump Desktop
-xorgxrdp|0.10.5-1|b04814d56be91d993f4d76370c473dda1b691641|Xorg backend for an independent XFCE X11 RDP session
+# package|reviewed version|reviewed AUR commit|PKGBUILD SHA-256|reason
+helium-browser-bin|0.15.4.1-1|108cb9ad9251ed783070620165efae38bd8765e2|b3e95550c99aee41d147d40d0eaf63fb9d89634fd2c77530ea8849c6ee1aff70|Default browser; packages Helium's signed upstream Linux tarball
+xrdp|0.10.6.1-1|29669f7baa3f9c80ebe50a19c8cf0f1200559b63|c89c8e0372d009544e1b7d1c04c04197701d2392d61b9d7f73d7c3e716ecfb68|RDP server for Jump Desktop
+xorgxrdp|0.10.5-1|b04814d56be91d993f4d76370c473dda1b691641|14da98dd29cbb3ed9a6bbed809108178324ad839a7719a6b5202e48ea98c2813|Xorg backend for an independent XFCE X11 RDP session

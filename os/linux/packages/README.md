@@ -86,6 +86,9 @@ No se instala una lista de aplicaciones hipotetica completa de una vez. Cada
 fase debe responder a una necesidad real, conservar rollback y terminar con una
 validacion antes de continuar.
 
+El procedimiento fijado para Helium vive en `../helium/scripts/install`; no se
+delega la revision o construccion inicial a un AUR helper global.
+
 ## makepkg
 
 Arch permite configurar rutas de salida en `makepkg.conf`. Cuando tenga sentido,
