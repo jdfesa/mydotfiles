@@ -47,12 +47,17 @@ select_from_menu() {
 
 confirm() {
   message=$1
+  default_answer=${2:-No}
   if [ "$dry_run" -eq 1 ]; then
     printf '[dry-run] confirmation required: %s\n' "$message"
     return 0
   fi
 
-  answer=$(select_from_menu "$message" 2 No Yes)
+  if [ "$default_answer" = Yes ]; then
+    answer=$(select_from_menu "$message" 2 Yes No)
+  else
+    answer=$(select_from_menu "$message" 2 No Yes)
+  fi
   [ "$answer" = Yes ] || exit 0
 }
 
@@ -101,7 +106,7 @@ case $choice in
     ;;
   'Power off')
     [ "$dry_run" -eq 1 ] || require systemctl
-    confirm 'Power off?'
+    confirm 'Power off?' Yes
     run systemctl poweroff
     ;;
   *)

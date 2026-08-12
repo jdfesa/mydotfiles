@@ -171,7 +171,8 @@ aparece primero, por lo que Enter sin mover la seleccion no ejecuta ninguna
 accion. Escape tambien cancela.
 
 Suspend, logout, reboot y power off requieren una segunda confirmacion vertical.
-`No` aparece primero para que Enter accidental no confirme.
+En `Power off`, `Yes` aparece primero para poder confirmar directamente con
+Enter. En las otras acciones, `No` sigue apareciendo primero.
 
 ## Atajos heredados sin comando
 
