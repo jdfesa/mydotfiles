@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+usage() {
+  printf 'Usage: %s [--execute] <package-list>\n' "$0" >&2
+  exit 2
+}
+
+execute=0
+if [[ ${1-} == '--execute' ]]; then
+  execute=1
+  shift
+fi
+[[ $# -eq 1 ]] || usage
+
+list=$1
+[[ -r $list ]] || {
+  printf 'ERROR: package list is not readable: %s\n' "$list" >&2
+  exit 1
+}
+
+mapfile -t packages < <(
+  sed -E \
+    -e 's/[[:space:]]*#.*$//' \
+    -e 's/^[[:space:]]+//' \
+    -e 's/[[:space:]]+$//' \
+    -e '/^[[:space:]]*$/d' \
+    "$list"
+)
+(( ${#packages[@]} > 0 )) || {
+  printf 'ERROR: package list is empty: %s\n' "$list" >&2
+  exit 1
+}
+
+duplicates=$(printf '%s\n' "${packages[@]}" | sort | uniq -d)
+[[ -z $duplicates ]] || {
+  printf 'ERROR: duplicate packages:\n%s\n' "$duplicates" >&2
+  exit 1
+}
+
+missing=()
+for package in "${packages[@]}"; do
+  pacman -Si "$package" >/dev/null 2>&1 || missing+=("$package")
+done
+(( ${#missing[@]} == 0 )) || {
+  printf 'ERROR: packages unavailable in enabled official repositories:\n' >&2
+  printf '  %s\n' "${missing[@]}" >&2
+  exit 1
+}
+
+printf 'Validated %d official packages from %s:\n' "${#packages[@]}" "$list"
+printf '  %s\n' "${packages[@]}"
+
+if (( execute == 0 )); then
+  printf '\nPLAN_ONLY: no packages changed.\n'
+  exit 0
+fi
+
+sudo -v
+sudo pacman -Syu --needed -- "${packages[@]}"
+printf '\nOFFICIAL_PACKAGES_OK\n'

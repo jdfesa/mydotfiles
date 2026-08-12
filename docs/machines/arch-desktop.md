@@ -1,7 +1,8 @@
 # Arch Desktop
 
-Notas operativas de la maquina Arch Linux accesible por SSH en
-`jd@192.168.8.15`.
+Notas operativas de la maquina Arch Linux accesible actualmente por SSH en
+`jd@192.168.8.47`. La direccion viene de DHCP y puede cambiar; la identidad
+estable del host es `arch-desktop`.
 
 ## Objetivo
 
@@ -10,7 +11,22 @@ comprometer el entorno de recuperacion. La fuente de verdad es
 `~/mydotfiles`; la maquina actua como runtime con symlinks, builds en cache y
 datos locales fuera de Git.
 
-## Estado verificado el 2026-07-17
+## Estado verificado el 2026-08-12
+
+- Reinstalacion limpia sobre Btrfs con subvolumenes separados y Snapper.
+- Kernel `linux` principal y `linux-lts` como fallback.
+- `jd` administra mediante `wheel`/sudo; root permanece bloqueado.
+- Primer boot, TTY, sudo, SSH y XFCE X11 mediante SDDM validados.
+- Hyprland esta instalado pero su configuracion Wayland aun no se activa.
+- El bootstrap de workstation se realiza por fases documentadas bajo
+  `os/linux/packages/`; no se agregan aplicaciones mediante comandos aislados.
+- Helium sera el navegador por defecto; Firefox se conserva como fallback desde
+  repositorios oficiales porque Helium aun se distribuye como beta en Linux.
+- GitHub CLI se utilizara para autenticar este dispositivo sin versionar tokens.
+- XRDP se mantiene pendiente hasta construir e instalar `xrdp` y `xorgxrdp`
+  desde los commits AUR revisados.
+
+## Estado historico verificado el 2026-07-17
 
 - Arch Linux usa `graphical.target` y SDDM 0.21 como display manager.
 - SDDM, SSH y XRDP estan habilitados y activos.

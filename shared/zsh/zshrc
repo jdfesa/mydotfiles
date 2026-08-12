@@ -20,17 +20,24 @@ if [[ "$IS_NETBEANS" == false ]] && command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
-# Zsh quality-of-life plugins from Homebrew, guarded for fresh machines.
-for brew_prefix in /usr/local /opt/homebrew; do
-  if [[ -r "$brew_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
-    source "$brew_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# Zsh quality-of-life plugins. Arch packages them under /usr/share/zsh/plugins;
+# Homebrew uses a shorter path on macOS. Source at most one copy of each.
+for autosuggestions in \
+  /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh; do
+  if [[ -r "$autosuggestions" ]]; then
+    source "$autosuggestions"
     break
   fi
 done
 
-for brew_prefix in /usr/local /opt/homebrew; do
-  if [[ -r "$brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-    source "$brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+for syntax_highlighting in \
+  /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; do
+  if [[ -r "$syntax_highlighting" ]]; then
+    source "$syntax_highlighting"
     break
   fi
 done

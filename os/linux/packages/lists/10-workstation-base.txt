@@ -1,0 +1,61 @@
+# Official Arch packages for the portable workstation foundation.
+# Keep one package per line. Install with scripts/install-official-list.
+
+# Source control and GitHub
+git
+github-cli
+git-lfs
+openssh
+
+# Package/build/maintenance foundation
+base-devel
+pacman-contrib
+reflector
+rsync
+curl
+wget
+jq
+
+# Shells and terminal workflow
+bash
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
+starship
+fzf
+zoxide
+direnv
+tmux
+
+# Editors, navigation, search and diagnostics
+neovim
+vim
+nano
+ripgrep
+fd
+bat
+eza
+yazi
+lazygit
+btop
+fastfetch
+tree
+less
+man-db
+man-pages
+
+# Archives
+zip
+unzip
+7zip
+
+# Graphical foundation used by both X11 and Wayland
+kitty
+ghostty
+gnome-keyring
+libsecret
+seahorse
+rtkit
+
+# Emergency browser from official repositories. Helium remains the default.
+firefox

@@ -29,7 +29,8 @@ Lo propio de una maquina concreta vive en:
 Actualmente incluye:
 
 - `starship`, desactivado solamente cuando la terminal viene desde NetBeans.
-- `zsh-autosuggestions` y `zsh-syntax-highlighting`.
+- `zsh-autosuggestions` y `zsh-syntax-highlighting`, detectados tanto en las
+  rutas oficiales de Arch como en Homebrew.
 - rutas base portables (`/usr/local/bin`, `/opt/homebrew/bin`, `~/.local/bin`).
 - carga opcional de `zsh/local.zsh` para GHCup/Cabal, Android, Java, Antigravity, opencode, NVM u otras rutas locales.
 - `bat`, usado mediante aliases seguros para lectura enriquecida de archivos sin reemplazar `cat`.

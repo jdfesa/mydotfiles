@@ -1,0 +1,11 @@
+# Official build and runtime dependencies required by the reviewed AUR
+# packages xrdp and xorgxrdp. Keeping this separate avoids presenting build
+# tooling as part of the everyday workstation base.
+
+nasm
+cmocka
+check
+ffmpeg
+imlib2
+x264
+xorg-server-devel

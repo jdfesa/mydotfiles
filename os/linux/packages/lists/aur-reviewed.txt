@@ -1,0 +1,4 @@
+# package|reviewed version|reviewed AUR commit|reason
+helium-browser-bin|0.15.4.1-1|108cb9ad9251ed783070620165efae38bd8765e2|Default browser; packages Helium's signed upstream Linux tarball
+xrdp|0.10.6.1-1|29669f7baa3f9c80ebe50a19c8cf0f1200559b63|RDP server for Jump Desktop
+xorgxrdp|0.10.5-1|b04814d56be91d993f4d76370c473dda1b691641|Xorg backend for an independent XFCE X11 RDP session

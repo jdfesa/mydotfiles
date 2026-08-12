@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+usage() {
+  printf 'Usage: %s [--execute]\n' "$0" >&2
+  exit 2
+}
+
+execute=0
+if [[ ${1-} == '--execute' ]]; then
+  execute=1
+  shift
+fi
+[[ $# -eq 0 ]] || usage
+
+name='Jose David'
+email='92765822+jdfesa@users.noreply.github.com'
+
+printf 'Git identity: %s <%s>\n' "$name" "$email"
+printf 'Default branch: main\n'
+printf 'Pull strategy: rebase\n'
+printf 'Fetch pruning: enabled\n'
+printf 'Credential storage: GitHub CLI (after gh auth login)\n'
+
+if (( execute == 0 )); then
+  printf '\nPLAN_ONLY: Git configuration unchanged.\n'
+  exit 0
+fi
+
+command -v git >/dev/null 2>&1 || {
+  printf 'ERROR: git is not installed.\n' >&2
+  exit 1
+}
+
+git config --global user.name "$name"
+git config --global user.email "$email"
+git config --global init.defaultBranch main
+git config --global pull.rebase true
+git config --global rebase.autoStash true
+git config --global fetch.prune true
+git config --global push.autoSetupRemote true
+git config --global core.editor 'nvim'
+git config --global credential.helper ''
+
+printf '\nGIT_CONFIGURATION_OK\n'
+git config --global --list --show-origin
+printf '\nAuthenticate this device separately with: gh auth login --web --git-protocol https\n'

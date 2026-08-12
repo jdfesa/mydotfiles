@@ -26,7 +26,7 @@ No guardar en Git:
 - logs de compilacion regenerables;
 - claves, tokens o credenciales.
 
-## Estructura prevista
+## Estructura activa
 
 ```text
 packages/
@@ -34,7 +34,57 @@ packages/
   yay/              # configuracion/notas del helper AUR
   makepkg/          # makepkg.conf de usuario si se decide versionar
   lists/            # listas de paquetes por perfil
+  scripts/          # validacion y aplicacion idempotente de manifiestos
 ```
+
+### Manifiestos actuales
+
+- `lists/10-workstation-base.txt`: herramientas oficiales portables, Git/GitHub,
+  terminal, editores, keyring, Helium fallback y diagnostico.
+- `lists/20-xrdp-build.txt`: dependencias oficiales de build para los paquetes
+  AUR revisados de XRDP; no se confunden con la base diaria.
+- `lists/aur-reviewed.txt`: versiones, commits revisados y justificacion de cada
+  paquete AUR permitido.
+
+Previsualizar y aplicar una lista oficial:
+
+```bash
+os/linux/packages/scripts/install-official-list \
+  os/linux/packages/lists/10-workstation-base.txt
+
+os/linux/packages/scripts/install-official-list --execute \
+  os/linux/packages/lists/10-workstation-base.txt
+```
+
+El instalador usa una actualizacion completa `pacman -Syu`; nunca ejecuta la
+actualizacion parcial no soportada `pacman -Sy paquete`.
+
+Configurar la identidad portable de Git sin guardar credenciales:
+
+```bash
+os/linux/packages/scripts/configure-git
+os/linux/packages/scripts/configure-git --execute
+```
+
+La autenticacion de GitHub pertenece al dispositivo y se hace despues con
+`gh auth login`; el token queda fuera del repositorio.
+
+## Workstation Phases
+
+1. **Official Foundation**: herramientas CLI, GitHub CLI, shells, editores,
+   keyring y Firefox de recuperacion.
+2. **Git and Dotfiles**: identidad, autenticacion del dispositivo, clon HTTPS y
+   perfil `arch-desktop`.
+3. **Default Browser**: `helium-browser-bin` AUR revisado, firma upstream y
+   `xdg-settings`; Firefox permanece como alternativa oficial.
+4. **Remote Recovery**: XRDP/Xorgxrdp AUR revisados y XFCE X11 por RDP.
+5. **Data and Productivity**: `SHARED-DATA`, Dropbox/Obsidian y herramientas de
+   trabajo elegidas, cada una con fuente documentada.
+6. **Wayland Desktop**: Hyprland y sus modulos, sin mezclar configuracion X11.
+
+No se instala una lista de aplicaciones hipotetica completa de una vez. Cada
+fase debe responder a una necesidad real, conservar rollback y terminar con una
+validacion antes de continuar.
 
 ## makepkg
 
