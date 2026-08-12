@@ -9,6 +9,7 @@ openssh
 
 # Package/build/maintenance foundation
 base-devel
+shellcheck
 pacman-contrib
 reflector
 rsync
