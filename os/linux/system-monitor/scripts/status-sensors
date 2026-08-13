@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+
+mode=${1:-text}
+cpu_temp=N/A
+cpu_use=N/A
+mem_use=N/A
+gpu_temp=N/A
+gpu_use=N/A
+
+read_cpu_sample() {
+  awk '/^cpu / {
+    idle = $5 + $6
+    total = $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9
+    print total, idle
+    exit
+  }' /proc/stat
+}
+
+read -r total_before idle_before < <(read_cpu_sample)
+sleep 0.2
+read -r total_after idle_after < <(read_cpu_sample)
+total_delta=$((total_after - total_before))
+idle_delta=$((idle_after - idle_before))
+if ((total_delta > 0)); then
+  cpu_use=$(((100 * (total_delta - idle_delta)) / total_delta))
+fi
+
+if command -v sensors >/dev/null 2>&1; then
+  cpu_temp="$({
+    sensors 2>/dev/null | awk '
+      /^(Tdie|Package id|Core 0|CPU|temp1):/ {
+        for (i = 2; i <= NF; i++) {
+          value = $i
+          gsub(/[+°C]/, "", value)
+          if (value ~ /^[0-9]+([.][0-9]+)?$/) {
+            sub(/[.].*/, "", value)
+            print value
+            exit
+          }
+        }
+      }'
+  } || true)"
+  gpu_temp="$({
+    sensors 2>/dev/null | awk '
+      /^(edge|junction):/ {
+        value = $2
+        gsub(/[+°C]/, "", value)
+        sub(/[.].*/, "", value)
+        print value
+        exit
+      }'
+  } || true)"
+fi
+
+if command -v free >/dev/null 2>&1; then
+  mem_use=$(free -m | awk '/^Mem:/ { printf "%.1f", $3 / 1024 }')
+fi
+
+# The automatic path is portable across DRM card renumbering but intentionally
+# specific to Linux systems exposing an AMD GPU through the amdgpu driver.
+if [[ -n "${AMDGPU_LOAD_COMMAND:-}" ]]; then
+  if [[ -x "$AMDGPU_LOAD_COMMAND" ]]; then
+    gpu_use=$($AMDGPU_LOAD_COMMAND 2>/dev/null || true)
+  else
+    printf 'status-sensors: AMDGPU_LOAD_COMMAND is not executable: %s\n' \
+      "$AMDGPU_LOAD_COMMAND" >&2
+  fi
+else
+  drm_class_dir=${DRM_CLASS_DIR:-/sys/class/drm}
+  for busy_file in "$drm_class_dir"/card[0-9]*/device/gpu_busy_percent; do
+    [[ -r "$busy_file" ]] || continue
+    device_dir=${busy_file%/gpu_busy_percent}
+    driver=$(basename -- "$(readlink -f "$device_dir/driver")")
+    [[ "$driver" == amdgpu ]] || continue
+
+    gpu_use=$(<"$busy_file")
+    [[ "$gpu_use" =~ ^[0-9]+$ ]] || gpu_use=N/A
+    break
+  done
+fi
+
+cpu_temp=${cpu_temp:-N/A}
+cpu_use=${cpu_use:-N/A}
+mem_use=${mem_use:-N/A}
+gpu_temp=${gpu_temp:-N/A}
+gpu_use=${gpu_use:-N/A}
+
+text="CPU ${cpu_use}%  GPU ${gpu_use}%"
+tooltip="CPU: ${cpu_temp}°C (${cpu_use}%)\nMemory: ${mem_use} GiB\nGPU: ${gpu_temp}°C (${gpu_use}%)"
+
+case "$mode" in
+  text)
+    printf ' CPU %s°C (%s%%)  MEM %s GiB  GPU %s°C (%s%%)\n' \
+      "$cpu_temp" "$cpu_use" "$mem_use" "$gpu_temp" "$gpu_use"
+    ;;
+  --waybar)
+    jq -cn --arg text "$text" --arg tooltip "$tooltip" \
+      '{text: $text, tooltip: $tooltip, class: "system-monitor"}'
+    ;;
+  --notify)
+    notify-send -t 10000 'System sensors' "$tooltip"
+    ;;
+  *)
+    printf 'Usage: status-sensors [text|--waybar|--notify]\n' >&2
+    exit 2
+    ;;
+esac
+
+# DWMBlocks exports BLOCK_BUTTON; preserve its existing interactions.
+case "${BLOCK_BUTTON:-}" in
+  1) kitty --class system-monitor -e btop >/dev/null 2>&1 & ;;
+  3) notify-send -t 10000 'System sensors' "$tooltip" ;;
+esac

@@ -32,7 +32,7 @@ sudo pacman -S --needed base-devel libx11
 ```
 
 En tiempo de ejecucion, el bloque de sensores usa las dependencias documentadas
-por `../dwm/scripts/status-sensors.sh`. La ausencia de un sensor opcional no
+por `../system-monitor/scripts/status-sensors`. La ausencia de un sensor opcional no
 debe impedir que DWMBlocks muestre los demas datos.
 
 En equipos con el driver `amdgpu`, `status-sensors` busca

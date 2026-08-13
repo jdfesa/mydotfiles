@@ -46,7 +46,6 @@ dwm/
     install-session       # backup, instalacion de DWM+dmenu y sesion
     rollback-session      # restaura un backup creado por el instalador
     wallpaper-rotator.sh
-    status-sensors.sh
     power-menu
 ```
 
@@ -172,9 +171,8 @@ y sesiones esta documentada en `os/linux/display-managers/README.md`.
 
 - `wallpaper-rotator.sh`: rota imagenes mediante `feh` sin romper rutas que
   contienen espacios.
-- `status-sensors.sh`: genera el bloque de CPU, memoria y GPU usado por
-  `dwmblocks`; detecta automaticamente la utilizacion publicada por `amdgpu`
-  en sysfs y admite un lector configurable como override.
+- Las metricas CPU, memoria y GPU usadas por `dwmblocks` se comparten ahora
+  desde `../system-monitor/scripts/status-sensors` con la barra Wayland.
 - `power-menu`: menu dmenu con lock, suspend, logout, reboot y power off;
   muestra `Cancel` como opcion inicial y confirma las acciones que interrumpen
   la sesion o el sistema.
