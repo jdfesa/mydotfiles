@@ -43,6 +43,8 @@ packages/
   terminal, editores, keyring, Helium fallback y diagnostico.
 - `lists/20-xrdp-build.txt`: dependencias oficiales de build para los paquetes
   AUR revisados de XRDP; no se confunden con la base diaria.
+- `lists/30-wayland-desktop.txt`: compositor Hyprland y componentes Wayland
+  opcionales; no modifica SDDM ni reemplaza XFCE.
 - `lists/aur-reviewed.txt`: versiones, commits revisados y justificacion de cada
   paquete AUR permitido.
 

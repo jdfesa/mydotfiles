@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -eu
+
+mode=${1:-region}
+pictures=${XDG_PICTURES_DIR:-}
+
+if [ -z "$pictures" ] && command -v xdg-user-dir >/dev/null 2>&1; then
+  pictures=$(xdg-user-dir PICTURES)
+fi
+if [ -z "$pictures" ]; then
+  pictures=$HOME/Pictures
+fi
+
+directory=$pictures/Screenshots
+output=$directory/screenshot-$(date +%Y%m%d-%H%M%S).png
+mkdir -p "$directory"
+
+case "$mode" in
+  region)
+    geometry=$(slurp) || exit 0
+    grim -g "$geometry" "$output"
+    ;;
+  full)
+    grim "$output"
+    ;;
+  *)
+    printf 'Usage: wayland-screenshot [region|full]\n' >&2
+    exit 2
+    ;;
+esac
+
+wl-copy < "$output"
+notify-send 'Screenshot saved' "$output"

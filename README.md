@@ -18,6 +18,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 | Consultar decisiones | [Architecture Decision Records](docs/adr/README.md) |
 | Ver los enlaces de macOS | [`profiles/macos-main.links`](profiles/macos-main.links) |
 | Diagnosticar los symlinks | `scripts/doctor macos-main` |
+| Probar Hyprland en Arch | `scripts/doctor arch-hyprland-preview` |
 
 ## Platform Status
 

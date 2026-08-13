@@ -1,0 +1,10 @@
+show=drun
+prompt=Applications
+allow_images=true
+image_size=24
+insensitive=true
+term=kitty
+width=520
+height=420
+location=center
+no_actions=true

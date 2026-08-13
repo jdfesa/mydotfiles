@@ -5,6 +5,31 @@ Configuraciones y utilidades especificas de GNU/Linux.
 Esta capa es para piezas que pertenecen al setup Linux y que no deberian vivir
 en la raiz compartida del repo.
 
+## Compatibility Disclaimer
+
+Las configuraciones graficas se desarrollan y validan incrementalmente sobre
+el hardware real de `arch-desktop`; no se asume que sus valores sean universales.
+Una GPU, salida, dispositivo de audio o teclado diferente puede requerir un
+override aunque la estructura modular y los componentes sean reutilizables.
+
+Base de validacion actual (2026-08-12):
+
+| Componente | Hardware o software probado |
+|---|---|
+| CPU | Intel Core i7-4790K, 8 hilos |
+| Placa | Intel B85, firmware AMI 4.6.5 |
+| GPU principal | AMD Radeon RX 550, driver `amdgpu` |
+| GPU integrada | Intel Haswell, driver `i915` |
+| Monitor | `HDMI-A-2`, 1920x1080, conectado a la RX 550 |
+| Audio | Realtek ALC892, Intel HDMI y AMD HDMI/DP mediante PipeWire |
+| Kernel | Arch Linux `7.1.8-arch1-3` |
+| Sesion Wayland | Hyprland 0.56.2 + UWSM 0.26.6 |
+| Shell grafico | Waybar 0.15.0, Wofi 1.5.3, Mako 1.11.0 |
+| Terminal | Kitty 0.48.2 con Zsh 5.9 y Starship 1.26.0 compartidos |
+
+Los detalles vivos y los resultados de cada prueba se mantienen en
+`docs/machines/arch-desktop.md` y en el README del componente correspondiente.
+
 ## Regla principal
 
 Los window managers viven como herramientas propias dentro de `os/linux/`,
@@ -15,8 +40,11 @@ Ejemplos:
 - `dwm/`: configuracion, fuentes, parches, scripts de build y notas de DWM;
 - `dwmblocks/`: barra de estado compilada, configuracion y scripts de instalacion;
 - `display-managers/`: decision y diagnostico de SDDM, LightDM, GDM y sesiones;
+- `audio/`: diagnostico y recuperacion de ALSA, PipeWire y WirePlumber;
 - `i3/`: configuracion, scripts y notas de i3;
 - `bspwm/`, `openbox/`, `sway/` o similares si se prueban mas adelante.
+- `hyprland/`: configuracion modular del compositor Wayland, mantenida como
+  sesion opcional mientras XFCE siga siendo el entorno de recuperacion.
 
 `x11/` y `wayland/` quedan para infraestructura compartida por varias sesiones,
 no para esconder un window manager importante dentro de una tecnologia base.
@@ -26,6 +54,8 @@ Ejemplos de infraestructura:
 - `x11/scripts/start-x11vnc.sh`;
 - scripts de `xrandr`, `xrdb`, `Xephyr` o display debugging;
 - utilidades de Wayland compartidas por Sway, Hyprland u otros compositores.
+- Waybar, Mako, Wofi y scripts Wayland reutilizables viven en `wayland/`, no
+  dentro de `hyprland/`.
 
 ## Que pertenece a esta capa
 
@@ -50,6 +80,9 @@ Las credenciales locales deben vivir fuera del repo, por ejemplo en `~/.vnc/`,
 
 ```text
 linux/
+  audio/            # audio Linux compartido por X11 y Wayland
+    README.md
+
   dwm/              # DWM como herramienta principal
     README.md
     src/
@@ -136,6 +169,7 @@ Este repo debe favorecer flujos que se puedan manejar remotamente:
 
 ## Referencias
 
+- `audio/README.md`
 - `docs/ARCHITECTURE.md`
 - `docs/adr/0004-use-standard-linux-runtime-paths.md`
 - XDG Base Directory Specification:

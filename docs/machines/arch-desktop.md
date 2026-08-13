@@ -17,7 +17,8 @@ datos locales fuera de Git.
 - Kernel `linux` principal y `linux-lts` como fallback.
 - `jd` administra mediante `wheel`/sudo; root permanece bloqueado.
 - Primer boot, TTY, sudo, SSH y XFCE X11 mediante SDDM validados.
-- Hyprland esta instalado pero su configuracion Wayland aun no se activa.
+- Hyprland esta instalado y su primera configuracion modular esta versionada;
+  permanece como sesion opcional mientras XFCE siga siendo la eleccion segura.
 - El bootstrap de workstation se realiza por fases documentadas bajo
   `os/linux/packages/`; no se agregan aplicaciones mediante comandos aislados.
 - Helium sera el navegador por defecto; Firefox se conserva como fallback desde
@@ -28,6 +29,46 @@ datos locales fuera de Git.
 - Codex CLI `0.147.0` tiene su host de Code Mode instalado en
   `~/.local/bin/codex-code-mode-host`; el flujo reproducible vive en
   `os/linux/codex/` y evita compilar V8 localmente.
+
+## Prueba Hyprland del 2026-08-12
+
+La primera sesion real valido compositor, salida HDMI-A-2 a 1920x1080, efectos
+y Kitty. Fallaron inicialmente Thunar, el menu de sesion y el audio.
+
+Se confirmo que estaban activas simultaneamente:
+
+- sesion 120: XFCE X11 remota mediante `xrdp-sesman`;
+- sesion 122: Hyprland Wayland local mediante SDDM.
+
+Esto explica que `xfwm4` apareciera como cliente de PipeWire, que Thunar
+reutilizara la instancia X11 y que Mako/PolicyKit encontraran servicios ya
+registrados. Para la proxima prueba se debe cerrar la sesion XRDP por completo.
+
+El entorno systemd/UWSM no incluia `~/.local/bin`, aunque Zsh interactivo si lo
+incluye. El perfil preview enlaza ahora
+`os/linux/wayland/environment.d/10-mydotfiles.conf`; requiere cerrar y volver a
+iniciar sesion para propagarse.
+
+PipeWire detecto tres dispositivos (Intel HDMI, Realtek ALC892 y AMD HDMI),
+pero tenia activo `Built-in Audio Digital Stereo (IEC958)` al 40%. AMD HDMI
+estaba con perfil `off`. Tras cerrar la sesion XRDP, reiniciar solamente
+PipeWire/WirePlumber no corrigio el problema: ambos puertos analogicos seguian
+marcados como no disponibles y el perfil volvia a S/PDIF. Se activo
+temporalmente `pro-audio`, que expone directamente `hw:1,0` (ALC892 Analog), y
+se dejo `alsa_output.pci-0000_00_1b.0.pro-output-0` como sink predeterminado al
+50 %. La ausencia de sonido restante era del mezclador ALSA: `Front`, que
+controla el jack verde trasero, estaba silenciado. Se desactivo `Auto-Mute`, se
+dejaron `Master` y `Front` al 100 %/0 dB sin mute y se mantuvo el volumen de
+usuario solo en PipeWire al 50 %. El usuario confirmo reproduccion correcta en
+YouTube con auriculares analogicos en el conector verde trasero. El diagnostico
+y la recuperacion estan documentados en `os/linux/audio/README.md`; falta
+verificar la persistencia despues de un reinicio futuro.
+
+El prompt Kitty distinto de macOS no era una variante intencional: faltaba el
+symlink `~/.config/starship.toml` en el perfil preview. Starship usaba entonces
+su prompt predeterminado multilínea (`~` y `›`). El enlace Arch apunta ahora a
+la misma fuente canónica `shared/starship/starship.toml` usada por macOS, sin
+cambiar el contenido compartido.
 
 ## Estado historico verificado el 2026-07-17
 
@@ -198,7 +239,7 @@ el comportamiento si el orden de DRM cambia en una reinstalacion. No requiere
 shared/bash/bashrc                         -> ~/.bashrc
 os/linux/dwm/session/autostart.sh          -> ~/.config/dwm/autostart.sh
 os/linux/dwm/scripts/wallpaper-rotator.sh  -> ~/.local/bin/wallpaper-rotator
-os/linux/dwm/scripts/status-sensors.sh     -> ~/.local/bin/status-sensors
+os/linux/system-monitor/scripts/status-sensors -> ~/.local/bin/status-sensors
 os/linux/dwm/scripts/power-menu            -> ~/.local/bin/power-menu
 os/linux/x11/scripts/cliphist              -> ~/.local/bin/cliphist
 os/linux/x11/scripts/start-x11vnc.sh       -> ~/.local/bin/start-x11vnc
@@ -211,6 +252,15 @@ El linker no reemplaza archivos reales automaticamente. Comprobar y aplicar:
 scripts/link --dry-run --repair arch-desktop
 scripts/link --repair arch-desktop
 scripts/doctor arch-desktop
+```
+
+La prueba de Hyprland usa un perfil superpuesto y deliberadamente acotado para
+no activar de golpe las piezas aun pendientes del perfil general:
+
+```sh
+scripts/link --dry-run --repair arch-hyprland-preview
+scripts/link --repair arch-hyprland-preview
+scripts/doctor arch-hyprland-preview
 ```
 
 El wrapper de Rclone hace `--dry-run` salvo que se indique `--apply`; sus

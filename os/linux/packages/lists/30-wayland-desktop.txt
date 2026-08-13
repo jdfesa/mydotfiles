@@ -1,0 +1,33 @@
+# Official Arch packages for the optional Wayland/Hyprland desktop.
+# XFCE and SDDM remain the recovery path and default login choice.
+
+# Session and compositor
+hyprland
+uwsm
+xdg-desktop-portal-hyprland
+hyprpolkitagent
+
+# Hyprland ecosystem
+hypridle
+hyprlock
+hyprpaper
+
+# Reusable Wayland shell
+waybar
+wofi
+mako
+pavucontrol
+
+# Screenshots, clipboard and media controls
+grim
+slurp
+wl-clipboard
+playerctl
+libnotify
+lm_sensors
+jq
+
+# Shared applications used by the session
+kitty
+thunar
+ttf-jetbrains-mono-nerd
