@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+EXECUTE=0
+[[ ${1-} == '--execute' ]] && EXECUTE=1
+if (( $# > 1 )) || (( $# == 1 && EXECUTE == 0 )); then
+  printf 'Usage: %s [--execute]\n' "$0" >&2
+  exit 2
+fi
+
+die() {
+  printf 'ERROR: %s\n' "$*" >&2
+  exit 1
+}
+
+for command in codex curl jq sha256sum tar install; do
+  command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
+done
+
+version=$(codex --version | awk '{ print $2 }')
+[[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || die "Unexpected Codex version: $version"
+
+case $(uname -m) in
+  x86_64) target='x86_64-unknown-linux-musl' ;;
+  aarch64 | arm64) target='aarch64-unknown-linux-musl' ;;
+  *) die "Unsupported architecture: $(uname -m)" ;;
+esac
+
+tag="rust-v$version"
+asset="codex-code-mode-host-$target.tar.gz"
+api="https://api.github.com/repos/openai/codex/releases/tags/$tag"
+destination="$HOME/.local/bin/codex-code-mode-host"
+
+printf 'Codex version: %s\n' "$version"
+printf 'Release tag: %s\n' "$tag"
+printf 'Official asset: %s\n' "$asset"
+printf 'Destination: %s\n' "$destination"
+
+if (( EXECUTE == 0 )); then
+  printf '\nPLAN_ONLY: no download, configuration, or executable changed.\n'
+  exit 0
+fi
+
+release=$(curl --fail --silent --show-error --location --retry 3 "$api")
+url=$(jq --raw-output --arg name "$asset" \
+  '.assets[] | select(.name == $name) | .browser_download_url' <<<"$release")
+digest=$(jq --raw-output --arg name "$asset" \
+  '.assets[] | select(.name == $name) | .digest' <<<"$release")
+
+[[ -n $url && $url != null ]] || die "Release asset was not found: $asset"
+[[ $digest =~ ^sha256:[0-9a-f]{64}$ ]] || die 'Release does not publish a valid SHA-256 digest.'
+
+temporary=$(mktemp -d)
+trap 'rm -rf "$temporary"' EXIT
+archive="$temporary/$asset"
+
+curl --fail --location --retry 3 --output "$archive" "$url"
+actual="sha256:$(sha256sum "$archive" | awk '{ print $1 }')"
+[[ $actual == "$digest" ]] || die "SHA-256 mismatch: expected $digest, got $actual"
+
+tar --extract --gzip --file "$archive" --directory "$temporary"
+source_binary="$temporary/codex-code-mode-host-$target"
+[[ -x $source_binary ]] || die 'Expected executable is missing from the release archive.'
+
+install -d -m 0755 "$HOME/.local/bin"
+install -m 0755 "$source_binary" "$destination.new"
+mv -f "$destination.new" "$destination"
+
+config="$HOME/.codex/config.toml"
+[[ -f $config ]] || die "Codex configuration is missing: $config"
+backup="$config.before-code-mode-host-$(date +%Y%m%d-%H%M%S)"
+cp -p "$config" "$backup"
+codex features enable code_mode_host
+
+command -v codex-code-mode-host >/dev/null 2>&1 || die 'Installed host is not available in PATH.'
+codex features list | awk '$1 == "code_mode_host" && $3 == "true" { found=1 } END { exit !found }' ||
+  die 'code_mode_host is not enabled.'
+
+printf '\nCODE_MODE_HOST_INSTALL_OK\n'
+printf 'sha256=%s\n' "${actual#sha256:}"
+printf 'backup=%s\n' "$backup"
+codex doctor --summary

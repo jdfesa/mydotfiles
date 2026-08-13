@@ -25,6 +25,9 @@ datos locales fuera de Git.
 - GitHub CLI se utilizara para autenticar este dispositivo sin versionar tokens.
 - XRDP se mantiene pendiente hasta construir e instalar `xrdp` y `xorgxrdp`
   desde los commits AUR revisados.
+- Codex CLI `0.147.0` tiene su host de Code Mode instalado en
+  `~/.local/bin/codex-code-mode-host`; el flujo reproducible vive en
+  `os/linux/codex/` y evita compilar V8 localmente.
 
 ## Estado historico verificado el 2026-07-17
 
