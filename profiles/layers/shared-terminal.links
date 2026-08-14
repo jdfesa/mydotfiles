@@ -1,3 +1,2 @@
-# Portable terminal and prompt used by both stable and preview desktops.
+# Portable prompt shared across operating systems.
 shared/starship/starship.toml|$HOME/.config/starship.toml
-shared/kitty|$HOME/.config/kitty

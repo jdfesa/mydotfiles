@@ -19,7 +19,8 @@ pero los archivos son configuraciones propias y no dependen de comandos
 
 ## Limites
 
-- Kitty vive en `shared/kitty/` porque tambien se usa en macOS y X11.
+- Kitty separa sus entrypoints en `os/linux/kitty/` y `os/macos/kitty/`, con
+  una base portable en `shared/kitty/common.conf`.
 - Hyprlock e Hypridle viven con Hyprland porque pertenecen a su ecosistema.
 - Los paquetes se declaran en `../packages/lists/30-wayland-desktop.txt`.
 - No se guardan fondos descargados sin licencia clara; la primera iteracion usa

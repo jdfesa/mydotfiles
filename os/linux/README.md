@@ -31,6 +31,17 @@ Los detalles vivos y los resultados de cada prueba se mantienen en
 `docs/machines/lab-desktop-01.md`, su inventario en
 `hosts/lab-desktop-01/host.toml` y el README del componente correspondiente.
 
+## Convencion de idioma
+
+La interfaz y la configuracion efectiva del sistema operativo se mantienen en
+ingles. Esto incluye textos visibles, etiquetas, comandos, comentarios tecnicos
+y nombres de archivos y directorios.
+
+La documentacion narrativa se escribe en espanol para conservar explicaciones
+y procedimientos claros. Dentro de esa documentacion, los identificadores
+tecnicos, rutas, nombres de archivos y nombres de directorios permanecen en
+ingles.
+
 ## Regla principal
 
 Los window managers viven como herramientas propias dentro de `os/linux/`,

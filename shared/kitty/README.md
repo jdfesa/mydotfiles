@@ -1,18 +1,22 @@
 # Kitty Configuration
 
-Configuration for [Kitty](https://sw.kovidgoyal.net/kitty/), a fast GPU-based terminal emulator with image support, sessions, remote control, and an extensive theme system.
-
-This configuration started as a copied/personalized setup from another developer's dotfiles. It is a working base, but should be adapted gradually to this repo's workflow.
+Base compartida de [Kitty](https://sw.kovidgoyal.net/kitty/) para Linux y
+macOS. Las opciones portables viven aqui; cada sistema operativo mantiene su
+propio entrypoint y sus propios modificadores.
 
 ## Structure
 
 - **Location**: `~/mydotfiles/shared/kitty/`
-  - `kitty.conf`: Main configuration file.
-  - `active-theme.conf`: Active color theme loaded by `kitty.conf`.
+  - `common.conf`: opciones y bindings realmente compartidos.
+  - `active-theme.conf`: tema cargado por `common.conf`.
   - `themes/`: Local copy of Kitty themes.
   - `sessions/`: Saved Kitty sessions.
   - `scripts/`: Helper scripts used by session/keymap actions.
-- **Symlink**: `~/.config/kitty` -> `~/mydotfiles/shared/kitty`
+- **Linux entrypoint**: `os/linux/kitty/kitty.conf`.
+- **macOS entrypoint**: `os/macos/kitty/kitty.conf`.
+- **Deployment**: cada perfil enlaza su entrypoint como
+  `~/.config/kitty/kitty.conf`; ya no se enlaza el directorio compartido
+  completo.
 
 ## Theme
 
@@ -22,7 +26,15 @@ The current theme is loaded from:
 include ~/mydotfiles/shared/kitty/active-theme.conf
 ```
 
-To change it, edit `active-theme.conf` directly or replace it with one of the files in `themes/themes/`.
+Para cambiarlo, editar `active-theme.conf` o reemplazarlo por uno de los
+archivos de `themes/themes/`.
+
+## Clipboard on Linux
+
+El entrypoint Linux asigna `Ctrl+Shift+C` a `copy_to_clipboard` y
+`Ctrl+Shift+V` a `paste_from_clipboard`. Estos bindings no se cargan en macOS.
+En aplicaciones TUI que capturan el mouse, mantener `Shift` mientras se
+arrastra para forzar la seleccion de Kitty.
 
 ## Installation
 
@@ -40,19 +52,17 @@ Homebrew alternative:
 brew install --cask kitty
 ```
 
-### 2. Apply this configuration and CLI symlinks
+### 2. Aplicar el perfil correspondiente
 
 ```bash
-mkdir -p ~/.config
-ln -s ~/mydotfiles/shared/kitty ~/.config/kitty
-mkdir -p ~/.local/bin
-ln -s /Applications/kitty.app/Contents/MacOS/kitty ~/.local/bin/kitty
-ln -s /Applications/kitty.app/Contents/MacOS/kitten ~/.local/bin/kitten
+scripts/link --dry-run --repair arch-hyprland
+scripts/link --dry-run --repair macos-main
 ```
 
-If `~/.config/kitty` already exists, back it up before creating the symlink. The
-`~/.local/bin` links make `kitty` and `kitten` available without requiring
-administrator permissions.
+La migracion desde el layout anterior requiere eliminar solamente el symlink
+de directorio `~/.config/kitty` y volver a aplicar el perfil. El linker crea un
+directorio real y enlaza dentro de el `kitty.conf` y `pass_keys.py`; nunca
+reemplaza archivos reales.
 
 ## See Themes
 

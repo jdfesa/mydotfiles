@@ -1,0 +1,3 @@
+# Linux-specific Kitty entrypoint plus the shared custom kitten.
+os/linux/kitty/kitty.conf|$HOME/.config/kitty/kitty.conf
+shared/kitty/pass_keys.py|$HOME/.config/kitty/pass_keys.py

@@ -17,7 +17,8 @@ componentes directos:
 Las piezas reutilizables por otros compositores Wayland no se duplican aqui:
 
 - Waybar, Mako, Wofi y scripts de captura/sesion viven en `../wayland/`;
-- Kitty conserva su fuente canonica en `shared/kitty/`;
+- Kitty usa `../kitty/kitty.conf` como entrypoint Linux e incluye su base desde
+  `shared/kitty/common.conf`;
 - paquetes reproducibles viven en `../packages/lists/30-wayland-desktop.txt`.
 
 ## Origen Omarchy
@@ -131,3 +132,12 @@ selecciono el perfil `pro-audio` y la salida fisica analogica
 controlar el volumen desde PipeWire al 50 %. El usuario confirmo sonido correcto
 en YouTube con auriculares conectados al jack verde trasero. El procedimiento
 reproducible completo vive en `os/linux/audio/README.md`.
+
+### Pantalla de bloqueo, 2026-08-13
+
+Se reemplazo el texto visible `Contrasena` por `Password` en Hyprlock. La fecha
+tambien fuerza `LC_TIME=C` para que los nombres del dia y del mes permanezcan en
+ingles independientemente del locale de la sesion. Este cambio sigue la
+convencion general: interfaz y configuracion del sistema en ingles;
+documentacion narrativa en espanol; nombres de archivos y directorios en
+ingles.
