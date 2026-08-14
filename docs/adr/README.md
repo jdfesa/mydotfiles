@@ -9,6 +9,16 @@ escribe en espanol.
 Esta convencion tambien se aplica a nombres de carpetas y archivos tecnicos del
 repositorio.
 
+## Decision Index
+
+- [0001: Use A Single Multi-OS Dotfiles Repository](0001-use-a-single-multi-os-dotfiles-repository.md)
+- [0002: Use Layered Dotfiles Organization](0002-use-layered-dotfiles-organization.md)
+- [0003: Keep Symlinks Now, Evaluate Chezmoi Later](0003-keep-symlinks-now-evaluate-chezmoi-later.md)
+- [0004: Use Standard Linux Runtime Paths](0004-use-standard-linux-runtime-paths.md)
+- [0005: Group Shared Configurations](0005-group-shared-configurations.md)
+- [0006: Separate Hosts From Profiles](0006-separate-hosts-from-profiles.md)
+- [0007: Isolate External Reference Material](0007-isolate-external-reference-material.md)
+
 ## When To Add An ADR
 
 Agregar un ADR cuando la decision:

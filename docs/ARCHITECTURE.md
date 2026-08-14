@@ -17,6 +17,7 @@ repositorio si llega a adoptarse.
 - Produccion nunca recibe implicitamente cambios validados solo en el canary.
 - El repositorio guarda fuentes; el sistema usa symlinks y rutas estandar.
 - Secretos, caches, builds y estado generado quedan fuera de Git.
+- El material externo de referencia queda separado del runtime desplegable.
 - Los cambios estructurales se realizan de forma incremental y verificable.
 
 ## Naming Convention
@@ -85,11 +86,18 @@ mydotfiles/
   hardware/                  # firmware y configuracion de perifericos
     silakka54/
 
+  references/                # auditorias externas no desplegables
+    inbox/                    # clones temporales ignorados
+    dotfiles/                 # dossiers de procedencia y decision
+    templates/
+    tools/
+
   scripts/                   # automatizacion transversal del repositorio
     link
     doctor
     profile-resolve
     validate-profiles
+    validate-references
 
   .githooks/                 # hooks de Git versionados
     pre-commit
@@ -121,11 +129,34 @@ flowchart LR
 
     Resolve --> Doctor["scripts/doctor"]
     Home --> Doctor
+
+    References["references/"] -. blocked .-> Resolve
 ```
 
 El host selecciona roles; los perfiles componen capas y cada capa apunta a una
 fuente canonica. `scripts/profile-resolve` valida y aplana el grafo antes de que
 `scripts/link` o `scripts/doctor` operen sobre destinos.
+
+El borde discontinuo representa una prohibicion: `references/` no puede ser
+fuente de un perfil. El resolver rechaza esa ruta incluso si el archivo existe.
+
+## External References
+
+`references/` permite estudiar dotfiles publicos sin confundirlos con la fuente
+de verdad propia. Un clon completo solo puede existir temporalmente y queda
+ignorado bajo `references/inbox/`. Git conserva un dossier pequeno con URL,
+revision auditada, licencia observada, inventario, evidencia y decisiones.
+
+Los estados de revision son `pending-review`, `keep`, `adapt`, `remove` y
+`reference-only`. Una idea marcada `adapt` se reescribe dentro de `shared/`,
+`os/`, `hardware/` o `scripts/`, segun su responsabilidad. Despues se prueba en
+el canary y solo se promueve a produccion cuando el comportamiento es conocido.
+
+Ni el dossier ni el clon son dependencias de runtime. Una coincidencia de
+contenido tampoco demuestra autoria: temas, shaders o plugins pueden provenir
+de un tercer proyecto y necesitan su propia atribucion. Ver
+[`references/README.md`](../references/README.md) y
+[ADR 0007](adr/0007-isolate-external-reference-material.md).
 
 ## Shared Configurations
 

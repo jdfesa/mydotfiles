@@ -1,0 +1,13 @@
+schema_version = 1
+id = "owner-repository"
+kind = "dotfiles"
+source_url = "https://example.com/owner/repository"
+upstream_owner = "owner"
+upstream_repository = "repository"
+default_branch = "main"
+audit_revision = "0000000000000000000000000000000000000000"
+audited_on = "YYYY-MM-DD"
+license_status = "pending-review"
+license_identifier = "pending"
+raw_source_policy = "ignored"
+lifecycle = "active-review"

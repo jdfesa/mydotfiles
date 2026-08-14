@@ -22,11 +22,12 @@ jobs:
       - name: Lint shell scripts
         run: scripts/lint-shell
 
-      - name: Validate profile graph
+      - name: Validate repository metadata and profile graph
         run: |
           scripts/test-profile-resolve
           scripts/validate-profiles
           scripts/validate-hosts
+          scripts/validate-references
 
       - name: Rebuild macOS profile in an isolated HOME
         shell: bash
