@@ -1,8 +1,9 @@
 # Hyprland
 
-Configuracion experimental de Hyprland para `arch-desktop`. XFCE permanece
-como entorno de recuperacion y como sesion elegida normalmente en SDDM hasta
-que este entorno Wayland se valide durante el uso diario.
+Configuracion experimental de Hyprland validada primero en `lab-desktop-01`
+(hostname `arch-desktop`). XFCE permanece como entorno X11 de recuperacion hasta
+que este entorno Wayland complete un periodo sostenido de uso y pruebas reales
+de rollback.
 
 ## Clasificacion
 
@@ -41,8 +42,9 @@ cd ~/mydotfiles
 scripts/link --dry-run --repair arch-hyprland-preview
 ```
 
-El perfil experimental solo enlaza Kitty y las piezas Wayland necesarias; no
-activa las demas capas pendientes de `arch-desktop`. La entrada principal es:
+El perfil experimental solo enlaza terminal, prompt, metricas y las piezas
+Wayland necesarias; no activa las demas capas pendientes de
+`arch-workstation`. La entrada principal es:
 
 ```text
 os/linux/hyprland/config -> ~/.config/hypr
@@ -51,6 +53,11 @@ os/linux/hyprland/config -> ~/.config/hypr
 Despues de crear el enlace, elegir manualmente `Hyprland (UWSM)` en SDDM. Este
 perfil no modifica la configuracion de SDDM, no habilita autologin y no cambia
 el gestor de arranque.
+
+El perfil objetivo reusable es `arch-hyprland`; el preview se conserva mientras
+el perfil general del host siga incompleto. Los plugins futuros no se agregan al
+nucleo implicitamente: cada uno debe documentar version, compatibilidad,
+verificacion y rollback, y activarse primero mediante una capa canary separada.
 
 ## Validacion y recuperacion
 
@@ -111,8 +118,8 @@ Correcciones preparadas:
 - reutilizar las metricas CPU/GPU de DWM en Waybar.
 
 El simbolo `~` seguido por un salto de linea y `›` provenia del prompt
-predeterminado de Starship: el perfil preview enlazaba Kitty y Zsh, pero no
-`shared/starship/starship.toml`. Se agrego ese enlace al perfil Arch; no se
+predeterminado de Starship: el perfil preview enlazaba Kitty, pero no
+`shared/starship/starship.toml`. Se agrego ese enlace al perfil; no se
 modifico la configuracion compartida que ya funciona en macOS.
 
 El audio analogico tampoco requeria reiniciar Arch. WirePlumber detectaba el

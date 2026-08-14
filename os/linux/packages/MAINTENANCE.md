@@ -80,7 +80,10 @@ uso a varias actualizaciones, se pueda restaurar desde documentación y todas la
 herramientas críticas tengan alternativa o procedimiento de recuperación. Una
 semana sin fallos no sustituye una restauracion probada.
 
-## Auditoria de arch-desktop: 2026-07-17
+## Auditoria historica anterior a la reinstalacion: 2026-07-17
+
+Los datos siguientes describen la instalacion Ext4 anterior. Se conservan como
+historial y no representan el estado actual de `lab-desktop-01`.
 
 Base verificada:
 
@@ -107,6 +110,29 @@ Trabajo pendiente antes de considerarla maquina principal:
 
 Estos puntos son deuda operativa conocida, no fallos que deban corregirse todos
 en una sola sesión.
+
+## Auditoria de lab-desktop-01: 2026-08-13
+
+Base actual verificada:
+
+- raiz Btrfs con subvolumenes, Snapper, grub-btrfs y scrub programado;
+- kernels `linux` y `linux-lts` instalados con sus initramfs;
+- Hyprland Wayland mediante UWSM, XFCE X11 y XRDP de recuperacion;
+- cero unidades systemd fallidas y cero errores Btrfs de dispositivo;
+- paquetes oficiales sin actualizaciones pendientes y solo tres paquetes
+  externos revisados: Helium, XRDP y Xorgxrdp;
+- SSD con SMART aprobado y 84 % de vida informada.
+
+Deuda operativa vigente:
+
+1. probar arranque real con `linux-lts` y rollback desde una entrada Snapper;
+2. definir y probar backup externo; los snapshots viven en el mismo SSD;
+3. restringir SSH/XRDP mediante firewall o tunel local documentado;
+4. habilitar y probar monitoreo SMART automatico;
+5. terminar `arch-workstation` sin sobrescribir el `~/.bashrc` real;
+6. migrar la configuracion de Hyprland de Hyprlang deprecado a Lua;
+7. ejecutar un smoke test de presentacion y screen sharing antes de considerar
+   cualquier promocion.
 
 Referencias oficiales:
 

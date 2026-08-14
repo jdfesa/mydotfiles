@@ -1,17 +1,49 @@
-# Arch Desktop
+# Lab Desktop 01
 
 Notas operativas de la maquina Arch Linux accesible actualmente por SSH en
-`jd@192.168.8.47`. La direccion viene de DHCP y puede cambiar; la identidad
-estable del host es `arch-desktop`.
+`jd@192.168.8.47`. La direccion viene de DHCP y puede cambiar. Su identidad en
+el repositorio es `lab-desktop-01`; el hostname operativo sigue siendo
+`arch-desktop` y no necesita coincidir con el identificador estable.
 
 ## Objetivo
 
 Usar esta maquina para probar Arch, window managers y configuraciones Linux sin
 comprometer el entorno de recuperacion. La fuente de verdad es
 `~/mydotfiles`; la maquina actua como runtime con symlinks, builds en cache y
-datos locales fuera de Git.
+datos locales fuera de Git. Es un host `canary`: puede reinstalarse, no debe
+guardar datos sensibles y recibe los experimentos antes que produccion.
 
-## Estado verificado el 2026-08-12
+## Hardware Contract
+
+El inventario declarativo vive en `hosts/lab-desktop-01/host.toml`. La base
+validada incluye i7-4790K, RX 550 mediante `amdgpu`, audio Realtek ALC892 y un
+Dell P2419H conectado como `HDMI-A-2` a 1920x1080@60. Estos datos describen la
+maquina; no forman parte del nombre de ningun perfil reusable.
+
+## Estado verificado el 2026-08-13
+
+- Hyprland 0.56.2 inicia mediante UWSM sobre Wayland con XWayland disponible.
+- `Hyprland --verify-config` y `hyprctl configerrors` no reportan errores; no
+  hay plugins instalados.
+- El perfil `arch-hyprland-preview` termina con 10 enlaces correctos y cero
+  warnings o errores.
+- El antiguo perfil general `arch-desktop` sigue incompleto en runtime: 4
+  enlaces correctos, 11 ausentes y `~/.bashrc` bloqueado por un archivo real.
+- `linux` y `linux-lts` estan instalados; XFCE X11, SSH y XRDP permanecen como
+  rutas de recuperacion.
+- Btrfs, Snapper y grub-btrfs exponen snapshots desde GRUB; tener entradas no
+  sustituye una prueba real de rollback ni un backup externo.
+- El audio ALC892 persistio despues del reinicio con la salida analogica
+  correcta y controles ALSA activos.
+- No existen unidades systemd fallidas. La politica de firewall, el monitoreo
+  SMART automatico y el backup externo todavia deben cerrarse antes de promover
+  el sistema.
+
+El perfil Hyprland actual usa Hyprlang, aceptado por 0.56 pero deprecado por
+upstream. La migracion modular a Lua debe realizarse y validarse en este host
+antes de una version que retire compatibilidad.
+
+## Instalacion verificada el 2026-08-12
 
 - Reinstalacion limpia sobre Btrfs con subvolumenes separados y Snapper.
 - Kernel `linux` principal y `linux-lts` como fallback.
@@ -24,8 +56,8 @@ datos locales fuera de Git.
 - Helium sera el navegador por defecto; Firefox se conserva como fallback desde
   repositorios oficiales porque Helium aun se distribuye como beta en Linux.
 - GitHub CLI se utilizara para autenticar este dispositivo sin versionar tokens.
-- XRDP se mantiene pendiente hasta construir e instalar `xrdp` y `xorgxrdp`
-  desde los commits AUR revisados.
+- XRDP y Xorgxrdp se construyeron desde commits AUR revisados y quedaron activos
+  como recuperacion remota de XFCE X11.
 - Codex CLI `0.147.0` tiene su host de Code Mode instalado en
   `~/.local/bin/codex-code-mode-host`; el flujo reproducible vive en
   `os/linux/codex/` y evita compilar V8 localmente.
@@ -70,7 +102,10 @@ su prompt predeterminado multilínea (`~` y `›`). El enlace Arch apunta ahora 
 la misma fuente canónica `shared/starship/starship.toml` usada por macOS, sin
 cambiar el contenido compartido.
 
-## Estado historico verificado el 2026-07-17
+## Estado historico anterior a la reinstalacion: 2026-07-17
+
+Esta seccion conserva evidencia de la instalacion anterior. No describe las
+sesiones instaladas actualmente y no debe usarse como inventario operativo.
 
 - Arch Linux usa `graphical.target` y SDDM 0.21 como display manager.
 - SDDM, SSH y XRDP estan habilitados y activos.
@@ -90,10 +125,11 @@ cambiar el contenido compartido.
 - Jump Desktop desde macOS debe conectarse mediante el tunel SSH documentado en
   `os/linux/x11/README.md`.
 
-## Display manager y sesiones disponibles
+## Display manager y sesiones historicas
 
-SDDM es el programa de login. DWM y XFCE son sesiones seleccionables dentro de
-SDDM; no son distintas variantes de SDDM.
+En la instalacion anterior, SDDM ofrecia DWM y XFCE. Despues de la reinstalacion
+actual, XFCE X11/Wayland y Hyprland son seleccionables; DWM debe reconstruirse e
+instalarse nuevamente antes de volver a aparecer.
 
 ```text
 SDDM
@@ -231,36 +267,31 @@ descubre dinamicamente la tarjeta controlada por `amdgpu`, por lo que conserva
 el comportamiento si el orden de DRM cambia en una reinstalacion. No requiere
 `radeontop`, `rocm-smi`, `nvtop` ni otro proceso de monitoreo residente.
 
-## Perfil y scripts de usuario
+## Profiles And User Scripts
 
-`profiles/arch-desktop.links` despliega:
+Los nombres nuevos describen capacidades y no la maquina:
 
 ```text
-shared/bash/bashrc                         -> ~/.bashrc
-os/linux/dwm/session/autostart.sh          -> ~/.config/dwm/autostart.sh
-os/linux/dwm/scripts/wallpaper-rotator.sh  -> ~/.local/bin/wallpaper-rotator
-os/linux/system-monitor/scripts/status-sensors -> ~/.local/bin/status-sensors
-os/linux/dwm/scripts/power-menu            -> ~/.local/bin/power-menu
-os/linux/x11/scripts/cliphist              -> ~/.local/bin/cliphist
-os/linux/x11/scripts/start-x11vnc.sh       -> ~/.local/bin/start-x11vnc
-shared/rclone/rclone-sync                  -> ~/.local/bin/rclone-sync
+arch-workstation            # base compartida sin elegir sesion grafica
+arch-dwm                    # base + DWM/X11
+arch-hyprland               # base + Hyprland/Wayland
+arch-hyprland-preview       # subconjunto aplicado actualmente en el canary
 ```
 
-El linker no reemplaza archivos reales automaticamente. Comprobar y aplicar:
+`arch-desktop` queda como alias compatible de `arch-dwm` mientras se migra la
+instalacion anterior; no debe usarse en automatizacion nueva.
 
-```sh
-scripts/link --dry-run --repair arch-desktop
-scripts/link --repair arch-desktop
-scripts/doctor arch-desktop
-```
-
-La prueba de Hyprland usa un perfil superpuesto y deliberadamente acotado para
-no activar de golpe las piezas aun pendientes del perfil general:
+El perfil objetivo del host es `arch-hyprland`, pero no se aplica de golpe. El
+preview preserva los diez enlaces ya validados mientras se resuelve
+deliberadamente `~/.bashrc` y se completa la base:
 
 ```sh
 scripts/link --dry-run --repair arch-hyprland-preview
 scripts/link --repair arch-hyprland-preview
 scripts/doctor arch-hyprland-preview
+
+# Objetivo futuro, solo despues de revisar el dry-run:
+scripts/link --dry-run --repair arch-hyprland
 ```
 
 El wrapper de Rclone hace `--dry-run` salvo que se indique `--apply`; sus

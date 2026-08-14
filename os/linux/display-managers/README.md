@@ -4,11 +4,12 @@ Un display manager presenta la pantalla grafica de inicio de sesion. No es el
 entorno de escritorio ni el window manager: SDDM puede iniciar XFCE, DWM u otra
 sesion que tenga un archivo valido en `xsessions/` o `wayland-sessions/`.
 
-## Decision para `arch-desktop`
+## Decision For The Lab Host
 
-Se mantiene **SDDM**. Ya esta habilitado, funciona con XFCE y no hay una razon
-operativa para reemplazarlo mientras se prueba DWM. XFCE X11 sigue siendo la
-sesion de recuperacion; DWM se agrega como alternativa, no como reemplazo.
+Se mantiene **SDDM** en `lab-desktop-01` (hostname `arch-desktop`). Ya esta
+habilitado, funciona con XFCE y Hyprland/UWSM, y no hay una razon operativa para
+reemplazarlo. XFCE X11 sigue siendo la sesion de recuperacion; cada window
+manager o compositor se agrega como alternativa, no como reemplazo.
 
 Solo debe haber un servicio de display manager habilitado a la vez. Instalar
 otro no agrega un nuevo escritorio al selector: para eso se instala una sesion.
@@ -35,15 +36,18 @@ recuperacion conocido que cambiar la apariencia del login.
 /usr/share/wayland-sessions/*.desktop
 ```
 
-La sesion DWM de este repositorio se instala como:
+La sesion DWM de este repositorio puede instalarse como:
 
 ```text
 /usr/local/share/xsessions/dwm.desktop
 /usr/local/libexec/dotfiles-dwm-session
 ```
 
-SDDM muestra `DWM (dotfiles)` junto con XFCE. La sesion elegida puede quedar
-recordada para el proximo login, pero XFCE no se desinstala ni se deshabilita.
+Despues de la reinstalacion Btrfs de 2026-08-12, DWM no esta instalado en el
+selector actual. `os/linux/dwm/scripts/install-session` debe reconstruirlo y
+validarlo antes de que SDDM vuelva a mostrar `DWM (dotfiles)`. La sesion elegida
+puede quedar recordada para el proximo login, pero XFCE no se desinstala ni se
+deshabilita.
 
 ## Diagnostico sin cambiar nada
 

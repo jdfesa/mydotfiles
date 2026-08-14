@@ -15,6 +15,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 |---|---|
 | Restaurar la Mac desde cero | [Restore macOS](docs/RESTORE.md) |
 | Entender la estructura | [Dotfiles Architecture](docs/ARCHITECTURE.md) |
+| Entender produccion y canary | [Workstation Lifecycle](docs/WORKSTATION_LIFECYCLE.md) |
 | Consultar decisiones | [Architecture Decision Records](docs/adr/README.md) |
 | Ver los enlaces de macOS | [`profiles/macos-main.links`](profiles/macos-main.links) |
 | Diagnosticar los symlinks | `scripts/doctor macos-main` |
@@ -24,8 +25,8 @@ rutas esperadas por cada aplicacion mediante symlinks.
 
 | Plataforma | Estado |
 |---|---|
-| macOS | Activa: 16 symlinks declarados y verificados |
-| Arch Linux | Activa: XFCE de respaldo y sesion DWM reproducible en SDDM |
+| macOS | Produccion: 16 symlinks declarados; no se modifica durante experimentos |
+| Arch Linux | Canary: Hyprland/Wayland activo, XFCE X11 y XRDP de recuperacion |
 | Windows | Planificada; sin perfil activo todavia |
 
 ## Conventions
@@ -50,7 +51,8 @@ mydotfiles/
       packages/homebrew/     # manifiestos de Homebrew
     linux/                   # DWM, display managers, X11 y paquetes de Linux
     windows/                 # configuracion nativa futura
-  profiles/                  # manifiestos de symlinks instalables
+  profiles/                  # roles instalables y capas de composicion
+  hosts/                     # inventario y riesgo de maquinas fisicas
   hardware/                  # teclados y otros perifericos
   scripts/                   # bootstrap, linking y diagnostico
   docs/                      # arquitectura, ADR e inventarios
@@ -69,12 +71,19 @@ categorias estables.
 | Solo macOS | `os/macos/<tool>/` | AeroSpace, Sketchybar, Hammerspoon |
 | Solo Linux | `os/linux/<tool>/` | DWM, i3, X11, Wayland |
 | Solo Windows | `os/windows/<tool>/` | PowerShell, Windows Terminal |
-| Maquina concreta | `profiles/` y `docs/machines/` | seleccion instalable y notas operativas |
+| Rol instalable | `profiles/<role>.links` | `arch-workstation`, `arch-hyprland` |
+| Fragmento de perfil | `profiles/layers/` | terminal compartida, Wayland, DWM/X11 |
+| Maquina concreta | `hosts/<id>/` y `docs/machines/` | inventario, riesgo y notas operativas |
 | Periferico | `hardware/<device>/` | Silakka54 |
-| Combinacion instalable | `profiles/<profile>.links` | `macos-main`, `arch-dwm` |
 
-DWM debe comenzar en `os/linux/dwm/`. La seleccion instalable de la computadora
-Arch pertenece a `profiles/`; sus notas operativas viven en `docs/machines/`.
+DWM comienza en `os/linux/dwm/`; Hyprland en `os/linux/hyprland/`; la
+infraestructura transversal permanece separada en `os/linux/x11/` y
+`os/linux/wayland/`. Los perfiles combinan esas fuentes sin confundirlas con el
+hardware de un host.
+
+`main-workstation` es el Hackintosh de produccion. `lab-desktop-01`, cuyo
+hostname actual es `arch-desktop`, es el canary donde se califican Arch y
+Hyprland antes de cualquier adopcion futura.
 
 ## Active macOS Layer
 
@@ -90,8 +99,17 @@ Todas viven bajo `shared/`.
 
 ## Symlink Workflow
 
-Los enlaces de cada entorno se declaran en `profiles/*.links`. El perfil actual
-de la Mac principal es `profiles/macos-main.links`.
+Los enlaces se declaran en perfiles que pueden incluir fragmentos de
+`profiles/layers/`. El perfil actual de la Mac principal sigue siendo
+`profiles/macos-main.links` y esta refactorizacion no lo aplica ni modifica en
+el sistema real.
+
+Validar el grafo sin tocar `$HOME`:
+
+```sh
+scripts/validate-profiles
+scripts/profile-resolve arch-hyprland
+```
 
 Comprobar el estado sin modificar nada:
 

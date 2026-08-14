@@ -47,6 +47,10 @@ una maquina viven en `docs/machines/` y los valores puramente locales quedan
 fuera de Git. Una futura capa por maquina requerira un problema real y una nueva
 decision.
 
+> Esta postergacion fue satisfecha y reemplazada por ADR 0006 cuando una segunda
+> maquina y niveles de riesgo diferentes hicieron necesaria la identidad de
+> hosts. El resto de esta decision continua vigente.
+
 La migracion se hace por grupos y solo despues de declarar los enlaces actuales
 en un perfil verificable.
 
