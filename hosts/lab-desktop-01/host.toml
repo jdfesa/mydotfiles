@@ -1,0 +1,28 @@
+schema_version = 1
+id = "lab-desktop-01"
+hostname = "arch-desktop"
+platforms = ["arch-linux", "windows-11"]
+primary_test_platform = "arch-linux"
+architecture = "x86_64"
+risk_tier = "canary"
+verified_on = "2026-08-13"
+documentation = "docs/machines/lab-desktop-01.md"
+
+# `current_profiles` describes what is safe to diagnose on the live host today.
+# `target_profiles` describes the reusable composition being qualified.
+current_profiles = ["arch-hyprland-preview"]
+target_profiles = ["arch-workstation", "arch-hyprland"]
+
+[hardware]
+cpu = "Intel Core i7-4790K"
+gpus = ["Intel HD Graphics 4600", "AMD Radeon RX 550"]
+primary_gpu_driver = "amdgpu"
+audio = "Realtek ALC892"
+monitor = "Dell P2419H, 1920x1080@60, HDMI-A-2"
+memory_gib = 16
+root_storage = "Kingston A400 480 GB, Btrfs"
+
+[policy]
+runtime_changes_allowed = true
+sensitive_data_allowed = false
+purpose = "Long-term Arch, X11, Wayland and Hyprland qualification"

@@ -1,0 +1,3 @@
+# Stable Arch baseline plus the optional DWM/X11 session layer.
+@include arch-workstation
+@include layers/linux-dwm-x11

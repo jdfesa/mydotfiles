@@ -1,0 +1,21 @@
+schema_version = 1
+id = "main-workstation"
+hostname = "Joses-Mac-Pro"
+platforms = ["macos-hackintosh"]
+architecture = "x86_64"
+risk_tier = "production"
+verified_on = "2026-08-13"
+documentation = "docs/machines/main-workstation.md"
+
+current_profiles = ["macos-main"]
+target_profiles = ["macos-main"]
+
+[hardware]
+cpu = "Intel Core i7-14700K (user-reported)"
+gpu = "AMD Radeon RX 580 8 GB"
+memory_gib = 32
+
+[policy]
+runtime_changes_allowed = false
+sensitive_data_allowed = true
+purpose = "Daily work, university, notes and presentations"

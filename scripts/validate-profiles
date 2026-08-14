@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)
+cd "$repo_root"
+
+find profiles -type f -name '*.links' -print | LC_ALL=C sort |
+while IFS= read -r manifest; do
+  profile=${manifest#profiles/}
+  profile=${profile%.links}
+  scripts/profile-resolve "$profile" > /dev/null
+  printf 'OK    %s\n' "$profile"
+done
+
+# The pipeline runs in a subshell on POSIX shells, so report the authoritative
+# count separately after validation succeeds.
+count=$(find profiles -type f -name '*.links' -print | wc -l | tr -d '[:space:]')
+printf 'Profile validation passed for %s manifest(s).\n' "$count"

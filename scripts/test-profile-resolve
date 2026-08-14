@@ -1,0 +1,77 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)
+cd "$repo_root"
+
+fixtures='test-profile-valid test-profile-identical test-profile-conflict test-profile-conflict-a test-profile-conflict-b test-profile-cycle-a test-profile-cycle-b test-profile-missing'
+
+cleanup() {
+  for fixture in $fixtures; do
+    rm -f "profiles/$fixture.links"
+  done
+}
+
+for fixture in $fixtures; do
+  if [ -e "profiles/$fixture.links" ]; then
+    printf 'Refusing to overwrite test fixture: profiles/%s.links\n' "$fixture" >&2
+    exit 1
+  fi
+done
+trap cleanup EXIT HUP INT TERM
+
+cat > profiles/test-profile-identical.links <<'EOF'
+README.md|$HOME/.config/mydotfiles-test
+EOF
+
+cat > profiles/test-profile-valid.links <<'EOF'
+README.md|$HOME/.config/mydotfiles-test
+@include test-profile-identical
+EOF
+
+cat > profiles/test-profile-conflict-a.links <<'EOF'
+README.md|$HOME/.config/mydotfiles-test
+EOF
+
+cat > profiles/test-profile-conflict-b.links <<'EOF'
+ROADMAP.md|$HOME/.config/mydotfiles-test
+EOF
+
+cat > profiles/test-profile-conflict.links <<'EOF'
+@include test-profile-conflict-a
+@include test-profile-conflict-b
+EOF
+
+cat > profiles/test-profile-cycle-a.links <<'EOF'
+@include test-profile-cycle-b
+EOF
+
+cat > profiles/test-profile-cycle-b.links <<'EOF'
+@include test-profile-cycle-a
+EOF
+
+cat > profiles/test-profile-missing.links <<'EOF'
+does/not/exist|$HOME/.config/mydotfiles-test
+EOF
+
+resolved_count=$(scripts/profile-resolve test-profile-valid | wc -l | tr -d '[:space:]')
+if [ "$resolved_count" != 1 ]; then
+  printf 'Expected duplicate mapping to resolve once, got %s\n' "$resolved_count" >&2
+  exit 1
+fi
+
+expect_failure() {
+  profile=$1
+  if scripts/profile-resolve "$profile" > /dev/null 2>&1; then
+    printf 'Expected profile resolution to fail: %s\n' "$profile" >&2
+    exit 1
+  fi
+}
+
+expect_failure test-profile-conflict
+expect_failure test-profile-cycle-a
+expect_failure test-profile-missing
+expect_failure ../outside-repository
+
+printf 'Profile resolver tests passed.\n'

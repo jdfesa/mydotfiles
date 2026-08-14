@@ -6,7 +6,7 @@ usage() {
   cat <<'EOF'
 Usage: scripts/link [--dry-run] [--repair] <profile>
 
-Create the symlinks declared in profiles/<profile>.links.
+Create the symlinks declared by profiles/<profile>.links and its includes.
 
 Options:
   --dry-run  Show changes without writing anything.
@@ -50,11 +50,10 @@ if [ -z "$profile" ]; then
   exit 2
 fi
 
-manifest=$repo_root/profiles/$profile.links
-if [ ! -f "$manifest" ]; then
-  printf 'Profile not found: %s\n' "$manifest" >&2
-  exit 2
-fi
+tmp_root=${TMPDIR:-/tmp}
+manifest=$(mktemp "$tmp_root/mydotfiles-link.XXXXXX")
+trap 'rm -f "$manifest"' EXIT HUP INT TERM
+"$repo_root/scripts/profile-resolve" "$profile" > "$manifest"
 
 expand_target() {
   case "$1" in

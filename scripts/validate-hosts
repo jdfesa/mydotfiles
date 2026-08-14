@@ -1,0 +1,80 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)
+cd "$repo_root"
+
+read_string() {
+  key=$1
+  file=$2
+  awk -F '[[:space:]]*=[[:space:]]*' -v wanted="$key" '
+    $1 == wanted {
+      value = $2
+      sub(/^"/, "", value)
+      sub(/"$/, "", value)
+      print value
+      exit
+    }
+  ' "$file"
+}
+
+profiles_from_manifest() {
+  awk '
+    /^(current_profiles|target_profiles)[[:space:]]*=/ {
+      line = $0
+      while (match(line, /"[^"]+"/)) {
+        print substr(line, RSTART + 1, RLENGTH - 2)
+        line = substr(line, RSTART + RLENGTH)
+      }
+    }
+  ' "$1"
+}
+
+count=0
+
+for manifest in hosts/*/host.toml; do
+  [ -f "$manifest" ] || continue
+
+  host_dir=${manifest%/host.toml}
+  expected_id=${host_dir#hosts/}
+  schema_version=$(awk -F '[[:space:]]*=[[:space:]]*' '$1 == "schema_version" { print $2; exit }' "$manifest")
+  host_id=$(read_string id "$manifest")
+  hostname=$(read_string hostname "$manifest")
+  risk_tier=$(read_string risk_tier "$manifest")
+  documentation=$(read_string documentation "$manifest")
+
+  if [ "$schema_version" != 1 ]; then
+    printf 'Invalid host schema in %s: %s\n' "$manifest" "$schema_version" >&2
+    exit 1
+  fi
+  if [ "$host_id" != "$expected_id" ]; then
+    printf 'Host id mismatch in %s: %s\n' "$manifest" "$host_id" >&2
+    exit 1
+  fi
+  if [ -z "$hostname" ]; then
+    printf 'Missing hostname in %s\n' "$manifest" >&2
+    exit 1
+  fi
+  case "$risk_tier" in
+    production|canary) ;;
+    *)
+      printf 'Invalid risk tier in %s: %s\n' "$manifest" "$risk_tier" >&2
+      exit 1
+      ;;
+  esac
+  if [ -z "$documentation" ] || [ ! -f "$documentation" ]; then
+    printf 'Missing host documentation for %s: %s\n' "$host_id" "$documentation" >&2
+    exit 1
+  fi
+
+  profiles_from_manifest "$manifest" |
+  while IFS= read -r profile; do
+    scripts/profile-resolve "$profile" > /dev/null
+  done
+
+  printf 'OK    %s (%s, %s)\n' "$host_id" "$hostname" "$risk_tier"
+  count=$((count + 1))
+done
+
+printf 'Host validation passed for %s manifest(s).\n' "$count"

@@ -1,21 +1,3 @@
-# source relative to repository|destination below $HOME
-
-# Portable workstation configuration.
-shared/bash/bashrc|$HOME/.bashrc
-shared/zsh/zshrc|$HOME/.zshrc
-shared/starship/starship.toml|$HOME/.config/starship.toml
-shared/btop|$HOME/.config/btop
-shared/fastfetch|$HOME/.config/fastfetch
-shared/kitty|$HOME/.config/kitty
-shared/lazygit/config.yml|$HOME/.config/lazygit/config.yml
-shared/nvim|$HOME/.config/nvim
-shared/yazi|$HOME/.config/yazi
-
-# User commands and per-user DWM startup. System files are installed separately.
-os/linux/dwm/scripts/wallpaper-rotator.sh|$HOME/.local/bin/wallpaper-rotator
-os/linux/system-monitor/scripts/status-sensors|$HOME/.local/bin/status-sensors
-os/linux/dwm/scripts/power-menu|$HOME/.local/bin/power-menu
-os/linux/dwm/session/autostart.sh|$HOME/.config/dwm/autostart.sh
-os/linux/x11/scripts/cliphist|$HOME/.local/bin/cliphist
-os/linux/x11/scripts/start-x11vnc.sh|$HOME/.local/bin/start-x11vnc
-shared/rclone/rclone-sync|$HOME/.local/bin/rclone-sync
+# Compatibility alias for the former machine-shaped profile name.
+# New automation should select arch-workstation, arch-dwm or arch-hyprland.
+@include arch-dwm

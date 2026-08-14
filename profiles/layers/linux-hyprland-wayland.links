@@ -1,0 +1,8 @@
+# Hyprland compositor and reusable Wayland session components.
+os/linux/hyprland/config|$HOME/.config/hypr
+os/linux/wayland/waybar|$HOME/.config/waybar
+os/linux/wayland/mako|$HOME/.config/mako
+os/linux/wayland/wofi|$HOME/.config/wofi
+os/linux/wayland/scripts/wayland-screenshot|$HOME/.local/bin/wayland-screenshot
+os/linux/wayland/scripts/wayland-power-menu|$HOME/.local/bin/wayland-power-menu
+os/linux/wayland/environment.d/10-mydotfiles.conf|$HOME/.config/environment.d/10-mydotfiles.conf

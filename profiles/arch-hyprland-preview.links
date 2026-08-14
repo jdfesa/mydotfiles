@@ -1,16 +1,6 @@
-# Experimental Wayland layer for arch-desktop.
+# Compatibility-safe experimental Wayland layer for the Arch lab host.
 # Applying this profile does not modify SDDM or select a default session.
 
-# Cross-platform terminal: keep the canonical shared configuration.
-shared/kitty|$HOME/.config/kitty
-shared/starship/starship.toml|$HOME/.config/starship.toml
-
-# Hyprland compositor and reusable Wayland session components.
-os/linux/hyprland/config|$HOME/.config/hypr
-os/linux/wayland/waybar|$HOME/.config/waybar
-os/linux/wayland/mako|$HOME/.config/mako
-os/linux/wayland/wofi|$HOME/.config/wofi
-os/linux/wayland/scripts/wayland-screenshot|$HOME/.local/bin/wayland-screenshot
-os/linux/wayland/scripts/wayland-power-menu|$HOME/.local/bin/wayland-power-menu
-os/linux/system-monitor/scripts/status-sensors|$HOME/.local/bin/status-sensors
-os/linux/wayland/environment.d/10-mydotfiles.conf|$HOME/.config/environment.d/10-mydotfiles.conf
+@include layers/shared-terminal
+@include layers/linux-observability
+@include layers/linux-hyprland-wayland

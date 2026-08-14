@@ -1,0 +1,3 @@
+# Stable Arch baseline plus the Hyprland/Wayland session layer.
+@include arch-workstation
+@include layers/linux-hyprland-wayland
