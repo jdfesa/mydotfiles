@@ -25,10 +25,16 @@ maquina; no forman parte del nombre de ningun perfil reusable.
 - Hyprland 0.56.2 inicia mediante UWSM sobre Wayland con XWayland disponible.
 - `Hyprland --verify-config` y `hyprctl configerrors` no reportan errores; no
   hay plugins instalados.
-- El perfil `arch-hyprland-preview` termina con 10 enlaces correctos y cero
-  warnings o errores.
-- El antiguo perfil general `arch-desktop` sigue incompleto en runtime: 4
-  enlaces correctos, 11 ausentes y `~/.bashrc` bloqueado por un archivo real.
+- El perfil compuesto `arch-hyprland` esta aplicado: sus 18 enlaces terminan
+  correctos, sin warnings ni errores. Incluye la base portable de workstation y
+  la capa Wayland; no duplica configuracion por hardware.
+- `arch-hyprland-preview` permanece como subconjunto compatible y tambien pasa
+  su diagnostico de 10 enlaces. El alias historico `arch-desktop` apunta a DWM
+  X11 y ya no describe el runtime actual.
+- La promocion respaldo el antiguo `~/.bashrc` de plantilla en
+  `~/.local/state/mydotfiles/backups/profile-migration/20260813T224514-0300/`
+  antes de enlazar la version gestionada. No fue necesario reiniciar ni
+  modificar la sesion Hyprland activa.
 - `linux` y `linux-lts` estan instalados; XFCE X11, SSH y XRDP permanecen como
   rutas de recuperacion.
 - Btrfs, Snapper y grub-btrfs exponen snapshots desde GRUB; tener entradas no

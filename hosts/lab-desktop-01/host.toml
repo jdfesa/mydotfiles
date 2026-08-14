@@ -10,8 +10,8 @@ documentation = "docs/machines/lab-desktop-01.md"
 
 # `current_profiles` describes what is safe to diagnose on the live host today.
 # `target_profiles` describes the reusable composition being qualified.
-current_profiles = ["arch-hyprland-preview"]
-target_profiles = ["arch-workstation", "arch-hyprland"]
+current_profiles = ["arch-hyprland"]
+target_profiles = ["arch-hyprland"]
 
 [hardware]
 cpu = "Intel Core i7-4790K"
