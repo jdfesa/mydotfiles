@@ -1,0 +1,2 @@
+# Linux metrics shared by X11 and Wayland sessions.
+os/linux/system-monitor/scripts/status-sensors|$HOME/.local/bin/status-sensors

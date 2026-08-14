@@ -1,0 +1,151 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/profile-resolve <profile>
+
+Resolve profiles/<profile>.links and its @include directives to a flat manifest.
+The result is written to stdout as source|$HOME/target entries.
+EOF
+}
+
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)
+profile=${1:-}
+
+if [ -z "$profile" ] || [ "$#" -ne 1 ]; then
+  usage >&2
+  exit 2
+fi
+
+tmp_root=${TMPDIR:-/tmp}
+raw_manifest=$(mktemp "$tmp_root/mydotfiles-profile.XXXXXX")
+trap 'rm -f "$raw_manifest"' EXIT HUP INT TERM
+
+validate_profile_name() {
+  name=$1
+
+  if ! printf '%s\n' "$name" | grep -Eq '^[A-Za-z0-9][A-Za-z0-9._/-]*$'; then
+    printf 'Invalid profile name: %s\n' "$name" >&2
+    return 1
+  fi
+
+  case "/$name/" in
+    *'/../'*|*'/./'*|*'//'*)
+      printf 'Invalid profile path: %s\n' "$name" >&2
+      return 1
+      ;;
+  esac
+}
+
+trim_line() {
+  printf '%s\n' "$1" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//'
+}
+
+resolve_profile() {
+  name=$1
+  ancestry=$2
+
+  validate_profile_name "$name"
+
+  case "$ancestry" in
+    *"|$name|"*)
+      printf 'Profile include cycle: %s -> %s\n' "$ancestry" "$name" >&2
+      return 1
+      ;;
+  esac
+
+  manifest=$repo_root/profiles/$name.links
+  if [ ! -f "$manifest" ]; then
+    printf 'Profile not found: %s\n' "$manifest" >&2
+    return 1
+  fi
+
+  while IFS= read -r raw_line || [ -n "$raw_line" ]; do
+    line=$(trim_line "$raw_line")
+    case "$line" in
+      ''|'#'*) continue ;;
+      '@include '*)
+        included=$(trim_line "${line#@include }")
+        if [ -z "$included" ]; then
+          printf 'Empty include in %s\n' "$manifest" >&2
+          return 1
+        fi
+        resolve_profile "$included" "$ancestry|$name|"
+        ;;
+      @include*)
+        printf 'Invalid include in %s: %s\n' "$manifest" "$line" >&2
+        return 1
+        ;;
+      *)
+        case "$line" in
+          *'|'*) ;;
+          *)
+            printf 'Invalid profile entry in %s: %s\n' "$manifest" "$line" >&2
+            return 1
+            ;;
+        esac
+
+        source_rel=${line%%|*}
+        target_expr=${line#*|}
+
+        if [ -z "$source_rel" ] || [ -z "$target_expr" ]; then
+          printf 'Incomplete profile entry in %s: %s\n' "$manifest" "$line" >&2
+          return 1
+        fi
+
+        case "/$source_rel/" in
+          /*'//'*)
+            printf 'Invalid source path in %s: %s\n' "$manifest" "$source_rel" >&2
+            return 1
+            ;;
+          *'/../'*|*'/./'*)
+            printf 'Source must stay below the repository: %s\n' "$source_rel" >&2
+            return 1
+            ;;
+        esac
+        case "$source_rel" in
+          /*)
+            printf 'Source must be repository-relative: %s\n' "$source_rel" >&2
+            return 1
+            ;;
+        esac
+        case "$target_expr" in
+          '$HOME/'*) ;;
+          *)
+            printf 'Target must start with $HOME/: %s\n' "$target_expr" >&2
+            return 1
+            ;;
+        esac
+
+        if [ ! -e "$repo_root/$source_rel" ]; then
+          printf 'Missing profile source: %s\n' "$repo_root/$source_rel" >&2
+          return 1
+        fi
+
+        printf '%s|%s\n' "$source_rel" "$target_expr" >> "$raw_manifest"
+        ;;
+    esac
+  done < "$manifest"
+}
+
+resolve_profile "$profile" ''
+
+awk -F '|' '
+  {
+    source = $1
+    target = $2
+    if (target in sources) {
+      if (sources[target] != source) {
+        printf "Conflicting profile target %s: %s and %s\n", \
+          target, sources[target], source > "/dev/stderr"
+        failed = 1
+      }
+      next
+    }
+    sources[target] = source
+    print source "|" target
+  }
+  END { if (failed) exit 1 }
+' "$raw_manifest"

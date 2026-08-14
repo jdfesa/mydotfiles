@@ -1,0 +1,9 @@
+# Shared workstation applications.
+@include layers/shared-shell
+@include layers/shared-terminal
+
+shared/btop|$HOME/.config/btop
+shared/fastfetch|$HOME/.config/fastfetch
+shared/lazygit/config.yml|$HOME/.config/lazygit/config.yml
+shared/nvim|$HOME/.config/nvim
+shared/yazi|$HOME/.config/yazi

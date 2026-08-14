@@ -1,0 +1,3 @@
+# Reusable Arch workstation baseline. It contains no display-protocol session.
+@include layers/shared-workstation
+@include layers/linux-common

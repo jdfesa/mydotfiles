@@ -11,10 +11,19 @@ bootstrap, linking, instalacion y mantenimiento general de `~/mydotfiles`.
 - `scripts/link --repair macos-main`: crea enlaces ausentes y reemplaza
   symlinks que apuntan a una fuente anterior. Nunca sobrescribe archivos o
   directorios reales.
+- `scripts/profile-resolve arch-hyprland`: expande includes y valida el
+  manifiesto sin modificar el sistema.
+- `scripts/validate-profiles`: resuelve todos los perfiles y capas, detectando
+  ciclos, fuentes ausentes y destinos en conflicto.
+- `scripts/validate-hosts`: comprueba identidad, nivel de riesgo, documentacion
+  y perfiles declarados por cada inventario `hosts/*/host.toml`.
+- `scripts/test-profile-resolve`: prueba deduplicacion y rechazo de ciclos,
+  fuentes ausentes, traversal y destinos en conflicto.
 - `scripts/lint-shell`: ejecuta ShellCheck sobre los scripts operativos. Excluye
   paletas declarativas que se cargan como datos.
 
-Los manifiestos viven en `profiles/*.links`; ver `profiles/README.md`.
+Los manifiestos instalables viven en `profiles/*.links`; sus fragmentos
+reusables viven en `profiles/layers/`. Ver `profiles/README.md`.
 
 Los hooks de Git viven en `.githooks/` para que tambien sean reproducibles. Se
 activan una vez por clon con `git config core.hooksPath .githooks`.
@@ -57,8 +66,8 @@ Karabiner, Kanata, BetterTouchTool, OBS, rutas privadas o LaunchAgents.
 
 Cada script que entre a este repo debe:
 
-1. Vivir en la capa correcta: `shared/`, `os/`, `profiles/`, documentacion de
-   maquinas o `scripts/` transversal.
+1. Vivir en la capa correcta: `shared/`, `os/`, seleccion en `profiles/`,
+   inventario en `hosts/`, documentacion de maquinas o `scripts/` transversal.
 2. Tener rutas basadas en `~/mydotfiles`, `$HOME`, XDG o variables.
 3. Tener README o comentario de uso.
 4. No depender de Yabai/Karabiner/Kanata/skhd/BTT salvo que se indique explicitamente.
