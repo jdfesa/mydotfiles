@@ -11,7 +11,8 @@ shared/btop|$HOME/.config/btop
 shared/fastfetch|$HOME/.config/fastfetch
 shared/gh-dash/config.yml|$HOME/.config/gh-dash/config.yml
 shared/ghostty|$HOME/.config/ghostty
-shared/kitty|$HOME/.config/kitty
+os/macos/kitty/kitty.conf|$HOME/.config/kitty/kitty.conf
+shared/kitty/pass_keys.py|$HOME/.config/kitty/pass_keys.py
 shared/lazygit/config.yml|$HOME/Library/Application Support/lazygit/config.yml
 shared/nvim|$HOME/.config/nvim
 shared/sesh|$HOME/.config/sesh

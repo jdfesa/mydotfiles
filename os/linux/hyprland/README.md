@@ -17,7 +17,8 @@ componentes directos:
 Las piezas reutilizables por otros compositores Wayland no se duplican aqui:
 
 - Waybar, Mako, Wofi y scripts de captura/sesion viven en `../wayland/`;
-- Kitty conserva su fuente canonica en `shared/kitty/`;
+- Kitty usa `../kitty/kitty.conf` como entrypoint Linux e incluye su base desde
+  `shared/kitty/common.conf`;
 - paquetes reproducibles viven en `../packages/lists/30-wayland-desktop.txt`.
 
 ## Origen Omarchy

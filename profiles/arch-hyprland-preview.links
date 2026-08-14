@@ -3,4 +3,5 @@
 
 @include layers/shared-terminal
 @include layers/linux-observability
+@include layers/linux-kitty
 @include layers/linux-hyprland-wayland
