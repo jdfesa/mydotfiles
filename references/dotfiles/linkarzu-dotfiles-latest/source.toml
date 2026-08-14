@@ -1,0 +1,13 @@
+schema_version = 1
+id = "linkarzu-dotfiles-latest"
+kind = "dotfiles"
+source_url = "https://github.com/linkarzu/dotfiles-latest"
+upstream_owner = "linkarzu"
+upstream_repository = "dotfiles-latest"
+default_branch = "main"
+audit_revision = "d674d4cf65fa47084bcf7db52ee74783cc6f9866"
+audited_on = "2026-08-14"
+license_status = "no-explicit-license-detected"
+license_identifier = "NOASSERTION"
+raw_source_policy = "ignored"
+lifecycle = "active-review"

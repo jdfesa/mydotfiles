@@ -17,6 +17,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 | Entender la estructura | [Dotfiles Architecture](docs/ARCHITECTURE.md) |
 | Entender produccion y canary | [Workstation Lifecycle](docs/WORKSTATION_LIFECYCLE.md) |
 | Consultar decisiones | [Architecture Decision Records](docs/adr/README.md) |
+| Evaluar dotfiles externos | [External References](references/README.md) |
 | Ver los enlaces de macOS | [`profiles/macos-main.links`](profiles/macos-main.links) |
 | Diagnosticar los symlinks | `scripts/doctor macos-main` |
 | Probar Hyprland en Arch | `scripts/doctor arch-hyprland-preview` |
@@ -39,6 +40,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 - Secretos, tokens, claves privadas, caches y builds fuera de Git.
 - Cada configuracion activa tiene un README y un destino declarado por perfil.
 - Las configuraciones importadas no se activan hasta adaptar rutas y dependencias.
+- Las fuentes externas se estudian bajo `references/` y nunca se despliegan.
 
 ## Repository Layout
 
@@ -54,6 +56,7 @@ mydotfiles/
   profiles/                  # roles instalables y capas de composicion
   hosts/                     # inventario y riesgo de maquinas fisicas
   hardware/                  # teclados y otros perifericos
+  references/                # fuentes externas: evidencia, no runtime
   scripts/                   # bootstrap, linking y diagnostico
   docs/                      # arquitectura, ADR e inventarios
 ```
@@ -75,11 +78,17 @@ categorias estables.
 | Fragmento de perfil | `profiles/layers/` | terminal compartida, Wayland, DWM/X11 |
 | Maquina concreta | `hosts/<id>/` y `docs/machines/` | inventario, riesgo y notas operativas |
 | Periferico | `hardware/<device>/` | Silakka54 |
+| Fuente externa | `references/<category>/` | Dossiers y clones temporales ignorados |
 
 DWM comienza en `os/linux/dwm/`; Hyprland en `os/linux/hyprland/`; la
 infraestructura transversal permanece separada en `os/linux/x11/` y
 `os/linux/wayland/`. Los perfiles combinan esas fuentes sin confundirlas con el
 hardware de un host.
+
+`references/` es una zona de estudio no desplegable. Un clon externo permanece
+ignorado en `references/inbox/`; las decisiones y evidencia se registran en un
+dossier. Solo una adaptacion comprendida y probada puede entrar luego a una
+ubicacion canonica activa.
 
 `main-workstation` es el Hackintosh de produccion. `lab-desktop-01`, cuyo
 hostname actual es `arch-desktop`, es el canary donde se califican Arch y

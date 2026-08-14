@@ -1,0 +1,130 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)
+cd "$repo_root"
+
+read_value() {
+  key=$1
+  file=$2
+  awk -F '[[:space:]]*=[[:space:]]*' -v wanted="$key" '
+    $1 == wanted {
+      value = $2
+      sub(/^[[:space:]]*/, "", value)
+      sub(/[[:space:]]*$/, "", value)
+      sub(/^"/, "", value)
+      sub(/"$/, "", value)
+      print value
+      exit
+    }
+  ' "$file"
+}
+
+require_file() {
+  file=$1
+  if [ ! -f "$file" ]; then
+    printf 'Missing reference dossier file: %s\n' "$file" >&2
+    exit 1
+  fi
+}
+
+tracked_inbox=$(git ls-files references/inbox | grep -Ev '^references/inbox/(\.gitignore|README\.md)$' || true)
+if [ -n "$tracked_inbox" ]; then
+  printf 'Raw reference material must not be tracked:\n%s\n' "$tracked_inbox" >&2
+  exit 1
+fi
+
+count=0
+for manifest in references/dotfiles/*/source.toml; do
+  [ -f "$manifest" ] || continue
+
+  dossier=${manifest%/source.toml}
+  expected_id=${dossier#references/dotfiles/}
+  schema_version=$(read_value schema_version "$manifest")
+  source_id=$(read_value id "$manifest")
+  kind=$(read_value kind "$manifest")
+  source_url=$(read_value source_url "$manifest")
+  upstream_owner=$(read_value upstream_owner "$manifest")
+  upstream_repository=$(read_value upstream_repository "$manifest")
+  default_branch=$(read_value default_branch "$manifest")
+  audit_revision=$(read_value audit_revision "$manifest")
+  audited_on=$(read_value audited_on "$manifest")
+  license_status=$(read_value license_status "$manifest")
+  license_identifier=$(read_value license_identifier "$manifest")
+  raw_source_policy=$(read_value raw_source_policy "$manifest")
+  lifecycle=$(read_value lifecycle "$manifest")
+
+  if [ "$schema_version" != 1 ]; then
+    printf 'Invalid reference schema in %s: %s\n' "$manifest" "$schema_version" >&2
+    exit 1
+  fi
+  if [ "$source_id" != "$expected_id" ]; then
+    printf 'Reference id mismatch in %s: %s\n' "$manifest" "$source_id" >&2
+    exit 1
+  fi
+  if [ "$kind" != dotfiles ]; then
+    printf 'Invalid reference kind in %s: %s\n' "$manifest" "$kind" >&2
+    exit 1
+  fi
+  case "$source_url" in
+    https://*) ;;
+    *)
+      printf 'Reference URL must use HTTPS in %s: %s\n' "$manifest" "$source_url" >&2
+      exit 1
+      ;;
+  esac
+  if [ -z "$upstream_owner" ] || [ -z "$upstream_repository" ] || [ -z "$default_branch" ]; then
+    printf 'Incomplete upstream identity in %s\n' "$manifest" >&2
+    exit 1
+  fi
+  if ! printf '%s\n' "$audit_revision" | grep -Eq '^[0-9a-f]{40}$'; then
+    printf 'Invalid audit revision in %s: %s\n' "$manifest" "$audit_revision" >&2
+    exit 1
+  fi
+  if ! printf '%s\n' "$audited_on" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
+    printf 'Invalid audit date in %s: %s\n' "$manifest" "$audited_on" >&2
+    exit 1
+  fi
+  case "$license_status" in
+    pending-review|licensed|no-explicit-license-detected) ;;
+    *)
+      printf 'Invalid license status in %s: %s\n' "$manifest" "$license_status" >&2
+      exit 1
+      ;;
+  esac
+  if [ -z "$license_identifier" ]; then
+    printf 'Missing license identifier in %s\n' "$manifest" >&2
+    exit 1
+  fi
+  if [ "$raw_source_policy" != ignored ]; then
+    printf 'Raw source policy must be ignored in %s\n' "$manifest" >&2
+    exit 1
+  fi
+  case "$lifecycle" in
+    active-review|completed|retired) ;;
+    *)
+      printf 'Invalid reference lifecycle in %s: %s\n' "$manifest" "$lifecycle" >&2
+      exit 1
+      ;;
+  esac
+
+  require_file "$dossier/inventory.md"
+  require_file "$dossier/review.md"
+  require_file "$dossier/evidence.md"
+
+  if ! grep -Eq '`(pending-review|keep|adapt|remove|reference-only)`' "$dossier/review.md"; then
+    printf 'Reference review has no recognized state: %s\n' "$dossier/review.md" >&2
+    exit 1
+  fi
+
+  printf 'OK    %s (%s)\n' "$source_id" "$lifecycle"
+  count=$((count + 1))
+done
+
+if [ "$count" -eq 0 ]; then
+  printf 'No reference dossiers found.\n' >&2
+  exit 1
+fi
+
+printf 'Reference validation passed for %s dossier(s).\n' "$count"

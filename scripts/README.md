@@ -17,8 +17,10 @@ bootstrap, linking, instalacion y mantenimiento general de `~/mydotfiles`.
   ciclos, fuentes ausentes y destinos en conflicto.
 - `scripts/validate-hosts`: comprueba identidad, nivel de riesgo, documentacion
   y perfiles declarados por cada inventario `hosts/*/host.toml`.
+- `scripts/validate-references`: valida metadatos, archivos obligatorios y la
+  politica de clones ignorados para cada dossier bajo `references/dotfiles/`.
 - `scripts/test-profile-resolve`: prueba deduplicacion y rechazo de ciclos,
-  fuentes ausentes, traversal y destinos en conflicto.
+  fuentes ausentes, material de referencia, traversal y destinos en conflicto.
 - `scripts/lint-shell`: ejecuta ShellCheck sobre los scripts operativos. Excluye
   paletas declarativas que se cargan como datos.
 
@@ -27,6 +29,10 @@ reusables viven en `profiles/layers/`. Ver `profiles/README.md`.
 
 Los hooks de Git viven en `.githooks/` para que tambien sean reproducibles. Se
 activan una vez por clon con `git config core.hooksPath .githooks`.
+
+Las herramientas de auditoria de fuentes externas viven en
+`references/tools/`; no pertenecen a esta carpeta porque no participan del
+bootstrap, linking ni mantenimiento del sistema activo.
 
 No usar esta carpeta como deposito general de scripts de macOS, Linux o Windows.
 Los scripts especificos de un sistema operativo deben vivir en su capa:

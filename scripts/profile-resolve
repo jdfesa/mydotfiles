@@ -110,6 +110,10 @@ resolve_profile() {
             printf 'Source must be repository-relative: %s\n' "$source_rel" >&2
             return 1
             ;;
+          references|references/*)
+            printf 'Reference sources cannot be deployed: %s\n' "$source_rel" >&2
+            return 1
+            ;;
         esac
         case "$target_expr" in
           '$HOME/'*) ;;
