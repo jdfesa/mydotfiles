@@ -2,7 +2,9 @@
 
 Este documento describe la arquitectura objetivo del repositorio. La meta es
 mantener una unica fuente de verdad reproducible para macOS, GNU/Linux y
-Windows sin duplicar configuraciones compartidas.
+Windows sin duplicar configuraciones compartidas. Una futura configuracion
+declarativa completa de NixOS queda fuera de este alcance y tendra su propio
+repositorio si llega a adoptarse.
 
 ## Principles
 
@@ -10,7 +12,9 @@ Windows sin duplicar configuraciones compartidas.
 - Una configuracion tiene una unica ubicacion canonica.
 - Las configuraciones compartidas se separan de las exclusivas de un sistema.
 - Las diferencias de una maquina no se confunden con las del sistema operativo.
-- Los perfiles declaran que piezas se despliegan juntas.
+- Los perfiles describen roles reusables; los hosts describen maquinas fisicas.
+- X11, Wayland y cada sesion grafica conservan limites explicitos.
+- Produccion nunca recibe implicitamente cambios validados solo en el canary.
 - El repositorio guarda fuentes; el sistema usa symlinks y rutas estandar.
 - Secretos, caches, builds y estado generado quedan fuera de Git.
 - Los cambios estructurales se realizan de forma incremental y verificable.
@@ -66,9 +70,17 @@ mydotfiles/
       packages/
 
   profiles/                  # manifiestos instalables
+    layers/                  # fragmentos reusables de composicion
     macos-main.links
+    arch-workstation.links
     arch-dwm.links
-    windows-native.links
+    arch-hyprland.links
+
+  hosts/                     # inventario y seleccion por maquina fisica
+    main-workstation/
+      host.toml
+    lab-desktop-01/
+      host.toml
 
   hardware/                  # firmware y configuracion de perifericos
     silakka54/
@@ -76,7 +88,8 @@ mydotfiles/
   scripts/                   # automatizacion transversal del repositorio
     link
     doctor
-    bootstrap
+    profile-resolve
+    validate-profiles
 
   .githooks/                 # hooks de Git versionados
     pre-commit
@@ -96,20 +109,23 @@ de agregarse; no se crean carpetas de herramientas directamente en la raiz.
 
 ```mermaid
 flowchart LR
-    Shared["shared/&lt;tool&gt;/"] --> Profile["profiles/&lt;profile&gt;.links"]
-    OS["os/&lt;system&gt;/"] --> Profile
-    Hardware["hardware/&lt;device&gt;/"] --> Profile
+    Shared["shared/&lt;tool&gt;/"] --> Layer["profiles/layers/*.links"]
+    OS["os/&lt;system&gt;/"] --> Layer
+    Layer --> Profile["profiles/&lt;role&gt;.links"]
+    Host["hosts/&lt;physical-id&gt;/host.toml"] --> Profile
+    Hardware["hardware/&lt;device&gt;/"] --> Layer
 
-    Profile --> Link["scripts/link"]
+    Profile --> Resolve["scripts/profile-resolve"]
+    Resolve --> Link["scripts/link"]
     Link --> Home["Destinos bajo $HOME"]
 
-    Profile --> Doctor["scripts/doctor"]
+    Resolve --> Doctor["scripts/doctor"]
     Home --> Doctor
 ```
 
-El perfil relaciona cada fuente versionada con su destino. `scripts/link` crea o
-repara los symlinks y `scripts/doctor` comprueba que el sistema siga apuntando a
-las fuentes correctas.
+El host selecciona roles; los perfiles componen capas y cada capa apunta a una
+fuente canonica. `scripts/profile-resolve` valida y aplana el grafo antes de que
+`scripts/link` o `scripts/doctor` operen sobre destinos.
 
 ## Shared Configurations
 
@@ -160,6 +176,16 @@ paquetes que solo tienen sentido en ese sistema.
 - systemd user services;
 - Pacman, Makepkg y helpers de AUR.
 
+`os/linux/x11/` y `os/linux/wayland/` contienen infraestructura transversal.
+Los compositores y window managers viven como modulos hermanos, por ejemplo
+`os/linux/dwm/` y `os/linux/hyprland/`. Una herramienta no se mueve entre X11 y
+Wayland solamente porque una sesion concreta la consuma.
+
+La administracion de paquetes actual es Arch-especifica. Cuando se incorpore
+otra distribucion dentro de este repositorio, esa responsabilidad se movera a
+un namespace explicito como `os/linux/arch/`; no se simulara portabilidad con
+scripts llenos de condicionales.
+
 DWM comienza directamente en `os/linux/dwm/`; no se crea una carpeta DWM en la
 raiz ni dentro de la documentacion de una maquina.
 
@@ -171,23 +197,27 @@ raiz ni dentro de la documentacion de una maquina.
 
 ## Machine-Specific State
 
-No existe una capa `hosts/` en la estructura actual porque todavia no hay
-configuraciones versionadas que justifiquen una jerarquia completa por maquina.
+`hosts/<id>/host.toml` registra una maquina fisica y el contrato de hardware que
+puede afectar compatibilidad. El identificador es estable y no incluye CPU,
+sistema operativo ni compositor.
 
 Las responsabilidades se distribuyen asi:
 
 - configuracion reutilizable: `shared/` u `os/<system>/`;
-- seleccion de piezas para una maquina: `profiles/<profile>.links`;
-- inventario, migracion y recuperacion: `docs/machines/<machine>.md`;
+- composicion reusable: `profiles/<role>.links` y `profiles/layers/`;
+- inventario y seleccion por maquina: `hosts/<id>/host.toml`;
+- migracion, pruebas y recuperacion: `docs/machines/<id>.md`;
 - rutas privadas, secretos y valores puramente locales: archivos ignorados.
 
-Si aparecen diferencias versionables que no puedan expresarse con estas capas,
-se documentara el caso real antes de agregar una categoria nueva.
+Un host no contiene una copia completa de los dotfiles. Un override se agrega
+solo despues de demostrar que deteccion automatica, defaults portables y capas
+reusables no resuelven una diferencia real, por ejemplo orden de GPU, layout de
+monitores o politica de energia de una laptop.
 
 ## Profiles
 
-Los perfiles declaran que fuentes se enlazan para formar un entorno. No
-contienen configuraciones.
+Los perfiles declaran capacidades que se enlazan para formar un entorno. No
+representan hardware ni contienen configuraciones.
 
 Cada entrada de `profiles/*.links` relaciona una fuente relativa al repositorio
 con un destino bajo `$HOME`. Por ejemplo:
@@ -195,7 +225,14 @@ con un destino bajo `$HOME`. Por ejemplo:
 ```text
 shared/nvim|$HOME/.config/nvim
 os/macos/aerospace|$HOME/.config/aerospace
+@include layers/shared-workstation
 ```
+
+`scripts/profile-resolve` expande includes, deduplica relaciones identicas y
+rechaza ciclos o colisiones. Las capas se agrupan por responsabilidad, no por
+maquina. Por ejemplo, `arch-hyprland` compone `arch-workstation` con la capa
+Hyprland/Wayland; el i7-4790K y un futuro i7-14700K pueden seleccionar el mismo
+perfil despues de validar sus propios contratos de hardware.
 
 Herramientas activas:
 
@@ -203,6 +240,8 @@ Herramientas activas:
 scripts/doctor macos-main
 scripts/link --dry-run macos-main
 scripts/link --repair macos-main
+scripts/profile-resolve arch-hyprland
+scripts/validate-profiles
 ```
 
 El linker nunca reemplaza automaticamente un archivo o directorio real.
@@ -262,27 +301,29 @@ futuro no requiere volver a decidir la clasificacion del repositorio.
 
 ## Continuous Verification
 
-`.github/workflows/lint.yml` protege dos contratos en cada push y pull request:
+`.github/workflows/lint.yml` protege estos contratos en cada push y pull request:
 
 1. `scripts/lint-shell` ejecuta ShellCheck sobre los scripts operativos;
-2. el perfil `macos-main` se aplica dentro de un `$HOME` temporal y luego se
-   valida con `scripts/doctor`.
+2. todos los perfiles y capas resuelven sin ciclos, fuentes ausentes o destinos
+   incompatibles;
+3. `macos-main` y los perfiles Linux principales se reconstruyen dentro de
+   `$HOME` temporales y se validan con `scripts/doctor`.
+
+Estas pruebas nunca aplican enlaces en el Hackintosh real.
 
 Las paletas de `shared/colorscheme/list/` se cargan como datos y no se ejecutan
 como programas independientes; por eso no forman parte del lint operativo.
 
 ## Migration Sequence
 
-1. Inventariar y verificar los enlaces actuales mediante un perfil.
-2. Mover las configuraciones exclusivas de macOS a `os/macos/`.
-3. Reparar los enlaces y validar las aplicaciones afectadas.
-4. Mantener las configuraciones compartidas bajo `shared/` y verificar sus
-   perfiles.
-5. Mover firmware y perifericos a `hardware/`.
-6. Convertir inventarios de software en documentacion o manifiestos reales.
-7. Crear `os/linux/dwm/` y el perfil `arch-dwm` sin depender de archivos
-   manuales de la maquina remota.
-8. Incorporar Windows cuando exista un entorno real para probarlo.
+1. Inventariar la maquina fisica y asignarle un nivel de riesgo.
+2. Clasificar cada fuente bajo `shared/`, `os/` o `hardware/`.
+3. Componer perfiles por capacidad y resolverlos estaticamente.
+4. Ejecutar link/doctor solamente dentro de un `$HOME` temporal.
+5. Previsualizar en el host canary y respaldar cualquier destino real.
+6. Aplicar una sola responsabilidad y validar la aplicacion afectada.
+7. Probar fallback y rollback antes de promover la capa.
+8. Mantener produccion sin cambios hasta que exista necesidad y aprobacion.
 
 Cada etapa debe dejar `scripts/doctor <profile>` sin errores y un rollback claro.
 

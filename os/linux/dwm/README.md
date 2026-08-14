@@ -132,7 +132,8 @@ El instalador coloca archivos locales de sistema en:
 
 No se usa `~/.xprofile` para iniciar procesos de DWM porque tambien puede ser
 leido por otras sesiones X11. El launcher ejecuta únicamente
-`~/.config/dwm/autostart.sh`, enlazado por el perfil `arch-desktop`.
+`~/.config/dwm/autostart.sh`, enlazado por el perfil `arch-dwm`. El antiguo
+nombre `arch-desktop` permanece solamente como alias de compatibilidad.
 
 El autostart inicia `picom` y `dwmblocks` si están instalados. La rotacion de
 wallpapers es opt-in para no fallar cuando no existe el directorio:

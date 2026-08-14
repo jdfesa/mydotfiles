@@ -28,7 +28,8 @@ Base de validacion actual (2026-08-12):
 | Terminal | Kitty 0.48.2 con Zsh 5.9 y Starship 1.26.0 compartidos |
 
 Los detalles vivos y los resultados de cada prueba se mantienen en
-`docs/machines/arch-desktop.md` y en el README del componente correspondiente.
+`docs/machines/lab-desktop-01.md`, su inventario en
+`hosts/lab-desktop-01/host.toml` y el README del componente correspondiente.
 
 ## Regla principal
 

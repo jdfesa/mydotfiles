@@ -76,7 +76,8 @@ La autenticacion de GitHub pertenece al dispositivo y se hace despues con
 1. **Official Foundation**: herramientas CLI, GitHub CLI, shells, editores,
    keyring y Firefox de recuperacion.
 2. **Git and Dotfiles**: identidad, autenticacion del dispositivo, clon HTTPS y
-   perfil `arch-desktop`.
+   perfil funcional (`arch-workstation`, `arch-dwm` o `arch-hyprland`) elegido
+   despues de validar el host.
 3. **Default Browser**: `helium-browser-bin` AUR revisado, firma upstream y
    `xdg-settings`; Firefox permanece como alternativa oficial.
 4. **Remote Recovery**: XRDP/Xorgxrdp AUR revisados y XFCE X11 por RDP.

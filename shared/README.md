@@ -40,5 +40,6 @@ repositorio, como linking, bootstrap y diagnostico de perfiles.
 `shared/` expresa la ubicacion canonica y la intencion de reutilizacion; no
 garantiza que cada archivo ya haya sido probado en todos los sistemas. Por
 ejemplo, Kitty o VS Code todavia pueden contener ajustes del Mac principal. Al
-crear el perfil de Arch se extraeran esas diferencias mediante includes,
-variables o capas pequenas de `os/`, sin duplicar la configuracion completa.
+validar una herramienta en otro sistema, sus diferencias se extraen mediante
+includes internos, variables o capas pequenas de `os/`; `profiles/layers/`
+solamente selecciona las fuentes y nunca duplica su contenido.

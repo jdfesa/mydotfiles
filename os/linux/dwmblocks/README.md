@@ -16,7 +16,8 @@ documentaron estos ajustes locales del respaldo historico:
 
 La configuracion efectiva es `src/blocks.h`. El comando `status-sensors` se
 resuelve mediante `PATH`; no se codifican rutas antiguas bajo
-`~/.local/scripts`. El perfil `arch-desktop` enlaza el script versionado en
+`~/.local/scripts`. La capa `linux-observability`, consumida por `arch-dwm`,
+enlaza el script versionado en
 `~/.local/bin/status-sensors`, y el launcher de la sesion DWM incluye
 `~/.local/bin` en `PATH`.
 
