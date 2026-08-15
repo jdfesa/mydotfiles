@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -eu
+
+config_root=${HYPRLAND_QUATTRO_ROOT:-$HOME/.config/hypr-quattro}
+config_file=$config_root/hyprland.lua
+state_home=${XDG_STATE_HOME:-$HOME/.local/state}
+log_dir=$state_home/mydotfiles
+log_file=$log_dir/hyprland-quattro-lab.log
+
+umask 077
+mkdir -p "$log_dir"
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin"
+export HYPRLAND_QUATTRO_ROOT="$config_root"
+
+if [ ! -r "$config_file" ]; then
+  printf 'Quattro Lab: missing config: %s\n' "$config_file" >&2
+  exit 1
+fi
+
+if [ ! -x /usr/bin/start-hyprland ]; then
+  printf 'Quattro Lab: /usr/bin/start-hyprland is unavailable\n' >&2
+  exit 127
+fi
+
+{
+  printf '\n=== Hyprland Quattro Lab %s ===\n' "$(date -Is)"
+  printf 'config=%s\n' "$config_file"
+} >> "$log_file"
+
+exec /usr/bin/start-hyprland -- --config "$config_file" >> "$log_file" 2>&1

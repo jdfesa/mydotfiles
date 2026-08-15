@@ -60,6 +60,48 @@ el perfil general del host siga incompleto. Los plugins futuros no se agregan al
 nucleo implicitamente: cada uno debe documentar version, compatibilidad,
 verificacion y rollback, y activarse primero mediante una capa canary separada.
 
+## Compatibilidad 0.55-0.57 y migracion a Lua
+
+Auditoria realizada el 2026-08-15:
+
+- la configuracion activa sigue usando Hyprlang: `hyprland.conf` incluye los
+  fragmentos `conf.d/*.conf`;
+- Hyprland 0.55 marco Hyprlang como obsoleto y traslado la configuracion del
+  compositor a `hyprland.lua`;
+- Hyprland 0.56.1, version publicada actualmente por Arch, todavia acepta el
+  formato anterior y por eso la sesion funciona, aunque muestra el aviso;
+- la rama de desarrollo que conduce a 0.57 ya retiro el administrador de
+  configuracion legacy. Al actualizar, estos archivos dejaran de controlar la
+  sesion. Hyprland podria generar o cargar una configuracion Lua predeterminada,
+  sin nuestros atajos, reglas ni autostart esperados.
+
+El aviso no es cosmetico y no debe ocultarse. La actualizacion a 0.57 queda
+bloqueada hasta completar una migracion canary a Lua. `hyprlock.conf` y
+`hypridle.conf` pertenecen a programas separados y conservan su propio formato,
+pero los comandos que llaman a `hyprctl dispatch` tambien deben revisarse al
+cambiar el parser del compositor. En particular, DPMS pasa a expresiones
+`hl.dsp.dpms(...)` y el cierre de una sesion UWSM debe hacerse con `uwsm stop`,
+no retirando Hyprland por debajo de sus clientes.
+
+La migracion se hara sin reemplazar a ciegas la configuracion activa:
+
+1. crear un arbol Lua paralelo que reproduzca primero el comportamiento actual;
+2. validar sintaxis con `luac -p` y semantica con la version instalada de
+   `Hyprland --verify-config`;
+3. probar desde el canary atajos, reglas, Waybar, Mako, Wofi y PolicyKit;
+4. probar bloqueo, DPMS, suspension, reanudacion y salida ordenada de UWSM;
+5. mantener XFCE/TTY como recuperacion y documentar el rollback de paquetes;
+6. cambiar el entrypoint solamente despues del smoke test completo.
+
+La personalizacion visual se evalua por separado en
+[`THEME_RADAR.md`](THEME_RADAR.md). No se mezclara una migracion de parser con
+un cambio de tema o de shell de escritorio.
+
+La primera implementacion Lua vive aislada en
+[`quattro-lab/`](quattro-lab/README.md). Agrega una segunda sesion UWSM sin
+reemplazar este entrypoint Hyprlang y conserva Waybar, Mako, Hyprlock,
+Hypridle, XFCE y XRDP durante la calificacion canary.
+
 ## Validacion y recuperacion
 
 Validar la sintaxis sin iniciar una sesion:

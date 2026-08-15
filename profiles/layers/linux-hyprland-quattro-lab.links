@@ -1,0 +1,2 @@
+# Optional parallel Lua session. It does not replace ~/.config/hypr.
+os/linux/hyprland/quattro-lab/config|$HOME/.config/hypr-quattro
