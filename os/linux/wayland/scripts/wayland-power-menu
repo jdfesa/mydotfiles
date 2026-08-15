@@ -8,7 +8,7 @@ choice=$(printf '%s\n' 'Lock' 'Suspend' 'Log out' 'Reboot' 'Power off' | \
 case "$choice" in
   Lock) hyprlock ;;
   Suspend) systemctl suspend ;;
-  'Log out') hyprctl dispatch exit ;;
+  'Log out') uwsm stop ;;
   Reboot) systemctl reboot ;;
   'Power off') systemctl poweroff ;;
 esac
