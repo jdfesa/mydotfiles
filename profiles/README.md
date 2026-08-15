@@ -40,6 +40,7 @@ configuracion. Los perfiles superiores expresan roles completos:
 | `arch-workstation` | Base Arch de usuario, sin elegir X11 o Wayland |
 | `arch-dwm` | Base Arch más DWM y utilidades X11 |
 | `arch-hyprland` | Base Arch más Hyprland y utilidades Wayland |
+| `arch-hyprland-quattro-lab` | Hyprland estable más una sesion Lua Quattro canary aislada |
 | `arch-hyprland-preview` | Subconjunto canary ya aplicado en el laboratorio |
 
 `arch-desktop` es un alias de compatibilidad para el antiguo perfil DWM. El

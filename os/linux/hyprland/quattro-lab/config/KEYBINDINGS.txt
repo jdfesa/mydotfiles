@@ -1,0 +1,33 @@
+HYPRLAND QUATTRO LAB
+
+Applications
+  Super + Return                 Kitty
+  Super + Shift + Return         Helium browser
+  Super + Space                  Wofi launcher
+  Super + Shift + F              Thunar
+  Super + Shift + N              Neovim in Kitty
+  Super + Shift + /              Bitwarden or installation notice
+  Super + K                      This keybinding map
+
+Windows and workspaces
+  Super + W                      Close window
+  Super + F                      Fullscreen
+  Super + T                      Toggle floating
+  Super + P                      Pseudo tile
+  Super + J                      Toggle split
+  Super + Arrows                 Focus window
+  Super + Shift + Arrows         Swap window
+  Super + Ctrl + Arrows          Resize window
+  Super + 1..0                   Workspace 1..10
+  Super + Shift + 1..0           Move window to workspace
+  Super + S                      Toggle scratchpad
+  Super + Alt + S                Send window to scratchpad
+  Super + G                      Toggle group
+  Alt + Tab                      Cycle windows
+
+Clipboard and session
+  Super + C / X / V              Universal copy / cut / paste
+  Super + Ctrl + A               Audio settings
+  Super + Ctrl + L               Lock
+  Super + Escape                 Power/session menu
+  Print / Shift + Print          Region / full screenshot

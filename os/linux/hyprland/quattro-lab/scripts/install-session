@@ -1,0 +1,85 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: os/linux/hyprland/quattro-lab/scripts/install-session [--dry-run]
+
+Install an additional SDDM/UWSM session for the linked Quattro Lab config.
+The stable Hyprland and XFCE sessions are not modified.
+EOF
+}
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+lab_root=$(CDPATH='' cd -- "$script_dir/.." && pwd -P)
+state_home=${XDG_STATE_HOME:-$HOME/.local/state}
+session_source=$lab_root/session/hyprland-quattro-lab.desktop
+launcher_source=$lab_root/session/hyprland-quattro-lab
+launcher_target=/usr/local/libexec/dotfiles-hyprland-quattro-lab
+session_target=/usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
+dry_run=0
+
+if [ "${1:-}" = "--dry-run" ]; then
+  dry_run=1
+  shift
+fi
+
+if [ "$#" -ne 0 ]; then
+  usage >&2
+  exit 2
+fi
+
+if [ "$(uname -s)" != Linux ]; then
+  printf 'Quattro Lab install: GNU/Linux is required\n' >&2
+  exit 1
+fi
+
+for command_name in sudo tar sha256sum; do
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    printf 'Quattro Lab install: required command not found: %s\n' \
+      "$command_name" >&2
+    exit 127
+  fi
+done
+
+if [ ! -r "$HOME/.config/hypr-quattro/hyprland.lua" ]; then
+  printf 'Quattro Lab install: link arch-hyprland-quattro-lab first\n' >&2
+  exit 1
+fi
+
+if [ "$dry_run" -eq 1 ]; then
+  cat <<EOF
+[dry-run] backup existing managed paths, if any
+[dry-run] install $launcher_source as $launcher_target
+[dry-run] install $session_source as $session_target
+EOF
+  exit 0
+fi
+
+sudo -v
+
+timestamp=$(date +%Y%m%d-%H%M%S)
+backup_dir=$state_home/mydotfiles/backups/hyprland-quattro-lab/$timestamp
+archive=$backup_dir/system-files.tar
+file_list=$backup_dir/system-files.txt
+mkdir -p "$backup_dir"
+chmod 700 "$backup_dir"
+: > "$file_list"
+
+for path in \
+  usr/local/libexec/dotfiles-hyprland-quattro-lab \
+  usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
+do
+  if [ -e "/$path" ] || [ -L "/$path" ]; then
+    printf '%s\n' "$path" >> "$file_list"
+  fi
+done
+
+tar -C / -cpf "$archive" -T "$file_list"
+(cd "$backup_dir" && sha256sum system-files.tar > system-files.tar.sha256)
+
+sudo install -Dm755 "$launcher_source" "$launcher_target"
+sudo install -Dm644 "$session_source" "$session_target"
+
+printf 'Quattro Lab session installed. Rollback archive: %s\n' "$backup_dir"

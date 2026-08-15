@@ -1,0 +1,3 @@
+# Stable Arch Hyprland profile plus the isolated Quattro Lab config.
+@include arch-hyprland
+@include layers/linux-hyprland-quattro-lab
