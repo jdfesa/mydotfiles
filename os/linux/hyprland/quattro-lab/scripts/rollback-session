@@ -3,8 +3,14 @@
 set -eu
 
 usage() {
-  printf 'Usage: os/linux/hyprland/quattro-lab/scripts/rollback-session <backup-directory>\n'
+  printf 'Usage: os/linux/hyprland/quattro-lab/scripts/rollback-session [--dry-run] <backup-directory>\n'
 }
+
+dry_run=0
+if [ "${1:-}" = "--dry-run" ]; then
+  dry_run=1
+  shift
+fi
 
 backup_dir=${1:-}
 if [ -z "$backup_dir" ] || [ "$#" -ne 1 ]; then
@@ -14,19 +20,78 @@ fi
 
 archive=$backup_dir/system-files.tar
 checksum=$archive.sha256
+file_list=$backup_dir/system-files.txt
+service_state=$backup_dir/user-service.state
+sleep_lock_unit=omarchy-sleep-lock.service
 
-if [ ! -r "$archive" ] || [ ! -r "$checksum" ]; then
+if [ ! -r "$archive" ] || [ ! -r "$checksum" ] || [ ! -r "$file_list" ]; then
   printf 'Quattro Lab rollback: incomplete backup directory: %s\n' \
     "$backup_dir" >&2
   exit 1
 fi
 
 (cd "$backup_dir" && sha256sum -c "$(basename -- "$checksum")")
+
+validate_managed_path() {
+  case $1 in
+    usr/local/libexec/dotfiles-hyprland-quattro-lab|\
+    usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop|\
+    etc/pam.d/omarchy-lock-password|\
+    etc/pam.d/omarchy-lock-fingerprint) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+while IFS= read -r path || [ -n "$path" ]; do
+  if [ -n "$path" ] && ! validate_managed_path "$path"; then
+    printf 'Quattro Lab rollback: refusing unmanaged backup path: %s\n' \
+      "$path" >&2
+    exit 1
+  fi
+done < "$file_list"
+
+tar -tf "$archive" | while IFS= read -r path || [ -n "$path" ]; do
+  normalized=${path#./}
+  if [ -n "$normalized" ] && ! validate_managed_path "$normalized"; then
+    printf 'Quattro Lab rollback: refusing unmanaged archive member: %s\n' \
+      "$path" >&2
+    exit 1
+  fi
+done
+
+if [ "$dry_run" -eq 1 ]; then
+  cat <<EOF
+[dry-run] remove only the four managed system paths
+[dry-run] restore the verified archive from $backup_dir
+[dry-run] restore the recorded $sleep_lock_unit enable/active state, if recorded
+EOF
+  exit 0
+fi
+
 sudo -v
 
 sudo rm -f -- \
   /usr/local/libexec/dotfiles-hyprland-quattro-lab \
-  /usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
+  /usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop \
+  /etc/pam.d/omarchy-lock-password \
+  /etc/pam.d/omarchy-lock-fingerprint
 
 sudo tar -C / -xpf "$archive"
-printf 'Quattro Lab session rollback restored: %s\n' "$backup_dir"
+
+if [ -r "$service_state" ]; then
+  previous_enabled=$(sed -n 's/^enabled=//p' "$service_state")
+  previous_active=$(sed -n 's/^active=//p' "$service_state")
+  systemctl --user daemon-reload
+  case $previous_enabled in
+    enabled|enabled-runtime|linked|linked-runtime|alias)
+      systemctl --user enable "$sleep_lock_unit" ;;
+    *) systemctl --user disable "$sleep_lock_unit" >/dev/null 2>&1 || true ;;
+  esac
+  if [ "$previous_active" = active ]; then
+    systemctl --user start "$sleep_lock_unit"
+  else
+    systemctl --user stop "$sleep_lock_unit" >/dev/null 2>&1 || true
+  fi
+fi
+
+printf 'Quattro Lab system integration rollback restored: %s\n' "$backup_dir"

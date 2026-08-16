@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -eu
+
+runtime_root=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
+monitor=$runtime_root/bin/omarchy-system-sleep-monitor
+
+if [ ! -x "$monitor" ]; then
+  printf "Quattro sleep monitor: pinned runtime command is unavailable: %s\n" "$monitor" >&2
+  exit 127
+fi
+
+export OMARCHY_PATH=$runtime_root
+export PATH=$OMARCHY_PATH/bin:$PATH
+exec "$monitor" "$@"

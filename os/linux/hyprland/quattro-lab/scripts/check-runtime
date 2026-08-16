@@ -4,11 +4,18 @@ set -eu
 
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 lab_root=$(CDPATH='' cd -- "$script_dir/.." && pwd -P)
+repo_root=$(CDPATH='' cd -- "$lab_root/../../../.." && pwd -P)
 # shellcheck source=/dev/null
 . "$lab_root/runtime/source.lock"
 
 runtime_root=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
 config_root=${HYPRLAND_QUATTRO_ROOT:-$HOME/.config/hypr-quattro}
+state_root=${XDG_STATE_HOME:-$HOME/.local/state}/omarchy
+password_pam=/etc/pam.d/omarchy-lock-password
+fingerprint_pam=/etc/pam.d/omarchy-lock-fingerprint
+session_launcher=/usr/local/libexec/dotfiles-hyprland-quattro-lab
+session_entry=/usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
+sleep_lock_unit=omarchy-sleep-lock.service
 failures=0
 
 ok() {
@@ -18,6 +25,20 @@ ok() {
 fail() {
   printf 'FAIL  %s\n' "$1" >&2
   failures=$((failures + 1))
+}
+
+check_link() {
+  link=$1
+  expected=$2
+  description=$3
+
+  if [ -L "$link" ] && \
+    [ "$(readlink -f -- "$link" 2>/dev/null || true)" = \
+      "$(readlink -f -- "$expected" 2>/dev/null || true)" ]; then
+    ok "$description"
+  else
+    fail "$description"
+  fi
 }
 
 if [ -d "$runtime_root/.git" ] && \
@@ -39,7 +60,10 @@ for pair in \
   "$config_root/hypr/input.lua:$runtime_root/config/hypr/input.lua" \
   "$config_root/hypr/bindings.lua:$runtime_root/config/hypr/bindings.lua" \
   "$config_root/hypr/looknfeel.lua:$runtime_root/config/hypr/looknfeel.lua" \
-  "$config_root/hypr/autostart.lua:$runtime_root/config/hypr/autostart.lua"
+  "$config_root/hypr/autostart.lua:$runtime_root/config/hypr/autostart.lua" \
+  "$config_root/hypr/xdph.conf:$runtime_root/config/hypr/xdph.conf" \
+  "$config_root/hypr/hyprsunset.conf:$runtime_root/config/hypr/hyprsunset.conf" \
+  "$HOME/.config/hyprland-preview-share-picker/config.yaml:$runtime_root/config/hyprland-preview-share-picker/config.yaml"
 do
   local_file=${pair%%:*}
   upstream_file=${pair#*:}
@@ -49,6 +73,43 @@ do
     fail "config differs from upstream: $local_file"
   fi
 done
+
+check_link "$HOME/.config/hypr-quattro" \
+  "$lab_root/config" 'Quattro Hyprland configuration symlink'
+check_link "$HOME/.config/omarchy" \
+  "$lab_root/config/omarchy" 'Quattro Omarchy configuration symlink'
+check_link "$HOME/.config/hyprland-preview-share-picker" \
+  "$lab_root/config/hyprland-preview-share-picker" 'screen-share picker configuration symlink'
+check_link "$HOME/.config/systemd/user/$sleep_lock_unit" \
+  "$lab_root/systemd/user/$sleep_lock_unit" 'sleep-lock user unit symlink'
+check_link "$HOME/.local/bin/omarchy-quattro-sleep-monitor" \
+  "$lab_root/bin/omarchy-quattro-sleep-monitor" 'sleep-lock wrapper symlink'
+check_link "$HOME/.config/hypr/xdph.conf" \
+  "$lab_root/config/hypr/xdph.conf" 'stable Hyprland portal compatibility link'
+check_link "$HOME/.config/hypr/hyprsunset.conf" \
+  "$lab_root/config/hypr/hyprsunset.conf" 'stable Hyprland nightlight compatibility link'
+
+if [ -L "$HOME/.config/hypr" ] && \
+  [ "$(readlink -f -- "$HOME/.config/hypr")" = "$repo_root/os/linux/hyprland/config" ]; then
+  ok 'stable Hyprland config symlink remains unchanged'
+else
+  fail 'stable Hyprland config symlink changed'
+fi
+
+if [ -L "$HOME/.config/waybar" ] && \
+  [ "$(readlink -f -- "$HOME/.config/waybar")" = "$repo_root/os/linux/wayland/waybar" ]; then
+  ok 'stable Waybar config symlink remains unchanged'
+else
+  fail 'stable Waybar config symlink changed'
+fi
+
+if [ -r "$HOME/.config/omarchy/shell.toml" ] && \
+  [ "$(sed -n '1p' "$HOME/.config/omarchy/shell.toml")" = '[font]' ] && \
+  [ "$(sed -n '2p' "$HOME/.config/omarchy/shell.toml")" = 'base-size = 12' ]; then
+  ok 'tracked shell font preference is base-size 12'
+else
+  fail 'tracked shell font preference is missing or changed'
+fi
 
 set --
 while IFS= read -r package_name || [ -n "$package_name" ]; do
@@ -68,31 +129,109 @@ if [ "$(pacman -Q quickshell-git 2>/dev/null || true)" = \
   'quickshell-git 0.3.0.r20.g28771c7-1' ] && \
   [ "$(pacman -Q xdg-terminal-exec 2>/dev/null || true)" = \
   'xdg-terminal-exec 0.14.2-1' ]; then
-  ok 'pinned Omarchy runtime packages are installed'
+  ok 'pinned Omarchy shell packages are installed'
 else
-  fail 'quickshell-git or xdg-terminal-exec is missing'
+  fail 'quickshell-git or xdg-terminal-exec exact version is missing'
 fi
 
-if [ -L "$HOME/.config/hypr-quattro" ] && [ -L "$HOME/.config/omarchy" ]; then
-  ok 'Quattro configuration symlinks exist'
+if [ "$(pacman -Q hyprland-preview-share-picker 2>/dev/null || true)" = \
+  'hyprland-preview-share-picker 0.2.1-1' ]; then
+  ok 'pinned screen-share picker package 0.2.1-1 is installed'
 else
-  fail 'Quattro configuration symlinks are missing'
+  fail 'exact screen-share picker package 0.2.1-1 is missing'
 fi
 
-if [ -s "${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/current/theme.name" ]; then
+if command -v hyprland-preview-share-picker >/dev/null 2>&1; then
+  ok 'screen-share picker binary exists'
+else
+  fail 'screen-share picker binary is unavailable'
+fi
+
+if [ -s "$state_root/current/theme/hyprland-preview-share-picker.css" ]; then
+  ok 'generated current-theme picker CSS exists'
+else
+  fail 'generated current-theme picker CSS is missing'
+fi
+
+if cmp -s "$lab_root/system/pam.d/omarchy-lock-password" "$password_pam" && \
+  [ "$(stat -c '%U:%G:%a' "$password_pam" 2>/dev/null || true)" = root:root:644 ]; then
+  ok 'password PAM stack content and root:root 0644 permissions'
+else
+  fail 'password PAM stack content or permissions differ'
+fi
+
+if cmp -s "$lab_root/session/hyprland-quattro-lab" "$session_launcher" && \
+  [ "$(stat -c '%U:%G:%a' "$session_launcher" 2>/dev/null || true)" = root:root:755 ] && \
+  cmp -s "$lab_root/session/hyprland-quattro-lab.desktop" "$session_entry" && \
+  [ "$(stat -c '%U:%G:%a' "$session_entry" 2>/dev/null || true)" = root:root:644 ]; then
+  ok 'root-owned Quattro session copies match versioned sources'
+else
+  fail 'root-owned Quattro session copies or permissions differ'
+fi
+
+fingerprint_enrolled=0
+if command -v fprintd-list >/dev/null 2>&1 && \
+  fprintd-list "$(id -un)" 2>/dev/null | grep -qi finger; then
+  fingerprint_enrolled=1
+fi
+if [ "$fingerprint_enrolled" -eq 1 ]; then
+  if cmp -s "$lab_root/system/pam.d/omarchy-lock-fingerprint" "$fingerprint_pam" && \
+    [ "$(stat -c '%U:%G:%a' "$fingerprint_pam" 2>/dev/null || true)" = root:root:644 ]; then
+    ok 'fingerprint PAM is installed for a positively detected enrollment'
+  else
+    fail 'fingerprint enrollment exists but its managed PAM stack differs'
+  fi
+elif [ ! -e "$fingerprint_pam" ] && [ ! -L "$fingerprint_pam" ]; then
+  ok 'fingerprint PAM remains disabled without a detected enrollment'
+else
+  fail 'fingerprint PAM exists without a positively detected enrollment'
+fi
+
+if [ -s "$state_root/current/theme.name" ]; then
   ok 'Quattro theme state is initialized'
 else
   fail 'Quattro theme state is missing'
 fi
 
+if systemctl --user show-environment >/dev/null 2>&1; then
+  if systemctl --user is-enabled --quiet "$sleep_lock_unit"; then
+    ok 'sleep-lock user unit is enabled'
+  else
+    fail 'sleep-lock user unit is not enabled'
+  fi
+
+  if systemctl --user is-active --quiet graphical-session.target; then
+    if systemctl --user is-active --quiet "$sleep_lock_unit"; then
+      ok 'sleep-lock user unit is active in the graphical session'
+    else
+      fail 'sleep-lock user unit is inactive in the graphical session'
+    fi
+  else
+    ok 'sleep-lock active-state check skipped outside a graphical session'
+  fi
+else
+  ok 'sleep-lock live state check skipped without a reachable user manager'
+fi
+
+export OMARCHY_PATH="$runtime_root"
+export PATH="$OMARCHY_PATH/bin:$PATH"
+export LUA_PATH="$config_root/?.lua;;"
+
 if [ "$failures" -eq 0 ]; then
-  export OMARCHY_PATH="$runtime_root"
-  export PATH="$OMARCHY_PATH/bin:$PATH"
-  export LUA_PATH="$config_root/?.lua;;"
   if Hyprland --verify-config --config "$config_root/hyprland.lua" >/dev/null 2>&1; then
     ok 'Hyprland accepts the upstream Quattro Lua configuration'
   else
     fail 'Hyprland rejected the upstream Quattro Lua configuration'
+  fi
+fi
+
+if systemctl --user is-active --quiet graphical-session.target 2>/dev/null; then
+  lock_status=$(omarchy-shell lock status 2>/dev/null || true)
+  if printf '%s' "$lock_status" | \
+    jq -e '.secure == true and .passwordPam == true' >/dev/null 2>&1; then
+    ok 'Quickshell lock status reports secure:true and passwordPam:true'
+  else
+    fail 'Quickshell lock status is not securely password-backed'
   fi
 fi
 

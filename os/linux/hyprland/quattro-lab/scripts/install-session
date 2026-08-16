@@ -6,8 +6,9 @@ usage() {
   cat <<'EOF'
 Usage: os/linux/hyprland/quattro-lab/scripts/install-session [--dry-run]
 
-Install an additional SDDM/UWSM session for the linked Quattro Lab config.
-The stable Hyprland and XFCE sessions are not modified.
+Install the managed Quattro system integration: the additional SDDM/UWSM
+session and the password PAM stack. Enable the profile-linked sleep-lock user
+service without modifying the stable Hyprland or XFCE sessions.
 EOF
 }
 
@@ -16,8 +17,13 @@ lab_root=$(CDPATH='' cd -- "$script_dir/.." && pwd -P)
 state_home=${XDG_STATE_HOME:-$HOME/.local/state}
 session_source=$lab_root/session/hyprland-quattro-lab.desktop
 launcher_source=$lab_root/session/hyprland-quattro-lab
+password_pam_source=$lab_root/system/pam.d/omarchy-lock-password
+fingerprint_pam_source=$lab_root/system/pam.d/omarchy-lock-fingerprint
 launcher_target=/usr/local/libexec/dotfiles-hyprland-quattro-lab
 session_target=/usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
+password_pam_target=/etc/pam.d/omarchy-lock-password
+fingerprint_pam_target=/etc/pam.d/omarchy-lock-fingerprint
+sleep_lock_unit=omarchy-sleep-lock.service
 dry_run=0
 
 if [ "${1:-}" = "--dry-run" ]; then
@@ -31,34 +37,57 @@ if [ "$#" -ne 0 ]; then
 fi
 
 if [ "$(uname -s)" != Linux ]; then
-  printf 'Quattro Lab install: GNU/Linux is required\n' >&2
+  printf 'Quattro integration install: GNU/Linux is required\n' >&2
   exit 1
 fi
 
-for command_name in sudo tar sha256sum; do
+for command_name in cmp sha256sum stat sudo systemctl tar; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
-    printf 'Quattro Lab install: required command not found: %s\n' \
+    printf 'Quattro integration install: required command not found: %s\n' \
       "$command_name" >&2
     exit 127
   fi
 done
 
-if [ ! -r "$HOME/.config/hypr-quattro/hyprland.lua" ]; then
-  printf 'Quattro Lab install: link arch-hyprland-quattro-lab first\n' >&2
+if [ ! -r "$HOME/.config/hypr-quattro/hyprland.lua" ] || \
+  [ ! -L "$HOME/.config/systemd/user/$sleep_lock_unit" ]; then
+  printf 'Quattro integration install: link arch-hyprland-quattro-lab first\n' >&2
   exit 1
 fi
 
 runtime_root=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
 if [ ! -r "$runtime_root/shell/shell.qml" ]; then
-  printf 'Quattro Lab install: synchronize the pinned runtime first\n' >&2
+  printf 'Quattro integration install: synchronize the pinned runtime first\n' >&2
   exit 1
+fi
+
+fingerprint_enrolled=0
+if command -v fprintd-list >/dev/null 2>&1 && \
+  fprintd-list "$(id -un)" 2>/dev/null | grep -qi finger; then
+  fingerprint_enrolled=1
 fi
 
 if [ "$dry_run" -eq 1 ]; then
   cat <<EOF
-[dry-run] backup existing managed paths, if any
+[dry-run] backup only these managed paths, if present:
+[dry-run]   $launcher_target
+[dry-run]   $session_target
+[dry-run]   $password_pam_target
+[dry-run]   $fingerprint_pam_target
+[dry-run] install password PAM template as root:root mode 0644
+EOF
+  if [ "$fingerprint_enrolled" -eq 1 ]; then
+    printf '[dry-run] install fingerprint PAM template (enrollment positively detected)\n'
+  else
+    printf '[dry-run] remove only %s (no enrollment detected)\n' \
+      "$fingerprint_pam_target"
+  fi
+  cat <<EOF
 [dry-run] install $launcher_source as $launcher_target
 [dry-run] install $session_source as $session_target
+[dry-run] systemctl --user daemon-reload
+[dry-run] systemctl --user enable $sleep_lock_unit
+[dry-run] start $sleep_lock_unit only when graphical-session.target is active
 EOF
   exit 0
 fi
@@ -69,23 +98,69 @@ timestamp=$(date +%Y%m%d-%H%M%S)
 backup_dir=$state_home/mydotfiles/backups/hyprland-quattro-lab/$timestamp
 archive=$backup_dir/system-files.tar
 file_list=$backup_dir/system-files.txt
+service_state=$backup_dir/user-service.state
 mkdir -p "$backup_dir"
 chmod 700 "$backup_dir"
 : > "$file_list"
 
 for path in \
   usr/local/libexec/dotfiles-hyprland-quattro-lab \
-  usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
+  usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop \
+  etc/pam.d/omarchy-lock-password \
+  etc/pam.d/omarchy-lock-fingerprint
 do
   if [ -e "/$path" ] || [ -L "/$path" ]; then
     printf '%s\n' "$path" >> "$file_list"
   fi
 done
 
+previous_enabled=$(systemctl --user is-enabled "$sleep_lock_unit" 2>/dev/null || true)
+previous_active=$(systemctl --user is-active "$sleep_lock_unit" 2>/dev/null || true)
+{
+  printf 'enabled=%s\n' "${previous_enabled:-disabled}"
+  printf 'active=%s\n' "${previous_active:-inactive}"
+} > "$service_state"
+
 tar -C / -cpf "$archive" -T "$file_list"
 (cd "$backup_dir" && sha256sum system-files.tar > system-files.tar.sha256)
 
+printf 'Quattro integration backup created before changes: %s\n' "$backup_dir"
+
 sudo install -Dm755 "$launcher_source" "$launcher_target"
 sudo install -Dm644 "$session_source" "$session_target"
+sudo install -Dm644 -o root -g root "$password_pam_source" "$password_pam_target"
 
-printf 'Quattro Lab session installed. Rollback archive: %s\n' "$backup_dir"
+if [ "$fingerprint_enrolled" -eq 1 ]; then
+  sudo install -Dm644 -o root -g root \
+    "$fingerprint_pam_source" "$fingerprint_pam_target"
+else
+  sudo rm -f -- "$fingerprint_pam_target"
+fi
+
+if ! cmp -s "$password_pam_source" "$password_pam_target" || \
+  [ "$(stat -c '%U:%G:%a' "$password_pam_target")" != root:root:644 ]; then
+  printf 'Quattro integration install: password PAM verification failed\n' >&2
+  exit 1
+fi
+if ! cmp -s "$launcher_source" "$launcher_target" || \
+  [ "$(stat -c '%U:%G:%a' "$launcher_target")" != root:root:755 ] || \
+  ! cmp -s "$session_source" "$session_target" || \
+  [ "$(stat -c '%U:%G:%a' "$session_target")" != root:root:644 ]; then
+  printf 'Quattro integration install: root-owned session verification failed\n' >&2
+  exit 1
+fi
+
+systemctl --user daemon-reload
+systemctl --user enable "$sleep_lock_unit"
+if systemctl --user is-active --quiet graphical-session.target; then
+  systemctl --user reset-failed "$sleep_lock_unit" >/dev/null 2>&1 || true
+  systemctl --user start "$sleep_lock_unit"
+  if ! systemctl --user is-active --quiet "$sleep_lock_unit"; then
+    printf 'Quattro integration install: sleep-lock unit did not stay active\n' >&2
+    exit 1
+  fi
+else
+  printf 'Quattro integration install: graphical session is inactive; sleep-lock will start with it.\n'
+fi
+
+printf 'Quattro system integration installed. Rollback archive: %s\n' "$backup_dir"
