@@ -1,0 +1,104 @@
+#!/bin/sh
+
+set -eu
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+lab_root=$(CDPATH='' cd -- "$script_dir/.." && pwd -P)
+# shellcheck source=/dev/null
+. "$lab_root/runtime/source.lock"
+
+runtime_root=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
+config_root=${HYPRLAND_QUATTRO_ROOT:-$HOME/.config/hypr-quattro}
+failures=0
+
+ok() {
+  printf 'OK    %s\n' "$1"
+}
+
+fail() {
+  printf 'FAIL  %s\n' "$1" >&2
+  failures=$((failures + 1))
+}
+
+if [ -d "$runtime_root/.git" ] && \
+  [ "$(git -C "$runtime_root" rev-parse HEAD 2>/dev/null || true)" = "$OMARCHY_COMMIT" ]; then
+  ok "runtime commit $OMARCHY_COMMIT"
+else
+  fail "runtime commit is not pinned at $OMARCHY_COMMIT"
+fi
+
+if [ -z "$(git -C "$runtime_root" status --porcelain 2>/dev/null || printf dirty)" ]; then
+  ok 'runtime checkout is clean'
+else
+  fail 'runtime checkout has local modifications'
+fi
+
+for pair in \
+  "$config_root/hyprland.lua:$runtime_root/config/hypr/hyprland.lua" \
+  "$config_root/hypr/monitors.lua:$runtime_root/config/hypr/monitors.lua" \
+  "$config_root/hypr/input.lua:$runtime_root/config/hypr/input.lua" \
+  "$config_root/hypr/bindings.lua:$runtime_root/config/hypr/bindings.lua" \
+  "$config_root/hypr/looknfeel.lua:$runtime_root/config/hypr/looknfeel.lua" \
+  "$config_root/hypr/autostart.lua:$runtime_root/config/hypr/autostart.lua"
+do
+  local_file=${pair%%:*}
+  upstream_file=${pair#*:}
+  if cmp -s "$local_file" "$upstream_file"; then
+    ok "upstream config ${local_file#"$config_root/"}"
+  else
+    fail "config differs from upstream: $local_file"
+  fi
+done
+
+set --
+while IFS= read -r package_name || [ -n "$package_name" ]; do
+  case $package_name in
+    ''|'#'*) continue ;;
+  esac
+  set -- "$@" "$package_name"
+done < "$lab_root/runtime/arch-packages.txt"
+missing_packages=$(pacman -T "$@" 2>/dev/null || true)
+if [ -z "$missing_packages" ]; then
+  ok 'Arch runtime packages are installed'
+else
+  fail "missing Arch packages: $(printf '%s' "$missing_packages" | tr '\n' ' ')"
+fi
+
+if [ "$(pacman -Q quickshell-git 2>/dev/null || true)" = \
+  'quickshell-git 0.3.0.r20.g28771c7-1' ] && \
+  [ "$(pacman -Q xdg-terminal-exec 2>/dev/null || true)" = \
+  'xdg-terminal-exec 0.14.2-1' ]; then
+  ok 'pinned Omarchy runtime packages are installed'
+else
+  fail 'quickshell-git or xdg-terminal-exec is missing'
+fi
+
+if [ -L "$HOME/.config/hypr-quattro" ] && [ -L "$HOME/.config/omarchy" ]; then
+  ok 'Quattro configuration symlinks exist'
+else
+  fail 'Quattro configuration symlinks are missing'
+fi
+
+if [ -s "${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/current/theme.name" ]; then
+  ok 'Quattro theme state is initialized'
+else
+  fail 'Quattro theme state is missing'
+fi
+
+if [ "$failures" -eq 0 ]; then
+  export OMARCHY_PATH="$runtime_root"
+  export PATH="$OMARCHY_PATH/bin:$PATH"
+  export LUA_PATH="$config_root/?.lua;;"
+  if Hyprland --verify-config --config "$config_root/hyprland.lua" >/dev/null 2>&1; then
+    ok 'Hyprland accepts the upstream Quattro Lua configuration'
+  else
+    fail 'Hyprland rejected the upstream Quattro Lua configuration'
+  fi
+fi
+
+if [ "$failures" -ne 0 ]; then
+  printf '%s Quattro runtime check(s) failed.\n' "$failures" >&2
+  exit 1
+fi
+
+printf 'Quattro runtime checks passed.\n'

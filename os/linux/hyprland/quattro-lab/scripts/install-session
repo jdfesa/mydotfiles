@@ -48,6 +48,12 @@ if [ ! -r "$HOME/.config/hypr-quattro/hyprland.lua" ]; then
   exit 1
 fi
 
+runtime_root=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
+if [ ! -r "$runtime_root/shell/shell.qml" ]; then
+  printf 'Quattro Lab install: synchronize the pinned runtime first\n' >&2
+  exit 1
+fi
+
 if [ "$dry_run" -eq 1 ]; then
   cat <<EOF
 [dry-run] backup existing managed paths, if any

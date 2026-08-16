@@ -1,0 +1,69 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: os/linux/hyprland/quattro-lab/scripts/prepare-user [--dry-run]
+
+Seed only the per-user state required by the Quattro desktop shell. Omarchy's
+distribution provisioning is deliberately marked complete so the lab cannot
+rewrite the host's browser, Git, agent, audio, or GTK setup on first login.
+EOF
+}
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+lab_root=$(CDPATH='' cd -- "$script_dir/.." && pwd -P)
+# shellcheck source=/dev/null
+. "$lab_root/runtime/source.lock"
+
+runtime_root=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
+config_root=${HYPRLAND_QUATTRO_ROOT:-$HOME/.config/hypr-quattro}
+state_root=${XDG_STATE_HOME:-$HOME/.local/state}/omarchy
+font_target=${XDG_DATA_HOME:-$HOME/.local/share}/fonts/omarchy/omarchy.ttf
+dry_run=0
+
+if [ "${1:-}" = "--dry-run" ]; then
+  dry_run=1
+  shift
+fi
+
+if [ "$#" -ne 0 ]; then
+  usage >&2
+  exit 2
+fi
+
+if [ ! -r "$runtime_root/shell/shell.qml" ] || \
+  [ "$(git -C "$runtime_root" rev-parse HEAD 2>/dev/null || true)" != "$OMARCHY_COMMIT" ]; then
+  printf 'Quattro user state: synchronize the pinned runtime first\n' >&2
+  exit 1
+fi
+
+if [ ! -r "$config_root/hyprland.lua" ] || [ ! -r "$HOME/.config/omarchy/shell.json" ]; then
+  printf 'Quattro user state: link profile arch-hyprland-quattro-lab first\n' >&2
+  exit 1
+fi
+
+if [ "$dry_run" -eq 1 ]; then
+  printf '[dry-run] install Omarchy icon font at %s\n' "$font_target"
+  printf '[dry-run] mark distribution provisioning complete under %s/done\n' \
+    "$state_root"
+  printf '[dry-run] seed Tokyo Night theme state without live-session hooks\n'
+  exit 0
+fi
+
+mkdir -p "$(dirname -- "$font_target")" "$state_root/done"
+install -m 644 "$runtime_root/default/fonts/omarchy/omarchy.ttf" "$font_target"
+fc-cache -f "$(dirname -- "$font_target")" >/dev/null
+
+export OMARCHY_PATH="$runtime_root"
+export PATH="$OMARCHY_PATH/bin:$PATH"
+
+omarchy-done mark finalize-user
+omarchy-done mark first-run-user
+
+if [ ! -s "$state_root/current/theme.name" ]; then
+  OMARCHY_THEME_HEADLESS=1 omarchy-theme-set 'Tokyo Night'
+fi
+
+printf 'Quattro user state prepared without running distribution provisioning.\n'
