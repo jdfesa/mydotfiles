@@ -30,6 +30,7 @@ No guardar en Git:
 
 ```text
 packages/
+  reflector/        # politica versionada; mirrorlist generado fuera de Git
   pacman/           # pacman.conf, hooks o notas si se versionan
   yay/              # configuracion/notas del helper AUR
   makepkg/          # makepkg.conf de usuario si se decide versionar
@@ -49,6 +50,12 @@ packages/
   backends exactos de captura/grabacion; no replica el catalogo de Omarchy.
 - `lists/aur-reviewed.txt`: versiones, commits revisados y justificacion de cada
   paquete AUR permitido.
+
+### Mirrors reproducibles
+
+[`REFLECTOR_MIRRORS.md`](REFLECTOR_MIRRORS.md) documenta la politica acotada de
+Reflector, el aplicador plan-only, los checks metadata/live, el timer semanal y
+el rollback verificado. La politica vive en Git; el mirrorlist generado no.
 
 Previsualizar y aplicar una lista oficial:
 
