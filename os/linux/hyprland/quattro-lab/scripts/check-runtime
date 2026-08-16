@@ -18,6 +18,12 @@ session_entry=/usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
 sleep_lock_unit=omarchy-sleep-lock.service
 failures=0
 
+has_fingerprint_enrollment() {
+  command -v fprintd-list >/dev/null 2>&1 &&
+    fprintd-list "$(id -un)" 2>/dev/null |
+      grep -Eq '#[0-9]+: (left|right)-(thumb|index-finger|middle-finger|ring-finger|little-finger)'
+}
+
 ok() {
   printf 'OK    %s\n' "$1"
 }
@@ -170,8 +176,7 @@ else
 fi
 
 fingerprint_enrolled=0
-if command -v fprintd-list >/dev/null 2>&1 && \
-  fprintd-list "$(id -un)" 2>/dev/null | grep -qi finger; then
+if has_fingerprint_enrollment; then
   fingerprint_enrolled=1
 fi
 if [ "$fingerprint_enrolled" -eq 1 ]; then
