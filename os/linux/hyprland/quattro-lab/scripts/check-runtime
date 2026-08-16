@@ -17,6 +17,12 @@ session_launcher=/usr/local/libexec/dotfiles-hyprland-quattro-lab
 session_entry=/usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
 sleep_lock_unit=omarchy-sleep-lock.service
 upstream_bindings_sha256=a1280ae15f32cdf68192e96eb916efd50180a6f11f133bcdb7f55e35aae2bb4c
+upstream_utilities_sha256=60b4ad67084d71222f04b118d6b5df0da7bc7b48169655674b84ae6d2f36b5ff
+upstream_menu_sha256=53b4599eb1f28fc115ec17a4f7ef59f727d84f2a81c0a0f45960e4b5182a2809
+upstream_screenshot_sha256=ce42401fd0e987a424afa70b8139879e52c2cd016f689a0c0df5bd1d0dc588fa
+upstream_screenrecord_sha256=86910b6cc0de464271587b8501ce40ebf8585da2caa156c274321a3ceef95508
+upstream_ocr_sha256=4572f2e6508d9fc71dc63a0d845d987cb6cf3ee0ebe6a99bee6324e0b979e11c
+upstream_qr_sha256=04eb56f006c03f0861eae3be8e3d29584f297960c53dbc4d8c2b85acd54ea965
 curated_bindings_sha256=fac51a1027228a25d1e5a429a3ee63d3e47cb24b4930fb6b27ef8d1bab2236eb
 curated_menu_sha256=35283ff733573abe07b20d486bcf5adcd7c7beaf76dcb0e364d8dcef79621965
 failures=0
@@ -89,6 +95,23 @@ if [ "$(sha256sum "$runtime_root/config/hypr/bindings.lua" | awk '{print $1}')" 
   ok 'intentional Bitwarden binding override matches its reviewed hash'
 else
   fail 'upstream or curated binding hash changed'
+fi
+
+if [ "$(sha256sum "$runtime_root/default/hypr/bindings/utilities.lua" | awk '{print $1}')" = \
+  "$upstream_utilities_sha256" ] && \
+  [ "$(sha256sum "$runtime_root/default/omarchy/omarchy-menu.jsonc" | awk '{print $1}')" = \
+  "$upstream_menu_sha256" ] && \
+  [ "$(sha256sum "$runtime_root/bin/omarchy-capture-screenshot" | awk '{print $1}')" = \
+  "$upstream_screenshot_sha256" ] && \
+  [ "$(sha256sum "$runtime_root/bin/omarchy-capture-screenrecording" | awk '{print $1}')" = \
+  "$upstream_screenrecord_sha256" ] && \
+  [ "$(sha256sum "$runtime_root/bin/omarchy-capture-text" | awk '{print $1}')" = \
+  "$upstream_ocr_sha256" ] && \
+  [ "$(sha256sum "$runtime_root/bin/omarchy-capture-qr" | awk '{print $1}')" = \
+  "$upstream_qr_sha256" ]; then
+  ok 'pinned capture bindings, menu, and command sources match reviewed hashes'
+else
+  fail 'pinned capture binding or command source hash changed'
 fi
 
 if [ "$(sha256sum "$config_root/omarchy/extensions/omarchy-menu.jsonc" | awk '{print $1}')" = \

@@ -30,7 +30,7 @@ No guardar en Git:
 
 ```text
 packages/
-  reflector/        # politica versionada; mirrorlist generado fuera de Git
+  reflector/        # política versionada; mirrorlist generado fuera de Git
   pacman/           # pacman.conf, hooks o notas si se versionan
   yay/              # configuracion/notas del helper AUR
   makepkg/          # makepkg.conf de usuario si se decide versionar
@@ -47,15 +47,15 @@ packages/
 - `lists/30-wayland-desktop.txt`: compositor Hyprland y componentes Wayland
   opcionales; no modifica SDDM ni reemplaza XFCE.
 - `lists/40-quattro-daily-workstation.txt`: aplicaciones diarias aprobadas y
-  backends exactos de captura/grabacion; no replica el catalogo de Omarchy.
+  backends exactos de captura/grabación; no replica el catálogo de Omarchy.
 - `lists/aur-reviewed.txt`: versiones, commits revisados y justificacion de cada
   paquete AUR permitido.
 
-### Mirrors reproducibles
+### Reproducible mirrors
 
-[`REFLECTOR_MIRRORS.md`](REFLECTOR_MIRRORS.md) documenta la politica acotada de
+[`REFLECTOR_MIRRORS.md`](REFLECTOR_MIRRORS.md) documenta la política acotada de
 Reflector, el aplicador plan-only, los checks metadata/live, el timer semanal y
-el rollback verificado. La politica vive en Git; el mirrorlist generado no.
+el rollback verificado. La política vive en Git; el mirrorlist generado no.
 
 Previsualizar y aplicar una lista oficial:
 

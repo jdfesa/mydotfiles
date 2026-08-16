@@ -46,18 +46,70 @@ require_owned_command() {
   [[ $owner == "$package" ]] || fail "$command is owned by $owner, expected $package"
 }
 
+require_owned_file() {
+  local path=$1 package=$2 owner
+  [[ -f $path ]] || fail "missing package file: $path"
+  owner=$(pacman -Qoq "$path" 2>/dev/null) || fail "unowned package file: $path"
+  [[ $owner == "$package" ]] || fail "$path is owned by $owner, expected $package"
+}
+
+require_exact_line() {
+  local file=$1 line=$2 description=$3
+  grep -Fx -- "$line" "$file" >/dev/null || fail "$description"
+}
+
+libreoffice_spanish_ui_selected() {
+  python3 - "$HOME/.config/libreoffice" <<'PY'
+import pathlib
+import re
+import sys
+
+root = pathlib.Path(sys.argv[1])
+pattern = re.compile(
+    r'<prop\b[^>]*\b(?:oor:)?name=["\'](?:ooLocale|UILocale)["\'][^>]*>'
+    r'.*?<value\b[^>]*>\s*es(?:[-_][A-Za-z]{2})?\s*</value>',
+    re.IGNORECASE | re.DOTALL,
+)
+for path in root.rglob('*.xcu'):
+    try:
+        text = path.read_text(encoding='utf-8')
+    except (OSError, UnicodeDecodeError):
+        continue
+    if pattern.search(text):
+        raise SystemExit(0)
+raise SystemExit(1)
+PY
+}
+
+is_english_or_neutral_locale() {
+  case $1 in
+    C|C.*|POSIX|en|en_*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 "$installer" "$manifest" >/dev/null || fail 'official package manifest metadata'
 pass 'all curated packages exist in enabled official repositories'
 
 mapfile -t packages < <(
   sed -E -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' "$manifest"
 )
-for forbidden in 1password vial vial-git vial-appimage wf-recorder gpu-screen-recorder-ui libreoffice-fresh; do
+for forbidden in 1password vial vial-git vial-appimage wf-recorder gpu-screen-recorder-ui libreoffice-fresh libreoffice-still-es; do
   if printf '%s\n' "${packages[@]}" | grep -Fx "$forbidden" >/dev/null; then
     fail "forbidden or intentionally deferred package in manifest: $forbidden"
   fi
 done
 pass 'manifest excludes deferred and redundant alternatives'
+
+printf '%s\n' "${packages[@]}" | grep -Fx hunspell-es_any >/dev/null ||
+  fail 'pure Spanish Hunspell dictionary missing from manifest'
+if printf '%s\n' "${packages[@]}" | grep -E '^libreoffice-(still|fresh)-[^[:space:]]+$' >/dev/null; then
+  fail 'LibreOffice UI language pack present in English baseline manifest'
+fi
+if printf '%s\n' "${packages[@]}" | grep -E '^hunspell-es_' | grep -Fvx hunspell-es_any >/dev/null; then
+  fail 'unexpected additional Spanish dictionary in manifest'
+fi
+pass 'manifest allows only the reviewed pure Spanish spelling dictionary'
 
 [[ -x $lab_root/config/compat-bin/omarchy-display-text-size ]] ||
   fail 'display text-size compatibility command'
@@ -109,6 +161,63 @@ pass 'Bitwarden binding and menu overrides are explicit'
 [[ -z $(git -C "$runtime" status --porcelain) ]] || fail 'Quattro runtime is dirty'
 pass 'pinned Quattro runtime is exact and clean'
 
+utilities=$runtime/default/hypr/bindings/utilities.lua
+capture_menu=$runtime/default/omarchy/omarchy-menu.jsonc
+capture_screenshot=$runtime/bin/omarchy-capture-screenshot
+
+require_exact_line "$utilities" \
+  'o.bind("SUPER + CTRL + C", "Capture menu", "omarchy-menu toggle capture")' \
+  'upstream capture menu binding changed'
+require_exact_line "$utilities" \
+  'o.bind("PRINT", "Screenshot", "omarchy-capture-screenshot")' \
+  'upstream Print screenshot binding changed'
+require_exact_line "$utilities" \
+  'o.bind("ALT + PRINT", "Screenrecording", "omarchy-capture-screenrecording --stop-recording || omarchy-menu toggle trigger.capture.screenrecord")' \
+  'upstream Alt+Print screen-recording binding changed'
+require_exact_line "$utilities" \
+  'o.bind("SUPER + PRINT", "Color picker", "pkill hyprpicker || hyprpicker -a")' \
+  'upstream Super+Print color-picker binding changed'
+require_exact_line "$utilities" \
+  'o.bind("SUPER + CTRL + PRINT", "Extract text (OCR) from screenshot", "omarchy-capture-text")' \
+  'upstream Super+Ctrl+Print OCR binding changed'
+require_exact_line "$utilities" \
+  'o.bind("SUPER + ALT + comma", "Invoke last notification", "omarchy-shell notifications invokeLast")' \
+  'upstream keyboard notification-action binding changed'
+
+require_exact_line "$capture_menu" \
+  '  "trigger.capture.screenshot": {"icon":"","label":"Screenshot","action":"omarchy-capture-screenshot"},' \
+  'upstream screenshot menu action changed'
+require_exact_line "$capture_menu" \
+  '  "trigger.capture.text": {"icon":"󰴑","label":"Text","action":"omarchy-capture-text"},' \
+  'upstream OCR menu action changed'
+require_exact_line "$capture_menu" \
+  '  "trigger.capture.qr": {"icon":"󰐲","label":"QR Code","action":"omarchy-capture-qr"},' \
+  'upstream QR menu action changed'
+require_exact_line "$capture_menu" \
+  '  "trigger.capture.screenrecord.no-audio": {"icon":"","label":"With no audio","action":"omarchy-capture-screenrecording"},' \
+  'upstream no-audio recording action changed'
+require_exact_line "$capture_menu" \
+  '  "trigger.capture.screenrecord.desktop-audio": {"icon":"","label":"With desktop audio","action":"omarchy-capture-screenrecording --with-desktop-audio"},' \
+  'upstream desktop-audio recording action changed'
+require_exact_line "$capture_menu" \
+  '  "trigger.capture.screenrecord.microphone": {"icon":"","label":"With desktop + microphone audio","action":"omarchy-capture-screenrecording --with-desktop-audio --with-microphone-audio"},' \
+  'upstream microphone recording action changed'
+require_exact_line "$capture_menu" \
+  '  "trigger.capture.screenrecord.webcam": {"icon":"","label":"With desktop + microphone audio + webcam","when":"omarchy-hw-webcam","action":"omarchy-capture-screenrecording-with-webcam"},' \
+  'upstream webcam recording action changed'
+require_exact_line "$capture_screenshot" \
+  "    omarchy-notification-send \"Screenshot saved to clipboard and file\" \"Edit with Super + Alt + , (or click this)\" \\" \
+  'upstream keyboard annotation notification changed'
+require_exact_line "$lab_root/session/hyprland-quattro-lab" \
+  'export OMARCHY_SCREENSHOT_EDITOR=omarchy-screenshot-edit' \
+  'Quattro screenshot editor selection changed'
+
+if awk '!/^[[:space:]]*--/ && /PRINT|SUPER[[:space:]]*\+[[:space:]]*CTRL[[:space:]]*\+[[:space:]]*C|omarchy-capture-(screenshot|text|qr|screenrecording)/ { found=1 } END { exit !found }' \
+  "$lab_root/config/hypr/bindings.lua"; then
+  fail 'local capture binding overrides upstream Omarchy'
+fi
+pass 'capture bindings and commands match pinned Omarchy sources without local chords'
+
 if ((metadata_only)); then
   printf 'QUATTRO_DAILY_METADATA_OK (%d checks)\n' "$checks"
   exit 0
@@ -118,6 +227,31 @@ for package in "${packages[@]}"; do
   require_package "$package"
 done
 pass 'all curated packages are installed'
+
+for variable in LANG LANGUAGE LC_ALL LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE \
+  LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE \
+  LC_MEASUREMENT LC_IDENTIFICATION; do
+  value=${!variable-}
+  [[ -z $value ]] || is_english_or_neutral_locale "$value" ||
+    fail "$variable selects a non-English locale: $value"
+done
+grep -Fx 'LANG=en_US.UTF-8' /etc/locale.conf >/dev/null ||
+  fail '/etc/locale.conf does not select en_US.UTF-8'
+if awk '!/^[[:space:]]*(#|$)/ && $1 !~ /^en_US([.@]|$)/ { print; found=1 } END { exit !found }' /etc/locale.gen >/dev/null; then
+  fail '/etc/locale.gen enables a non-English locale'
+fi
+locale -a | grep -Fxi en_US.utf8 >/dev/null || fail 'en_US.UTF-8 locale is not generated'
+grep -Fx 'KEYMAP=us' /etc/vconsole.conf >/dev/null || fail 'virtual-console keymap is not US'
+grep -Eq 'Option[[:space:]]+"XkbLayout"[[:space:]]+"us"' /etc/X11/xorg.conf.d/00-keyboard.conf ||
+  fail 'declared XKB layout is not US'
+if grep -Eq '^[[:space:]]*XKBVARIANT=.+|Option[[:space:]]+"XkbVariant"[[:space:]]+"[^[:space:]]+"' \
+  /etc/vconsole.conf /etc/X11/xorg.conf.d/00-keyboard.conf; then
+  fail 'an unreviewed keyboard variant is active'
+fi
+require_exact_line "$runtime/default/hypr/input.lua" \
+  'local kb_layout = vconsole.XKBLAYOUT or "us"' \
+  'upstream Quattro US keyboard fallback changed'
+pass 'host and Quattro baseline select English locales and a US keyboard'
 
 while read -r command package; do
   require_owned_command "$command" "$package"
@@ -138,8 +272,15 @@ ghostty ghostty
 bitwarden-desktop bitwarden
 vlc vlc-cli
 libreoffice libreoffice-still
+tesseract tesseract
+zbarimg zbar
 EOF
 pass 'expected commands are present and package-owned'
+
+require_owned_file /usr/share/tessdata/eng.traineddata tesseract-data-eng
+require_owned_file /usr/share/hunspell/es.aff hunspell-es_any
+require_owned_file /usr/share/hunspell/es.dic hunspell-es_any
+pass 'English OCR data and the allowed pure Spanish spelling data are package-owned'
 
 for package in obs-studio kdenlive obsidian discord telegram-desktop kitty ghostty bitwarden vlc libreoffice-still; do
   pacman -Ql "$package" | grep -E '/usr/share/applications/[^/]+\.desktop$' >/dev/null ||
@@ -149,6 +290,24 @@ pass 'approved GUI packages provide desktop entries'
 
 pacman -Q 1password >/dev/null 2>&1 && fail '1Password must remain absent'
 pass '1Password is absent'
+
+spanish_ui_packages=$(LC_ALL=C pacman -Qi | awk -F '[[:space:]]*:[[:space:]]*' '
+  $1 == "Name" { name=$2 }
+  $1 == "Description" {
+    description=tolower($2)
+    if (description ~ /spanish/ && description ~ /(language pack|locali[sz]ation|translation)/) print name
+  }
+')
+[[ -z $spanish_ui_packages ]] ||
+  fail "Spanish UI localization package installed: ${spanish_ui_packages//$'\n'/ }"
+require_owned_file /usr/lib/libreoffice/help/en-US/contents.js libreoffice-still
+require_owned_file /usr/lib/libreoffice/share/registry/res/fcfg_langpack_en-US.xcd libreoffice-still
+[[ ! -e /usr/lib/libreoffice/program/resource/es ]] ||
+  fail 'Spanish LibreOffice UI resources remain installed'
+if [[ -d $HOME/.config/libreoffice ]] && libreoffice_spanish_ui_selected; then
+  fail 'LibreOffice user configuration selects a Spanish UI locale'
+fi
+pass 'LibreOffice retains base English UI/help with no Spanish UI localization'
 
 [[ -L $HOME/.config/xdg-terminals.list ]] || fail 'managed xdg-terminals.list symlink'
 [[ $(readlink -f "$HOME/.config/xdg-terminals.list") == "$repo_root/os/linux/xdg/xdg-terminals.list" ]] ||
@@ -162,7 +321,7 @@ pass 'Kitty is the managed default terminal'
   fail 'Kitty config target'
 cmp -s "$HOME/.config/kitty/kitty.conf" "$repo_root/os/linux/kitty/kitty.conf" ||
   fail 'Kitty config content mismatch'
-grep -F 'include $HOME/mydotfiles/shared/kitty/common.conf' "$repo_root/os/linux/kitty/kitty.conf" >/dev/null ||
+grep -F "include \$HOME/mydotfiles/shared/kitty/common.conf" "$repo_root/os/linux/kitty/kitty.conf" >/dev/null ||
   fail 'Kitty Linux entrypoint does not include the shared base'
 grep -F 'include ~/mydotfiles/shared/kitty/active-theme.conf' "$repo_root/shared/kitty/common.conf" >/dev/null ||
   fail 'Kitty shared base does not include the repository theme'
@@ -184,11 +343,13 @@ pass 'compatibility commands precede runtime only in Quattro PATH'
 
 bash -n "$runtime/bin/omarchy-capture-screenshot" \
   "$runtime/bin/omarchy-capture-region" \
-  "$runtime/bin/omarchy-capture-screenrecording" ||
+  "$runtime/bin/omarchy-capture-screenrecording" \
+  "$runtime/bin/omarchy-capture-text" \
+  "$runtime/bin/omarchy-capture-qr" ||
   fail 'pinned capture command syntax'
-for command in grim slurp wl-copy satty gpu-screen-recorder obs ffmpeg mpv hyprctl jq; do
+for command in grim slurp wl-copy satty gpu-screen-recorder obs ffmpeg mpv hyprctl jq tesseract zbarimg; do
   require_command "$command"
 done
-pass 'screenshot and recording commands resolve without capture'
+pass 'screenshot, annotation, OCR, QR, and recording commands resolve without capture'
 
 printf 'QUATTRO_DAILY_WORKSTATION_OK (%d checks)\n' "$checks"
