@@ -6,6 +6,7 @@ script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 packages_root=$(cd -- "$script_dir/.." && pwd -P)
 checker=$script_dir/check-reflector-mirrors
 applicator=$script_dir/apply-reflector-mirrors
+journal_filter=$packages_root/reflector/service-job-completions.jq
 tmp_root=$(mktemp -d "${TMPDIR:-/tmp}/mydotfiles-reflector-test.XXXXXX")
 trap 'rm -rf "$tmp_root"' EXIT HUP INT TERM
 
@@ -38,6 +39,29 @@ grep -F 'GNU/Linux is required' "$tmp_root/darwin-apply.out" >/dev/null ||
 
 bash -n "$applicator" "$0"
 sh -n "$checker"
+
+cat > "$tmp_root/journal.json" <<'EOF'
+{"_PID":"1","_COMM":"systemd","UNIT":"reflector.service","JOB_TYPE":"start","JOB_RESULT":"done","MESSAGE_ID":"39f53479d3a045ac8e11786248231fbf","__REALTIME_TIMESTAMP":"1000000"}
+{"_PID":"1","_COMM":"systemd","UNIT":"reflector.service","JOB_TYPE":"start","JOB_RESULT":"done","MESSAGE_ID":"39f53479d3a045ac8e11786248231fbf","__REALTIME_TIMESTAMP":"2000000"}
+{"_PID":"1","_COMM":"systemd","UNIT":"reflector.service","JOB_TYPE":"start","JOB_RESULT":"failed","MESSAGE_ID":"be02cf6855d2428ba40df7e9d022f03d","__REALTIME_TIMESTAMP":"3000000"}
+EOF
+latest_completion=$(
+  jq -c --arg unit reflector.service --argjson minimum_us 1500000 \
+    -f "$journal_filter" "$tmp_root/journal.json" |
+    tail -n 1
+)
+[[ $(printf '%s\n' "$latest_completion" | jq -r .JOB_RESULT) == failed ]] ||
+  fail 'journal filter must expose a later failed job instead of an older success'
+cat >> "$tmp_root/journal.json" <<'EOF'
+{"_PID":"1","_COMM":"systemd","UNIT":"reflector.service","JOB_TYPE":"start","JOB_RESULT":"done","MESSAGE_ID":"39f53479d3a045ac8e11786248231fbf","INVOCATION_ID":"current","__REALTIME_TIMESTAMP":"4000000"}
+EOF
+latest_completion=$(
+  jq -c --arg unit reflector.service --argjson minimum_us 3500000 \
+    -f "$journal_filter" "$tmp_root/journal.json" |
+    tail -n 1
+)
+[[ $(printf '%s\n' "$latest_completion" | jq -r .INVOCATION_ID) == current ]] ||
+  fail 'journal filter did not isolate the current execution window'
 
 for file in "$applicator" "$checker" "$0"; do
   [[ -x $file ]] || fail "missing executable mode: $file"
@@ -85,6 +109,9 @@ fi
 
 if "$applicator" --dry-run > "$tmp_root/invalid.out" 2>&1; then
   fail 'unsupported --dry-run flag unexpectedly succeeded'
+fi
+if "$checker" --pre-enable > "$tmp_root/missing-epoch.out" 2>&1; then
+  fail 'pre-enable validation unexpectedly accepted a missing lower bound'
 fi
 
 printf 'REFLECTOR_MIRRORS_TESTS_OK\n'

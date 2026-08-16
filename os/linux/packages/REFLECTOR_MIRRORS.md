@@ -88,8 +88,8 @@ El aplicador:
    `~/.local/state/mydotfiles/backups/reflector/<timestamp>/`, con checksums;
 3. instala la política y fuerza un refresh inmediato mediante el servicio
    empaquetado;
-4. exige de 5 a 10 entradas `Server` HTTPS, config exacta y un servicio
-   exitoso reciente;
+4. exige de 5 a 10 entradas `Server` HTTPS, config exacta y que la ejecución
+   actual del servicio haya terminado con éxito y generado esa misma lista;
 5. ejecuta `pacman -Syy --noconfirm`, que descarga metadata pero no resuelve ni
    confirma upgrades, y comprueba que `pacman -Si pacman` pueda leerla;
 6. recién entonces habilita e inicia `reflector.timer`;
@@ -108,8 +108,40 @@ os/linux/packages/scripts/check-reflector-mirrors
 ```
 
 Verifica hash/contenido/ownership de la config, forma y protocolo del
-mirrorlist, resultado reciente del servicio, timer habilitado y activo, y
-metadata legible y reciente de pacman. No abre interfaces gráficas.
+mirrorlist, el último resultado reciente del servicio en el journal, timer
+habilitado y activo, y metadata legible y reciente de pacman. No abre
+interfaces gráficas.
+
+### Semántica real del servicio oneshot
+
+El primer despliegue controlado del 16 de agosto de 2026 generó correctamente
+10 servidores HTTPS, pero el checker exigía `ExecMainExitTimestamp`. El
+servicio oficial es `Type=oneshot`, usa `RemainAfterExit=no` y el `CollectMode`
+efectivo es `inactive`. Al terminar queda inactivo y systemd puede descargar su
+estado de memoria; la documentación oficial aclara que entonces se pierden
+timestamps, códigos y estadísticas de ejecución salvo lo conservado en el
+journal. Por eso un `systemctl show` posterior devolvió timestamps e
+`InvocationID` vacíos; además, `Result=success` y `ExecMainStatus=0` después de
+recargar la definición no probaban una ejecución histórica. El aplicador
+interpretó ese vacío como fallo y restauró correctamente el backup
+`20260816T034753Z`; no llegó a refrescar metadata de pacman ni a habilitar el
+timer.
+
+La validación corregida no acepta simplemente “algún éxito” anterior:
+
+1. captura un epoch inmediatamente antes de `systemctl start`; sin
+   `--no-block`, `systemctl` espera que termine el start job;
+2. exige que el mirrorlist tenga el header de Reflector, el argumento exacto de
+   la config empaquetada, y tiempos de header/mtime dentro de esa ventana;
+3. lee los registros estructurados del journal desde ese epoch, toma la última
+   finalización de un start job y exige `JOB_RESULT=done` junto al `MESSAGE_ID`
+   de éxito de systemd;
+4. vincula el tiempo de esa finalización con el header de la lista. Un fallo
+   posterior no puede quedar oculto detrás de un éxito más antiguo.
+
+El chequeo live usa la misma prueba con una ventana máxima de ocho días. Si el
+usuario no puede leer el journal del sistema, falla cerrado con una indicación
+explícita en lugar de asumir éxito.
 
 ## Actualizar la política
 
@@ -166,3 +198,6 @@ la caché y pacman reutilizará lo válido.
 
 - https://man.archlinux.org/man/reflector.1.en
 - https://wiki.archlinux.org/title/Mirrors
+- https://man.archlinux.org/man/systemd.unit.5.en
+- https://man.archlinux.org/man/systemctl.1.en
+- https://man.archlinux.org/man/journalctl.1.en

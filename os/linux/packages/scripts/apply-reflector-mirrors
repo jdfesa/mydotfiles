@@ -53,7 +53,7 @@ fail() {
 }
 
 [[ $(uname -s) == Linux ]] || fail 'GNU/Linux is required'
-for command_name in awk cmp cp date grep install mkdir pacman realpath reflector sha256sum stat sudo systemctl; do
+for command_name in awk cmp cp date grep install jq journalctl mkdir pacman realpath reflector sha256sum stat sudo systemctl; do
   command -v "$command_name" >/dev/null 2>&1 || fail "required command not found: $command_name"
 done
 for expected_file in "$policy" "$checker" "$config_target" "$mirrorlist" "$service_unit" "$timer_unit"; do
@@ -183,7 +183,8 @@ Would back up only:
   enabled/active state of $timer
 Backup root: $backup_root/<UTC timestamp>
 Would install root:root 0644: $config_target
-Would run immediate refresh: sudo systemctl start $service
+Would capture a validation lower bound and run: sudo systemctl start $service
+Would require the current start-job success journal record to match the generated mirrorlist.
 Would validate bounded HTTPS mirrors before forcing metadata refresh only:
   sudo pacman -Syy --noconfirm
 Would enable and start $timer only after all immediate checks pass.
@@ -222,8 +223,9 @@ sudo install -m 0644 -o root -g root "$policy" "$config_target"
 cmp -s "$policy" "$config_target"
 [[ $(stat -c '%U:%G:%a' "$config_target") == root:root:644 ]]
 
+refresh_not_before=$(date +%s)
 sudo systemctl start "$service"
-"$checker" --pre-enable
+"$checker" --pre-enable "$refresh_not_before"
 
 # Force downloads of repository databases through the selected mirrors. This
 # refreshes metadata only; it neither resolves nor commits a package upgrade.
