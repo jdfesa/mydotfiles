@@ -233,10 +233,11 @@ fi
 if systemctl --user is-active --quiet graphical-session.target 2>/dev/null; then
   lock_status=$(omarchy-shell lock status 2>/dev/null || true)
   if printf '%s' "$lock_status" | \
-    jq -e '.secure == true and .passwordPam == true' >/dev/null 2>&1; then
-    ok 'Quickshell lock status reports secure:true and passwordPam:true'
+    jq -e '.passwordPam == true and (.locked == false or .secure == true)' \
+      >/dev/null 2>&1; then
+    ok 'Quickshell password PAM is ready and any active lock is secure'
   else
-    fail 'Quickshell lock status is not securely password-backed'
+    fail 'Quickshell password PAM is unavailable or an active lock is insecure'
   fi
 fi
 
