@@ -66,7 +66,7 @@ sintaxis y resolucion de comandos. No captura, no graba y no abre un vault.
 | Apps -> OBS Studio | desktop entry oficial | OBS + portal PipeWire |
 | `Super+Return` | `omarchy-launch-terminal` | `xdg-terminal-exec` -> Kitty |
 | Apps -> Ghostty | desktop entry oficial | terminal alternativo explicito |
-| `Super+Shift+/` | `setsid uwsm-app -- bitwarden` | Bitwarden desktop |
+| `Super+Shift+/` | `setsid uwsm-app -- bitwarden-desktop` | Bitwarden desktop |
 | `Super+Shift+O` | binding upstream | Obsidian |
 
 Durante la seleccion de screenshot, `Return` toma la ventana resaltada,

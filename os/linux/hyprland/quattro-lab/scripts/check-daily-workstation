@@ -79,7 +79,8 @@ if ! grep -F 'hl.unbind("SUPER + SHIFT + SLASH")' "$lab_root/config/hypr/binding
   fail 'Bitwarden binding override'
 fi
 if ! grep -F '"install.service.1password"' "$lab_root/config/omarchy/extensions/omarchy-menu.jsonc" >/dev/null ||
-  ! grep -F '"action": "setsid uwsm-app -- bitwarden"' "$lab_root/config/omarchy/extensions/omarchy-menu.jsonc" >/dev/null; then
+  ! grep -F '"when": "omarchy-cmd-present bitwarden-desktop"' "$lab_root/config/omarchy/extensions/omarchy-menu.jsonc" >/dev/null ||
+  ! grep -F '"action": "setsid uwsm-app -- bitwarden-desktop"' "$lab_root/config/omarchy/extensions/omarchy-menu.jsonc" >/dev/null; then
   fail 'Bitwarden menu override'
 fi
 if ! python3 - "$lab_root/config/omarchy/extensions/omarchy-menu.jsonc" <<'PY'
@@ -94,7 +95,8 @@ text = '\n'.join(
 items = json.loads(re.sub(r',(?=\s*[}\]])', '', text))
 item = items.get('install.service.1password', {})
 assert item.get('label') == 'Bitwarden'
-assert item.get('action') == 'setsid uwsm-app -- bitwarden'
+assert item.get('when') == 'omarchy-cmd-present bitwarden-desktop'
+assert item.get('action') == 'setsid uwsm-app -- bitwarden-desktop'
 PY
 then
   fail 'Bitwarden JSONC menu override'
@@ -130,11 +132,11 @@ obs obs-studio
 kdenlive kdenlive
 obsidian obsidian
 discord discord
-telegram-desktop telegram-desktop
+Telegram telegram-desktop
 kitty kitty
 ghostty ghostty
-bitwarden bitwarden
-vlc vlc
+bitwarden-desktop bitwarden
+vlc vlc-cli
 libreoffice libreoffice-still
 EOF
 pass 'expected commands are present and package-owned'

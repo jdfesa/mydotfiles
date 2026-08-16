@@ -26,7 +26,7 @@
 -- Replace Quattro's 1Password action with the repository-selected password
 -- manager. Vault data and login state remain owned by Bitwarden itself.
 hl.unbind("SUPER + SHIFT + SLASH")
-o.bind("SUPER + SHIFT + SLASH", "Bitwarden", "setsid uwsm-app -- bitwarden")
+o.bind("SUPER + SHIFT + SLASH", "Bitwarden", "setsid uwsm-app -- bitwarden-desktop")
 
 -- Logitech MX Keys examples:
 -- o.bind("SUPER + SHIFT + S", nil, "omarchy-capture-screenshot")
