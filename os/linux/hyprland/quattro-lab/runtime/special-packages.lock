@@ -1,0 +1,6 @@
+# Packages built and published by the official Omarchy stable repository.
+# The installer downloads these exact payloads without adding an Omarchy
+# repository to /etc/pacman.conf.
+
+quickshell-git-0.3.0.r20.g28771c7-1-x86_64.pkg.tar.zst 5e4d8cb4eb05a741545d9f058ad440faa3111df925a7bba0ab98337765f06930
+xdg-terminal-exec-0.14.2-1-any.pkg.tar.zst 79310148773a2b0278ff3a4c1abf61eff41319bd1791ec5e309a2a29392bfa49

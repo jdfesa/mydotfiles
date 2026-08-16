@@ -4,6 +4,7 @@ set -eu
 
 config_root=${HYPRLAND_QUATTRO_ROOT:-$HOME/.config/hypr-quattro}
 config_file=$config_root/hyprland.lua
+runtime_root=${OMARCHY_PATH:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
 state_home=${XDG_STATE_HOME:-$HOME/.local/state}
 log_dir=$state_home/mydotfiles
 log_file=$log_dir/hyprland-quattro-lab.log
@@ -12,10 +13,27 @@ umask 077
 mkdir -p "$log_dir"
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin"
 export HYPRLAND_QUATTRO_ROOT="$config_root"
+export OMARCHY_PATH="$runtime_root"
+export PATH="$OMARCHY_PATH/bin:$PATH"
+export LUA_PATH="$config_root/?.lua;;"
 
 if [ ! -r "$config_file" ]; then
   printf 'Quattro Lab: missing config: %s\n' "$config_file" >&2
   exit 1
+fi
+
+if [ ! -r "$OMARCHY_PATH/default/hypr/bootstrap.lua" ] || \
+  [ ! -r "$OMARCHY_PATH/shell/shell.qml" ]; then
+  printf 'Quattro Lab: runtime is missing or incomplete: %s\n' \
+    "$OMARCHY_PATH" >&2
+  printf 'Run scripts/sync-runtime before starting this session.\n' >&2
+  exit 1
+fi
+
+if ! command -v quickshell >/dev/null 2>&1 && \
+  ! command -v qs >/dev/null 2>&1; then
+  printf 'Quattro Lab: quickshell is unavailable\n' >&2
+  exit 127
 fi
 
 if [ ! -x /usr/bin/start-hyprland ]; then
@@ -26,6 +44,7 @@ fi
 {
   printf '\n=== Hyprland Quattro Lab %s ===\n' "$(date -Is)"
   printf 'config=%s\n' "$config_file"
+  printf 'runtime=%s\n' "$OMARCHY_PATH"
 } >> "$log_file"
 
 exec /usr/bin/start-hyprland -- --config "$config_file" >> "$log_file" 2>&1

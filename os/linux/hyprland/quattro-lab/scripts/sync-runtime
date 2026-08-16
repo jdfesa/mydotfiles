@@ -1,0 +1,80 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: os/linux/hyprland/quattro-lab/scripts/sync-runtime [--dry-run]
+
+Materialize the complete pinned Omarchy Quattro source runtime in the user's
+XDG data directory. Existing checkouts are verified and never overwritten.
+EOF
+}
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+lab_root=$(CDPATH='' cd -- "$script_dir/.." && pwd -P)
+# shellcheck source=/dev/null
+. "$lab_root/runtime/source.lock"
+
+runtime_root=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
+dry_run=0
+
+if [ "${1:-}" = "--dry-run" ]; then
+  dry_run=1
+  shift
+fi
+
+if [ "$#" -ne 0 ]; then
+  usage >&2
+  exit 2
+fi
+
+if ! command -v git >/dev/null 2>&1; then
+  printf 'Quattro runtime: git is required\n' >&2
+  exit 127
+fi
+
+if [ -e "$runtime_root" ] || [ -L "$runtime_root" ]; then
+  if [ ! -d "$runtime_root/.git" ]; then
+    printf 'Quattro runtime: refusing non-Git path: %s\n' "$runtime_root" >&2
+    exit 1
+  fi
+
+  actual_commit=$(git -C "$runtime_root" rev-parse HEAD)
+  if [ "$actual_commit" != "$OMARCHY_COMMIT" ]; then
+    printf 'Quattro runtime: expected %s, found %s\n' \
+      "$OMARCHY_COMMIT" "$actual_commit" >&2
+    exit 1
+  fi
+
+  if [ -n "$(git -C "$runtime_root" status --porcelain)" ]; then
+    printf 'Quattro runtime: checkout has local modifications: %s\n' \
+      "$runtime_root" >&2
+    exit 1
+  fi
+
+  printf 'Quattro runtime already verified: %s (%s)\n' \
+    "$runtime_root" "$actual_commit"
+  exit 0
+fi
+
+if [ "$dry_run" -eq 1 ]; then
+  printf '[dry-run] clone %s tag %s into %s\n' \
+    "$OMARCHY_REPOSITORY" "$OMARCHY_TAG" "$runtime_root"
+  printf '[dry-run] verify commit %s\n' "$OMARCHY_COMMIT"
+  exit 0
+fi
+
+mkdir -p "$(dirname -- "$runtime_root")"
+git clone --branch "$OMARCHY_TAG" --depth 1 --single-branch \
+  "$OMARCHY_REPOSITORY" "$runtime_root"
+
+actual_commit=$(git -C "$runtime_root" rev-parse HEAD)
+if [ "$actual_commit" != "$OMARCHY_COMMIT" ]; then
+  printf 'Quattro runtime: expected %s, cloned %s\n' \
+    "$OMARCHY_COMMIT" "$actual_commit" >&2
+  exit 1
+fi
+
+printf 'Quattro runtime installed: %s (%s)\n' \
+  "$runtime_root" "$actual_commit"

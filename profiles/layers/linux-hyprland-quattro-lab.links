@@ -1,2 +1,3 @@
-# Optional parallel Lua session. It does not replace ~/.config/hypr.
+# Optional parallel upstream Quattro session. It does not replace ~/.config/hypr.
 os/linux/hyprland/quattro-lab/config|$HOME/.config/hypr-quattro
+os/linux/hyprland/quattro-lab/config/omarchy|$HOME/.config/omarchy

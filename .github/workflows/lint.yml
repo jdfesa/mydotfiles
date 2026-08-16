@@ -39,7 +39,7 @@ jobs:
       - name: Rebuild Linux profiles in isolated homes
         shell: bash
         run: |
-          for profile in arch-workstation arch-dwm arch-hyprland arch-hyprland-preview; do
+          for profile in arch-workstation arch-dwm arch-hyprland arch-hyprland-preview arch-hyprland-quattro-lab; do
             test_home=$(mktemp -d)
             HOME="$test_home" scripts/link "$profile"
             HOME="$test_home" scripts/doctor "$profile"

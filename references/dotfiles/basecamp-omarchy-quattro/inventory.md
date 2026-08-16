@@ -16,8 +16,8 @@ forma parte del runtime.
 | Area upstream | Tamano observado | Portabilidad | Relacion local |
 |---|---:|---|---|
 | `config/hypr/` + `default/hypr/` | 50 archivos Lua | Alta para configuracion base; media para helpers que invocan `omarchy-*` | Sustituiria gradualmente el Hyprlang actual antes de Hyprland 0.57 |
-| `shell/` | 95 archivos QML | Media-baja sin adaptacion; requiere Quickshell y servicios auxiliares | Candidato a una sesion Quattro Lab, no a reemplazo inmediato de Waybar/Mako |
-| `bin/` | 425 comandos/scripts | Variable | Extraer solamente el cierre transitivo usado por los plugins elegidos |
+| `shell/` | 95 archivos QML | Media-baja sin su runtime; requiere Quickshell y servicios auxiliares | Se ejecuta completo solo dentro de Quattro Lab |
+| `bin/` | 425 comandos/scripts | Variable | Se conserva completo para no romper contratos entre plugins y comandos |
 | `themes/` | 22 temas | Media | Paletas y plantillas son adaptables; fondos y activos requieren auditoria individual |
 | `default/themed/` | 17 plantillas | Media | Puede inspirar un generador propio de tema semantico |
 | `config/omarchy/shell.json` | 1 configuracion | Alta una vez portado el shell | Modelo declarativo util para layout y plugins |
@@ -28,8 +28,8 @@ forma parte del runtime.
 - El bootstrap Lua espera `OMARCHY_PATH` y carga modulos desde
   `/usr/share/omarchy` salvo que se reconfigure.
 - Los defaults de Hyprland contienen mas de cien referencias a comandos
-  `omarchy-*`; los bindings de tiling puros son mucho mas portables que menus,
-  capturas, lock, audio, red y energia.
+  `omarchy-*`; por ello copiar solamente dotfiles produce una sesion incompleta.
+  El baseline conserva el arbol `bin/` entero y recorta despues de medir uso.
 - El shell importa Quickshell, Hyprland, PipeWire, MPRIS, Notifications, PAM,
   Polkit, SystemTray, UPower, Bluetooth y Networking.
 - La maquina canary ya tiene Hyprland `0.56.2`, UWSM, NetworkManager,

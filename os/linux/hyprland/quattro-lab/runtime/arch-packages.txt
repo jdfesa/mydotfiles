@@ -1,0 +1,14 @@
+# Runtime dependencies available from the official Arch repositories.
+brightnessctl
+foot
+gum
+hyprpicker
+hyprsunset
+inotify-tools
+lua51
+luarocks
+pamixer
+power-profiles-daemon
+socat
+udiskie
+wtype
