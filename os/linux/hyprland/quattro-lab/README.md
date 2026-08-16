@@ -24,6 +24,10 @@ La copia completa queda fuera de Git, fijada por `runtime/source.lock`, en:
 Los dotfiles pequenos y personalizables permanecen versionados en este repo.
 El perfil los enlaza como `~/.config/hypr-quattro` y `~/.config/omarchy`.
 
+La seleccion diaria de aplicaciones, backends, shortcuts, Bitwarden, ownership
+de Kitty y la decision de diferir Vial estan en
+[`DAILY_WORKSTATION.md`](DAILY_WORKSTATION.md).
+
 La integracion P0 agrega, sin activar aplicaciones opcionales:
 
 - autenticacion de bloqueo Quickshell con el stack PAM de password exacto de
@@ -40,11 +44,11 @@ La integracion P0 agrega, sin activar aplicaciones opcionales:
 - XFCE/XRDP y la sesion Hyprland estable permanecen como recuperacion.
 - No se ejecutan el instalador de la distro, migraciones, provisioning,
   configuracion de Pacman, SDDM, Limine, Snapper, firewall o servicios del host.
-- No se instalan en bloque las aplicaciones opcionales de la ISO (Kdenlive,
-  LibreOffice, Docker, juegos, etc.). El escritorio y su superficie de comandos
-  si se copian completos; una accion que lance una app ausente se ajusta despues.
-- La primera prueba conserva incluso la seleccion de apps upstream, incluido el
-  binding de 1Password. Bitwarden se sustituye una vez validado el arranque base.
+- No se instalan en bloque las aplicaciones de la ISO. Solo se aplica el
+  manifiesto curado documentado en `DAILY_WORKSTATION.md`; Docker, juegos y
+  servicios no pedidos permanecen ausentes.
+- El binding y el row de 1Password se reemplazan mediante overrides de usuario
+  por Bitwarden; no se parchea el runtime derivado.
 - La configuracion activa de macOS no participa en este perfil.
 
 `prepare-user` marca el provisioning de distribucion como completado antes del
