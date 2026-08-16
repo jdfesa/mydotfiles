@@ -45,6 +45,8 @@ packages/
   AUR revisados de XRDP; no se confunden con la base diaria.
 - `lists/30-wayland-desktop.txt`: compositor Hyprland y componentes Wayland
   opcionales; no modifica SDDM ni reemplaza XFCE.
+- `lists/40-quattro-daily-workstation.txt`: aplicaciones diarias aprobadas y
+  backends exactos de captura/grabacion; no replica el catalogo de Omarchy.
 - `lists/aur-reviewed.txt`: versiones, commits revisados y justificacion de cada
   paquete AUR permitido.
 
