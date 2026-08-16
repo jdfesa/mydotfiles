@@ -1,3 +1,6 @@
 # Optional parallel upstream Quattro session. It does not replace ~/.config/hypr.
 os/linux/hyprland/quattro-lab/config|$HOME/.config/hypr-quattro
 os/linux/hyprland/quattro-lab/config/omarchy|$HOME/.config/omarchy
+os/linux/hyprland/quattro-lab/config/hyprland-preview-share-picker|$HOME/.config/hyprland-preview-share-picker
+os/linux/hyprland/quattro-lab/systemd/user/omarchy-sleep-lock.service|$HOME/.config/systemd/user/omarchy-sleep-lock.service
+os/linux/hyprland/quattro-lab/bin/omarchy-quattro-sleep-monitor|$HOME/.local/bin/omarchy-quattro-sleep-monitor

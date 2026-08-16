@@ -24,6 +24,16 @@ La copia completa queda fuera de Git, fijada por `runtime/source.lock`, en:
 Los dotfiles pequenos y personalizables permanecen versionados en este repo.
 El perfil los enlaza como `~/.config/hypr-quattro` y `~/.config/omarchy`.
 
+La integracion P0 agrega, sin activar aplicaciones opcionales:
+
+- autenticacion de bloqueo Quickshell con el stack PAM de password exacto de
+  `v4.0.0`;
+- bloqueo previo a suspend mediante un servicio de usuario acotado a
+  `graphical-session.target`;
+- configuracion exacta de portal y `hyprsunset`, con perfil `identity` sin
+  tinte como valor inicial;
+- el picker oficial de screen sharing fijado por filename, version y SHA-256.
+
 ## Limites deliberados
 
 - `~/.config/hypr` continua siendo la sesion estable.
@@ -45,7 +55,7 @@ agentes, audio o GTK, sin recortar el shell del escritorio.
 
 La ISO contiene este mismo codigo, paquetes binarios, un repositorio offline y
 el instalador del sistema. Para el trasplante, el tag Git es la fuente legible y
-trazable; los dos binarios especiales se descargan por nombre y SHA-256 desde el
+trazable; los tres binarios especiales se descargan por nombre y SHA-256 desde el
 repositorio oficial de Omarchy. Desmontar la ISO agregaria peso, no una capa de
 dotfiles mas completa.
 
@@ -70,17 +80,48 @@ scripts/link --repair arch-hyprland-quattro-lab
 os/linux/hyprland/quattro-lab/scripts/prepare-user --dry-run
 os/linux/hyprland/quattro-lab/scripts/prepare-user
 
-# 5. Verificar todo antes de tocar SDDM.
-os/linux/hyprland/quattro-lab/scripts/check-runtime
-
-# 6. Instalar la entrada adicional de SDDM/UWSM.
+# 5. Instalar la entrada adicional de SDDM/UWSM, PAM administrado y activar
+#    el monitor de bloqueo previo a suspend en la sesion grafica actual.
 os/linux/hyprland/quattro-lab/scripts/install-session --dry-run
 os/linux/hyprland/quattro-lab/scripts/install-session
+
+# 6. Verificar runtime, PAM, servicio, portal, nightlight y picker sin bloquear.
+os/linux/hyprland/quattro-lab/scripts/check-runtime
 ```
 
 `install-dependencies` no agrega el repositorio Omarchy a
-`/etc/pacman.conf`. Descarga `quickshell-git` y `xdg-terminal-exec` por sus
-payloads exactos, valida los SHA-256 fijados y luego usa `pacman -U`.
+`/etc/pacman.conf`. Descarga `quickshell-git`, `xdg-terminal-exec` y
+`hyprland-preview-share-picker` por sus payloads exactos, valida los SHA-256
+fijados y luego usa `pacman -U`.
+
+## Modelo de estado
+
+| Clase | Fuente de verdad | Destino o resultado |
+|---|---|---|
+| Configuracion de usuario | archivos versionados bajo `config/`, `systemd/user/` y `bin/` | symlinks en `~/.config` y `~/.local/bin` creados por el perfil |
+| Compatibilidad Hyprland | `config/hypr/{xdph,hyprsunset}.conf` | links versionados dentro del source estable que aparecen en `~/.config/hypr`; el symlink raiz estable no se reemplaza |
+| Copias root-owned | templates bajo `system/pam.d/` y archivos bajo `session/` | `/etc/pam.d/omarchy-lock-*` y `/usr/local/{libexec,share}` mediante `install-session` |
+| Runtime derivado | `runtime/source.lock` | checkout Git limpio en `~/.local/share/mydotfiles/omarchy-quattro/runtime` |
+| Paquetes especiales | `runtime/special-packages.lock` | paquetes de sistema instalados desde payloads oficiales verificados |
+| Estado derivado | temas del runtime | `~/.local/state/omarchy/current`; no se versionan historia, cache ni notificaciones |
+
+`config/omarchy/shell.toml` es una preferencia deliberadamente versionada y
+mantiene `[font] base-size = 12`. No es estado generado.
+
+El instalador respalda solo sus cuatro rutas administradas antes de escribir.
+Instala PAM como `root:root` modo `0644` y compara el contenido instalado con
+el template. El PAM de fingerprint solo se instala cuando `fprintd-list`
+confirma un dedo enrolado para el usuario; en este desktop password es
+obligatorio y fingerprint permanece ausente mientras no exista esa evidencia.
+
+## Actualizacion reproducible
+
+1. actualizar `source.lock` y los payloads lockeados en una rama revisable;
+2. consultar primero la metadata del DB oficial estable de Omarchy;
+3. ejecutar `sync-runtime` (nunca modifica un checkout dirty o en otro commit);
+4. ejecutar `install-dependencies`, `scripts/link --repair`, `prepare-user` e
+   `install-session` en ese orden;
+5. terminar con `check-runtime` y `scripts/doctor arch-hyprland-quattro-lab`.
 
 ## Validacion interactiva
 
@@ -102,15 +143,22 @@ El launcher escribe fallos tempranos en:
 
 ## Rollback
 
-La entrada de SDDM se retira con el archivo de respaldo informado al instalar:
+La entrada de SDDM y las copias PAM se revierten con el directorio de respaldo
+informado al instalar. Tambien se restaura el estado previo enabled/active del
+servicio de usuario:
 
 ```sh
+os/linux/hyprland/quattro-lab/scripts/rollback-session --dry-run \
+  "$HOME/.local/state/mydotfiles/backups/hyprland-quattro-lab/<timestamp>"
 os/linux/hyprland/quattro-lab/scripts/rollback-session \
   "$HOME/.local/state/mydotfiles/backups/hyprland-quattro-lab/<timestamp>"
 ```
 
-El runtime, los paquetes y el estado de usuario se conservan para diagnostico;
-el rollback nunca toca `~/.config/hypr` ni macOS.
+Cada backup contiene `system-files.tar`, su SHA-256, la lista exacta de rutas y
+el estado previo del servicio. El rollback valida que no haya miembros fuera de
+las cuatro rutas administradas antes de extraer. El runtime, los paquetes y el
+estado de usuario se conservan para diagnostico; el rollback nunca toca otros
+archivos PAM/systemd, `~/.config/hypr`, las sesiones legacy ni macOS.
 
 ## Proveniencia
 

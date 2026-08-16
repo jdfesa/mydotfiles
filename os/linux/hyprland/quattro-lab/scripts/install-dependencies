@@ -7,7 +7,7 @@ usage() {
 Usage: os/linux/hyprland/quattro-lab/scripts/install-dependencies [--dry-run]
 
 Install the desktop runtime dependencies for the pinned Quattro release.
-Official Arch packages come from the host's configured repositories. The two
+Official Arch packages come from the host's configured repositories. The three
 Omarchy-built packages are downloaded by exact filename and SHA-256; no Pacman
 repository is added to /etc/pacman.conf.
 EOF
