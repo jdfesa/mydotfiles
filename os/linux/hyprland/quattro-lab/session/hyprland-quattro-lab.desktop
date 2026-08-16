@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Hyprland Quattro Lab
 Comment=Reversible Omarchy Quattro behavior lab managed by mydotfiles
-Exec=uwsm start -e -D Hyprland:QuattroLab -N "Hyprland Quattro Lab" -F /usr/local/libexec/dotfiles-hyprland-quattro-lab
+Exec=uwsm start -g -1 -e -D Hyprland:QuattroLab -F /usr/local/libexec/dotfiles-hyprland-quattro-lab
 TryExec=/usr/local/libexec/dotfiles-hyprland-quattro-lab
 DesktopNames=Hyprland;QuattroLab
 Type=Application
