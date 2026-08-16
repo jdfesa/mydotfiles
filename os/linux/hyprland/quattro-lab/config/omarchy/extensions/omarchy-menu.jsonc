@@ -34,7 +34,7 @@
   "install.service.1password": {
     "icon": "󰟵",
     "label": "Bitwarden",
-    "when": "omarchy-cmd-present bitwarden",
-    "action": "setsid uwsm-app -- bitwarden"
+    "when": "omarchy-cmd-present bitwarden-desktop",
+    "action": "setsid uwsm-app -- bitwarden-desktop"
   },
 }
