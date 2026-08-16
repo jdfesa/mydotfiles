@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+packages_root=$(cd -- "$script_dir/.." && pwd -P)
+checker=$script_dir/check-reflector-mirrors
+applicator=$script_dir/apply-reflector-mirrors
+tmp_root=$(mktemp -d "${TMPDIR:-/tmp}/mydotfiles-reflector-test.XXXXXX")
+trap 'rm -rf "$tmp_root"' EXIT HUP INT TERM
+
+fail() {
+  printf 'FAIL: %s\n' "$1" >&2
+  exit 1
+}
+
+before_diff=$(git -C "$packages_root/../../.." diff -- os/linux/packages)
+"$checker" --metadata-only > "$tmp_root/metadata.out"
+grep -F 'REFLECTOR_MIRRORS_METADATA_OK' "$tmp_root/metadata.out" >/dev/null ||
+  fail 'metadata-only success marker'
+after_diff=$(git -C "$packages_root/../../.." diff -- os/linux/packages)
+[[ $after_diff == "$before_diff" ]] || fail 'metadata-only check modified repository files'
+
+mkdir -p "$tmp_root/darwin-bin"
+cat > "$tmp_root/darwin-bin/uname" <<'EOF'
+#!/bin/sh
+printf 'Darwin\n'
+EOF
+chmod +x "$tmp_root/darwin-bin/uname"
+PATH="$tmp_root/darwin-bin:$PATH" "$checker" --metadata-only > "$tmp_root/darwin-metadata.out"
+grep -F 'REFLECTOR_MIRRORS_METADATA_OK' "$tmp_root/darwin-metadata.out" >/dev/null ||
+  fail 'metadata-only check under Darwin uname'
+if PATH="$tmp_root/darwin-bin:$PATH" "$applicator" > "$tmp_root/darwin-apply.out" 2>&1; then
+  fail 'applicator unexpectedly accepted Darwin'
+fi
+grep -F 'GNU/Linux is required' "$tmp_root/darwin-apply.out" >/dev/null ||
+  fail 'applicator Darwin guard'
+
+bash -n "$applicator" "$0"
+sh -n "$checker"
+
+for file in "$applicator" "$checker" "$0"; do
+  [[ -x $file ]] || fail "missing executable mode: $file"
+done
+
+if [[ $(uname -s) == Linux ]] && command -v reflector >/dev/null 2>&1 &&
+  [[ -r /etc/xdg/reflector/reflector.conf && -r /etc/pacman.d/mirrorlist &&
+     -r /usr/lib/systemd/system/reflector.service && -r /usr/lib/systemd/system/reflector.timer ]]; then
+  mkdir -p "$tmp_root/bin"
+  cat > "$tmp_root/bin/sudo" <<EOF
+#!/bin/sh
+printf 'sudo must not run during plan mode\n' >> '$tmp_root/sudo-called'
+exit 99
+EOF
+  chmod +x "$tmp_root/bin/sudo"
+
+  config_before=$(sha256sum /etc/xdg/reflector/reflector.conf | awk '{print $1}')
+  mirrors_before=$(sha256sum /etc/pacman.d/mirrorlist | awk '{print $1}')
+  PATH="$tmp_root/bin:$PATH" "$applicator" > "$tmp_root/plan.out"
+  grep -F 'PLAN_ONLY: no files, pacman metadata, or services changed.' "$tmp_root/plan.out" >/dev/null ||
+    fail 'default plan-only marker'
+  [[ ! -e $tmp_root/sudo-called ]] || fail 'plan mode invoked sudo'
+  [[ $(sha256sum /etc/xdg/reflector/reflector.conf | awk '{print $1}') == "$config_before" ]] ||
+    fail 'plan mode changed Reflector config'
+  [[ $(sha256sum /etc/pacman.d/mirrorlist | awk '{print $1}') == "$mirrors_before" ]] ||
+    fail 'plan mode changed mirrorlist'
+
+  fake_backup=$tmp_root/state/mydotfiles/backups/reflector/20260816T000000Z
+  mkdir -p "$fake_backup"
+  cp "$packages_root/reflector/reflector.conf" "$fake_backup/reflector.conf"
+  printf 'Server = https://example.invalid/archlinux/$repo/os/$arch\n' > "$fake_backup/mirrorlist"
+  printf 'enabled=disabled\nactive=inactive\n' > "$fake_backup/reflector.timer.state"
+  (
+    cd "$fake_backup"
+    sha256sum reflector.conf mirrorlist reflector.timer.state > SHA256SUMS
+  )
+  XDG_STATE_HOME="$tmp_root/state" PATH="$tmp_root/bin:$PATH" \
+    "$applicator" --rollback "$fake_backup" > "$tmp_root/rollback-plan.out"
+  grep -F 'PLAN_ONLY: verify checksums and restore only:' "$tmp_root/rollback-plan.out" >/dev/null ||
+    fail 'rollback plan-only marker'
+  [[ ! -e $tmp_root/sudo-called ]] || fail 'rollback plan invoked sudo'
+else
+  printf 'SKIP: live-host plan test requires Arch Reflector package files.\n'
+fi
+
+if "$applicator" --dry-run > "$tmp_root/invalid.out" 2>&1; then
+  fail 'unsupported --dry-run flag unexpectedly succeeded'
+fi
+
+printf 'REFLECTOR_MIRRORS_TESTS_OK\n'

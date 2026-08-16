@@ -1,0 +1,239 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+usage() {
+  cat >&2 <<EOF
+Usage: $0 [--execute] [--rollback BACKUP_DIR]
+
+Without --execute, print a plan and change nothing. Rollback also requires
+--execute and only accepts a backup created beneath the managed backup root.
+EOF
+  exit 2
+}
+
+execute=0
+rollback_dir=
+while (($#)); do
+  case $1 in
+    --execute)
+      ((execute == 0)) || usage
+      execute=1
+      shift
+      ;;
+    --rollback)
+      [[ -z $rollback_dir && $# -ge 2 ]] || usage
+      rollback_dir=$2
+      shift 2
+      ;;
+    *) usage ;;
+  esac
+done
+
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+packages_root=$(cd -- "$script_dir/.." && pwd -P)
+policy=$packages_root/reflector/reflector.conf
+checker=$script_dir/check-reflector-mirrors
+state_home=${XDG_STATE_HOME:-$HOME/.local/state}
+backup_root=$state_home/mydotfiles/backups/reflector
+config_target=/etc/xdg/reflector/reflector.conf
+mirrorlist=/etc/pacman.d/mirrorlist
+service_unit=/usr/lib/systemd/system/reflector.service
+timer_unit=/usr/lib/systemd/system/reflector.timer
+service=reflector.service
+timer=reflector.timer
+backup_dir=
+previous_enabled=
+previous_active=
+rollback_required=0
+
+fail() {
+  printf 'ERROR: %s\n' "$1" >&2
+  exit 1
+}
+
+[[ $(uname -s) == Linux ]] || fail 'GNU/Linux is required'
+for command_name in awk cmp cp date grep install mkdir pacman realpath reflector sha256sum stat sudo systemctl; do
+  command -v "$command_name" >/dev/null 2>&1 || fail "required command not found: $command_name"
+done
+for expected_file in "$policy" "$checker" "$config_target" "$mirrorlist" "$service_unit" "$timer_unit"; do
+  [[ -r $expected_file ]] || fail "expected file is not readable: $expected_file"
+done
+[[ -x $checker ]] || fail "checker is not executable: $checker"
+grep -Fqx 'ExecStart=/usr/bin/reflector @/etc/xdg/reflector/reflector.conf' "$service_unit" ||
+  fail "unexpected packaged service command: $service_unit"
+grep -Fqx 'OnCalendar=weekly' "$timer_unit" || fail "unexpected packaged timer schedule: $timer_unit"
+
+read_timer_state() {
+  local value status
+
+  if value=$(systemctl is-enabled "$timer" 2>/dev/null); then
+    previous_enabled=$value
+  else
+    status=$?
+    previous_enabled=$value
+    [[ $status -eq 1 && $previous_enabled == disabled ]] ||
+      fail "cannot determine enabled state for $timer (status $status: ${previous_enabled:-no output})"
+  fi
+
+  if value=$(systemctl is-active "$timer" 2>/dev/null); then
+    previous_active=$value
+  else
+    status=$?
+    previous_active=$value
+    [[ $status -eq 3 && $previous_active == inactive ]] ||
+      fail "cannot determine active state for $timer (status $status: ${previous_active:-no output})"
+  fi
+}
+
+verify_backup() {
+  local candidate=$1 canonical root_canonical
+  [[ -d $candidate ]] || fail "backup directory does not exist: $candidate"
+  canonical=$(realpath -- "$candidate")
+  root_canonical=$(realpath -- "$backup_root")
+  [[ $canonical == "$root_canonical"/* ]] || fail "backup is outside managed root: $candidate"
+  for file in reflector.conf mirrorlist reflector.timer.state SHA256SUMS; do
+    [[ -f $canonical/$file ]] || fail "incomplete backup: $canonical/$file"
+  done
+  (cd -- "$canonical" && sha256sum --check SHA256SUMS >/dev/null) ||
+    fail "backup checksum verification failed: $canonical"
+  backup_dir=$canonical
+}
+
+restore_timer_state() {
+  local enabled=$1 active=$2
+  case $enabled in
+    enabled) sudo systemctl enable "$timer" || return 1 ;;
+    disabled) sudo systemctl disable "$timer" || return 1 ;;
+    *)
+      printf 'ERROR: unsupported saved enabled state: %s\n' "$enabled" >&2
+      return 1
+      ;;
+  esac
+  case $active in
+    active) sudo systemctl start "$timer" || return 1 ;;
+    inactive) sudo systemctl stop "$timer" || return 1 ;;
+    *)
+      printf 'ERROR: unsupported saved active state: %s\n' "$active" >&2
+      return 1
+      ;;
+  esac
+}
+
+restore_backup() {
+  local saved_enabled saved_active
+  saved_enabled=$(awk -F= '$1 == "enabled" {print $2}' "$backup_dir/reflector.timer.state")
+  saved_active=$(awk -F= '$1 == "active" {print $2}' "$backup_dir/reflector.timer.state")
+  if [[ -z $saved_enabled || -z $saved_active ]]; then
+    printf 'ERROR: saved timer state is incomplete\n' >&2
+    return 1
+  fi
+
+  sudo systemctl stop "$timer" || return 1
+  sudo install -m 0644 -o root -g root "$backup_dir/reflector.conf" "$config_target" || return 1
+  sudo install -m 0644 -o root -g root "$backup_dir/mirrorlist" "$mirrorlist" || return 1
+  restore_timer_state "$saved_enabled" "$saved_active" || return 1
+
+  cmp -s "$backup_dir/reflector.conf" "$config_target" || return 1
+  cmp -s "$backup_dir/mirrorlist" "$mirrorlist" || return 1
+  [[ $(stat -c '%U:%G:%a' "$config_target") == root:root:644 ]] || return 1
+  [[ $(stat -c '%U:%G:%a' "$mirrorlist") == root:root:644 ]] || return 1
+}
+
+automatic_rollback() {
+  local status=$1
+  trap - ERR INT TERM
+  if ((rollback_required)); then
+    printf 'ERROR: application failed; restoring backup %s\n' "$backup_dir" >&2
+    set +e
+    if restore_backup; then
+      printf 'ROLLBACK_OK: restored files and timer state from %s\n' "$backup_dir" >&2
+    else
+      printf 'ROLLBACK_FAILED: manual recovery is required from %s\n' "$backup_dir" >&2
+    fi
+  fi
+  exit "$status"
+}
+
+if [[ -n $rollback_dir ]]; then
+  verify_backup "$rollback_dir"
+  if ((execute == 0)); then
+    printf 'PLAN_ONLY: verify checksums and restore only:\n'
+    printf '  %s -> %s\n' "$backup_dir/reflector.conf" "$config_target"
+    printf '  %s -> %s\n' "$backup_dir/mirrorlist" "$mirrorlist"
+    printf '  timer state from %s\n' "$backup_dir/reflector.timer.state"
+    printf 'No files or services changed. Re-run with --execute to apply rollback.\n'
+    exit 0
+  fi
+  sudo -v
+  restore_backup
+  printf 'REFLECTOR_MIRRORS_ROLLBACK_OK: %s\n' "$backup_dir"
+  exit 0
+fi
+
+policy_hash=$(sha256sum "$policy" | awk '{print $1}')
+if ((execute == 0)); then
+  cat <<EOF
+PLAN_ONLY: no files, pacman metadata, or services changed.
+Policy: $policy
+Policy SHA-256: $policy_hash
+Would back up only:
+  $config_target
+  $mirrorlist
+  enabled/active state of $timer
+Backup root: $backup_root/<UTC timestamp>
+Would install root:root 0644: $config_target
+Would run immediate refresh: sudo systemctl start $service
+Would validate bounded HTTPS mirrors before forcing metadata refresh only:
+  sudo pacman -Syy --noconfirm
+Would enable and start $timer only after all immediate checks pass.
+Any failure after backup triggers automatic file and timer-state rollback.
+Re-run with --execute to apply.
+EOF
+  exit 0
+fi
+
+sudo -v
+read_timer_state
+timestamp=$(date -u +%Y%m%dT%H%M%SZ)
+backup_dir=$backup_root/$timestamp
+mkdir -p -- "$backup_root"
+mkdir -- "$backup_dir"
+chmod 700 "$backup_dir"
+cp -- "$config_target" "$backup_dir/reflector.conf"
+cp -- "$mirrorlist" "$backup_dir/mirrorlist"
+{
+  printf 'enabled=%s\n' "$previous_enabled"
+  printf 'active=%s\n' "$previous_active"
+} > "$backup_dir/reflector.timer.state"
+(
+  cd -- "$backup_dir"
+  sha256sum reflector.conf mirrorlist reflector.timer.state > SHA256SUMS
+  sha256sum --check SHA256SUMS >/dev/null
+)
+printf 'Backup verified before changes: %s\n' "$backup_dir"
+
+rollback_required=1
+trap 'automatic_rollback $?' ERR
+trap 'automatic_rollback 130' INT
+trap 'automatic_rollback 143' TERM
+
+sudo install -m 0644 -o root -g root "$policy" "$config_target"
+cmp -s "$policy" "$config_target"
+[[ $(stat -c '%U:%G:%a' "$config_target") == root:root:644 ]]
+
+sudo systemctl start "$service"
+"$checker" --pre-enable
+
+# Force downloads of repository databases through the selected mirrors. This
+# refreshes metadata only; it neither resolves nor commits a package upgrade.
+sudo pacman -Syy --noconfirm
+pacman -Si pacman >/dev/null
+
+sudo systemctl enable --now "$timer"
+"$checker"
+
+rollback_required=0
+trap - ERR INT TERM
+printf 'REFLECTOR_MIRRORS_APPLY_OK\n'
+printf 'Backup for explicit rollback: %s\n' "$backup_dir"

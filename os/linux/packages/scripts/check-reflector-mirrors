@@ -1,0 +1,173 @@
+#!/bin/sh
+
+set -eu
+
+usage() {
+  printf 'Usage: %s [--metadata-only | --pre-enable]\n' "$0" >&2
+  exit 2
+}
+
+mode=live
+case ${1:-} in
+  '') ;;
+  --metadata-only) mode=metadata; shift ;;
+  --pre-enable) mode=pre_enable; shift ;;
+  *) usage ;;
+esac
+[ "$#" -eq 0 ] || usage
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+packages_root=$(CDPATH='' cd -- "$script_dir/.." && pwd -P)
+policy=$packages_root/reflector/reflector.conf
+applicator=$script_dir/apply-reflector-mirrors
+test_script=$script_dir/test-reflector-mirrors
+config_target=/etc/xdg/reflector/reflector.conf
+mirrorlist=/etc/pacman.d/mirrorlist
+timer=reflector.timer
+service=reflector.service
+min_servers=5
+max_servers=10
+max_age_seconds=691200
+checks=0
+
+pass() {
+  checks=$((checks + 1))
+  printf 'PASS: %s\n' "$1"
+}
+
+fail() {
+  printf 'FAIL: %s\n' "$1" >&2
+  exit 1
+}
+
+require_command() {
+  command -v "$1" >/dev/null 2>&1 || fail "missing command: $1"
+}
+
+[ -r "$policy" ] || fail "missing repository policy: $policy"
+[ -x "$applicator" ] || fail "applicator is not executable: $applicator"
+[ -x "$test_script" ] || fail "test is not executable: $test_script"
+pass 'repository policy and commands exist with executable modes'
+
+tmp_root=${TMPDIR:-/tmp}
+actual_options=$(mktemp "$tmp_root/mydotfiles-reflector-options.XXXXXX")
+expected_options=$(mktemp "$tmp_root/mydotfiles-reflector-expected.XXXXXX")
+trap 'rm -f "$actual_options" "$expected_options"' EXIT HUP INT TERM
+
+awk '
+  /^[[:space:]]*($|#)/ { next }
+  {
+    sub(/^[[:space:]]*/, "")
+    sub(/[[:space:]]*$/, "")
+    print
+  }
+' "$policy" > "$actual_options"
+cat > "$expected_options" <<'EOF'
+--save /etc/pacman.d/mirrorlist
+--protocol https
+--completion-percent 100
+--age 12
+--latest 25
+--sort rate
+--number 10
+--connection-timeout 5
+--download-timeout 5
+EOF
+cmp -s "$actual_options" "$expected_options" ||
+  fail 'repository policy options differ from the reviewed bounded policy'
+if grep -Eq '(^|[[:space:]])(--country|-c)([[:space:]]|$)' "$actual_options"; then
+  fail 'repository policy must not impose a country filter'
+fi
+pass 'policy is exact: recent HTTPS, 25 rated candidates, 10 outputs, no country lock'
+
+reflector_count=$(
+  find "$packages_root/lists" -type f -name '*.txt' -print |
+    while IFS= read -r manifest; do
+      awk '
+        {
+          sub(/[[:space:]]*#.*/, "")
+          gsub(/^[[:space:]]+|[[:space:]]+$/, "")
+          if ($0 == "reflector") print FILENAME
+        }
+      ' "$manifest"
+    done |
+    wc -l |
+    tr -d '[:space:]'
+)
+[ "$reflector_count" -eq 1 ] ||
+  fail "reflector must appear in exactly one official manifest (found $reflector_count)"
+pass 'reflector is represented exactly once in the Linux package manifests'
+
+if [ "$mode" = metadata ]; then
+  printf 'REFLECTOR_MIRRORS_METADATA_OK (%s checks)\n' "$checks"
+  exit 0
+fi
+
+[ "$(uname -s)" = Linux ] || fail 'live validation requires GNU/Linux'
+for command_name in cmp date pacman sha256sum stat systemctl; do
+  require_command "$command_name"
+done
+[ -r "$config_target" ] || fail "missing live Reflector config: $config_target"
+[ -r "$mirrorlist" ] || fail "missing live mirrorlist: $mirrorlist"
+
+expected_hash=$(sha256sum "$policy" | awk '{print $1}')
+actual_hash=$(sha256sum "$config_target" | awk '{print $1}')
+[ "$actual_hash" = "$expected_hash" ] || fail 'live Reflector config hash differs from repository policy'
+cmp -s "$policy" "$config_target" || fail 'live Reflector config content differs from repository policy'
+[ "$(stat -c '%U:%G:%a' "$config_target")" = root:root:644 ] ||
+  fail 'live Reflector config must be root:root mode 0644'
+pass "live Reflector config matches repository SHA-256 $expected_hash"
+
+server_count=$(awk '/^[[:space:]]*Server[[:space:]]*=/{count++} END{print count+0}' "$mirrorlist")
+[ "$server_count" -ge "$min_servers" ] ||
+  fail "mirrorlist has only $server_count active Server entries (minimum $min_servers)"
+[ "$server_count" -le "$max_servers" ] ||
+  fail "mirrorlist has $server_count active Server entries (maximum $max_servers)"
+if awk '
+  /^[[:space:]]*Server[[:space:]]*=/ {
+    line=$0
+    sub(/^[[:space:]]*Server[[:space:]]*=[[:space:]]*/, "", line)
+    if (line !~ /^https:\/\// || line !~ /\$repo\/os\/\$arch[[:space:]]*$/) exit 1
+  }
+' "$mirrorlist"; then
+  :
+else
+  fail 'mirrorlist contains a non-HTTPS active Server entry'
+fi
+pass "mirrorlist has $server_count bounded HTTPS Server entries with pacman placeholders"
+
+result=$(systemctl show "$service" --property=Result --value)
+main_status=$(systemctl show "$service" --property=ExecMainStatus --value)
+exit_timestamp=$(systemctl show "$service" --property=ExecMainExitTimestamp --value)
+[ "$result" = success ] || fail "$service result is not success: ${result:-unset}"
+[ "$main_status" = 0 ] || fail "$service exit status is not zero: ${main_status:-unset}"
+[ -n "$exit_timestamp" ] || fail "$service has no successful exit timestamp"
+exit_epoch=$(date -d "$exit_timestamp" +%s) || fail "cannot parse service timestamp: $exit_timestamp"
+now_epoch=$(date +%s)
+service_age=$((now_epoch - exit_epoch))
+[ "$service_age" -ge 0 ] || fail "$service timestamp is in the future"
+[ "$service_age" -le "$max_age_seconds" ] ||
+  fail "$service last successful refresh is older than eight days"
+pass "$service completed successfully within the last eight days"
+
+if [ "$mode" != pre_enable ]; then
+  systemctl is-enabled --quiet "$timer" || fail "$timer is not enabled"
+  systemctl is-active --quiet "$timer" || fail "$timer is not active"
+  pass "$timer is enabled and active"
+fi
+
+if [ "$mode" != pre_enable ]; then
+  pacman -Si pacman >/dev/null 2>&1 || fail 'pacman cannot read refreshed repository metadata'
+  [ -s /var/lib/pacman/sync/core.db ] || fail 'pacman core metadata is missing or empty'
+  core_db_epoch=$(stat -c '%Y' /var/lib/pacman/sync/core.db)
+  core_db_age=$((now_epoch - core_db_epoch))
+  [ "$core_db_age" -ge 0 ] || fail 'pacman core metadata timestamp is in the future'
+  [ "$core_db_age" -le "$max_age_seconds" ] || fail 'pacman core metadata is older than eight days'
+  pass 'pacman repository metadata is readable, nonempty, and recent'
+fi
+
+if [ "$mode" = pre_enable ]; then
+  printf 'REFLECTOR_MIRRORS_PRE_ENABLE_OK (%s checks)\n' "$checks"
+else
+  printf 'REFLECTOR_MIRRORS_LIVE_OK (%s checks)\n' "$checks"
+fi
