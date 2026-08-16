@@ -27,4 +27,14 @@
   // Example: replace the default About action by reusing the same id. Existing
   // fields are kept unless overridden.
   // "about": {"icon":"","label":"About","action":"omarchy-launch-or-focus-tui \"zsh -c 'fastfetch; read -k 1'\""},
+
+  // Reuse the upstream 1Password row so it can never offer the 1Password
+  // installer in this curated profile. The official Bitwarden package owns
+  // its desktop state; this override only launches the client.
+  "install.service.1password": {
+    "icon": "󰟵",
+    "label": "Bitwarden",
+    "when": "omarchy-cmd-present bitwarden",
+    "action": "setsid uwsm-app -- bitwarden"
+  },
 }

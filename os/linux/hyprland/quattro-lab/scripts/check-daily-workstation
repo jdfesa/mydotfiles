@@ -1,0 +1,192 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+usage() {
+  printf 'Usage: %s [--metadata-only]\n' "$0" >&2
+  exit 2
+}
+
+metadata_only=0
+if [[ ${1-} == '--metadata-only' ]]; then
+  metadata_only=1
+  shift
+fi
+[[ $# -eq 0 ]] || usage
+
+lab_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+repo_root=$(cd -- "$lab_root/../../../.." && pwd)
+manifest=$repo_root/os/linux/packages/lists/40-quattro-daily-workstation.txt
+installer=$repo_root/os/linux/packages/scripts/install-official-list
+runtime=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
+expected_commit=f0020448ca87329199de7cb12f2015ebc4a3e5e7
+checks=0
+
+pass() {
+  checks=$((checks + 1))
+  printf 'PASS: %s\n' "$1"
+}
+
+fail() {
+  printf 'FAIL: %s\n' "$1" >&2
+  exit 1
+}
+
+require_command() {
+  command -v "$1" >/dev/null 2>&1 || fail "missing command: $1"
+}
+
+require_package() {
+  pacman -Q "$1" >/dev/null 2>&1 || fail "missing package: $1"
+}
+
+require_owned_command() {
+  local command=$1 package=$2 path owner
+  path=$(command -v "$command" 2>/dev/null) || fail "missing command: $command"
+  owner=$(pacman -Qoq "$path" 2>/dev/null) || fail "unowned command: $path"
+  [[ $owner == "$package" ]] || fail "$command is owned by $owner, expected $package"
+}
+
+"$installer" "$manifest" >/dev/null || fail 'official package manifest metadata'
+pass 'all curated packages exist in enabled official repositories'
+
+mapfile -t packages < <(
+  sed -E -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' "$manifest"
+)
+for forbidden in 1password vial vial-git vial-appimage wf-recorder gpu-screen-recorder-ui libreoffice-fresh; do
+  if printf '%s\n' "${packages[@]}" | grep -Fx "$forbidden" >/dev/null; then
+    fail "forbidden or intentionally deferred package in manifest: $forbidden"
+  fi
+done
+pass 'manifest excludes deferred and redundant alternatives'
+
+[[ -x $lab_root/config/compat-bin/omarchy-display-text-size ]] ||
+  fail 'display text-size compatibility command'
+[[ -x $lab_root/config/compat-bin/omarchy-font-set ]] ||
+  fail 'font-set compatibility command'
+[[ -x $lab_root/config/compat-bin/omarchy-screenshot-edit ]] ||
+  fail 'screenshot editor compatibility command'
+"$lab_root/scripts/test-kitty-compat" >/dev/null || fail 'Kitty compatibility test'
+pass 'Kitty compatibility layer preserves managed symlinks'
+
+bash -n "$lab_root/session/hyprland-quattro-lab" \
+  "$lab_root/config/compat-bin/omarchy-kitty-safe" \
+  "$lab_root/config/compat-bin/omarchy-screenshot-edit" ||
+  fail 'Quattro daily shell syntax'
+pass 'Quattro daily shell syntax'
+
+if ! grep -F 'hl.unbind("SUPER + SHIFT + SLASH")' "$lab_root/config/hypr/bindings.lua" >/dev/null ||
+  ! grep -F '"Bitwarden"' "$lab_root/config/hypr/bindings.lua" >/dev/null; then
+  fail 'Bitwarden binding override'
+fi
+if ! grep -F '"install.service.1password"' "$lab_root/config/omarchy/extensions/omarchy-menu.jsonc" >/dev/null ||
+  ! grep -F '"action": "setsid uwsm-app -- bitwarden"' "$lab_root/config/omarchy/extensions/omarchy-menu.jsonc" >/dev/null; then
+  fail 'Bitwarden menu override'
+fi
+if ! python3 - "$lab_root/config/omarchy/extensions/omarchy-menu.jsonc" <<'PY'
+import json
+import re
+import sys
+
+text = '\n'.join(
+    line for line in open(sys.argv[1], encoding='utf-8')
+    if not line.lstrip().startswith('//')
+)
+items = json.loads(re.sub(r',(?=\s*[}\]])', '', text))
+item = items.get('install.service.1password', {})
+assert item.get('label') == 'Bitwarden'
+assert item.get('action') == 'setsid uwsm-app -- bitwarden'
+PY
+then
+  fail 'Bitwarden JSONC menu override'
+fi
+pass 'Bitwarden binding and menu overrides are explicit'
+
+[[ -d $runtime/.git ]] || fail "Quattro runtime checkout missing: $runtime"
+[[ $(git -C "$runtime" rev-parse HEAD) == "$expected_commit" ]] ||
+  fail 'Quattro runtime commit mismatch'
+[[ -z $(git -C "$runtime" status --porcelain) ]] || fail 'Quattro runtime is dirty'
+pass 'pinned Quattro runtime is exact and clean'
+
+if ((metadata_only)); then
+  printf 'QUATTRO_DAILY_METADATA_OK (%d checks)\n' "$checks"
+  exit 0
+fi
+
+for package in "${packages[@]}"; do
+  require_package "$package"
+done
+pass 'all curated packages are installed'
+
+while read -r command package; do
+  require_owned_command "$command" "$package"
+done <<'EOF'
+grim grim
+slurp slurp
+wl-copy wl-clipboard
+satty satty
+gpu-screen-recorder gpu-screen-recorder
+mpv mpv
+obs obs-studio
+kdenlive kdenlive
+obsidian obsidian
+discord discord
+telegram-desktop telegram-desktop
+kitty kitty
+ghostty ghostty
+bitwarden bitwarden
+vlc vlc
+libreoffice libreoffice-still
+EOF
+pass 'expected commands are present and package-owned'
+
+for package in obs-studio kdenlive obsidian discord telegram-desktop kitty ghostty bitwarden vlc libreoffice-still; do
+  pacman -Ql "$package" | grep -E '/usr/share/applications/[^/]+\.desktop$' >/dev/null ||
+    fail "desktop entry missing from package: $package"
+done
+pass 'approved GUI packages provide desktop entries'
+
+pacman -Q 1password >/dev/null 2>&1 && fail '1Password must remain absent'
+pass '1Password is absent'
+
+[[ -L $HOME/.config/xdg-terminals.list ]] || fail 'managed xdg-terminals.list symlink'
+[[ $(readlink -f "$HOME/.config/xdg-terminals.list") == "$repo_root/os/linux/xdg/xdg-terminals.list" ]] ||
+  fail 'xdg-terminals.list target'
+[[ $(xdg-terminal-exec --print-id 2>/dev/null) == kitty.desktop ]] ||
+  fail 'xdg-terminal-exec does not resolve Kitty'
+pass 'Kitty is the managed default terminal'
+
+[[ -L $HOME/.config/kitty/kitty.conf ]] || fail 'managed Kitty config symlink'
+[[ $(readlink -f "$HOME/.config/kitty/kitty.conf") == "$repo_root/os/linux/kitty/kitty.conf" ]] ||
+  fail 'Kitty config target'
+cmp -s "$HOME/.config/kitty/kitty.conf" "$repo_root/os/linux/kitty/kitty.conf" ||
+  fail 'Kitty config content mismatch'
+grep -F 'include $HOME/mydotfiles/shared/kitty/common.conf' "$repo_root/os/linux/kitty/kitty.conf" >/dev/null ||
+  fail 'Kitty Linux entrypoint does not include the shared base'
+grep -F 'include ~/mydotfiles/shared/kitty/active-theme.conf' "$repo_root/shared/kitty/common.conf" >/dev/null ||
+  fail 'Kitty shared base does not include the repository theme'
+if grep -E 'omarchy|\.local/state' "$repo_root/os/linux/kitty/kitty.conf" \
+  "$repo_root/shared/kitty/common.conf" >/dev/null; then
+  fail 'Kitty config unexpectedly includes Quattro state'
+fi
+KITTY_CONFIG_FILE="$HOME/.config/kitty/kitty.conf" \
+  kitty +runpy 'import os; from kitty.config import load_config; bad=[]; load_config(os.environ["KITTY_CONFIG_FILE"], accumulate_bad_lines=bad); raise SystemExit(bool(bad))' ||
+  fail 'Kitty rejects the managed configuration'
+pass 'Kitty entrypoint and theme source are repository-owned'
+
+session_path="$HOME/.config/hypr-quattro/compat-bin:$runtime/bin:$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin"
+[[ $(PATH=$session_path command -v omarchy-display-text-size) == "$HOME/.config/hypr-quattro/compat-bin/omarchy-display-text-size" ]] ||
+  fail 'Quattro display text-size precedence'
+[[ $(PATH=$session_path command -v omarchy-font-set) == "$HOME/.config/hypr-quattro/compat-bin/omarchy-font-set" ]] ||
+  fail 'Quattro font-set precedence'
+pass 'compatibility commands precede runtime only in Quattro PATH'
+
+bash -n "$runtime/bin/omarchy-capture-screenshot" \
+  "$runtime/bin/omarchy-capture-region" \
+  "$runtime/bin/omarchy-capture-screenrecording" ||
+  fail 'pinned capture command syntax'
+for command in grim slurp wl-copy satty gpu-screen-recorder obs ffmpeg mpv hyprctl jq; do
+  require_command "$command"
+done
+pass 'screenshot and recording commands resolve without capture'
+
+printf 'QUATTRO_DAILY_WORKSTATION_OK (%d checks)\n' "$checks"

@@ -1,0 +1,3 @@
+# Terminal emulator preference order for xdg-terminal-exec.
+# Kitty is managed by mydotfiles; Ghostty remains an explicit alternative.
+kitty.desktop

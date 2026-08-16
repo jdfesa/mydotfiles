@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+command_name=${0##*/}
+case "$command_name" in
+  omarchy-display-text-size | omarchy-font-set) ;;
+  *)
+    printf 'ERROR: unsupported compatibility command: %s\n' "$command_name" >&2
+    exit 2
+    ;;
+esac
+
+runtime_root=${OMARCHY_PATH:-/usr/share/omarchy}
+upstream=$runtime_root/bin/$command_name
+[[ -x $upstream ]] || {
+  printf 'ERROR: upstream command is missing: %s\n' "$upstream" >&2
+  exit 127
+}
+
+kitty_config=$HOME/.config/kitty/kitty.conf
+if [[ ! -L $kitty_config ]]; then
+  exec "$upstream" "$@"
+fi
+
+real_home=$HOME
+if ! shadow_home=$(mktemp -d "${XDG_RUNTIME_DIR:-/tmp}/omarchy-kitty-safe.XXXXXX" 2>/dev/null); then
+  shadow_home=$(mktemp -d "${TMPDIR:-/tmp}/omarchy-kitty-safe.XXXXXX")
+fi
+cleanup() {
+  rm -rf -- "$shadow_home"
+}
+trap cleanup EXIT HUP INT TERM
+
+mkdir -p "$shadow_home/.config"
+for config in alacritty foot fontconfig ghostty omarchy; do
+  if [[ -e $real_home/.config/$config || -L $real_home/.config/$config ]]; then
+    ln -s "$real_home/.config/$config" "$shadow_home/.config/$config"
+  fi
+done
+
+# The pinned upstream command keeps controlling its supported shell, GTK and
+# non-Kitty terminal settings. Omitting only .config/kitty prevents GNU sed -i
+# from replacing the managed symlink or editing its repository target.
+HOME=$shadow_home "$upstream" "$@"

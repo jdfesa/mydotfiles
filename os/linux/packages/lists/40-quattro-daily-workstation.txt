@@ -1,0 +1,27 @@
+# Official Arch packages for the curated Quattro daily workstation.
+# Keep this list intentionally small; do not mirror Omarchy's application list.
+
+# Capture and production
+grim
+slurp
+wl-clipboard
+satty
+gpu-screen-recorder
+mpv
+obs-studio
+kdenlive
+
+# Notes and communication
+obsidian
+discord
+telegram-desktop
+
+# Terminals and password manager
+kitty
+ghostty
+bitwarden
+
+# Media and office
+vlc
+libreoffice-still
+libreoffice-still-es

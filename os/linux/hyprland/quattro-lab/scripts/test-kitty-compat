@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+lab_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+compat_bin=$lab_root/config/compat-bin
+test_root=$(mktemp -d)
+cleanup() {
+  rm -rf -- "$test_root"
+}
+trap cleanup EXIT HUP INT TERM
+
+make_upstream() {
+  local runtime=$1
+  mkdir -p "$runtime/bin"
+  cat >"$runtime/bin/omarchy-display-text-size" <<'EOF'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+sed -i -E 's/^font_size .*/font_size 9.0/' "$HOME/.config/kitty/kitty.conf" 2>/dev/null || true
+sed -i -E 's/^font-size = .*/font-size = 9/' "$HOME/.config/ghostty/config"
+EOF
+  cat >"$runtime/bin/omarchy-font-set" <<'EOF'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+sed -i 's/^font_family .*/font_family Quattro Font/' "$HOME/.config/kitty/kitty.conf" 2>/dev/null || true
+sed -i 's/^font-family = .*/font-family = Quattro Font/' "$HOME/.config/ghostty/config"
+EOF
+  chmod 0755 "$runtime/bin/omarchy-display-text-size" "$runtime/bin/omarchy-font-set"
+}
+
+make_home() {
+  local home=$1
+  mkdir -p "$home/.config/kitty" "$home/.config/ghostty"
+  printf 'font-size = 15\nfont-family = Repository Font\n' >"$home/.config/ghostty/config"
+}
+
+runtime=$test_root/runtime
+make_upstream "$runtime"
+
+managed_home=$test_root/managed-home
+repo_config=$test_root/repo/kitty.conf
+make_home "$managed_home"
+mkdir -p "${repo_config%/*}"
+printf 'font_size 15\nfont_family Repository Font\n' >"$repo_config"
+ln -s "$repo_config" "$managed_home/.config/kitty/kitty.conf"
+repo_hash=$(sha256sum "$repo_config" | awk '{print $1}')
+
+for command in omarchy-display-text-size omarchy-font-set; do
+  HOME=$managed_home OMARCHY_PATH=$runtime "$compat_bin/$command"
+  [[ -L $managed_home/.config/kitty/kitty.conf ]]
+  [[ $(readlink -f "$managed_home/.config/kitty/kitty.conf") == "$repo_config" ]]
+  [[ $(sha256sum "$repo_config" | awk '{print $1}') == "$repo_hash" ]]
+done
+grep -Fx 'font-family = Quattro Font' "$managed_home/.config/ghostty/config" >/dev/null
+
+regular_home=$test_root/regular-home
+make_home "$regular_home"
+printf 'font_size 15\nfont_family Repository Font\n' >"$regular_home/.config/kitty/kitty.conf"
+HOME=$regular_home OMARCHY_PATH=$runtime "$compat_bin/omarchy-display-text-size"
+grep -Fx 'font_size 9.0' "$regular_home/.config/kitty/kitty.conf" >/dev/null
+HOME=$regular_home OMARCHY_PATH=$runtime "$compat_bin/omarchy-font-set"
+grep -Fx 'font_family Quattro Font' "$regular_home/.config/kitty/kitty.conf" >/dev/null
+
+printf 'KITTY_COMPAT_TEST_OK\n'
