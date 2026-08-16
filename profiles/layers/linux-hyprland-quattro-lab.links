@@ -4,3 +4,4 @@ os/linux/hyprland/quattro-lab/config/omarchy|$HOME/.config/omarchy
 os/linux/hyprland/quattro-lab/config/hyprland-preview-share-picker|$HOME/.config/hyprland-preview-share-picker
 os/linux/hyprland/quattro-lab/systemd/user/omarchy-sleep-lock.service|$HOME/.config/systemd/user/omarchy-sleep-lock.service
 os/linux/hyprland/quattro-lab/bin/omarchy-quattro-sleep-monitor|$HOME/.local/bin/omarchy-quattro-sleep-monitor
+os/linux/xdg/xdg-terminals.list|$HOME/.config/xdg-terminals.list

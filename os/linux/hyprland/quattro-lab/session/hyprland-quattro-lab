@@ -5,6 +5,7 @@ set -eu
 config_root=${HYPRLAND_QUATTRO_ROOT:-$HOME/.config/hypr-quattro}
 config_file=$config_root/hyprland.lua
 runtime_root=${OMARCHY_PATH:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
+compat_bin=$config_root/compat-bin
 state_home=${XDG_STATE_HOME:-$HOME/.local/state}
 log_dir=$state_home/mydotfiles
 log_file=$log_dir/hyprland-quattro-lab.log
@@ -14,8 +15,9 @@ mkdir -p "$log_dir"
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin"
 export HYPRLAND_QUATTRO_ROOT="$config_root"
 export OMARCHY_PATH="$runtime_root"
-export PATH="$OMARCHY_PATH/bin:$PATH"
+export PATH="$compat_bin:$OMARCHY_PATH/bin:$PATH"
 export LUA_PATH="$config_root/?.lua;;"
+export OMARCHY_SCREENSHOT_EDITOR=omarchy-screenshot-edit
 
 if [ ! -r "$config_file" ]; then
   printf 'Quattro Lab: missing config: %s\n' "$config_file" >&2
@@ -28,6 +30,14 @@ if [ ! -r "$OMARCHY_PATH/default/hypr/bootstrap.lua" ] || \
     "$OMARCHY_PATH" >&2
   printf 'Run scripts/sync-runtime before starting this session.\n' >&2
   exit 1
+fi
+
+if [ ! -x "$compat_bin/omarchy-display-text-size" ] || \
+  [ ! -x "$compat_bin/omarchy-font-set" ] || \
+  [ ! -x "$compat_bin/omarchy-screenshot-edit" ]; then
+  printf 'Quattro Lab: compatibility commands are missing: %s\n' \
+    "$compat_bin" >&2
+  exit 127
 fi
 
 if ! command -v quickshell >/dev/null 2>&1 && \

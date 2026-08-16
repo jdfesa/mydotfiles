@@ -16,6 +16,9 @@ fingerprint_pam=/etc/pam.d/omarchy-lock-fingerprint
 session_launcher=/usr/local/libexec/dotfiles-hyprland-quattro-lab
 session_entry=/usr/local/share/wayland-sessions/hyprland-quattro-lab.desktop
 sleep_lock_unit=omarchy-sleep-lock.service
+upstream_bindings_sha256=a1280ae15f32cdf68192e96eb916efd50180a6f11f133bcdb7f55e35aae2bb4c
+curated_bindings_sha256=1a53b0078755330d98c4586153b831df29ba3d72540827ffb9fcf610dacf3626
+curated_menu_sha256=14b5e6314690bacb2c3b623038b8a4049f808a8cd8cbf7c744a98233b520d011
 failures=0
 
 has_fingerprint_enrollment() {
@@ -64,7 +67,6 @@ for pair in \
   "$config_root/hyprland.lua:$runtime_root/config/hypr/hyprland.lua" \
   "$config_root/hypr/monitors.lua:$runtime_root/config/hypr/monitors.lua" \
   "$config_root/hypr/input.lua:$runtime_root/config/hypr/input.lua" \
-  "$config_root/hypr/bindings.lua:$runtime_root/config/hypr/bindings.lua" \
   "$config_root/hypr/looknfeel.lua:$runtime_root/config/hypr/looknfeel.lua" \
   "$config_root/hypr/autostart.lua:$runtime_root/config/hypr/autostart.lua" \
   "$config_root/hypr/xdph.conf:$runtime_root/config/hypr/xdph.conf" \
@@ -80,6 +82,22 @@ do
   fi
 done
 
+if [ "$(sha256sum "$runtime_root/config/hypr/bindings.lua" | awk '{print $1}')" = \
+  "$upstream_bindings_sha256" ] && \
+  [ "$(sha256sum "$config_root/hypr/bindings.lua" | awk '{print $1}')" = \
+  "$curated_bindings_sha256" ]; then
+  ok 'intentional Bitwarden binding override matches its reviewed hash'
+else
+  fail 'upstream or curated binding hash changed'
+fi
+
+if [ "$(sha256sum "$config_root/omarchy/extensions/omarchy-menu.jsonc" | awk '{print $1}')" = \
+  "$curated_menu_sha256" ]; then
+  ok 'intentional Bitwarden menu override matches its reviewed hash'
+else
+  fail 'curated Bitwarden menu override hash changed'
+fi
+
 check_link "$HOME/.config/hypr-quattro" \
   "$lab_root/config" 'Quattro Hyprland configuration symlink'
 check_link "$HOME/.config/omarchy" \
@@ -90,6 +108,10 @@ check_link "$HOME/.config/systemd/user/$sleep_lock_unit" \
   "$lab_root/systemd/user/$sleep_lock_unit" 'sleep-lock user unit symlink'
 check_link "$HOME/.local/bin/omarchy-quattro-sleep-monitor" \
   "$lab_root/bin/omarchy-quattro-sleep-monitor" 'sleep-lock wrapper symlink'
+check_link "$HOME/.config/xdg-terminals.list" \
+  "$repo_root/os/linux/xdg/xdg-terminals.list" 'Kitty terminal preference symlink'
+check_link "$HOME/.config/kitty/kitty.conf" \
+  "$repo_root/os/linux/kitty/kitty.conf" 'repository-owned Kitty configuration symlink'
 check_link "$HOME/.config/hypr/xdph.conf" \
   "$lab_root/config/hypr/xdph.conf" 'stable Hyprland portal compatibility link'
 check_link "$HOME/.config/hypr/hyprsunset.conf" \
@@ -107,6 +129,21 @@ if [ -L "$HOME/.config/waybar" ] && \
   ok 'stable Waybar config symlink remains unchanged'
 else
   fail 'stable Waybar config symlink changed'
+fi
+
+if [ -x "$config_root/compat-bin/omarchy-display-text-size" ] && \
+  [ -x "$config_root/compat-bin/omarchy-font-set" ] && \
+  [ -x "$config_root/compat-bin/omarchy-screenshot-edit" ] && \
+  "$lab_root/scripts/test-kitty-compat" >/dev/null 2>&1; then
+  ok 'Quattro-only Kitty and screenshot compatibility commands'
+else
+  fail 'Quattro compatibility commands are missing or unsafe'
+fi
+
+if [ "$(xdg-terminal-exec --print-id 2>/dev/null || true)" = kitty.desktop ]; then
+  ok 'xdg-terminal-exec resolves Kitty'
+else
+  fail 'xdg-terminal-exec does not resolve Kitty'
 fi
 
 if [ -r "$HOME/.config/omarchy/shell.toml" ] && \
@@ -219,7 +256,7 @@ else
 fi
 
 export OMARCHY_PATH="$runtime_root"
-export PATH="$OMARCHY_PATH/bin:$PATH"
+export PATH="$config_root/compat-bin:$OMARCHY_PATH/bin:$PATH"
 export LUA_PATH="$config_root/?.lua;;"
 
 if [ "$failures" -eq 0 ]; then
