@@ -24,8 +24,8 @@ La copia completa queda fuera de Git, fijada por `runtime/source.lock`, en:
 Los dotfiles pequenos y personalizables permanecen versionados en este repo.
 El perfil los enlaza como `~/.config/hypr-quattro` y `~/.config/omarchy`.
 
-La seleccion diaria de aplicaciones, backends, shortcuts, Bitwarden, ownership
-de Kitty y la decision de diferir Vial estan en
+La selección diaria de aplicaciones, backends, shortcuts, Bitwarden, ownership
+de Kitty y la decisión de diferir Vial están documentadas en
 [`DAILY_WORKSTATION.md`](DAILY_WORKSTATION.md).
 
 La integracion P0 agrega, sin activar aplicaciones opcionales:
@@ -46,7 +46,7 @@ La integracion P0 agrega, sin activar aplicaciones opcionales:
   configuracion de Pacman, SDDM, Limine, Snapper, firewall o servicios del host.
 - No se instalan en bloque las aplicaciones de la ISO. Solo se aplica el
   manifiesto curado documentado en `DAILY_WORKSTATION.md`; Docker, juegos y
-  servicios no pedidos permanecen ausentes.
+  servicios no solicitados permanecen ausentes.
 - El binding y el row de 1Password se reemplazan mediante overrides de usuario
   por Bitwarden; no se parchea el runtime derivado.
 - La configuracion activa de macOS no participa en este perfil.

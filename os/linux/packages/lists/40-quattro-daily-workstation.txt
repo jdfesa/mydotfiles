@@ -7,6 +7,9 @@ slurp
 wl-clipboard
 satty
 gpu-screen-recorder
+tesseract
+tesseract-data-eng
+zbar
 mpv
 obs-studio
 kdenlive
@@ -24,4 +27,4 @@ bitwarden
 # Media and office
 vlc
 libreoffice-still
-libreoffice-still-es
+hunspell-es_any

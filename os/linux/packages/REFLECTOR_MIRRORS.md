@@ -1,11 +1,11 @@
-# Mirrors de Arch con Reflector
+# Arch Mirrors with Reflector
 
 Esta política evita que una lista mundial enorme convierta una transacción
 grande de `pacman` en una sucesión de fallos DNS, conexión y baja velocidad.
 `mydotfiles` conserva la selección reproducible; la lista generada sigue siendo
 estado dinámico de este host.
 
-## Síntoma y causa
+## Symptom and cause
 
 Los dos intentos aprobados de `pacman -Syu --needed` para la workstation diaria
 de Quattro abortaron durante las descargas. Pacman indicó explícitamente que no
@@ -20,7 +20,7 @@ grande, recorrer servidores de muchos continentes no aporta una reserva útil:
 aumenta la probabilidad de DNS lento, rutas inestables, timeouts y mirrors con
 rendimiento insuficiente desde esta red.
 
-## Política versionada
+## Versioned policy
 
 La fuente de verdad es:
 
@@ -53,7 +53,7 @@ mundial completa.
 `reflector` ya aparece una sola vez en
 `lists/10-workstation-base.txt`; no se duplica en otro manifiesto.
 
-## Comprobar metadata sin cambiar el sistema
+## Check metadata without changing the system
 
 Este chequeo es portable y puede ejecutarse en macOS. Solo inspecciona el repo:
 
@@ -65,7 +65,7 @@ os/linux/packages/scripts/test-reflector-mirrors
 El test omite automáticamente la parte de plan del host si no encuentra los
 archivos del paquete Arch. No modifica la configuración activa de macOS.
 
-## Plan, instalación y validación
+## Plan, installation, and validation
 
 El comportamiento predeterminado es un plan sin cambios:
 
@@ -112,7 +112,7 @@ mirrorlist, el último resultado reciente del servicio en el journal, timer
 habilitado y activo, y metadata legible y reciente de pacman. No abre
 interfaces gráficas.
 
-### Semántica real del servicio oneshot
+### Actual oneshot service semantics
 
 El primer despliegue controlado del 16 de agosto de 2026 generó correctamente
 10 servidores HTTPS, pero el checker exigía `ExecMainExitTimestamp`. El
@@ -143,7 +143,7 @@ El chequeo live usa la misma prueba con una ventana máxima de ocho días. Si el
 usuario no puede leer el journal del sistema, falla cerrado con una indicación
 explícita en lugar de asumir éxito.
 
-## Actualizar la política
+## Updating the policy
 
 No editar el mirrorlist generado ni dejar un cambio manual solo en `/etc`.
 Para ajustar antigüedad, candidatos o salidas:
@@ -158,7 +158,7 @@ Para ajustar antigüedad, candidatos o salidas:
 La selección generada cambiará según el estado de la red y de los mirrors; esa
 variación es esperada y nunca se debe copiar al repositorio.
 
-## Timer semanal
+## Weekly timer
 
 Se usa `reflector.timer` oficial, con `OnCalendar=weekly`, persistencia y demora
 aleatoria de hasta 12 horas. Si el equipo estaba apagado, systemd recupera la
@@ -186,7 +186,7 @@ El rollback solo acepta un directorio bajo el root administrado, verifica
 estados enabled/active registrados. Si la aplicación falla, el mismo mecanismo
 se ejecuta automáticamente. No borra backups ni cachés.
 
-## Reintento de Quattro
+## Quattro retry
 
 Este trabajo solo prepara mirrors confiables. No toca los archivos gate
 originales de `quattro-daily-workstation`, no ejecuta el upgrade y no crea su
@@ -194,7 +194,7 @@ marcador de finalización. Una vez validado el despliegue, el controlador puede
 repetir su comando `pacman -Syu --needed`; los paquetes ya descargados siguen en
 la caché y pacman reutilizará lo válido.
 
-## Referencias oficiales
+## Official references
 
 - https://man.archlinux.org/man/reflector.1.en
 - https://wiki.archlinux.org/title/Mirrors
