@@ -715,7 +715,7 @@ def input_digest(context: RunContext) -> str:
             "platform": context.platform,
             "data": data,
             "source": tree_manifest(context.source),
-            "chezmoi": chezmoi_version(),
+            "chezmoi": project_chezmoi_version(chezmoi_version()),
         }
     )
 

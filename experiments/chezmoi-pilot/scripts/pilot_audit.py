@@ -31,6 +31,7 @@ AUTOMATED_CHECKS = {
     "UT-TEMPLATE-GUARDRAIL": "experiments/chezmoi-pilot/tests/test_pilot.py::test_template_key_guardrail_is_rejected",
     "UT-MISSING-GIT-DATA": "experiments/chezmoi-pilot/tests/test_pilot.py::test_missing_git_data_fails_render",
     "UT-PREVIEW-DIGEST": "experiments/chezmoi-pilot/tests/test_pilot.py::test_source_change_changes_preview_digest",
+    "UT-PREVIEW-CHEZMOI-PROVENANCE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_chezmoi_build_banner_does_not_change_preview_digest",
     "UT-SEMANTIC-FALSE-MAPPING": "experiments/chezmoi-pilot/tests/test_pilot.py::test_false_os_window_mapping_is_rejected",
     "UT-SEMANTIC-COLLISION": "experiments/chezmoi-pilot/tests/test_pilot.py::test_semantic_chord_collision_is_rejected",
     "CHK-CANONICAL-MODEL": "experiments/chezmoi-pilot/scripts/pilot.py::validate_repository",
