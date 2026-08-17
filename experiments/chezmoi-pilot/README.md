@@ -50,6 +50,11 @@ contextual o application-specific son resultados válidos.
 
 ## Commands
 
+El harness descubre OpenSpec mediante `OPENSPEC_BIN`, luego `PATH` y finalmente
+`~/.local/bin/openspec` en POSIX. Esto permite ejecutar la suite desde SSH no
+interactivo sin cargar un profile de shell. Windows soporta solo override o
+`PATH` hasta disponer de evidencia nativa para un candidato npm user-local.
+
 ```sh
 # Unit tests y comparación fresh de la proyección completa.
 experiments/chezmoi-pilot/scripts/validate
@@ -74,7 +79,8 @@ ejecutarse sin runner nativo aprobado. macOS permanece audit-only.
 
 ## Failure Modes
 
-El harness falla ante containment inválido, ambiente heredado no permitido,
+El harness falla ante OpenSpec ausente o override inválido, containment
+inválido, ambiente heredado no permitido,
 source features peligrosas, secreto, missing fixture data, ownership duplicado,
 canonical drift, semantic false mapping/collision, preview obsoleto, mode
 inesperado, evidencia fresh distinta o documentación generada stale.

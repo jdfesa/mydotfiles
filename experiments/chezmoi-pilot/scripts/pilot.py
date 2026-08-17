@@ -18,7 +18,7 @@ import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 from pilot_audit import (
     AuditError,
@@ -51,6 +51,11 @@ PLATFORMS = ("linux", "macos", "windows")
 EXPECTED_OPEN_SPEC = "1.9.0"
 EXPECTED_CHEZMOI = CHEZMOI_EXACT_VERSION
 WINDOWS_TERMINAL_VERSION = "1.24.11321.0"
+OPENSPEC_RESOLUTION_METHODS = (
+    "supported resolution order: set OPENSPEC_BIN to an executable path; "
+    "place openspec on PATH; on POSIX install it at ~/.local/bin/openspec. "
+    "On Windows, use OPENSPEC_BIN or PATH."
+)
 
 class PilotError(RuntimeError):
     """Fail-closed pilot error."""
@@ -529,8 +534,54 @@ def chezmoi_version() -> str:
     return result.stdout.strip()
 
 
+def resolve_openspec_bin(
+    environment: Mapping[str, str] | None = None,
+    home: Path | None = None,
+    os_name: str | None = None,
+) -> str:
+    """Resolve OpenSpec without depending on an interactive shell profile."""
+    selected_environment = os.environ if environment is None else environment
+    selected_home = Path.home() if home is None else home
+    selected_os_name = os.name if os_name is None else os_name
+    search_path = selected_environment.get("PATH", "")
+
+    override = selected_environment.get("OPENSPEC_BIN")
+    if override is not None:
+        override = override.strip()
+        candidate = None
+        if override:
+            expanded = Path(override).expanduser()
+            if expanded.is_absolute() or expanded.parent != Path("."):
+                candidate = expanded
+            else:
+                discovered = shutil.which(override, path=search_path)
+                candidate = Path(discovered) if discovered else None
+        if candidate is not None and candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate.resolve())
+        raise PilotError(
+            "OpenSpec executable discovery failed: OPENSPEC_BIN is set but does not "
+            f"resolve to an executable file; {OPENSPEC_RESOLUTION_METHODS}"
+        )
+
+    discovered = shutil.which("openspec", path=search_path)
+    if discovered:
+        return str(Path(discovered).resolve())
+
+    if selected_os_name == "posix":
+        user_local = selected_home / ".local" / "bin" / "openspec"
+        if user_local.is_file() and os.access(user_local, os.X_OK):
+            return str(user_local.resolve())
+
+    raise PilotError(f"OpenSpec executable discovery failed: {OPENSPEC_RESOLUTION_METHODS}")
+
+
 def openspec_version() -> str:
-    result = subprocess.run(["openspec", "--version"], check=True, text=True, capture_output=True)
+    result = subprocess.run(
+        [resolve_openspec_bin(), "--version"],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
     return result.stdout.strip()
 
 

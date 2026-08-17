@@ -73,7 +73,7 @@ node --version
 npm --version
 python3 --version
 chezmoi --version
-openspec --version
+"$HOME/.local/bin/openspec" --version
 npm list --global --prefix "$HOME/.local" --depth=0 @fission-ai/openspec
 ```
 
@@ -81,12 +81,38 @@ La policy npm bloqueó el `postinstall` opcional de OpenSpec. El script auditado
 solo imprime un hint opt-in de shell completion; CLI e integración funcionan sin
 él. No se debilita la policy para mostrar ese hint.
 
+## Executable Discovery
+
+Un shell SSH no interactivo puede omitir `~/.local/bin` de `PATH`, aunque la
+instalación user-scoped sea correcta. El harness resuelve OpenSpec sin depender
+de dotfiles interactivos y con esta precedencia:
+
+1. `OPENSPEC_BIN` explícito;
+2. `shutil.which("openspec")` sobre el `PATH` recibido;
+3. en POSIX, `Path.home() / ".local/bin/openspec"`.
+
+El override debe resolver a un archivo executable; si es inválido, el harness
+falla en lugar de ocultar el error con otro candidato. Si ningún método funciona,
+el diagnóstico enumera estas opciones sin imprimir el ambiente ni valores
+secret-like. Ninguna ruta contiene un username hardcodeado.
+
+Ejemplo explícito para automatización no interactiva:
+
+```sh
+OPENSPEC_BIN="$HOME/.local/bin/openspec" \
+  experiments/chezmoi-pilot/scripts/validate
+```
+
+No se afirma un fallback npm user-local para Windows. Su prefix depende de la
+configuración npm y no existe evidencia Windows nativa revisada; en Windows se
+debe usar `OPENSPEC_BIN` o exponer `openspec` mediante `PATH`.
+
 ## Codex Integration
 
 Inicializar únicamente la integración core soportada desde repository root:
 
 ```sh
-openspec init --tools codex --profile core --no-animation
+"$HOME/.local/bin/openspec" init --tools codex --profile core --no-animation
 ```
 
 OpenSpec `1.9.0` usa integración Codex skills-only. La inicialización auditada

@@ -93,6 +93,78 @@ class StaticPolicyTests(unittest.TestCase):
 
 
 class ModelTests(unittest.TestCase):
+    @staticmethod
+    def make_executable(path: Path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        path.chmod(0o755)
+
+    def test_openspec_explicit_override_precedes_path(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="pilot-openspec-override-") as temp:
+            root = Path(temp)
+            override = root / "override" / "openspec"
+            path_candidate = root / "path" / "openspec"
+            self.make_executable(override)
+            self.make_executable(path_candidate)
+            resolved = pilot.resolve_openspec_bin(
+                {
+                    "OPENSPEC_BIN": str(override),
+                    "PATH": str(path_candidate.parent),
+                },
+                home=root / "home",
+                os_name="posix",
+            )
+            self.assertEqual(resolved, str(override.resolve()))
+            with self.assertRaises(pilot.PilotError):
+                pilot.resolve_openspec_bin(
+                    {
+                        "OPENSPEC_BIN": str(root / "missing" / "openspec"),
+                        "PATH": str(path_candidate.parent),
+                    },
+                    home=root / "home",
+                    os_name="posix",
+                )
+
+    def test_openspec_posix_user_local_fallback_with_stripped_path(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="pilot-openspec-user-local-") as temp:
+            home = Path(temp)
+            candidate = home / ".local" / "bin" / "openspec"
+            self.make_executable(candidate)
+            resolved = pilot.resolve_openspec_bin(
+                {"PATH": "/nonexistent"}, home=home, os_name="posix"
+            )
+            self.assertEqual(resolved, str(candidate.resolve()))
+
+    def test_openspec_path_discovery_precedes_user_local(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="pilot-openspec-path-") as temp:
+            root = Path(temp)
+            path_candidate = root / "path" / "openspec"
+            user_local = root / "home" / ".local" / "bin" / "openspec"
+            self.make_executable(path_candidate)
+            self.make_executable(user_local)
+            resolved = pilot.resolve_openspec_bin(
+                {"PATH": str(path_candidate.parent)},
+                home=root / "home",
+                os_name="posix",
+            )
+            self.assertEqual(resolved, str(path_candidate.resolve()))
+
+    def test_openspec_missing_executable_has_safe_diagnostic(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="pilot-openspec-missing-") as temp:
+            secret = "must-not-appear-in-diagnostic"
+            with self.assertRaises(pilot.PilotError) as raised:
+                pilot.resolve_openspec_bin(
+                    {"PATH": "", "PILOT_SECRET_TOKEN": secret},
+                    home=Path(temp),
+                    os_name="posix",
+                )
+            diagnostic = str(raised.exception)
+            self.assertIn("OPENSPEC_BIN", diagnostic)
+            self.assertIn("PATH", diagnostic)
+            self.assertIn("~/.local/bin/openspec", diagnostic)
+            self.assertIn("On Windows, use OPENSPEC_BIN or PATH", diagnostic)
+            self.assertNotIn(secret, diagnostic)
+
     def test_repository_model_and_support_matrix(self) -> None:
         result = pilot.validate_repository()
         self.assertEqual(result["profileReferences"], 0)

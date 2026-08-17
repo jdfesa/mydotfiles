@@ -72,7 +72,7 @@
 - [x] 9.2 Presentar artifacts, evidence, preguntas, failures, scorecard y outcome antes de Git publication.
 - [x] 9.3 Documentar no-adoption y separar cualquier cleanup/adoption de packages sin reparar ni desvincular producción.
 - [ ] 9.4 Si se recomienda selective migration, crear otra OpenSpec change para un canary literal; no convertir targets aquí.
-- [ ] 9.5 Completar publication aprobada: commits, push, PR, checks, rebase merge, branch cleanup y sincronización Arch. El checkbox permanece abierto en el contenido inmutable del PR porque merge, cleanup y sync ocurren después de aprobar sus checks.
+- [x] 9.5 Completar publication aprobada: commits, push, PR `#14`, checks, rebase merge, branch cleanup y sincronización Arch; verificado después del merge en el follow-up autorizado.
 
 ## 10. Publication Audit Corrections
 
@@ -97,3 +97,9 @@
 
 - [x] 12.1 Reemplazar el container Arch anidado por `ubuntu-22.04` directo, tooling fijado, smoke-first, triggers sin duplicación y cero relajaciones de seguridad.
 - [x] 12.2 Exigir la arquitectura mediante audit/tests, clasificar evidencia `portable-linux`, actualizar WHY/HOW y regenerar evidencia/documentación deterministas.
+
+## 13. Portable OpenSpec Discovery Follow-up
+
+- [x] 13.1 Implementar precedence `OPENSPEC_BIN`, `PATH` y fallback POSIX user-local sin paths absolutos de host ni candidato Windows no probado.
+- [x] 13.2 Agregar focused tests para override, `PATH`, stripped-PATH POSIX fallback y diagnóstico missing sin filtración de secretos.
+- [x] 13.3 Actualizar WHY/HOW y traceability, regenerar evidencia/docs y ejecutar la suite Arch no interactiva completa antes de publicar el follow-up.
