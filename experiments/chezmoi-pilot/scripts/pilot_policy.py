@@ -7,6 +7,7 @@ import copy
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
@@ -23,6 +24,7 @@ MANDATORY_TRUE_FIELDS = ("allSelectedFixturesPassed", "deterministic")
 POSIX_ENV_ALLOWLIST = ("PATH",)
 WINDOWS_ENV_ALLOWLIST = ("PATH", "SystemRoot", "WINDIR", "ComSpec", "PATHEXT")
 PYTHON_COMPATIBILITY_CONTRACT = ">=3.11"
+CHEZMOI_EXACT_VERSION = "2.72.0"
 
 
 def stable_digest(value: Any) -> str:
@@ -39,6 +41,15 @@ def _project_python_runtime(version: Any) -> str:
         return f"unsupported:{version}"
     if (major, minor) >= (3, 11):
         return PYTHON_COMPATIBILITY_CONTRACT
+    return f"unsupported:{version}"
+
+
+def project_chezmoi_version(version: Any) -> str:
+    """Keep the exact semantic version while excluding distributor build banners."""
+
+    match = re.search(r"\bv?(\d+\.\d+\.\d+)\b", str(version))
+    if match and match.group(1) == CHEZMOI_EXACT_VERSION:
+        return CHEZMOI_EXACT_VERSION
     return f"unsupported:{version}"
 
 
@@ -60,9 +71,10 @@ def evidence_projection(evidence: Mapping[str, Any]) -> dict[str, Any]:
 
     Wall-clock timestamps and all dynamic Git publication provenance are
     removed. The exact raw Python runtime is projected to the declared >=3.11
-    compatibility contract. Exact Chezmoi/OpenSpec versions, commands, paths,
-    hashes, manifests, modes, metrics, blockers, native evidence, and outcomes
-    remain visible.
+    compatibility contract. Chezmoi distributor build banners are projected to
+    the exact 2.72.0 semantic version, while OpenSpec remains exact. Commands,
+    paths, hashes, manifests, modes, metrics, blockers, native evidence, and
+    outcomes remain visible.
     """
 
     projected = copy.deepcopy(dict(evidence))
@@ -70,8 +82,11 @@ def evidence_projection(evidence: Mapping[str, Any]) -> dict[str, Any]:
     # review.json, but branch/rebase/commit/dirty transitions are not behavior.
     projected.pop("git", None)
     tools = projected.get("tools")
-    if isinstance(tools, dict) and "python" in tools:
-        tools["python"] = _project_python_runtime(tools["python"])
+    if isinstance(tools, dict):
+        if "python" in tools:
+            tools["python"] = _project_python_runtime(tools["python"])
+        if "chezmoi" in tools:
+            tools["chezmoi"] = project_chezmoi_version(tools["chezmoi"])
     return _project(projected)
 
 

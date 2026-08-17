@@ -92,3 +92,8 @@
 - [x] 11.1 Excluir de la proyección los cuatro campos Git dinámicos de publicación y probar feature-to-main, reviewed base, HEAD y dirty sintéticos.
 - [x] 11.2 Conservar Python exacto en evidencia raw, proyectarlo al contrato `>=3.11` y mantener Chezmoi/OpenSpec exactos con tests sensibles.
 - [x] 11.3 Regenerar evidencia/docs, comparar dos proyecciones fresh y ejecutar validation completa para el controller audit final aprobado.
+
+## 12. Host Bubblewrap CI Correction
+
+- [x] 12.1 Reemplazar el container Arch anidado por `ubuntu-22.04` directo, tooling fijado, smoke-first, triggers sin duplicación y cero relajaciones de seguridad.
+- [x] 12.2 Exigir la arquitectura mediante audit/tests, clasificar evidencia `portable-linux`, actualizar WHY/HOW y regenerar evidencia/documentación deterministas.

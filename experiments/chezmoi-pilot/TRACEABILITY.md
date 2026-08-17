@@ -22,6 +22,7 @@ un JSON pointer; los blocks nativos y gates humanos no se presentan como tests.
 | `chezmoi-pilot-evaluation` | Only timestamps change | `automated-check` | UT-PROJECTION-VOLATILE — `experiments/chezmoi-pilot/tests/test_pilot.py::test_timestamps_do_not_change_projection` |
 | `chezmoi-pilot-evaluation` | Publication changes Git state | `automated-check` | UT-PROJECTION-PUBLICATION — `experiments/chezmoi-pilot/tests/test_pilot.py::test_publication_git_and_compatible_python_do_not_change_projection` |
 | `chezmoi-pilot-evaluation` | Compatible Python patch changes | `automated-check` | UT-PROJECTION-PUBLICATION — `experiments/chezmoi-pilot/tests/test_pilot.py::test_publication_git_and_compatible_python_do_not_change_projection` |
+| `chezmoi-pilot-evaluation` | Chezmoi distributor build banner changes | `automated-check` | UT-PROJECTION-CHEZMOI-PROVENANCE — `experiments/chezmoi-pilot/tests/test_pilot.py::test_chezmoi_build_provenance_does_not_change_exact_version_projection` |
 | `chezmoi-pilot-evaluation` | Deterministic behavior changes | `automated-check` | UT-PROJECTION-SENSITIVE — `experiments/chezmoi-pilot/tests/test_pilot.py::test_deterministic_evidence_changes_projection` |
 | `chezmoi-pilot-evaluation` | Normalization hides a path escape | `automated-check` | UT-CONTAINMENT-MATRIX — `experiments/chezmoi-pilot/tests/test_pilot.py::test_negative_matrix` |
 | `chezmoi-pilot-evaluation` | Generated document is edited manually | `automated-check` | CHK-GENERATED-DOCS — `experiments/chezmoi-pilot/scripts/pilot.py::generate_documents` |
@@ -30,6 +31,7 @@ un JSON pointer; los blocks nativos y gates humanos no se presentan como tests.
 | `chezmoi-pilot-evaluation` | Automated check ID is stale | `automated-check` | UT-TRACEABILITY-STALE-ID — `experiments/chezmoi-pilot/tests/test_pilot.py::test_traceability_rejects_stale_check_id` |
 | `chezmoi-pilot-evaluation` | OpenSpec scenario has no entry | `automated-check` | UT-TRACEABILITY-MISSING — `experiments/chezmoi-pilot/tests/test_pilot.py::test_traceability_rejects_missing_scenario` |
 | `chezmoi-pilot-evaluation` | Linux CI environment lacks safe Bubblewrap | `automated-check` | CHK-CI-POLICY — `experiments/chezmoi-pilot/scripts/pilot.py::validate_ci_workflow` |
+| `chezmoi-pilot-evaluation` | Portable Linux CI passes | `generated-evidence` | `review.json#/repositoryValidation/ci/runner` |
 | `chezmoi-pilot-evaluation` | Windows CI is not configured | `generated-evidence` | `review.json#/nativeEvidence/windows` |
 | `chezmoi-pilot-evaluation` | Unrelated repository path changes | `automated-check` | CHK-CI-POLICY — `experiments/chezmoi-pilot/scripts/pilot.py::validate_ci_workflow` |
 | `chezmoi-pilot-evaluation` | Evaluation dependency changes | `automated-check` | CHK-TOOL-VERSIONS — `experiments/chezmoi-pilot/scripts/pilot.py::expected_versions` |

@@ -93,9 +93,11 @@ La evaluación MUST definir una sola proyección determinista para comparar fres
 evidence con `review.json` y para generar todos los input digests. Puede excluir
 únicamente timestamps y el contexto Git dinámico de publicación. La versión
 Python exacta MUST conservarse en evidencia raw, pero la proyección MUST usar el
-contrato compatible `>=3.11`; Chezmoi y OpenSpec MUST conservar sus versiones
-exactas. La proyección MUST conservar commands, exits, paths normalizados,
-hashes, manifests, modes, métricas, blockers, native evidence y outcome.
+contrato compatible `>=3.11`. El banner Chezmoi raw MUST conservar provenance
+del distribuidor, mientras la proyección MUST exigir la versión semántica exacta
+`2.72.0`; OpenSpec MUST permanecer exactamente `1.9.0`. La proyección MUST
+conservar commands, exits, paths normalizados, hashes, manifests, modes,
+métricas, blockers, native evidence y outcome.
 
 #### Scenario: Only timestamps change
 - **WHEN** cambian `recordedAt`, `startedAt` o `endedAt`
@@ -108,6 +110,10 @@ hashes, manifests, modes, métricas, blockers, native evidence y outcome.
 #### Scenario: Compatible Python patch changes
 - **WHEN** cambia únicamente el patch Python exacto y ambas versiones satisfacen `>=3.11`
 - **THEN** la evidencia raw conserva ambas versiones auditables y la proyección permanece en el contrato `>=3.11`
+
+#### Scenario: Chezmoi distributor build banner changes
+- **WHEN** Arch y upstream reportan distinto build/commit banner para Chezmoi `2.72.0`
+- **THEN** raw evidence conserva ambos banners y la proyección permanece exactamente `2.72.0`
 
 #### Scenario: Deterministic behavior changes
 - **WHEN** cambia un command, hash, manifest, mode, metric, blocker o native-evidence field
@@ -156,13 +162,21 @@ genérico no SHALL presentarse como focused unit test.
 
 Linux CI MUST ejecutar unit tests, evidencia fresh versus reviewed, generated-doc
 check, outcome/native invariant, OpenSpec strict/doctor y validators relevantes.
-MUST conservar Bubblewrap estricto y fallar si el container no permite private
-`/dev`/`proc` más un único root host-backed escribible. El job Windows disabled
+MUST usar directamente el host GitHub `ubuntu-22.04` fijado, sin job container,
+instalar Chezmoi `2.72.0` y OpenSpec `1.9.0` exactos antes del sandbox y ejecutar
+primero el smoke test Bubblewrap estricto. MUST fallar si el host no permite
+private `/dev`/`proc` más un único root host-backed escribible. MUST prohibir
+privileged mode, capabilities adicionales, bypass AppArmor/seccomp, cambios de
+sysctl, skip silencioso y fallback fuera de Bubblewrap. El job Windows disabled
 no cuenta como gate; native evidence falso en la evidencia executable sí.
 
 #### Scenario: Linux CI environment lacks safe Bubblewrap
-- **WHEN** el Arch container no puede crear el sandbox requerido
+- **WHEN** el host `ubuntu-22.04` no puede crear el sandbox requerido
 - **THEN** CI falla sin degradar containment
+
+#### Scenario: Portable Linux CI passes
+- **WHEN** el runner directo Ubuntu completa smoke, matrix y validators
+- **THEN** la evidencia se etiqueta `portable-linux`, no native Arch ni native Windows
 
 #### Scenario: Windows CI is not configured
 - **WHEN** el job Windows sigue disabled o no hay runner revisado
@@ -170,7 +184,7 @@ no cuenta como gate; native evidence falso en la evidencia executable sí.
 
 #### Scenario: Unrelated repository path changes
 - **WHEN** un PR no modifica piloto, OpenSpec change, workflow, inputs canónicos o scripts/perfiles comparados
-- **THEN** path filters pueden evitar el rolling-Arch job sin omitir una dependencia relevante
+- **THEN** path filters pueden evitar el job Ubuntu sin omitir una dependencia relevante
 
 ### Requirement: Toolchain provenance stays reproducible
 

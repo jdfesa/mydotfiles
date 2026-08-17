@@ -2,6 +2,8 @@ name: Chezmoi Pilot
 
 on:
   push:
+    branches:
+      - main
     paths:
       - ".github/workflows/chezmoi-pilot.yml"
       - "README.md"
@@ -47,6 +49,7 @@ on:
       - "os/linux/kitty/**"
       - "os/macos/kitty/**"
       - "os/macos/aerospace/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -54,17 +57,43 @@ permissions:
 jobs:
   linux-isolated-pilot:
     name: Linux isolated Chezmoi matrix
-    runs-on: ubuntu-latest
-    container: archlinux:base
+    runs-on: ubuntu-22.04
 
     steps:
-      - name: Install official Arch evaluation tools
+      - name: Install Ubuntu runtime dependencies
         run: |
-          pacman -Syu --noconfirm --needed chezmoi python git bubblewrap nodejs npm shellcheck
-          npm install --global --prefix /usr/local --ignore-scripts @fission-ai/openspec@1.9.0
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends bubblewrap ca-certificates curl git shellcheck
 
-      - name: Check out repository
-        uses: actions/checkout@v6
+      - name: Set up Python compatibility runtime
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Set up pinned Node.js runtime
+        uses: actions/setup-node@v6
+        with:
+          node-version: "26.7.0"
+
+      - name: Install pinned evaluation tools
+        env:
+          CHEZMOI_SHA256: ba563f716d5c00a2e91d4aeb199b417c6b219db2896f890fd422fc72610b2d90
+        run: |
+          install -d -m 0755 "$HOME/.local/bin"
+          curl --fail --silent --show-error --location \
+            --output "$RUNNER_TEMP/chezmoi-linux-amd64" \
+            https://github.com/twpayne/chezmoi/releases/download/v2.72.0/chezmoi-linux-amd64
+          printf '%s  %s\n' "$CHEZMOI_SHA256" "$RUNNER_TEMP/chezmoi-linux-amd64" | sha256sum --check
+          install -m 0755 "$RUNNER_TEMP/chezmoi-linux-amd64" "$HOME/.local/bin/chezmoi"
+          npm install --global --prefix "$HOME/.local" --ignore-scripts \
+            npm@12.0.2 @fission-ai/openspec@1.9.0
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.local/bin:$PATH"
+          test "$(node --version)" = "v26.7.0"
+          test "$(npm --version)" = "12.0.2"
+          test "$(openspec --version)" = "1.9.0"
+          chezmoi --version | grep --fixed-strings "v2.72.0"
+          python3 -c 'import sys; assert sys.version_info >= (3, 11)'
 
       - name: Require strict Bubblewrap containment
         run: |
@@ -74,6 +103,9 @@ jobs:
             --proc /proc \
             --dev /dev \
             -- sh -c 'test -c /dev/null && test -d /proc && touch /tmp/pilot-smoke'
+
+      - name: Check out repository
+        uses: actions/checkout@v6
 
       - name: Run containment and cross-render matrix
         run: experiments/chezmoi-pilot/scripts/validate

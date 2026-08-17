@@ -35,16 +35,19 @@ evidencia con `evidence/review.json`. `generate-docs --check` repite ese gate
 antes de comprobar Markdown. La proyección elimina timestamps y el contexto Git
 dinámico de publicación completo (`branch`, `reviewedBase`, `headRevision`,
 `dirty`). Conserva el runtime Python exacto en raw evidence, pero lo proyecta al
-contrato compatible `>=3.11`; Chezmoi y OpenSpec permanecen exactos. Commands,
-exits, paths, hashes, manifests, modes, métricas, blockers, native state y
-outcome continúan siendo sensibles.
+contrato compatible `>=3.11`. Conserva el banner Chezmoi completo en raw, pero
+proyecta los builds Arch/upstream a la versión exacta `2.72.0`; OpenSpec permanece
+exactamente `1.9.0`. Commands, exits, paths, hashes, manifests, modes, métricas,
+blockers, native state y outcome continúan siendo sensibles.
 
 Final projection digest:
-`43a7784a570ceab9981af9b419f1238f1a3e794fcf823caad5fdb69150ece504`.
+`0b468d4b45a52aae27eaae6aca38f26aacff789f35d65502aa87500764f2b967`.
 
 Focused tests prueban que timestamps, un rebase merge sintético a `main` y otro
 patch Python compatible no alteran la proyección. Un cambio de command, hash,
 manifest, metric, Chezmoi/OpenSpec exactos o Python incompatible sí la altera.
+Un banner de distribuidor distinto para el mismo Chezmoi `2.72.0` no altera la
+proyección; una versión Chezmoi distinta sí.
 
 ## Semantic Corrections
 
@@ -66,7 +69,7 @@ manifest, metric, Chezmoi/OpenSpec exactos o Python incompatible sí la altera.
 | Operator entry commands | 3 | 1 |
 | Measured internal commands | 6 | 10 por fixture |
 | Comparison/automation files | 3 | 10 automation/test files |
-| Raw automation/test LOC | 381 | 2,488 |
+| Raw automation/test LOC | 381 | 2,623 |
 | Main harness LOC | N/A | `pilot.py`: 1,625 |
 | Templates | 0 | 1 |
 | Persistent state | 0 | 1 DB temporal por run |
@@ -93,10 +96,10 @@ revisión considerablemente mayor que los scripts productivos comparados.
 
 ## Traceability
 
-Los 90 escenarios OpenSpec tienen 90 entries declaradas:
+Los 92 escenarios OpenSpec tienen 92 entries declaradas:
 
-- 50 `automated-check` con ID y locator concretos;
-- 27 `generated-evidence` con JSON pointer;
+- 51 `automated-check` con ID y locator concretos;
+- 28 `generated-evidence` con JSON pointer;
 - 3 `native-blocked`;
 - 10 `human-review-gate`.
 
@@ -110,10 +113,19 @@ outcome invariant, OpenSpec strict/doctor y validators del repositorio. Path
 filters cubren piloto, change OpenSpec, workflow, inputs Starship/Kitty/AeroSpace
 y scripts/perfiles comparados.
 
-El Arch container incluye un Bubblewrap smoke test estricto. No se pudo reproducir
-localmente el modelo exacto de namespaces de GitHub-hosted Docker; si el runner
-impide Bubblewrap, el PR check debe fallar y corregirse sin degradar containment.
-El job Windows disabled permanece visible, pero no cuenta como gate executable.
+El primer PR check falló porque Docker bloqueó el user namespace antes de que
+Bubblewrap pudiera crear el sandbox dentro del container Arch. No se aceptó
+`seccomp=unconfined` ni otra relajación. El workflow ahora usa directamente el
+VM fijado `ubuntu-22.04`, sin job container, privileged mode, capabilities,
+bypass seccomp/AppArmor, sysctl, skip ni fallback.
+
+Las dependencias y herramientas fijadas se instalan antes del sandbox. El smoke
+test Bubblewrap estricto ocurre antes del checkout y del harness completo; exige
+`/` read-only, private `/dev`/`proc` y temp privado. Esta arquitectura elimina
+una capa de namespaces sin debilitar Bubblewrap. Su resultado es evidencia
+`portable-linux` en Ubuntu, no native Arch ni native Windows. Arch se cubre
+separadamente con doctor, profiles y symlinks en la máquina real. El job Windows
+disabled permanece visible, pero no cuenta como gate executable.
 
 ## Native Blockers
 
@@ -124,7 +136,7 @@ El job Windows disabled permanece visible, pero no cuenta como gate executable.
 
 ## Task Status
 
-La change queda en `59/62` tareas completadas. Permanecen abiertas:
+La change queda en `61/64` tareas completadas. Permanecen abiertas:
 
 - `6.6`: native Windows evidence, bloqueada sin runner revisado.
 - `9.4`: no aplica con el outcome actual; requiere otra change si una revisión

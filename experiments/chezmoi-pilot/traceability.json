@@ -123,6 +123,14 @@
     },
     {
       "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Chezmoi distributor build banner changes",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PROJECTION-CHEZMOI-PROVENANCE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
       "scenario": "Deterministic behavior changes",
       "coverage": {
         "kind": "automated-check",
@@ -183,6 +191,14 @@
       "coverage": {
         "kind": "automated-check",
         "id": "CHK-CI-POLICY"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Portable Linux CI passes",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/repositoryValidation/ci/runner"
       }
     },
     {

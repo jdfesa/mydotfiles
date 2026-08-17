@@ -209,13 +209,16 @@ auditoría humana, pero la comparación reproducible usa una única
 - el objeto Git dinámico de publicación completo: `branch`, `reviewedBase`,
   `headRevision` y `dirty`;
 - el patch Python exacto, proyectado al contrato compatible `>=3.11` que también
-  aplica `doctor`.
+  aplica `doctor`;
+- el banner de build/distribuidor Chezmoi, proyectado a la versión semántica
+  exacta `2.72.0`.
 
-La proyección conserva las versiones exactas de Chezmoi y OpenSpec, commands,
-exits, previews, hashes, manifests, modes, paths normalizados, source
-provenance, métricas, blockers, native evidence y outcome. Una versión Python
-incompatible no se normaliza como válida. `validate` ejecuta evidencia fresca y
-compara toda la proyección.
+La evidencia raw conserva el banner Chezmoi completo. La proyección conserva
+Chezmoi exactamente en `2.72.0`, OpenSpec exactamente en `1.9.0`, commands,
+exits, previews, hashes, manifests, modes, paths normalizados, source provenance,
+métricas, blockers, native evidence y outcome. Una versión Python incompatible o
+Chezmoi distinta no se normaliza como válida. `validate` ejecuta evidencia fresca
+y compara toda la proyección.
 `generate-docs --check` hace la misma comparación antes de verificar contenido.
 Los input digests de documentos son exactamente el digest de esa proyección.
 
@@ -270,12 +273,25 @@ outcome invariant, OpenSpec strict/doctor y validators relevantes. Path filters
 cubren piloto, change OpenSpec, workflow, Starship/Kitty canónicos y scripts o
 perfiles comparados.
 
-El job corre dentro de `archlinux:base`. No se ha probado localmente el modelo
-exacto de namespaces de GitHub-hosted Docker; un smoke test Bubblewrap con
-private `/dev` debe fallar el PR si el runner no permite la contención requerida.
-No se degrada seguridad para obtener un check verde. El job Windows permanece
-visiblemente disabled y no cuenta como evidencia; el invariante executable es
-el gate real.
+El primer PR check demostró que anidar Bubblewrap dentro de un job container
+Arch agrega una barrera Docker que bloquea el user namespace antes del sandbox.
+La corrección elimina esa capa y ejecuta directamente sobre `ubuntu-22.04`
+fijado. Esto reduce orquestación sin debilitar el boundary primario: no existe
+job container, privileged mode, capability adicional, bypass seccomp/AppArmor,
+sysctl, skip silencioso ni fallback fuera de Bubblewrap.
+
+El job instala dependencias Ubuntu y las versiones exactas Chezmoi `2.72.0`,
+OpenSpec `1.9.0`, Node.js `26.7.0` y npm `12.0.2` antes del sandbox. El binario
+Chezmoi se verifica contra un SHA-256 fijado. Luego ejecuta primero un smoke test
+con `/` read-only, private `/dev` y `/proc`; solo después hace checkout y corre
+el harness estricto. Las descargas ocurren antes del sandbox y dentro del piloto
+siguen prohibidos externals, hooks y refresh. La evidencia común no promete un
+network namespace que el host Arch auditado no soporta.
+
+El resultado CI se clasifica `portable-linux` en Ubuntu 22.04: no es evidencia
+nativa Arch ni Windows. Arch se verifica separadamente sobre la máquina real con
+profiles, symlinks y doctor. El job Windows permanece visiblemente disabled y no
+cuenta como evidencia; el invariante executable es el gate real.
 
 ### 13. Preserve coexistence and rollback boundaries
 
@@ -316,8 +332,8 @@ que restaure un único owner.
 
 - ¿Se aprobará un runner Windows nativo para paths, behavior, encoding, rollback
   y ACLs?
-- ¿El Arch container de GitHub Actions permitirá Bubblewrap sin degradar la
-  contención?
+- ¿El runner directo `ubuntu-22.04` seguirá ofreciendo el user namespace
+  requerido por Bubblewrap durante la vida de este piloto?
 - ¿Conviene cerrar la evaluación si la complejidad sigue excediendo al linker?
 - Si una evidencia futura recomienda migration, ¿cuál será el canary literal
   del nuevo cambio? Starship es el candidato normal, no una autorización.

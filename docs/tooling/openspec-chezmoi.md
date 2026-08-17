@@ -41,11 +41,14 @@ decisión posterior debe adoptar o remover entries explícitamente. Reinstalar u
 repositories Arch firmados actuales y full upgrade soportado; no fuerza packages
 cacheados ni partial upgrades para repetir strings históricas.
 
-`review.json` registra el runtime Python exacto para auditoría. Como el soporte
+`review.json` registra el runtime Python y el banner Chezmoi completos para
+auditoría. Como el soporte
 declarado y el gate `doctor` son Python `>=3.11`, la proyección determinista
 normaliza cualquier patch compatible a ese contrato; un runtime incompatible no
-queda oculto. Chezmoi `2.72.0` y OpenSpec `1.9.0` permanecen versiones exactas en
-la proyección y cualquier drift exige revisión.
+queda oculto. Arch y el binario upstream agregan metadata de build distinta, por
+lo que la proyección normaliza solo ese banner y exige Chezmoi semántico exacto
+`2.72.0`. OpenSpec permanece exactamente `1.9.0`; cualquier drift de versión
+exige revisión.
 
 ## Installation and Verification
 
@@ -106,6 +109,29 @@ byte-for-byte con una inicialización aislada. `openspec update` puede reemplaza
 contenido managed y exige version bump revisado; no se usa como upgrade shortcut
 unpinned.
 
+## CI Runtime
+
+CI usa directamente el VM GitHub-hosted fijado `ubuntu-22.04`; no usa un job
+container. `apt-get` instala Bubblewrap, certificados, curl, Git y ShellCheck
+desde Ubuntu antes del sandbox. `actions/setup-python@v6` selecciona el contrato
+Python `3.11` y `actions/setup-node@v6` fija Node.js `26.7.0`; npm se fija en
+`12.0.2` y OpenSpec en `1.9.0` bajo `$HOME/.local`.
+
+Chezmoi se descarga desde el release oficial `v2.72.0` como
+`chezmoi-linux-amd64` y se verifica antes de instalar con:
+
+```text
+ba563f716d5c00a2e91d4aeb199b417c6b219db2896f890fd422fc72610b2d90
+```
+
+El primer PR check probó que el anterior container Arch bloqueaba el user
+namespace antes de Bubblewrap. Ejecutar sobre el VM directo elimina esa capa y
+reduce complejidad, pero no relaja el boundary del piloto: siguen prohibidos
+privileged mode, capabilities, bypass de seccomp/AppArmor, sysctl, skip y
+fallback fuera del harness. Esta ejecución es evidencia Linux portable; native
+Arch continúa verificándose en la workstation real y native Windows permanece
+bloqueado.
+
 ## Primary Sources
 
 - OpenSpec `v1.9.0`: https://github.com/Fission-AI/OpenSpec/releases/tag/v1.9.0
@@ -121,3 +147,6 @@ unpinned.
 - Windows Terminal stable `1.24.11321.0`: https://github.com/microsoft/terminal/releases/tag/v1.24.11321.0
 - Windows Terminal actions: https://learn.microsoft.com/en-us/windows/terminal/customize-settings/actions
 - Windows Terminal settings/schema: https://learn.microsoft.com/en-us/windows/terminal/faq
+- Chezmoi `v2.72.0`: https://github.com/twpayne/chezmoi/releases/tag/v2.72.0
+- GitHub-hosted runners: https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+- Ubuntu Bubblewrap: https://packages.ubuntu.com/jammy/bubblewrap
