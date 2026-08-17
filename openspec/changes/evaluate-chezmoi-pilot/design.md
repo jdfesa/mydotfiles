@@ -290,8 +290,10 @@ job container, privileged mode, capability adicional, bypass seccomp/AppArmor,
 sysctl, skip silencioso ni fallback fuera de Bubblewrap.
 
 El job instala dependencias Ubuntu y las versiones exactas Chezmoi `2.72.0`,
-OpenSpec `1.9.0`, Node.js `26.7.0` y npm `12.0.2` antes del sandbox. El binario
-Chezmoi se verifica contra un SHA-256 fijado. Luego ejecuta primero un smoke test
+OpenSpec `1.9.0`, Node.js `26.7.0`, npm `12.0.2` y ShellCheck `0.11.0` antes del
+sandbox. Los binarios Chezmoi y ShellCheck se verifican contra SHA-256 fijados;
+el pin de ShellCheck evita depender del parser antiguo de Ubuntu 22.04 sin
+omitir lint. Luego ejecuta primero un smoke test
 con `/` read-only, private `/dev` y `/proc`; solo después hace checkout y corre
 el harness estricto. El checkout usa history completa para que la provenance
 Git calcule `reviewedBase` contra `origin/main` también bajo el PR merge ref. Las

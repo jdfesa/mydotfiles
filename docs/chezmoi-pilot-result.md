@@ -48,7 +48,7 @@ y datos efectivos que el harness valida. Así Ubuntu/Arch pueden diferir en
 defaults irrelevantes sin ocultar un cambio behavioral.
 
 Final projection digest:
-`ab06a436db17767b13dc5b20df284be7a1b624a5fba7e25d39bbe00ec24e7624`.
+`5223206afb4b4381ec5a6e152c3d6339cf79968a52853a85b30a44ff4cb967d8`.
 
 Focused tests prueban que timestamps, un rebase merge sintético a `main` y otro
 patch Python compatible no alteran la proyección. Un cambio de command, hash,
@@ -76,8 +76,8 @@ proyección ni `previewDigest`; una versión Chezmoi distinta sí.
 | Operator entry commands | 3 | 1 |
 | Measured internal commands | 6 | 10 por fixture |
 | Comparison/automation files | 3 | 10 automation/test files |
-| Raw automation/test LOC | 381 | 2,745 |
-| Main harness LOC | N/A | `pilot.py`: 1,625 |
+| Raw automation/test LOC | 381 | 2,760 |
+| Main harness LOC | N/A | `pilot.py`: 1,650 |
 | Templates | 0 | 1 |
 | Persistent state | 0 | 1 DB temporal por run |
 | Native Windows | No soportado | Bloqueado; structural-only en Arch |
@@ -126,8 +126,11 @@ Bubblewrap pudiera crear el sandbox dentro del container Arch. No se aceptó
 VM fijado `ubuntu-22.04`, sin job container, privileged mode, capabilities,
 bypass seccomp/AppArmor, sysctl, skip ni fallback.
 
-Las dependencias y herramientas fijadas se instalan antes del sandbox. El smoke
-test Bubblewrap estricto ocurre antes del checkout y del harness completo; exige
+Las dependencias y herramientas fijadas se instalan antes del sandbox.
+ShellCheck `0.11.0` se obtiene del release oficial con SHA-256 fijado porque el
+parser empaquetado por Ubuntu 22.04 es anterior al usado por el repositorio; así
+se conserva el validator completo en vez de omitirlo. El smoke test Bubblewrap
+estricto ocurre antes del checkout y del harness completo; exige
 `/` read-only, private `/dev`/`proc` y temp privado. El checkout conserva history
 completa para calcular `reviewedBase` contra `origin/main`. Esta arquitectura elimina
 una capa de namespaces sin debilitar Bubblewrap. Su resultado es evidencia

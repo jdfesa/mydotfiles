@@ -414,6 +414,18 @@ class TraceabilityTests(unittest.TestCase):
         )
         self.assert_ci_rejected(workflow.replace("          fetch-depth: 0\n", "", 1))
 
+    def test_ci_policy_requires_pinned_shellcheck(self) -> None:
+        workflow = (pilot.REPO_ROOT / ".github/workflows/chezmoi-pilot.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assert_ci_rejected(workflow.replace("v0.11.0", "v0.10.0"))
+        self.assert_ci_rejected(
+            workflow.replace(
+                "8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198",
+                "0" * 64,
+            )
+        )
+
     def test_traceability_rejects_stale_check_id(self) -> None:
         declaration = pilot.load_json(PILOT_ROOT / "traceability.json")
         declaration = copy.deepcopy(declaration)

@@ -63,7 +63,7 @@ jobs:
       - name: Install Ubuntu runtime dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends bubblewrap ca-certificates curl git shellcheck
+          sudo apt-get install --yes --no-install-recommends bubblewrap ca-certificates curl git
 
       - name: Set up Python compatibility runtime
         uses: actions/setup-python@v6
@@ -78,6 +78,7 @@ jobs:
       - name: Install pinned evaluation tools
         env:
           CHEZMOI_SHA256: ba563f716d5c00a2e91d4aeb199b417c6b219db2896f890fd422fc72610b2d90
+          SHELLCHECK_SHA256: 8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198
         run: |
           install -d -m 0755 "$HOME/.local/bin"
           curl --fail --silent --show-error --location \
@@ -85,6 +86,12 @@ jobs:
             https://github.com/twpayne/chezmoi/releases/download/v2.72.0/chezmoi-linux-amd64
           printf '%s  %s\n' "$CHEZMOI_SHA256" "$RUNNER_TEMP/chezmoi-linux-amd64" | sha256sum --check
           install -m 0755 "$RUNNER_TEMP/chezmoi-linux-amd64" "$HOME/.local/bin/chezmoi"
+          curl --fail --silent --show-error --location \
+            --output "$RUNNER_TEMP/shellcheck.tar.xz" \
+            https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz
+          printf '%s  %s\n' "$SHELLCHECK_SHA256" "$RUNNER_TEMP/shellcheck.tar.xz" | sha256sum --check
+          tar -xJf "$RUNNER_TEMP/shellcheck.tar.xz" -C "$RUNNER_TEMP"
+          install -m 0755 "$RUNNER_TEMP/shellcheck-v0.11.0/shellcheck" "$HOME/.local/bin/shellcheck"
           npm install --global --prefix "$HOME/.local" --ignore-scripts \
             npm@12.0.2 @fission-ai/openspec@1.9.0
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
@@ -93,6 +100,7 @@ jobs:
           test "$(npm --version)" = "12.0.2"
           test "$(openspec --version)" = "1.9.0"
           chezmoi --version | grep --fixed-strings "v2.72.0"
+          test "$(shellcheck --version | sed -n 's/^version: //p')" = "0.11.0"
           python3 -c 'import sys; assert sys.version_info >= (3, 11)'
 
       - name: Require strict Bubblewrap containment
