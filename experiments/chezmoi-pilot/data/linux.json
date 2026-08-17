@@ -1,0 +1,7 @@
+{
+  "pilot": {
+    "platform": "linux",
+    "host": "pilot-linux",
+    "git": {"name": "Pilot User", "email": "pilot@example.invalid", "credentialHelper": "cache"}
+  }
+}

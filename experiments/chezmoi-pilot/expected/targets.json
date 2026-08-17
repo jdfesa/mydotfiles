@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "required": {
+    "linux": [".config/starship.toml", ".gitconfig", ".config/kitty/common.conf", ".config/kitty/kitty.conf"],
+    "macos": [".config/starship.toml", ".gitconfig", ".config/kitty/common.conf", ".config/kitty/kitty.conf"],
+    "windows": [".config/starship.toml", ".gitconfig", "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"]
+  },
+  "forbidden": {
+    "linux": ["AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"],
+    "macos": ["AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"],
+    "windows": [".config/kitty/kitty.conf", ".config/kitty/common.conf"]
+  },
+  "fileMode": "0644",
+  "directoryMode": "0755"
+}

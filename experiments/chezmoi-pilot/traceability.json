@@ -1,0 +1,725 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Chezmoi reduces visible commands through hidden orchestration",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/comparison"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Future bootstrap phase requires native behavior",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "La elección de adapter y support matrix pertenece a revisión arquitectónica futura."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Current linker blocks a real file",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/currentLinkerBaseline/realFileRefusal"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Current model lacks rendered host data",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/currentLinkerBaseline/gitRendering"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Pilot automation grows",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/comparison/chezmoiPilot/automationTests"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Command sequence changes",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PROJECTION-SENSITIVE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Every mandatory metric passes",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/mandatory"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "One mandatory metric fails",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OUTCOME-INCOMPLETE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Critical safety failure occurs",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OUTCOME-REJECT"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Safety passes but evidence is incomplete",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OUTCOME-CONTINUE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Selective migration is recommended",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OUTCOME-RECOMMEND"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Recommendation contradicts native evidence",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OUTCOME-NATIVE-INVARIANT"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Only timestamps change",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PROJECTION-VOLATILE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Publication changes Git state",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PROJECTION-PUBLICATION"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Compatible Python patch changes",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PROJECTION-PUBLICATION"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Deterministic behavior changes",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PROJECTION-SENSITIVE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Normalization hides a path escape",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-CONTAINMENT-MATRIX"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Generated document is edited manually",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-GENERATED-DOCS"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Policy needs explanation",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "La suficiencia de WHY/HOW y trade-offs requiere revisión humana del documento."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Scenario is only a human gate",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-TRACEABILITY"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Automated check ID is stale",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-TRACEABILITY-STALE-ID"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "OpenSpec scenario has no entry",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-TRACEABILITY-MISSING"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Linux CI environment lacks safe Bubblewrap",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CI-POLICY"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Windows CI is not configured",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/nativeEvidence/windows"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Unrelated repository path changes",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CI-POLICY"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Evaluation dependency changes",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-TOOL-VERSIONS"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Reviewers choose no adoption",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "La decisión de cerrar la evaluación es un gate humano explícito."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Chezmoi package remains installed",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "Retener o remover tooling del host requiere una decisión separada."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Safe temporary root is accepted",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/rootContained"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Real home is rejected",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-CONTAINMENT-MATRIX"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Symlink escape is rejected",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-CONTAINMENT-MATRIX"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Host has tokens and an SSH agent",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-ENV-ALLOWLIST"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Future Windows runtime needs host variables",
+      "coverage": {
+        "kind": "native-blocked",
+        "reason": "Requiere un runner Windows nativo revisado; no existe evidencia ejecutada."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Bubblewrap prefix is inspected",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-BWRAP-PREFIX"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Network namespace is unavailable",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/sandbox/networkIsolated"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Host defaults disagree with explicit isolation",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/effective"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Template references real-home semantics",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-AMBIENT-HOME-REJECT"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Representative input is staged",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/appliedManifest"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Production mutation is requested",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/mandatory/protectedMetadataChanges"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Pilot target overlaps a profile target",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/mandatory/realOwnershipOverlaps"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Duplicate target appears inside one model",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/ownership/singleOwner"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Future cutover is proposed",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "Todo cutover requiere otra change y aprobación target-by-target."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Preview is clean and current",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/previewDigest"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Source changes after preview",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PREVIEW-DIGEST"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Clean runs match",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/deterministic"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Second apply changes state",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/secondApplyChanges"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Temporary rollback succeeds",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/mandatory/rollbackExact"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "No-adoption outcome is selected",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "Cerrar o rechazar la evaluación es un gate humano; no existe rollback productivo."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Canonical input changes",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-MODEL"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Temporary destination changes out of band",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/driftDetected"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Secret-like fixture is introduced",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-SECRET-FIXTURE-REJECT"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Host authentication exists",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-ENV-ALLOWLIST"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "POSIX modes match",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/caseDetails/fileModesValid"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Privilege would be required",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "Una necesidad de privilegio detiene el piloto y exige un gate separado."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Windows permissions are reviewed",
+      "coverage": {
+        "kind": "native-blocked",
+        "reason": "ACLs y permisos requieren un runner Windows nativo revisado."
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Provisioning item enters the pilot",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-STATIC-SOURCE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Executable source attribute appears",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-STATIC-SOURCE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-safety",
+      "scenario": "Conflict requires a choice",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "No se fuerza un conflict real; revisión confirma error-on-conflict y cualquier fixture futuro requiere aprobación."
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Content is byte-identical across platforms",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/caseDetails/starshipLiteralSha256"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Session behavior differs",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-MODEL"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "All Starship fixtures render",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Starship staging diverges",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-MODEL"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Platform credential helper changes",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Host identity is omitted",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-MISSING-GIT-DATA"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Linux Kitty is rendered",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/linux/first/caseDetails/kittyEntrypointSha256"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "macOS Kitty is simulated on Arch",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/macos/first/caseDetails/kittyEntrypointSha256"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Canonical Kitty behavior changes",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Windows fixture is rendered",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/results/windows/first/appliedManifest"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Common action lacks Windows support",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Application command is mapped",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Session-defined desktop command is mapped",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Current AeroSpace action is represented",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Windows desktop chord is not designed",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Physical key is remapped",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "La equivalencia física entre hosts requiere inventario/hardware y revisión humana."
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Kitty creates a pane-like window",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Windows Terminal creates an OS window",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Order and spatial focus differ",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Contextual Kitty navigation is represented",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "False native action mapping is introduced",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-SEMANTIC-FALSE-MAPPING"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Platform chord collides",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-SEMANTIC-COLLISION"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Platform mapping is complete",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Literal chords differ",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Literal candidate contains substitution",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-STATIC-SOURCE"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Pilot template crosses a review guardrail",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-TEMPLATE-GUARDRAIL"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Semantic divergence fits within the guardrails",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-SEMANTIC-FALSE-MAPPING"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Pilot guardrail is proposed as repository policy",
+      "coverage": {
+        "kind": "human-review-gate",
+        "reason": "Convertir tripwires del piloto en policy productiva exige una decisión humana separada."
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Different applications share an intent",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "CHK-CANONICAL-SEMANTICS"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Arch matrix passes all fixtures",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/nativeEvidence/archCrossRender"
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "Native Windows evidence is unavailable",
+      "coverage": {
+        "kind": "native-blocked",
+        "reason": "El runner Windows nativo permanece ausente y bloquea la recomendación."
+      }
+    },
+    {
+      "capability": "cross-platform-dotfile-model",
+      "scenario": "macOS remains audit-only",
+      "coverage": {
+        "kind": "generated-evidence",
+        "pointer": "/nativeEvidence/macos"
+      }
+    }
+  ]
+}

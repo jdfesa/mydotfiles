@@ -1,0 +1,108 @@
+name: Chezmoi Pilot
+
+on:
+  push:
+    paths:
+      - ".github/workflows/chezmoi-pilot.yml"
+      - "README.md"
+      - "docs/chezmoi-pilot-result.md"
+      - "docs/generated/chezmoi-pilot-*.md"
+      - "docs/tooling/openspec-chezmoi.md"
+      - "experiments/chezmoi-pilot/**"
+      - "openspec/config.yaml"
+      - "openspec/changes/evaluate-chezmoi-pilot/**"
+      - "profiles/**"
+      - "scripts/doctor"
+      - "scripts/link"
+      - "scripts/profile-resolve"
+      - "scripts/test-profile-resolve"
+      - "scripts/validate-hosts"
+      - "scripts/validate-profiles"
+      - "scripts/validate-references"
+      - "shared/starship/**"
+      - "shared/kitty/**"
+      - "os/linux/kitty/**"
+      - "os/macos/kitty/**"
+      - "os/macos/aerospace/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chezmoi-pilot.yml"
+      - "README.md"
+      - "docs/chezmoi-pilot-result.md"
+      - "docs/generated/chezmoi-pilot-*.md"
+      - "docs/tooling/openspec-chezmoi.md"
+      - "experiments/chezmoi-pilot/**"
+      - "openspec/config.yaml"
+      - "openspec/changes/evaluate-chezmoi-pilot/**"
+      - "profiles/**"
+      - "scripts/doctor"
+      - "scripts/link"
+      - "scripts/profile-resolve"
+      - "scripts/test-profile-resolve"
+      - "scripts/validate-hosts"
+      - "scripts/validate-profiles"
+      - "scripts/validate-references"
+      - "shared/starship/**"
+      - "shared/kitty/**"
+      - "os/linux/kitty/**"
+      - "os/macos/kitty/**"
+      - "os/macos/aerospace/**"
+
+permissions:
+  contents: read
+
+jobs:
+  linux-isolated-pilot:
+    name: Linux isolated Chezmoi matrix
+    runs-on: ubuntu-latest
+    container: archlinux:base
+
+    steps:
+      - name: Install official Arch evaluation tools
+        run: |
+          pacman -Syu --noconfirm --needed chezmoi python git bubblewrap nodejs npm shellcheck
+          npm install --global --prefix /usr/local --ignore-scripts @fission-ai/openspec@1.9.0
+
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Require strict Bubblewrap containment
+        run: |
+          bwrap --die-with-parent --new-session \
+            --ro-bind / / \
+            --tmpfs /tmp \
+            --proc /proc \
+            --dev /dev \
+            -- sh -c 'test -c /dev/null && test -d /proc && touch /tmp/pilot-smoke'
+
+      - name: Run containment and cross-render matrix
+        run: experiments/chezmoi-pilot/scripts/validate
+
+      - name: Verify generated documentation
+        run: experiments/chezmoi-pilot/scripts/generate-docs --check
+
+      - name: Run pilot doctor
+        run: experiments/chezmoi-pilot/scripts/doctor
+
+      - name: Validate OpenSpec change
+        run: |
+          openspec validate evaluate-chezmoi-pilot --strict
+          openspec validate --all --strict
+          openspec doctor --json
+
+      - name: Run repository validators
+        run: |
+          scripts/lint-shell
+          scripts/test-profile-resolve
+          scripts/validate-profiles
+          scripts/validate-hosts
+          scripts/validate-references
+
+  native-windows-gate:
+    name: Native Windows evidence gate
+    if: ${{ false }}
+    runs-on: windows-latest
+    steps:
+      - name: Gate remains intentionally disabled
+        shell: pwsh
+        run: throw 'Enable only after a reviewed native Windows runner and Chezmoi provenance gate exist.'

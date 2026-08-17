@@ -1,0 +1,4345 @@
+{
+  "blockers": [
+    "No existe evidencia Windows nativa de target/schema/ACL/idempotencia.",
+    "El harness macOS nativo no fue autorizado ni ejecutado.",
+    "Containment y staging por plataforma agregan complejidad frente al workflow literal actual."
+  ],
+  "comparison": {
+    "chezmoiPilot": {
+      "automationTests": {
+        "byFile": {
+          "experiments/chezmoi-pilot/scripts/doctor": 5,
+          "experiments/chezmoi-pilot/scripts/generate-docs": 5,
+          "experiments/chezmoi-pilot/scripts/pilot.py": 1625,
+          "experiments/chezmoi-pilot/scripts/pilot_audit.py": 140,
+          "experiments/chezmoi-pilot/scripts/pilot_docs.py": 206,
+          "experiments/chezmoi-pilot/scripts/pilot_policy.py": 155,
+          "experiments/chezmoi-pilot/scripts/run": 5,
+          "experiments/chezmoi-pilot/scripts/run-windows.ps1": 28,
+          "experiments/chezmoi-pilot/scripts/validate": 7,
+          "experiments/chezmoi-pilot/tests/test_pilot.py": 312
+        },
+        "files": 10,
+        "rawLines": 2488
+      },
+      "costs": [
+        "Encoding propio del source state.",
+        "Harness de containment.",
+        "Persistent state adicional.",
+        "Adapter de staging por plataforma.",
+        "M\u00e1s conceptos de recovery."
+      ],
+      "documentation": {
+        "files": 7
+      },
+      "implementation": {
+        "byFile": {
+          "experiments/chezmoi-pilot/data/linux.json": 7,
+          "experiments/chezmoi-pilot/data/macos.json": 7,
+          "experiments/chezmoi-pilot/data/windows.json": 7,
+          "experiments/chezmoi-pilot/expected/canonical-hashes.json": 24,
+          "experiments/chezmoi-pilot/expected/targets.json": 15,
+          "experiments/chezmoi-pilot/fixtures/git/dot_gitconfig.tmpl": 11,
+          "experiments/chezmoi-pilot/fixtures/windows-terminal/settings.json": 12,
+          "experiments/chezmoi-pilot/mappings.json": 50,
+          "experiments/chezmoi-pilot/scripts/doctor": 5,
+          "experiments/chezmoi-pilot/scripts/generate-docs": 5,
+          "experiments/chezmoi-pilot/scripts/pilot.py": 1625,
+          "experiments/chezmoi-pilot/scripts/pilot_audit.py": 140,
+          "experiments/chezmoi-pilot/scripts/pilot_docs.py": 206,
+          "experiments/chezmoi-pilot/scripts/pilot_policy.py": 155,
+          "experiments/chezmoi-pilot/scripts/run": 5,
+          "experiments/chezmoi-pilot/scripts/run-windows.ps1": 28,
+          "experiments/chezmoi-pilot/scripts/validate": 7,
+          "experiments/chezmoi-pilot/semantics.json": 286,
+          "experiments/chezmoi-pilot/tests/test_pilot.py": 312,
+          "experiments/chezmoi-pilot/traceability.json": 725
+        },
+        "files": 20,
+        "rawLines": 3632
+      },
+      "internalCommandsPerFixture": {
+        "linux": 10,
+        "macos": 10,
+        "windows": 10
+      },
+      "operatorEntryCommands": 1,
+      "persistentStateFilesPerRun": 1,
+      "platformAdapters": 2,
+      "strengths": [
+        "Renderiza datos de host falsos.",
+        "Incluye diff/status.",
+        "Mide idempotencia y drift de archivos materializados.",
+        "Modela un target Windows estructural."
+      ],
+      "templates": 1
+    },
+    "currentModel": {
+      "automationScripts": {
+        "byFile": {
+          "scripts/doctor": 80,
+          "scripts/link": 146,
+          "scripts/profile-resolve": 155
+        },
+        "files": 3,
+        "rawLines": 381
+      },
+      "gaps": [
+        "No renderiza datos de host.",
+        "No tiene perfil Windows nativo.",
+        "Visibilidad limitada del drift de archivos materializados."
+      ],
+      "hiddenState": 0,
+      "measuredInternalCommands": 6,
+      "operatorEntryCommands": 3,
+      "representativeSupport": {
+        "git": "separate configure-git",
+        "kitty": "symlink plus shared include",
+        "starship": "symlink",
+        "windowsTerminal": "unsupported"
+      },
+      "strengths": [
+        "Ownership simple.",
+        "Rechaza archivos reales.",
+        "Baja carga cognitiva para links literales."
+      ],
+      "templates": 0
+    },
+    "policy": {
+      "baselineInternalCommands": 6,
+      "clearComplexityBenefit": false,
+      "commandCountNotHigher": false,
+      "locIsUnweighted": true,
+      "maximumPilotInternalCommands": 10,
+      "permitsSelectiveMigration": false,
+      "persistentStateNotHigher": false
+    },
+    "priorityOrder": [
+      "scalability",
+      "total-complexity",
+      "maintainability-deterministic-ownership",
+      "reinstall-reproducibility",
+      "versioned-idempotence-drift-rollback-documentation"
+    ],
+    "unweighted": true
+  },
+  "containmentNegativeTests": {
+    "active-profile-target": true,
+    "filesystem-root": true,
+    "missing-marker": true,
+    "real-home": true,
+    "repository": true,
+    "reused-root": true,
+    "root-parent": true,
+    "safe-descendant": true,
+    "symlink-escape": true
+  },
+  "currentLinkerBaseline": {
+    "commands": [
+      {
+        "command": [
+          "<REPO>/scripts/profile-resolve",
+          "arch-workstation"
+        ],
+        "exit": 0,
+        "label": "profile-resolve",
+        "sandbox": "bubblewrap-private-dev-no-network-namespace",
+        "stderrLines": 0,
+        "stderrPreview": [],
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdoutLines": 12,
+        "stdoutPreview": [
+          "shared/bash/bashrc|$HOME/.bashrc",
+          "shared/zsh/zshrc|$HOME/.zshrc",
+          "shared/starship/starship.toml|$HOME/.config/starship.toml",
+          "shared/btop|$HOME/.config/btop",
+          "shared/fastfetch|$HOME/.config/fastfetch",
+          "shared/lazygit/config.yml|$HOME/.config/lazygit/config.yml",
+          "shared/nvim|$HOME/.config/nvim",
+          "shared/yazi|$HOME/.config/yazi",
+          "os/linux/system-monitor/scripts/status-sensors|$HOME/.local/bin/status-sensors",
+          "shared/rclone/rclone-sync|$HOME/.local/bin/rclone-sync",
+          "os/linux/kitty/kitty.conf|$HOME/.config/kitty/kitty.conf",
+          "shared/kitty/pass_keys.py|$HOME/.config/kitty/pass_keys.py"
+        ],
+        "stdoutSha256": "b33f01f4678399e0618c5f71f6592b2b04a03628a1a5820839198f00e8c65e30"
+      },
+      {
+        "command": [
+          "<REPO>/scripts/link",
+          "--dry-run",
+          "arch-workstation"
+        ],
+        "exit": 0,
+        "label": "link-dry-run",
+        "sandbox": "bubblewrap-private-dev-no-network-namespace",
+        "stderrLines": 0,
+        "stderrPreview": [],
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdoutLines": 37,
+        "stdoutPreview": [
+          "[dry-run] mkdir -p <BASELINE>/home",
+          "[dry-run] ln -s <REPO>/shared/bash/bashrc <BASELINE>/home/.bashrc",
+          "would create <BASELINE>/home/.bashrc -> <REPO>/shared/bash/bashrc",
+          "[dry-run] mkdir -p <BASELINE>/home",
+          "[dry-run] ln -s <REPO>/shared/zsh/zshrc <BASELINE>/home/.zshrc",
+          "would create <BASELINE>/home/.zshrc -> <REPO>/shared/zsh/zshrc",
+          "[dry-run] mkdir -p <BASELINE>/home/.config",
+          "[dry-run] ln -s <REPO>/shared/starship/starship.toml <BASELINE>/home/.config/starship.toml",
+          "would create <BASELINE>/home/.config/starship.toml -> <REPO>/shared/starship/starship.toml",
+          "[dry-run] mkdir -p <BASELINE>/home/.config",
+          "[dry-run] ln -s <REPO>/shared/btop <BASELINE>/home/.config/btop",
+          "would create <BASELINE>/home/.config/btop -> <REPO>/shared/btop"
+        ],
+        "stdoutSha256": "a98da70fcbe99e1343f24f7aa8d482e618f1bbcd04d5d5bdba0555edc9f72b0a"
+      },
+      {
+        "command": [
+          "<REPO>/scripts/link",
+          "arch-workstation"
+        ],
+        "exit": 0,
+        "label": "link-apply",
+        "sandbox": "bubblewrap-private-dev-no-network-namespace",
+        "stderrLines": 0,
+        "stderrPreview": [],
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdoutLines": 13,
+        "stdoutPreview": [
+          "created <BASELINE>/home/.bashrc -> <REPO>/shared/bash/bashrc",
+          "created <BASELINE>/home/.zshrc -> <REPO>/shared/zsh/zshrc",
+          "created <BASELINE>/home/.config/starship.toml -> <REPO>/shared/starship/starship.toml",
+          "created <BASELINE>/home/.config/btop -> <REPO>/shared/btop",
+          "created <BASELINE>/home/.config/fastfetch -> <REPO>/shared/fastfetch",
+          "created <BASELINE>/home/.config/lazygit/config.yml -> <REPO>/shared/lazygit/config.yml",
+          "created <BASELINE>/home/.config/nvim -> <REPO>/shared/nvim",
+          "created <BASELINE>/home/.config/yazi -> <REPO>/shared/yazi",
+          "created <BASELINE>/home/.local/bin/status-sensors -> <REPO>/os/linux/system-monitor/scripts/status-sensors",
+          "created <BASELINE>/home/.local/bin/rclone-sync -> <REPO>/shared/rclone/rclone-sync",
+          "created <BASELINE>/home/.config/kitty/kitty.conf -> <REPO>/os/linux/kitty/kitty.conf",
+          "created <BASELINE>/home/.config/kitty/pass_keys.py -> <REPO>/shared/kitty/pass_keys.py"
+        ],
+        "stdoutSha256": "c63dbf01bb6a9a1b1ef7ce880a879cec39bfa83dcd8539abf5afb4698974f6c6"
+      },
+      {
+        "command": [
+          "<REPO>/scripts/link",
+          "arch-workstation"
+        ],
+        "exit": 0,
+        "label": "link-second",
+        "sandbox": "bubblewrap-private-dev-no-network-namespace",
+        "stderrLines": 0,
+        "stderrPreview": [],
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdoutLines": 13,
+        "stdoutPreview": [
+          "ok      <BASELINE>/home/.bashrc",
+          "ok      <BASELINE>/home/.zshrc",
+          "ok      <BASELINE>/home/.config/starship.toml",
+          "ok      <BASELINE>/home/.config/btop",
+          "ok      <BASELINE>/home/.config/fastfetch",
+          "ok      <BASELINE>/home/.config/lazygit/config.yml",
+          "ok      <BASELINE>/home/.config/nvim",
+          "ok      <BASELINE>/home/.config/yazi",
+          "ok      <BASELINE>/home/.local/bin/status-sensors",
+          "ok      <BASELINE>/home/.local/bin/rclone-sync",
+          "ok      <BASELINE>/home/.config/kitty/kitty.conf",
+          "ok      <BASELINE>/home/.config/kitty/pass_keys.py"
+        ],
+        "stdoutSha256": "ccb6a0e5fabf80c37024c6c35374018545b6de07e8717e0b6c47d3b22dc572d1"
+      },
+      {
+        "command": [
+          "<REPO>/scripts/doctor",
+          "arch-workstation"
+        ],
+        "exit": 0,
+        "label": "doctor",
+        "sandbox": "bubblewrap-private-dev-no-network-namespace",
+        "stderrLines": 0,
+        "stderrPreview": [],
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdoutLines": 13,
+        "stdoutPreview": [
+          "OK    <BASELINE>/home/.bashrc",
+          "OK    <BASELINE>/home/.zshrc",
+          "OK    <BASELINE>/home/.config/starship.toml",
+          "OK    <BASELINE>/home/.config/btop",
+          "OK    <BASELINE>/home/.config/fastfetch",
+          "OK    <BASELINE>/home/.config/lazygit/config.yml",
+          "OK    <BASELINE>/home/.config/nvim",
+          "OK    <BASELINE>/home/.config/yazi",
+          "OK    <BASELINE>/home/.local/bin/status-sensors",
+          "OK    <BASELINE>/home/.local/bin/rclone-sync",
+          "OK    <BASELINE>/home/.config/kitty/kitty.conf",
+          "OK    <BASELINE>/home/.config/kitty/pass_keys.py"
+        ],
+        "stdoutSha256": "148a6bea1bea404ce524a4f9216f404629c3fd4c42158c44c0fb71ecf26d0858"
+      },
+      {
+        "command": [
+          "<REPO>/scripts/link",
+          "arch-workstation"
+        ],
+        "exit": 1,
+        "label": "link-real-file-refusal",
+        "sandbox": "bubblewrap-private-dev-no-network-namespace",
+        "stderrLines": 1,
+        "stderrPreview": [
+          "blocked <BASELINE>/blocked-home/.config/starship.toml exists and is not a symlink"
+        ],
+        "stderrSha256": "805c82161a478c06b4d0d1d27ccbfe16c41ad2753ae3bfcb9baad9d9513c4d3a",
+        "stdoutLines": 12,
+        "stdoutPreview": [
+          "created <BASELINE>/blocked-home/.bashrc -> <REPO>/shared/bash/bashrc",
+          "created <BASELINE>/blocked-home/.zshrc -> <REPO>/shared/zsh/zshrc",
+          "created <BASELINE>/blocked-home/.config/btop -> <REPO>/shared/btop",
+          "created <BASELINE>/blocked-home/.config/fastfetch -> <REPO>/shared/fastfetch",
+          "created <BASELINE>/blocked-home/.config/lazygit/config.yml -> <REPO>/shared/lazygit/config.yml",
+          "created <BASELINE>/blocked-home/.config/nvim -> <REPO>/shared/nvim",
+          "created <BASELINE>/blocked-home/.config/yazi -> <REPO>/shared/yazi",
+          "created <BASELINE>/blocked-home/.local/bin/status-sensors -> <REPO>/os/linux/system-monitor/scripts/status-sensors",
+          "created <BASELINE>/blocked-home/.local/bin/rclone-sync -> <REPO>/shared/rclone/rclone-sync",
+          "created <BASELINE>/blocked-home/.config/kitty/kitty.conf -> <REPO>/os/linux/kitty/kitty.conf",
+          "created <BASELINE>/blocked-home/.config/kitty/pass_keys.py -> <REPO>/shared/kitty/pass_keys.py",
+          "Link result: 11 change(s), 1 error(s)."
+        ],
+        "stdoutSha256": "0e1d4d2d544faa4356e240be4db19f0cd14d5ca406e14fd5ddbd462f5241557b"
+      }
+    ],
+    "gitRendering": "No soportado; configure-git permanece authoritative y no fue ejecutado.",
+    "manifest": [
+      {
+        "mode": "0777",
+        "path": ".bashrc",
+        "target": "<REPO>/shared/bash/bashrc",
+        "type": "symlink"
+      },
+      {
+        "mode": "0755",
+        "path": ".config",
+        "type": "directory"
+      },
+      {
+        "mode": "0777",
+        "path": ".config/btop",
+        "target": "<REPO>/shared/btop",
+        "type": "symlink"
+      },
+      {
+        "mode": "0777",
+        "path": ".config/fastfetch",
+        "target": "<REPO>/shared/fastfetch",
+        "type": "symlink"
+      },
+      {
+        "mode": "0755",
+        "path": ".config/kitty",
+        "type": "directory"
+      },
+      {
+        "mode": "0777",
+        "path": ".config/kitty/kitty.conf",
+        "target": "<REPO>/os/linux/kitty/kitty.conf",
+        "type": "symlink"
+      },
+      {
+        "mode": "0777",
+        "path": ".config/kitty/pass_keys.py",
+        "target": "<REPO>/shared/kitty/pass_keys.py",
+        "type": "symlink"
+      },
+      {
+        "mode": "0755",
+        "path": ".config/lazygit",
+        "type": "directory"
+      },
+      {
+        "mode": "0777",
+        "path": ".config/lazygit/config.yml",
+        "target": "<REPO>/shared/lazygit/config.yml",
+        "type": "symlink"
+      },
+      {
+        "mode": "0777",
+        "path": ".config/nvim",
+        "target": "<REPO>/shared/nvim",
+        "type": "symlink"
+      },
+      {
+        "mode": "0777",
+        "path": ".config/starship.toml",
+        "target": "<REPO>/shared/starship/starship.toml",
+        "type": "symlink"
+      },
+      {
+        "mode": "0777",
+        "path": ".config/yazi",
+        "target": "<REPO>/shared/yazi",
+        "type": "symlink"
+      },
+      {
+        "mode": "0755",
+        "path": ".local",
+        "type": "directory"
+      },
+      {
+        "mode": "0755",
+        "path": ".local/bin",
+        "type": "directory"
+      },
+      {
+        "mode": "0777",
+        "path": ".local/bin/rclone-sync",
+        "target": "<REPO>/shared/rclone/rclone-sync",
+        "type": "symlink"
+      },
+      {
+        "mode": "0777",
+        "path": ".local/bin/status-sensors",
+        "target": "<REPO>/os/linux/system-monitor/scripts/status-sensors",
+        "type": "symlink"
+      },
+      {
+        "mode": "0777",
+        "path": ".zshrc",
+        "target": "<REPO>/shared/zsh/zshrc",
+        "type": "symlink"
+      }
+    ],
+    "profile": "arch-workstation",
+    "protectedMetadataChanged": 0,
+    "realFileRefusal": true,
+    "sandbox": {
+      "hostBackedWritablePaths": [
+        "<BASELINE>"
+      ],
+      "hostRoot": "read-only",
+      "kind": "bubblewrap",
+      "networkIsolated": false,
+      "privatePseudoFilesystems": [
+        "/dev",
+        "/proc"
+      ]
+    },
+    "secondRunChanges": 0,
+    "starshipSymlink": true,
+    "windowsTerminal": "No soportado."
+  },
+  "git": {
+    "branch": "feature/openspec-chezmoi-pilot",
+    "dirty": true,
+    "headRevision": "f3a9b108009766b033773bc76a84e8473277b275",
+    "reviewedBase": "f3a9b108009766b033773bc76a84e8473277b275"
+  },
+  "host": {
+    "architecture": "x86_64",
+    "system": "Linux"
+  },
+  "mandatory": {
+    "allSelectedFixturesPassed": true,
+    "deterministic": true,
+    "idempotent": true,
+    "outOfRootWrites": 0,
+    "prohibitedFeatureFindings": 0,
+    "protectedMetadataChanges": 0,
+    "realOwnershipOverlaps": 0,
+    "rollbackExact": true,
+    "secretFindings": 0
+  },
+  "nativeEvidence": {
+    "archCrossRender": true,
+    "macos": false,
+    "windows": false
+  },
+  "outcome": "keep-and-continue-evaluation",
+  "recordedAt": "2026-08-17T02:29:07.979354+00:00",
+  "repositoryValidation": {
+    "canonicalMappings": 22,
+    "ci": {
+      "nativeWindowsJob": "disabled",
+      "pathFiltered": true,
+      "requiredChecks": 9
+    },
+    "documentationLanguage": {
+      "files": 11,
+      "findings": 0,
+      "language": "Spanish UTF-8"
+    },
+    "environmentAllowlist": {
+      "posixInherited": [
+        "PATH"
+      ],
+      "temporaryOverrides": [
+        "HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_CACHE_HOME",
+        "XDG_DATA_HOME",
+        "XDG_STATE_HOME",
+        "TMPDIR",
+        "TEMP",
+        "TMP",
+        "LANG",
+        "LC_ALL",
+        "TZ",
+        "NO_COLOR"
+      ],
+      "windowsInherited": [
+        "PATH",
+        "SystemRoot",
+        "WINDIR",
+        "ComSpec",
+        "PATHEXT"
+      ],
+      "windowsTemporaryOverrides": [
+        "USERPROFILE",
+        "LOCALAPPDATA"
+      ]
+    },
+    "profileReferences": 0,
+    "semantics": {
+      "actions": 11,
+      "aerospacePreserved": true,
+      "canonicalActionChecks": 27,
+      "chordCollisions": 0,
+      "platforms": 3,
+      "windowsKeyReserved": true
+    },
+    "traceability": {
+      "coverageKinds": {
+        "automated-check": 50,
+        "generated-evidence": 27,
+        "human-review-gate": 10,
+        "native-blocked": 3
+      },
+      "entries": 90,
+      "scenarios": 90
+    },
+    "windows": {
+      "lineEndings": "LF",
+      "schema": "https://aka.ms/terminal-profiles-schema",
+      "structuralOnly": true,
+      "version": "1.24.11321.0"
+    }
+  },
+  "results": {
+    "linux": {
+      "deterministic": true,
+      "first": {
+        "appliedManifest": [
+          {
+            "mode": "0755",
+            "path": ".config",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/active-theme.conf",
+            "sha256": "d803bc6abff8b834dffa1ce5e4dc470c1360fa6b3df95d1e382847162cfd99b6",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/common.conf",
+            "sha256": "f73261df256dbba0353caeb7790b5e8207a2851bd03c8a019173135b91f3615b",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/get_layout.py",
+            "sha256": "1e370545c4375a706c81cb5bdf0e0ccad7e5776bd338cc8699f661c99e11ad04",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/kitty.conf",
+            "sha256": "a871257e41834851532ea49ded625e0bca3d9a92ceb3ccf62b361757c41d5624",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pass_keys.py",
+            "sha256": "b0d775566836a6b8a8453b54c7eef6cdf56346784cddc759f71a66ae3e53e8b3",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/pilot-unsupported",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+            "sha256": "753c85e38858870090ba773dcdbd4688753e182d7030a5f1e51f236dd3440288",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/pilot-unsupported/skitty",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pilot-unsupported/skitty/README.md",
+            "sha256": "d5d3c013adf961eb9491ce62d5a257b72c8e4c49afafe0cf57cfcadfa143acee",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/quick-access-terminal-center.conf",
+            "sha256": "2fe4c523cf485f1023d54910a3e780ffa07cb1db37f27d9b7b06aa03dcc9efd2",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/quick-access-terminal-daily.conf",
+            "sha256": "6a791c911a92134034a065418b1d39c72ab5d946d118be9cbdd0c52f267b33d9",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/scripts",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/scripts/kitty-list-sessions.sh",
+            "sha256": "58699e7b907239149725d8e432f9d7118d18d9bb38b724b0d75b679fa4620d7b",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/scripts/kitty-zoxide-session.sh",
+            "sha256": "32fe0acc15e33f97ce10981339e48f971110bafabcd4c2d0574cac531facb31a",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/sessions",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/blogpost.kitty-session",
+            "sha256": "bc0ce9a99664a38489dd9e5f967836ddd52f7f11a14323f4af1a03b6ddf4e67d",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/dotfiles.kitty-session",
+            "sha256": "8613c0f299306ddadbdc4c3b43cc9828e7f4d837675dfb66c4a28eb70f3a559d",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/dots-private.kitty-session",
+            "sha256": "f63148758de9bb7ad67a1909c41332b4d942d8dcda3135e45e2b34fdbed37f26",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/glove80.kitty-session",
+            "sha256": "be3110ca3f04b939206cf31a434779792e65e15fde5d680572ee5bf2930e4f92",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/home.kitty-session",
+            "sha256": "b962a12b207221bf1b9d2bc53664a1537f13f9922bf8cb53f376a240816da8ed",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/lua.kitty-session",
+            "sha256": "af2b708bcdc3d2ccd887dba6f81ccfbb3b04f6b7657da52909520d5238e7ed3c",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/networking.kitty-session",
+            "sha256": "c87b63b56ca988f8cbc99bf32444451ea03749a877a81242d90156d53017b060",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/obsidian.kitty-session",
+            "sha256": "9137e3141fd4fc354a5f3c8493f418fd308abb3e2c4edc4d4f6c5ad9c03d5c23",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/scripts.kitty-session",
+            "sha256": "780ba773c793711ed2af43aeb8424a6672d0586041b1d9df1072961313ad43a6",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/skitty.kitty-session",
+            "sha256": "724adfe97b4db98620ccbba44d5658ca0560051b87388eaafa4b4b9b8097186f",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/toucan.kitty-session",
+            "sha256": "05ad6a98dfb19f98ad75e4a23c62756006c264be8ed452fb0ab73c5739a863ad",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/starship.toml",
+            "sha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".gitconfig",
+            "sha256": "a216f601a686d6ed5d37db353848b146cb990680566d081444e1c9833fe528c0",
+            "type": "file"
+          }
+        ],
+        "appliedManifestDigest": "cd19c6298abe6ecb887edfd2c9c69eca7499de0bb3b8ef4ffba03866f98640ee",
+        "caseDetails": {
+          "fileModesValid": true,
+          "gitCredentialHelper": "cache",
+          "kittyCommonSha256": "f73261df256dbba0353caeb7790b5e8207a2851bd03c8a019173135b91f3615b",
+          "kittyEntrypointSha256": "a871257e41834851532ea49ded625e0bca3d9a92ceb3ccf62b361757c41d5624",
+          "starshipLiteralSha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414"
+        },
+        "commands": [
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "dump-config",
+              "--format=json"
+            ],
+            "endedAt": "2026-08-17T02:29:02.427655+00:00",
+            "exit": 0,
+            "label": "dump-config",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:02.390225+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 246,
+            "stdoutPreview": [
+              "{",
+              "  \"cacheDir\": \"<RUN>/cache\",",
+              "  \"color\": \"auto\",",
+              "  \"data\": {",
+              "    \"pilot\": {",
+              "      \"git\": {",
+              "        \"credentialHelper\": \"cache\",",
+              "        \"email\": \"pilot@example.invalid\",",
+              "        \"name\": \"Pilot User\"",
+              "      },",
+              "      \"host\": \"pilot-linux\",",
+              "      \"platform\": \"linux\""
+            ],
+            "stdoutSha256": "43f1f8286b19cc85dc3267167172bf05160cccf4971f2171a5bed42a75f50239"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "managed",
+              "--include=files",
+              "--path-style=relative"
+            ],
+            "endedAt": "2026-08-17T02:29:02.499658+00:00",
+            "exit": 0,
+            "label": "managed",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:02.460690+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 24,
+            "stdoutPreview": [
+              ".config/kitty/active-theme.conf",
+              ".config/kitty/common.conf",
+              ".config/kitty/get_layout.py",
+              ".config/kitty/kitty.conf",
+              ".config/kitty/pass_keys.py",
+              ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+              ".config/kitty/pilot-unsupported/skitty/README.md",
+              ".config/kitty/quick-access-terminal-center.conf",
+              ".config/kitty/quick-access-terminal-daily.conf",
+              ".config/kitty/scripts/kitty-list-sessions.sh",
+              ".config/kitty/scripts/kitty-zoxide-session.sh",
+              ".config/kitty/sessions/blogpost.kitty-session"
+            ],
+            "stdoutSha256": "0b7e5a06776ab6fb92a5047eba01b96af3533f35d6f5f8fbf4cd8e2cbbb36a13"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:02.576804+00:00",
+            "exit": 0,
+            "label": "status-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:02.536412+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 30,
+            "stdoutPreview": [
+              " A .config",
+              " A .config/kitty",
+              " A .config/kitty/active-theme.conf",
+              " A .config/kitty/common.conf",
+              " A .config/kitty/get_layout.py",
+              " A .config/kitty/kitty.conf",
+              " A .config/kitty/pass_keys.py",
+              " A .config/kitty/pilot-unsupported",
+              " A .config/kitty/pilot-unsupported/colorscheme-selector.sh",
+              " A .config/kitty/pilot-unsupported/skitty",
+              " A .config/kitty/pilot-unsupported/skitty/README.md",
+              " A .config/kitty/quick-access-terminal-center.conf"
+            ],
+            "stdoutSha256": "b6160ea790c908d2f9852714ef0c5d42b316498b9612380ee27c6c51b98540d1"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:02.652818+00:00",
+            "exit": 0,
+            "label": "diff-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:02.610041+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 2128,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/kitty b/.config/kitty",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config/kitty",
+              "diff --git a/.config/kitty/active-theme.conf b/.config/kitty/active-theme.conf",
+              "new file mode 100644"
+            ],
+            "stdoutSha256": "aa3bad84c890b4fbd8cc0f47c756f7ab438aa0bc586f26086349ed5e72ea5ce4"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:02.730416+00:00",
+            "exit": 0,
+            "label": "dry-run-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:02.687231+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 2128,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/kitty b/.config/kitty",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config/kitty",
+              "diff --git a/.config/kitty/active-theme.conf b/.config/kitty/active-theme.conf",
+              "new file mode 100644"
+            ],
+            "stdoutSha256": "aa3bad84c890b4fbd8cc0f47c756f7ab438aa0bc586f26086349ed5e72ea5ce4"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:02.878764+00:00",
+            "exit": 0,
+            "label": "apply",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:02.836446+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:02.954608+00:00",
+            "exit": 0,
+            "label": "apply-second",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:02.914014+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:03.028928+00:00",
+            "exit": 0,
+            "label": "dry-run-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:02.988726+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:03.103575+00:00",
+            "exit": 0,
+            "label": "diff-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.062282+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:03.178506+00:00",
+            "exit": 0,
+            "label": "status-drift",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.136771+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 1,
+            "stdoutPreview": [
+              "MM .config/starship.toml"
+            ],
+            "stdoutSha256": "17ef008016ab0b2af96e68283921f0305d03a532dfcc28b569e9633f50133fb5"
+          }
+        ],
+        "driftDetected": true,
+        "effective": {
+          "configPaths": {
+            "cacheDir": "<RUN>/cache",
+            "destDir": "<RUN>/destination",
+            "persistentState": "<RUN>/state/chezmoi.boltdb",
+            "scriptTempDir": "<RUN>/tmp",
+            "sourceDir": "<RUN>/source"
+          }
+        },
+        "ownership": {
+          "logicalComparisonOverlap": [
+            "$HOME/.config/kitty/kitty.conf",
+            "$HOME/.config/starship.toml"
+          ],
+          "realIntersection": [],
+          "singleOwner": true,
+          "targets": [
+            ".config/kitty/active-theme.conf",
+            ".config/kitty/common.conf",
+            ".config/kitty/get_layout.py",
+            ".config/kitty/kitty.conf",
+            ".config/kitty/pass_keys.py",
+            ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+            ".config/kitty/pilot-unsupported/skitty/README.md",
+            ".config/kitty/quick-access-terminal-center.conf",
+            ".config/kitty/quick-access-terminal-daily.conf",
+            ".config/kitty/scripts/kitty-list-sessions.sh",
+            ".config/kitty/scripts/kitty-zoxide-session.sh",
+            ".config/kitty/sessions/blogpost.kitty-session",
+            ".config/kitty/sessions/dotfiles.kitty-session",
+            ".config/kitty/sessions/dots-private.kitty-session",
+            ".config/kitty/sessions/glove80.kitty-session",
+            ".config/kitty/sessions/home.kitty-session",
+            ".config/kitty/sessions/lua.kitty-session",
+            ".config/kitty/sessions/networking.kitty-session",
+            ".config/kitty/sessions/obsidian.kitty-session",
+            ".config/kitty/sessions/scripts.kitty-session",
+            ".config/kitty/sessions/skitty.kitty-session",
+            ".config/kitty/sessions/toucan.kitty-session",
+            ".config/starship.toml",
+            ".gitconfig"
+          ]
+        },
+        "platform": "linux",
+        "preview": {
+          "diffLines": 2128,
+          "dryRunLines": 2128,
+          "statusLines": 30
+        },
+        "previewDigest": "bd271581ec0c24690426199792a3550575a11910de9f6a74bf656e4ca3f7a67b",
+        "protectedMetadataChanged": 0,
+        "rollbackExact": true,
+        "rootContained": true,
+        "sandbox": {
+          "hostBackedWritablePaths": [
+            "<RUN>"
+          ],
+          "hostRoot": "read-only",
+          "kind": "bubblewrap",
+          "networkIsolated": false,
+          "networkLimitation": "host kernel rejected the requested network namespace",
+          "privatePseudoFilesystems": [
+            "/dev",
+            "/proc"
+          ]
+        },
+        "secondApplyChanges": 0,
+        "secondDryRunChanges": 0,
+        "static": {
+          "conditionals": 0,
+          "dataKeys": [
+            "credentialHelper",
+            "email",
+            "name"
+          ],
+          "divergentLines": 3,
+          "prohibitedFindings": 0,
+          "secretFindings": 0,
+          "templates": 1
+        }
+      },
+      "second": {
+        "appliedManifest": [
+          {
+            "mode": "0755",
+            "path": ".config",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/active-theme.conf",
+            "sha256": "d803bc6abff8b834dffa1ce5e4dc470c1360fa6b3df95d1e382847162cfd99b6",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/common.conf",
+            "sha256": "f73261df256dbba0353caeb7790b5e8207a2851bd03c8a019173135b91f3615b",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/get_layout.py",
+            "sha256": "1e370545c4375a706c81cb5bdf0e0ccad7e5776bd338cc8699f661c99e11ad04",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/kitty.conf",
+            "sha256": "a871257e41834851532ea49ded625e0bca3d9a92ceb3ccf62b361757c41d5624",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pass_keys.py",
+            "sha256": "b0d775566836a6b8a8453b54c7eef6cdf56346784cddc759f71a66ae3e53e8b3",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/pilot-unsupported",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+            "sha256": "753c85e38858870090ba773dcdbd4688753e182d7030a5f1e51f236dd3440288",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/pilot-unsupported/skitty",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pilot-unsupported/skitty/README.md",
+            "sha256": "d5d3c013adf961eb9491ce62d5a257b72c8e4c49afafe0cf57cfcadfa143acee",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/quick-access-terminal-center.conf",
+            "sha256": "2fe4c523cf485f1023d54910a3e780ffa07cb1db37f27d9b7b06aa03dcc9efd2",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/quick-access-terminal-daily.conf",
+            "sha256": "6a791c911a92134034a065418b1d39c72ab5d946d118be9cbdd0c52f267b33d9",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/scripts",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/scripts/kitty-list-sessions.sh",
+            "sha256": "58699e7b907239149725d8e432f9d7118d18d9bb38b724b0d75b679fa4620d7b",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/scripts/kitty-zoxide-session.sh",
+            "sha256": "32fe0acc15e33f97ce10981339e48f971110bafabcd4c2d0574cac531facb31a",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/sessions",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/blogpost.kitty-session",
+            "sha256": "bc0ce9a99664a38489dd9e5f967836ddd52f7f11a14323f4af1a03b6ddf4e67d",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/dotfiles.kitty-session",
+            "sha256": "8613c0f299306ddadbdc4c3b43cc9828e7f4d837675dfb66c4a28eb70f3a559d",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/dots-private.kitty-session",
+            "sha256": "f63148758de9bb7ad67a1909c41332b4d942d8dcda3135e45e2b34fdbed37f26",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/glove80.kitty-session",
+            "sha256": "be3110ca3f04b939206cf31a434779792e65e15fde5d680572ee5bf2930e4f92",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/home.kitty-session",
+            "sha256": "b962a12b207221bf1b9d2bc53664a1537f13f9922bf8cb53f376a240816da8ed",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/lua.kitty-session",
+            "sha256": "af2b708bcdc3d2ccd887dba6f81ccfbb3b04f6b7657da52909520d5238e7ed3c",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/networking.kitty-session",
+            "sha256": "c87b63b56ca988f8cbc99bf32444451ea03749a877a81242d90156d53017b060",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/obsidian.kitty-session",
+            "sha256": "9137e3141fd4fc354a5f3c8493f418fd308abb3e2c4edc4d4f6c5ad9c03d5c23",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/scripts.kitty-session",
+            "sha256": "780ba773c793711ed2af43aeb8424a6672d0586041b1d9df1072961313ad43a6",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/skitty.kitty-session",
+            "sha256": "724adfe97b4db98620ccbba44d5658ca0560051b87388eaafa4b4b9b8097186f",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/toucan.kitty-session",
+            "sha256": "05ad6a98dfb19f98ad75e4a23c62756006c264be8ed452fb0ab73c5739a863ad",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/starship.toml",
+            "sha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".gitconfig",
+            "sha256": "a216f601a686d6ed5d37db353848b146cb990680566d081444e1c9833fe528c0",
+            "type": "file"
+          }
+        ],
+        "appliedManifestDigest": "cd19c6298abe6ecb887edfd2c9c69eca7499de0bb3b8ef4ffba03866f98640ee",
+        "caseDetails": {
+          "fileModesValid": true,
+          "gitCredentialHelper": "cache",
+          "kittyCommonSha256": "f73261df256dbba0353caeb7790b5e8207a2851bd03c8a019173135b91f3615b",
+          "kittyEntrypointSha256": "a871257e41834851532ea49ded625e0bca3d9a92ceb3ccf62b361757c41d5624",
+          "starshipLiteralSha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414"
+        },
+        "commands": [
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "dump-config",
+              "--format=json"
+            ],
+            "endedAt": "2026-08-17T02:29:03.298923+00:00",
+            "exit": 0,
+            "label": "dump-config",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.261577+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 246,
+            "stdoutPreview": [
+              "{",
+              "  \"cacheDir\": \"<RUN>/cache\",",
+              "  \"color\": \"auto\",",
+              "  \"data\": {",
+              "    \"pilot\": {",
+              "      \"git\": {",
+              "        \"credentialHelper\": \"cache\",",
+              "        \"email\": \"pilot@example.invalid\",",
+              "        \"name\": \"Pilot User\"",
+              "      },",
+              "      \"host\": \"pilot-linux\",",
+              "      \"platform\": \"linux\""
+            ],
+            "stdoutSha256": "43f1f8286b19cc85dc3267167172bf05160cccf4971f2171a5bed42a75f50239"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "managed",
+              "--include=files",
+              "--path-style=relative"
+            ],
+            "endedAt": "2026-08-17T02:29:03.369648+00:00",
+            "exit": 0,
+            "label": "managed",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.331919+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 24,
+            "stdoutPreview": [
+              ".config/kitty/active-theme.conf",
+              ".config/kitty/common.conf",
+              ".config/kitty/get_layout.py",
+              ".config/kitty/kitty.conf",
+              ".config/kitty/pass_keys.py",
+              ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+              ".config/kitty/pilot-unsupported/skitty/README.md",
+              ".config/kitty/quick-access-terminal-center.conf",
+              ".config/kitty/quick-access-terminal-daily.conf",
+              ".config/kitty/scripts/kitty-list-sessions.sh",
+              ".config/kitty/scripts/kitty-zoxide-session.sh",
+              ".config/kitty/sessions/blogpost.kitty-session"
+            ],
+            "stdoutSha256": "0b7e5a06776ab6fb92a5047eba01b96af3533f35d6f5f8fbf4cd8e2cbbb36a13"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:03.445896+00:00",
+            "exit": 0,
+            "label": "status-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.406561+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 30,
+            "stdoutPreview": [
+              " A .config",
+              " A .config/kitty",
+              " A .config/kitty/active-theme.conf",
+              " A .config/kitty/common.conf",
+              " A .config/kitty/get_layout.py",
+              " A .config/kitty/kitty.conf",
+              " A .config/kitty/pass_keys.py",
+              " A .config/kitty/pilot-unsupported",
+              " A .config/kitty/pilot-unsupported/colorscheme-selector.sh",
+              " A .config/kitty/pilot-unsupported/skitty",
+              " A .config/kitty/pilot-unsupported/skitty/README.md",
+              " A .config/kitty/quick-access-terminal-center.conf"
+            ],
+            "stdoutSha256": "b6160ea790c908d2f9852714ef0c5d42b316498b9612380ee27c6c51b98540d1"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:03.523663+00:00",
+            "exit": 0,
+            "label": "diff-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.480606+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 2128,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/kitty b/.config/kitty",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config/kitty",
+              "diff --git a/.config/kitty/active-theme.conf b/.config/kitty/active-theme.conf",
+              "new file mode 100644"
+            ],
+            "stdoutSha256": "aa3bad84c890b4fbd8cc0f47c756f7ab438aa0bc586f26086349ed5e72ea5ce4"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:03.600601+00:00",
+            "exit": 0,
+            "label": "dry-run-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.557148+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 2128,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/kitty b/.config/kitty",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config/kitty",
+              "diff --git a/.config/kitty/active-theme.conf b/.config/kitty/active-theme.conf",
+              "new file mode 100644"
+            ],
+            "stdoutSha256": "aa3bad84c890b4fbd8cc0f47c756f7ab438aa0bc586f26086349ed5e72ea5ce4"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:03.748160+00:00",
+            "exit": 0,
+            "label": "apply",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.705568+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:03.830081+00:00",
+            "exit": 0,
+            "label": "apply-second",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.788604+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:03.903936+00:00",
+            "exit": 0,
+            "label": "dry-run-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.862678+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:03.975959+00:00",
+            "exit": 0,
+            "label": "diff-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:03.936401+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:04.048922+00:00",
+            "exit": 0,
+            "label": "status-drift",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.008669+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 1,
+            "stdoutPreview": [
+              "MM .config/starship.toml"
+            ],
+            "stdoutSha256": "17ef008016ab0b2af96e68283921f0305d03a532dfcc28b569e9633f50133fb5"
+          }
+        ],
+        "driftDetected": true,
+        "effective": {
+          "configPaths": {
+            "cacheDir": "<RUN>/cache",
+            "destDir": "<RUN>/destination",
+            "persistentState": "<RUN>/state/chezmoi.boltdb",
+            "scriptTempDir": "<RUN>/tmp",
+            "sourceDir": "<RUN>/source"
+          }
+        },
+        "ownership": {
+          "logicalComparisonOverlap": [
+            "$HOME/.config/kitty/kitty.conf",
+            "$HOME/.config/starship.toml"
+          ],
+          "realIntersection": [],
+          "singleOwner": true,
+          "targets": [
+            ".config/kitty/active-theme.conf",
+            ".config/kitty/common.conf",
+            ".config/kitty/get_layout.py",
+            ".config/kitty/kitty.conf",
+            ".config/kitty/pass_keys.py",
+            ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+            ".config/kitty/pilot-unsupported/skitty/README.md",
+            ".config/kitty/quick-access-terminal-center.conf",
+            ".config/kitty/quick-access-terminal-daily.conf",
+            ".config/kitty/scripts/kitty-list-sessions.sh",
+            ".config/kitty/scripts/kitty-zoxide-session.sh",
+            ".config/kitty/sessions/blogpost.kitty-session",
+            ".config/kitty/sessions/dotfiles.kitty-session",
+            ".config/kitty/sessions/dots-private.kitty-session",
+            ".config/kitty/sessions/glove80.kitty-session",
+            ".config/kitty/sessions/home.kitty-session",
+            ".config/kitty/sessions/lua.kitty-session",
+            ".config/kitty/sessions/networking.kitty-session",
+            ".config/kitty/sessions/obsidian.kitty-session",
+            ".config/kitty/sessions/scripts.kitty-session",
+            ".config/kitty/sessions/skitty.kitty-session",
+            ".config/kitty/sessions/toucan.kitty-session",
+            ".config/starship.toml",
+            ".gitconfig"
+          ]
+        },
+        "platform": "linux",
+        "preview": {
+          "diffLines": 2128,
+          "dryRunLines": 2128,
+          "statusLines": 30
+        },
+        "previewDigest": "bd271581ec0c24690426199792a3550575a11910de9f6a74bf656e4ca3f7a67b",
+        "protectedMetadataChanged": 0,
+        "rollbackExact": true,
+        "rootContained": true,
+        "sandbox": {
+          "hostBackedWritablePaths": [
+            "<RUN>"
+          ],
+          "hostRoot": "read-only",
+          "kind": "bubblewrap",
+          "networkIsolated": false,
+          "networkLimitation": "host kernel rejected the requested network namespace",
+          "privatePseudoFilesystems": [
+            "/dev",
+            "/proc"
+          ]
+        },
+        "secondApplyChanges": 0,
+        "secondDryRunChanges": 0,
+        "static": {
+          "conditionals": 0,
+          "dataKeys": [
+            "credentialHelper",
+            "email",
+            "name"
+          ],
+          "divergentLines": 3,
+          "prohibitedFindings": 0,
+          "secretFindings": 0,
+          "templates": 1
+        }
+      }
+    },
+    "macos": {
+      "deterministic": true,
+      "first": {
+        "appliedManifest": [
+          {
+            "mode": "0755",
+            "path": ".config",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/active-theme.conf",
+            "sha256": "d803bc6abff8b834dffa1ce5e4dc470c1360fa6b3df95d1e382847162cfd99b6",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/common.conf",
+            "sha256": "f73261df256dbba0353caeb7790b5e8207a2851bd03c8a019173135b91f3615b",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/get_layout.py",
+            "sha256": "1e370545c4375a706c81cb5bdf0e0ccad7e5776bd338cc8699f661c99e11ad04",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/kitty.conf",
+            "sha256": "019ee6fad90dc51ffc76a96e40d5f586d410fe3f0b1ba6105cecfb6c797068e4",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pass_keys.py",
+            "sha256": "b0d775566836a6b8a8453b54c7eef6cdf56346784cddc759f71a66ae3e53e8b3",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/pilot-unsupported",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+            "sha256": "753c85e38858870090ba773dcdbd4688753e182d7030a5f1e51f236dd3440288",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/pilot-unsupported/skitty",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pilot-unsupported/skitty/README.md",
+            "sha256": "d5d3c013adf961eb9491ce62d5a257b72c8e4c49afafe0cf57cfcadfa143acee",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/quick-access-terminal-center.conf",
+            "sha256": "2fe4c523cf485f1023d54910a3e780ffa07cb1db37f27d9b7b06aa03dcc9efd2",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/quick-access-terminal-daily.conf",
+            "sha256": "6a791c911a92134034a065418b1d39c72ab5d946d118be9cbdd0c52f267b33d9",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/scripts",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/scripts/kitty-list-sessions.sh",
+            "sha256": "58699e7b907239149725d8e432f9d7118d18d9bb38b724b0d75b679fa4620d7b",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/scripts/kitty-zoxide-session.sh",
+            "sha256": "32fe0acc15e33f97ce10981339e48f971110bafabcd4c2d0574cac531facb31a",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/sessions",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/blogpost.kitty-session",
+            "sha256": "bc0ce9a99664a38489dd9e5f967836ddd52f7f11a14323f4af1a03b6ddf4e67d",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/dotfiles.kitty-session",
+            "sha256": "8613c0f299306ddadbdc4c3b43cc9828e7f4d837675dfb66c4a28eb70f3a559d",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/dots-private.kitty-session",
+            "sha256": "f63148758de9bb7ad67a1909c41332b4d942d8dcda3135e45e2b34fdbed37f26",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/glove80.kitty-session",
+            "sha256": "be3110ca3f04b939206cf31a434779792e65e15fde5d680572ee5bf2930e4f92",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/home.kitty-session",
+            "sha256": "b962a12b207221bf1b9d2bc53664a1537f13f9922bf8cb53f376a240816da8ed",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/lua.kitty-session",
+            "sha256": "af2b708bcdc3d2ccd887dba6f81ccfbb3b04f6b7657da52909520d5238e7ed3c",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/networking.kitty-session",
+            "sha256": "c87b63b56ca988f8cbc99bf32444451ea03749a877a81242d90156d53017b060",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/obsidian.kitty-session",
+            "sha256": "9137e3141fd4fc354a5f3c8493f418fd308abb3e2c4edc4d4f6c5ad9c03d5c23",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/scripts.kitty-session",
+            "sha256": "780ba773c793711ed2af43aeb8424a6672d0586041b1d9df1072961313ad43a6",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/skitty.kitty-session",
+            "sha256": "724adfe97b4db98620ccbba44d5658ca0560051b87388eaafa4b4b9b8097186f",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/toucan.kitty-session",
+            "sha256": "05ad6a98dfb19f98ad75e4a23c62756006c264be8ed452fb0ab73c5739a863ad",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/starship.toml",
+            "sha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".gitconfig",
+            "sha256": "502384593122b8c20fb77078e864bc79432d47bfd6af324970a95cf0951357d0",
+            "type": "file"
+          }
+        ],
+        "appliedManifestDigest": "d602471d476f06d3b0e2e84d48ea259b6a5332b105b843e8d80f3f9838ebb0ae",
+        "caseDetails": {
+          "fileModesValid": true,
+          "gitCredentialHelper": "osxkeychain",
+          "kittyCommonSha256": "f73261df256dbba0353caeb7790b5e8207a2851bd03c8a019173135b91f3615b",
+          "kittyEntrypointSha256": "019ee6fad90dc51ffc76a96e40d5f586d410fe3f0b1ba6105cecfb6c797068e4",
+          "starshipLiteralSha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414"
+        },
+        "commands": [
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "dump-config",
+              "--format=json"
+            ],
+            "endedAt": "2026-08-17T02:29:04.169997+00:00",
+            "exit": 0,
+            "label": "dump-config",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.132475+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 246,
+            "stdoutPreview": [
+              "{",
+              "  \"cacheDir\": \"<RUN>/cache\",",
+              "  \"color\": \"auto\",",
+              "  \"data\": {",
+              "    \"pilot\": {",
+              "      \"git\": {",
+              "        \"credentialHelper\": \"osxkeychain\",",
+              "        \"email\": \"pilot@example.invalid\",",
+              "        \"name\": \"Pilot User\"",
+              "      },",
+              "      \"host\": \"pilot-macos\",",
+              "      \"platform\": \"macos\""
+            ],
+            "stdoutSha256": "969ad8ebabcec29e42c3d1273ac0d76c365e8d04ee339ca903f2e850b2e8de01"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "managed",
+              "--include=files",
+              "--path-style=relative"
+            ],
+            "endedAt": "2026-08-17T02:29:04.242321+00:00",
+            "exit": 0,
+            "label": "managed",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.203604+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 24,
+            "stdoutPreview": [
+              ".config/kitty/active-theme.conf",
+              ".config/kitty/common.conf",
+              ".config/kitty/get_layout.py",
+              ".config/kitty/kitty.conf",
+              ".config/kitty/pass_keys.py",
+              ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+              ".config/kitty/pilot-unsupported/skitty/README.md",
+              ".config/kitty/quick-access-terminal-center.conf",
+              ".config/kitty/quick-access-terminal-daily.conf",
+              ".config/kitty/scripts/kitty-list-sessions.sh",
+              ".config/kitty/scripts/kitty-zoxide-session.sh",
+              ".config/kitty/sessions/blogpost.kitty-session"
+            ],
+            "stdoutSha256": "0b7e5a06776ab6fb92a5047eba01b96af3533f35d6f5f8fbf4cd8e2cbbb36a13"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:04.319074+00:00",
+            "exit": 0,
+            "label": "status-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.278615+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 30,
+            "stdoutPreview": [
+              " A .config",
+              " A .config/kitty",
+              " A .config/kitty/active-theme.conf",
+              " A .config/kitty/common.conf",
+              " A .config/kitty/get_layout.py",
+              " A .config/kitty/kitty.conf",
+              " A .config/kitty/pass_keys.py",
+              " A .config/kitty/pilot-unsupported",
+              " A .config/kitty/pilot-unsupported/colorscheme-selector.sh",
+              " A .config/kitty/pilot-unsupported/skitty",
+              " A .config/kitty/pilot-unsupported/skitty/README.md",
+              " A .config/kitty/quick-access-terminal-center.conf"
+            ],
+            "stdoutSha256": "b6160ea790c908d2f9852714ef0c5d42b316498b9612380ee27c6c51b98540d1"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:04.393764+00:00",
+            "exit": 0,
+            "label": "diff-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.352139+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 2125,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/kitty b/.config/kitty",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config/kitty",
+              "diff --git a/.config/kitty/active-theme.conf b/.config/kitty/active-theme.conf",
+              "new file mode 100644"
+            ],
+            "stdoutSha256": "f40530c6787c83304ce4f6a78f0bfa601e452071cdfaf4331e52f9de9a71f07d"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:04.470430+00:00",
+            "exit": 0,
+            "label": "dry-run-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.427734+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 2125,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/kitty b/.config/kitty",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config/kitty",
+              "diff --git a/.config/kitty/active-theme.conf b/.config/kitty/active-theme.conf",
+              "new file mode 100644"
+            ],
+            "stdoutSha256": "f40530c6787c83304ce4f6a78f0bfa601e452071cdfaf4331e52f9de9a71f07d"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:04.616830+00:00",
+            "exit": 0,
+            "label": "apply",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.575359+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:04.693896+00:00",
+            "exit": 0,
+            "label": "apply-second",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.651484+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:04.768335+00:00",
+            "exit": 0,
+            "label": "dry-run-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.727466+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:04.841886+00:00",
+            "exit": 0,
+            "label": "diff-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.801758+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:04.915202+00:00",
+            "exit": 0,
+            "label": "status-drift",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.874535+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 1,
+            "stdoutPreview": [
+              "MM .config/starship.toml"
+            ],
+            "stdoutSha256": "17ef008016ab0b2af96e68283921f0305d03a532dfcc28b569e9633f50133fb5"
+          }
+        ],
+        "driftDetected": true,
+        "effective": {
+          "configPaths": {
+            "cacheDir": "<RUN>/cache",
+            "destDir": "<RUN>/destination",
+            "persistentState": "<RUN>/state/chezmoi.boltdb",
+            "scriptTempDir": "<RUN>/tmp",
+            "sourceDir": "<RUN>/source"
+          }
+        },
+        "ownership": {
+          "logicalComparisonOverlap": [
+            "$HOME/.config/kitty/kitty.conf",
+            "$HOME/.config/starship.toml"
+          ],
+          "realIntersection": [],
+          "singleOwner": true,
+          "targets": [
+            ".config/kitty/active-theme.conf",
+            ".config/kitty/common.conf",
+            ".config/kitty/get_layout.py",
+            ".config/kitty/kitty.conf",
+            ".config/kitty/pass_keys.py",
+            ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+            ".config/kitty/pilot-unsupported/skitty/README.md",
+            ".config/kitty/quick-access-terminal-center.conf",
+            ".config/kitty/quick-access-terminal-daily.conf",
+            ".config/kitty/scripts/kitty-list-sessions.sh",
+            ".config/kitty/scripts/kitty-zoxide-session.sh",
+            ".config/kitty/sessions/blogpost.kitty-session",
+            ".config/kitty/sessions/dotfiles.kitty-session",
+            ".config/kitty/sessions/dots-private.kitty-session",
+            ".config/kitty/sessions/glove80.kitty-session",
+            ".config/kitty/sessions/home.kitty-session",
+            ".config/kitty/sessions/lua.kitty-session",
+            ".config/kitty/sessions/networking.kitty-session",
+            ".config/kitty/sessions/obsidian.kitty-session",
+            ".config/kitty/sessions/scripts.kitty-session",
+            ".config/kitty/sessions/skitty.kitty-session",
+            ".config/kitty/sessions/toucan.kitty-session",
+            ".config/starship.toml",
+            ".gitconfig"
+          ]
+        },
+        "platform": "macos",
+        "preview": {
+          "diffLines": 2125,
+          "dryRunLines": 2125,
+          "statusLines": 30
+        },
+        "previewDigest": "6597874072afbe1fe63be5a94014019191f327cf215e6b77f61b1d5d400724ba",
+        "protectedMetadataChanged": 0,
+        "rollbackExact": true,
+        "rootContained": true,
+        "sandbox": {
+          "hostBackedWritablePaths": [
+            "<RUN>"
+          ],
+          "hostRoot": "read-only",
+          "kind": "bubblewrap",
+          "networkIsolated": false,
+          "networkLimitation": "host kernel rejected the requested network namespace",
+          "privatePseudoFilesystems": [
+            "/dev",
+            "/proc"
+          ]
+        },
+        "secondApplyChanges": 0,
+        "secondDryRunChanges": 0,
+        "static": {
+          "conditionals": 0,
+          "dataKeys": [
+            "credentialHelper",
+            "email",
+            "name"
+          ],
+          "divergentLines": 3,
+          "prohibitedFindings": 0,
+          "secretFindings": 0,
+          "templates": 1
+        }
+      },
+      "second": {
+        "appliedManifest": [
+          {
+            "mode": "0755",
+            "path": ".config",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/active-theme.conf",
+            "sha256": "d803bc6abff8b834dffa1ce5e4dc470c1360fa6b3df95d1e382847162cfd99b6",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/common.conf",
+            "sha256": "f73261df256dbba0353caeb7790b5e8207a2851bd03c8a019173135b91f3615b",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/get_layout.py",
+            "sha256": "1e370545c4375a706c81cb5bdf0e0ccad7e5776bd338cc8699f661c99e11ad04",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/kitty.conf",
+            "sha256": "019ee6fad90dc51ffc76a96e40d5f586d410fe3f0b1ba6105cecfb6c797068e4",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pass_keys.py",
+            "sha256": "b0d775566836a6b8a8453b54c7eef6cdf56346784cddc759f71a66ae3e53e8b3",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/pilot-unsupported",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+            "sha256": "753c85e38858870090ba773dcdbd4688753e182d7030a5f1e51f236dd3440288",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/pilot-unsupported/skitty",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/pilot-unsupported/skitty/README.md",
+            "sha256": "d5d3c013adf961eb9491ce62d5a257b72c8e4c49afafe0cf57cfcadfa143acee",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/quick-access-terminal-center.conf",
+            "sha256": "2fe4c523cf485f1023d54910a3e780ffa07cb1db37f27d9b7b06aa03dcc9efd2",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/quick-access-terminal-daily.conf",
+            "sha256": "6a791c911a92134034a065418b1d39c72ab5d946d118be9cbdd0c52f267b33d9",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/scripts",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/scripts/kitty-list-sessions.sh",
+            "sha256": "58699e7b907239149725d8e432f9d7118d18d9bb38b724b0d75b679fa4620d7b",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/scripts/kitty-zoxide-session.sh",
+            "sha256": "32fe0acc15e33f97ce10981339e48f971110bafabcd4c2d0574cac531facb31a",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": ".config/kitty/sessions",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/blogpost.kitty-session",
+            "sha256": "bc0ce9a99664a38489dd9e5f967836ddd52f7f11a14323f4af1a03b6ddf4e67d",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/dotfiles.kitty-session",
+            "sha256": "8613c0f299306ddadbdc4c3b43cc9828e7f4d837675dfb66c4a28eb70f3a559d",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/dots-private.kitty-session",
+            "sha256": "f63148758de9bb7ad67a1909c41332b4d942d8dcda3135e45e2b34fdbed37f26",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/glove80.kitty-session",
+            "sha256": "be3110ca3f04b939206cf31a434779792e65e15fde5d680572ee5bf2930e4f92",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/home.kitty-session",
+            "sha256": "b962a12b207221bf1b9d2bc53664a1537f13f9922bf8cb53f376a240816da8ed",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/lua.kitty-session",
+            "sha256": "af2b708bcdc3d2ccd887dba6f81ccfbb3b04f6b7657da52909520d5238e7ed3c",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/networking.kitty-session",
+            "sha256": "c87b63b56ca988f8cbc99bf32444451ea03749a877a81242d90156d53017b060",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/obsidian.kitty-session",
+            "sha256": "9137e3141fd4fc354a5f3c8493f418fd308abb3e2c4edc4d4f6c5ad9c03d5c23",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/scripts.kitty-session",
+            "sha256": "780ba773c793711ed2af43aeb8424a6672d0586041b1d9df1072961313ad43a6",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/skitty.kitty-session",
+            "sha256": "724adfe97b4db98620ccbba44d5658ca0560051b87388eaafa4b4b9b8097186f",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/kitty/sessions/toucan.kitty-session",
+            "sha256": "05ad6a98dfb19f98ad75e4a23c62756006c264be8ed452fb0ab73c5739a863ad",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/starship.toml",
+            "sha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".gitconfig",
+            "sha256": "502384593122b8c20fb77078e864bc79432d47bfd6af324970a95cf0951357d0",
+            "type": "file"
+          }
+        ],
+        "appliedManifestDigest": "d602471d476f06d3b0e2e84d48ea259b6a5332b105b843e8d80f3f9838ebb0ae",
+        "caseDetails": {
+          "fileModesValid": true,
+          "gitCredentialHelper": "osxkeychain",
+          "kittyCommonSha256": "f73261df256dbba0353caeb7790b5e8207a2851bd03c8a019173135b91f3615b",
+          "kittyEntrypointSha256": "019ee6fad90dc51ffc76a96e40d5f586d410fe3f0b1ba6105cecfb6c797068e4",
+          "starshipLiteralSha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414"
+        },
+        "commands": [
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "dump-config",
+              "--format=json"
+            ],
+            "endedAt": "2026-08-17T02:29:05.036832+00:00",
+            "exit": 0,
+            "label": "dump-config",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:04.999111+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 246,
+            "stdoutPreview": [
+              "{",
+              "  \"cacheDir\": \"<RUN>/cache\",",
+              "  \"color\": \"auto\",",
+              "  \"data\": {",
+              "    \"pilot\": {",
+              "      \"git\": {",
+              "        \"credentialHelper\": \"osxkeychain\",",
+              "        \"email\": \"pilot@example.invalid\",",
+              "        \"name\": \"Pilot User\"",
+              "      },",
+              "      \"host\": \"pilot-macos\",",
+              "      \"platform\": \"macos\""
+            ],
+            "stdoutSha256": "969ad8ebabcec29e42c3d1273ac0d76c365e8d04ee339ca903f2e850b2e8de01"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "managed",
+              "--include=files",
+              "--path-style=relative"
+            ],
+            "endedAt": "2026-08-17T02:29:05.108115+00:00",
+            "exit": 0,
+            "label": "managed",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.070271+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 24,
+            "stdoutPreview": [
+              ".config/kitty/active-theme.conf",
+              ".config/kitty/common.conf",
+              ".config/kitty/get_layout.py",
+              ".config/kitty/kitty.conf",
+              ".config/kitty/pass_keys.py",
+              ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+              ".config/kitty/pilot-unsupported/skitty/README.md",
+              ".config/kitty/quick-access-terminal-center.conf",
+              ".config/kitty/quick-access-terminal-daily.conf",
+              ".config/kitty/scripts/kitty-list-sessions.sh",
+              ".config/kitty/scripts/kitty-zoxide-session.sh",
+              ".config/kitty/sessions/blogpost.kitty-session"
+            ],
+            "stdoutSha256": "0b7e5a06776ab6fb92a5047eba01b96af3533f35d6f5f8fbf4cd8e2cbbb36a13"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:05.185147+00:00",
+            "exit": 0,
+            "label": "status-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.145388+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 30,
+            "stdoutPreview": [
+              " A .config",
+              " A .config/kitty",
+              " A .config/kitty/active-theme.conf",
+              " A .config/kitty/common.conf",
+              " A .config/kitty/get_layout.py",
+              " A .config/kitty/kitty.conf",
+              " A .config/kitty/pass_keys.py",
+              " A .config/kitty/pilot-unsupported",
+              " A .config/kitty/pilot-unsupported/colorscheme-selector.sh",
+              " A .config/kitty/pilot-unsupported/skitty",
+              " A .config/kitty/pilot-unsupported/skitty/README.md",
+              " A .config/kitty/quick-access-terminal-center.conf"
+            ],
+            "stdoutSha256": "b6160ea790c908d2f9852714ef0c5d42b316498b9612380ee27c6c51b98540d1"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:05.262675+00:00",
+            "exit": 0,
+            "label": "diff-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.219221+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 2125,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/kitty b/.config/kitty",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config/kitty",
+              "diff --git a/.config/kitty/active-theme.conf b/.config/kitty/active-theme.conf",
+              "new file mode 100644"
+            ],
+            "stdoutSha256": "f40530c6787c83304ce4f6a78f0bfa601e452071cdfaf4331e52f9de9a71f07d"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:05.341721+00:00",
+            "exit": 0,
+            "label": "dry-run-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.297382+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 2125,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/kitty b/.config/kitty",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config/kitty",
+              "diff --git a/.config/kitty/active-theme.conf b/.config/kitty/active-theme.conf",
+              "new file mode 100644"
+            ],
+            "stdoutSha256": "f40530c6787c83304ce4f6a78f0bfa601e452071cdfaf4331e52f9de9a71f07d"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:05.489280+00:00",
+            "exit": 0,
+            "label": "apply",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.448262+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:05.567149+00:00",
+            "exit": 0,
+            "label": "apply-second",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.525388+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:05.642684+00:00",
+            "exit": 0,
+            "label": "dry-run-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.600760+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:05.717269+00:00",
+            "exit": 0,
+            "label": "diff-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.676162+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:05.790967+00:00",
+            "exit": 0,
+            "label": "status-drift",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.750274+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 1,
+            "stdoutPreview": [
+              "MM .config/starship.toml"
+            ],
+            "stdoutSha256": "17ef008016ab0b2af96e68283921f0305d03a532dfcc28b569e9633f50133fb5"
+          }
+        ],
+        "driftDetected": true,
+        "effective": {
+          "configPaths": {
+            "cacheDir": "<RUN>/cache",
+            "destDir": "<RUN>/destination",
+            "persistentState": "<RUN>/state/chezmoi.boltdb",
+            "scriptTempDir": "<RUN>/tmp",
+            "sourceDir": "<RUN>/source"
+          }
+        },
+        "ownership": {
+          "logicalComparisonOverlap": [
+            "$HOME/.config/kitty/kitty.conf",
+            "$HOME/.config/starship.toml"
+          ],
+          "realIntersection": [],
+          "singleOwner": true,
+          "targets": [
+            ".config/kitty/active-theme.conf",
+            ".config/kitty/common.conf",
+            ".config/kitty/get_layout.py",
+            ".config/kitty/kitty.conf",
+            ".config/kitty/pass_keys.py",
+            ".config/kitty/pilot-unsupported/colorscheme-selector.sh",
+            ".config/kitty/pilot-unsupported/skitty/README.md",
+            ".config/kitty/quick-access-terminal-center.conf",
+            ".config/kitty/quick-access-terminal-daily.conf",
+            ".config/kitty/scripts/kitty-list-sessions.sh",
+            ".config/kitty/scripts/kitty-zoxide-session.sh",
+            ".config/kitty/sessions/blogpost.kitty-session",
+            ".config/kitty/sessions/dotfiles.kitty-session",
+            ".config/kitty/sessions/dots-private.kitty-session",
+            ".config/kitty/sessions/glove80.kitty-session",
+            ".config/kitty/sessions/home.kitty-session",
+            ".config/kitty/sessions/lua.kitty-session",
+            ".config/kitty/sessions/networking.kitty-session",
+            ".config/kitty/sessions/obsidian.kitty-session",
+            ".config/kitty/sessions/scripts.kitty-session",
+            ".config/kitty/sessions/skitty.kitty-session",
+            ".config/kitty/sessions/toucan.kitty-session",
+            ".config/starship.toml",
+            ".gitconfig"
+          ]
+        },
+        "platform": "macos",
+        "preview": {
+          "diffLines": 2125,
+          "dryRunLines": 2125,
+          "statusLines": 30
+        },
+        "previewDigest": "6597874072afbe1fe63be5a94014019191f327cf215e6b77f61b1d5d400724ba",
+        "protectedMetadataChanged": 0,
+        "rollbackExact": true,
+        "rootContained": true,
+        "sandbox": {
+          "hostBackedWritablePaths": [
+            "<RUN>"
+          ],
+          "hostRoot": "read-only",
+          "kind": "bubblewrap",
+          "networkIsolated": false,
+          "networkLimitation": "host kernel rejected the requested network namespace",
+          "privatePseudoFilesystems": [
+            "/dev",
+            "/proc"
+          ]
+        },
+        "secondApplyChanges": 0,
+        "secondDryRunChanges": 0,
+        "static": {
+          "conditionals": 0,
+          "dataKeys": [
+            "credentialHelper",
+            "email",
+            "name"
+          ],
+          "divergentLines": 3,
+          "prohibitedFindings": 0,
+          "secretFindings": 0,
+          "templates": 1
+        }
+      }
+    },
+    "windows": {
+      "deterministic": true,
+      "first": {
+        "appliedManifest": [
+          {
+            "mode": "0755",
+            "path": ".config",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/starship.toml",
+            "sha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".gitconfig",
+            "sha256": "f29816abb9830db781c315221846897e900d81d4e29ac45e56453e2c2508fc9f",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData/Local",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData/Local/Packages",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json",
+            "sha256": "40f13a1f6429ac0189d8595085541d66623911860fc48b668b2500bf7c5c4a47",
+            "type": "file"
+          }
+        ],
+        "appliedManifestDigest": "ede4ff47390342d18a3eb7f37f08db2810e0a4934acbf95762a66a3e78cf3cad",
+        "caseDetails": {
+          "fileModesValid": true,
+          "gitCredentialHelper": "manager",
+          "starshipLiteralSha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414",
+          "windowsTerminalStructuralOnly": true,
+          "windowsTerminalVersion": "1.24.11321.0"
+        },
+        "commands": [
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "dump-config",
+              "--format=json"
+            ],
+            "endedAt": "2026-08-17T02:29:05.907084+00:00",
+            "exit": 0,
+            "label": "dump-config",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.869369+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 246,
+            "stdoutPreview": [
+              "{",
+              "  \"cacheDir\": \"<RUN>/cache\",",
+              "  \"color\": \"auto\",",
+              "  \"data\": {",
+              "    \"pilot\": {",
+              "      \"git\": {",
+              "        \"credentialHelper\": \"manager\",",
+              "        \"email\": \"pilot@example.invalid\",",
+              "        \"name\": \"Pilot User\"",
+              "      },",
+              "      \"host\": \"pilot-windows\",",
+              "      \"platform\": \"windows\""
+            ],
+            "stdoutSha256": "3b85299e9df316b7ac920a5cac0e1793cfd6fbdf831a092273cd3b288e6680a9"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "managed",
+              "--include=files",
+              "--path-style=relative"
+            ],
+            "endedAt": "2026-08-17T02:29:05.977630+00:00",
+            "exit": 0,
+            "label": "managed",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:05.940290+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 3,
+            "stdoutPreview": [
+              ".config/starship.toml",
+              ".gitconfig",
+              "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
+            ],
+            "stdoutSha256": "e88c08c7fe256b58d8ab5b763f9cd79cb83f53e8dbef5dc564ae11fbdd6ba127"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:06.053734+00:00",
+            "exit": 0,
+            "label": "status-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.013234+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 9,
+            "stdoutPreview": [
+              " A .config",
+              " A .config/starship.toml",
+              " A .gitconfig",
+              " A AppData",
+              " A AppData/Local",
+              " A AppData/Local/Packages",
+              " A AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe",
+              " A AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState",
+              " A AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
+            ],
+            "stdoutSha256": "4d1ea4c93540e57c7d78ee7c006d2704edf754fff41f2b36d3eeaab761a3bd87"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:06.126991+00:00",
+            "exit": 0,
+            "label": "diff-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.087215+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 476,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/starship.toml b/.config/starship.toml",
+              "new file mode 100644",
+              "index 0000000000000000000000000000000000000000..a245d3e0f680c0478b04fb931cfd2831fc18b93e",
+              "--- /dev/null",
+              "+++ b/.config/starship.toml",
+              "@@ -0,0 +1,405 @@",
+              "+scan_timeout = 100"
+            ],
+            "stdoutSha256": "7b4a05d9b154ae62bfb4528eda0a1848f5ae92de5b165f341018fca8986994b9"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:06.199859+00:00",
+            "exit": 0,
+            "label": "dry-run-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.159949+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 476,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/starship.toml b/.config/starship.toml",
+              "new file mode 100644",
+              "index 0000000000000000000000000000000000000000..a245d3e0f680c0478b04fb931cfd2831fc18b93e",
+              "--- /dev/null",
+              "+++ b/.config/starship.toml",
+              "@@ -0,0 +1,405 @@",
+              "+scan_timeout = 100"
+            ],
+            "stdoutSha256": "7b4a05d9b154ae62bfb4528eda0a1848f5ae92de5b165f341018fca8986994b9"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:06.343120+00:00",
+            "exit": 0,
+            "label": "apply",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.302803+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:06.415765+00:00",
+            "exit": 0,
+            "label": "apply-second",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.377071+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:06.488887+00:00",
+            "exit": 0,
+            "label": "dry-run-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.448481+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:06.562273+00:00",
+            "exit": 0,
+            "label": "diff-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.521750+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:06.634604+00:00",
+            "exit": 0,
+            "label": "status-drift",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.594964+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 1,
+            "stdoutPreview": [
+              "MM .config/starship.toml"
+            ],
+            "stdoutSha256": "17ef008016ab0b2af96e68283921f0305d03a532dfcc28b569e9633f50133fb5"
+          }
+        ],
+        "driftDetected": true,
+        "effective": {
+          "configPaths": {
+            "cacheDir": "<RUN>/cache",
+            "destDir": "<RUN>/destination",
+            "persistentState": "<RUN>/state/chezmoi.boltdb",
+            "scriptTempDir": "<RUN>/tmp",
+            "sourceDir": "<RUN>/source"
+          }
+        },
+        "ownership": {
+          "logicalComparisonOverlap": [
+            "$HOME/.config/starship.toml"
+          ],
+          "realIntersection": [],
+          "singleOwner": true,
+          "targets": [
+            ".config/starship.toml",
+            ".gitconfig",
+            "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
+          ]
+        },
+        "platform": "windows",
+        "preview": {
+          "diffLines": 476,
+          "dryRunLines": 476,
+          "statusLines": 9
+        },
+        "previewDigest": "a95093f7a686ef004b166b4cf409c01dbdef3fde2a89105432e2edab17c8ba1f",
+        "protectedMetadataChanged": 0,
+        "rollbackExact": true,
+        "rootContained": true,
+        "sandbox": {
+          "hostBackedWritablePaths": [
+            "<RUN>"
+          ],
+          "hostRoot": "read-only",
+          "kind": "bubblewrap",
+          "networkIsolated": false,
+          "networkLimitation": "host kernel rejected the requested network namespace",
+          "privatePseudoFilesystems": [
+            "/dev",
+            "/proc"
+          ]
+        },
+        "secondApplyChanges": 0,
+        "secondDryRunChanges": 0,
+        "static": {
+          "conditionals": 0,
+          "dataKeys": [
+            "credentialHelper",
+            "email",
+            "name"
+          ],
+          "divergentLines": 3,
+          "prohibitedFindings": 0,
+          "secretFindings": 0,
+          "templates": 1
+        }
+      },
+      "second": {
+        "appliedManifest": [
+          {
+            "mode": "0755",
+            "path": ".config",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": ".config/starship.toml",
+            "sha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414",
+            "type": "file"
+          },
+          {
+            "mode": "0644",
+            "path": ".gitconfig",
+            "sha256": "f29816abb9830db781c315221846897e900d81d4e29ac45e56453e2c2508fc9f",
+            "type": "file"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData/Local",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData/Local/Packages",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe",
+            "type": "directory"
+          },
+          {
+            "mode": "0755",
+            "path": "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState",
+            "type": "directory"
+          },
+          {
+            "mode": "0644",
+            "path": "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json",
+            "sha256": "40f13a1f6429ac0189d8595085541d66623911860fc48b668b2500bf7c5c4a47",
+            "type": "file"
+          }
+        ],
+        "appliedManifestDigest": "ede4ff47390342d18a3eb7f37f08db2810e0a4934acbf95762a66a3e78cf3cad",
+        "caseDetails": {
+          "fileModesValid": true,
+          "gitCredentialHelper": "manager",
+          "starshipLiteralSha256": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414",
+          "windowsTerminalStructuralOnly": true,
+          "windowsTerminalVersion": "1.24.11321.0"
+        },
+        "commands": [
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "dump-config",
+              "--format=json"
+            ],
+            "endedAt": "2026-08-17T02:29:06.750898+00:00",
+            "exit": 0,
+            "label": "dump-config",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.711051+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 246,
+            "stdoutPreview": [
+              "{",
+              "  \"cacheDir\": \"<RUN>/cache\",",
+              "  \"color\": \"auto\",",
+              "  \"data\": {",
+              "    \"pilot\": {",
+              "      \"git\": {",
+              "        \"credentialHelper\": \"manager\",",
+              "        \"email\": \"pilot@example.invalid\",",
+              "        \"name\": \"Pilot User\"",
+              "      },",
+              "      \"host\": \"pilot-windows\",",
+              "      \"platform\": \"windows\""
+            ],
+            "stdoutSha256": "3b85299e9df316b7ac920a5cac0e1793cfd6fbdf831a092273cd3b288e6680a9"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "managed",
+              "--include=files",
+              "--path-style=relative"
+            ],
+            "endedAt": "2026-08-17T02:29:06.823329+00:00",
+            "exit": 0,
+            "label": "managed",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.784283+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 3,
+            "stdoutPreview": [
+              ".config/starship.toml",
+              ".gitconfig",
+              "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
+            ],
+            "stdoutSha256": "e88c08c7fe256b58d8ab5b763f9cd79cb83f53e8dbef5dc564ae11fbdd6ba127"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:06.899647+00:00",
+            "exit": 0,
+            "label": "status-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.859289+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 9,
+            "stdoutPreview": [
+              " A .config",
+              " A .config/starship.toml",
+              " A .gitconfig",
+              " A AppData",
+              " A AppData/Local",
+              " A AppData/Local/Packages",
+              " A AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe",
+              " A AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState",
+              " A AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
+            ],
+            "stdoutSha256": "4d1ea4c93540e57c7d78ee7c006d2704edf754fff41f2b36d3eeaab761a3bd87"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:06.973783+00:00",
+            "exit": 0,
+            "label": "diff-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:06.933300+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 476,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/starship.toml b/.config/starship.toml",
+              "new file mode 100644",
+              "index 0000000000000000000000000000000000000000..a245d3e0f680c0478b04fb931cfd2831fc18b93e",
+              "--- /dev/null",
+              "+++ b/.config/starship.toml",
+              "@@ -0,0 +1,405 @@",
+              "+scan_timeout = 100"
+            ],
+            "stdoutSha256": "7b4a05d9b154ae62bfb4528eda0a1848f5ae92de5b165f341018fca8986994b9"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:07.047379+00:00",
+            "exit": 0,
+            "label": "dry-run-before",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:07.007011+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 476,
+            "stdoutPreview": [
+              "diff --git a/.config b/.config",
+              "new file mode 40755",
+              "index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+              "--- /dev/null",
+              "+++ b/.config",
+              "diff --git a/.config/starship.toml b/.config/starship.toml",
+              "new file mode 100644",
+              "index 0000000000000000000000000000000000000000..a245d3e0f680c0478b04fb931cfd2831fc18b93e",
+              "--- /dev/null",
+              "+++ b/.config/starship.toml",
+              "@@ -0,0 +1,405 @@",
+              "+scan_timeout = 100"
+            ],
+            "stdoutSha256": "7b4a05d9b154ae62bfb4528eda0a1848f5ae92de5b165f341018fca8986994b9"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:07.192595+00:00",
+            "exit": 0,
+            "label": "apply",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:07.150878+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply"
+            ],
+            "endedAt": "2026-08-17T02:29:07.268557+00:00",
+            "exit": 0,
+            "label": "apply-second",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:07.226041+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "apply",
+              "--dry-run",
+              "--verbose"
+            ],
+            "endedAt": "2026-08-17T02:29:07.342917+00:00",
+            "exit": 0,
+            "label": "dry-run-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:07.302238+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "diff"
+            ],
+            "endedAt": "2026-08-17T02:29:07.418857+00:00",
+            "exit": 0,
+            "label": "diff-after",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:07.375952+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 0,
+            "stdoutPreview": [],
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "command": [
+              "chezmoi",
+              "--source",
+              "<RUN>/source",
+              "--destination",
+              "<RUN>/destination",
+              "--config",
+              "<RUN>/config/chezmoi.toml",
+              "--cache",
+              "<RUN>/cache",
+              "--persistent-state",
+              "<RUN>/state/chezmoi.boltdb",
+              "--working-tree",
+              "<RUN>/working-tree",
+              "--no-pager",
+              "--no-tty",
+              "--refresh-externals=never",
+              "--skip-secrets",
+              "--error-on-conflict",
+              "--use-builtin-diff",
+              "status"
+            ],
+            "endedAt": "2026-08-17T02:29:07.494468+00:00",
+            "exit": 0,
+            "label": "status-drift",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T02:29:07.451938+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 1,
+            "stdoutPreview": [
+              "MM .config/starship.toml"
+            ],
+            "stdoutSha256": "17ef008016ab0b2af96e68283921f0305d03a532dfcc28b569e9633f50133fb5"
+          }
+        ],
+        "driftDetected": true,
+        "effective": {
+          "configPaths": {
+            "cacheDir": "<RUN>/cache",
+            "destDir": "<RUN>/destination",
+            "persistentState": "<RUN>/state/chezmoi.boltdb",
+            "scriptTempDir": "<RUN>/tmp",
+            "sourceDir": "<RUN>/source"
+          }
+        },
+        "ownership": {
+          "logicalComparisonOverlap": [
+            "$HOME/.config/starship.toml"
+          ],
+          "realIntersection": [],
+          "singleOwner": true,
+          "targets": [
+            ".config/starship.toml",
+            ".gitconfig",
+            "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
+          ]
+        },
+        "platform": "windows",
+        "preview": {
+          "diffLines": 476,
+          "dryRunLines": 476,
+          "statusLines": 9
+        },
+        "previewDigest": "a95093f7a686ef004b166b4cf409c01dbdef3fde2a89105432e2edab17c8ba1f",
+        "protectedMetadataChanged": 0,
+        "rollbackExact": true,
+        "rootContained": true,
+        "sandbox": {
+          "hostBackedWritablePaths": [
+            "<RUN>"
+          ],
+          "hostRoot": "read-only",
+          "kind": "bubblewrap",
+          "networkIsolated": false,
+          "networkLimitation": "host kernel rejected the requested network namespace",
+          "privatePseudoFilesystems": [
+            "/dev",
+            "/proc"
+          ]
+        },
+        "secondApplyChanges": 0,
+        "secondDryRunChanges": 0,
+        "static": {
+          "conditionals": 0,
+          "dataKeys": [
+            "credentialHelper",
+            "email",
+            "name"
+          ],
+          "divergentLines": 3,
+          "prohibitedFindings": 0,
+          "secretFindings": 0,
+          "templates": 1
+        }
+      }
+    }
+  },
+  "schemaVersion": 1,
+  "sourceProvenance": {
+    "os/linux/kitty/kitty.conf": "eaa1d652928ed72f818e71944afb351c535501c53ecd0170ce51322b01776dd1",
+    "os/macos/kitty/kitty.conf": "f7f645f827ad162b7cafd7c236287e0fbc95dfba7daf8a61436f7b27a8121d08",
+    "shared/kitty/active-theme.conf": "d803bc6abff8b834dffa1ce5e4dc470c1360fa6b3df95d1e382847162cfd99b6",
+    "shared/kitty/common.conf": "2c96895d71b4a2a7c894d7fd1fb3e6b95e13fd84e54d8f38d243dc1a90858a50",
+    "shared/kitty/get_layout.py": "1e370545c4375a706c81cb5bdf0e0ccad7e5776bd338cc8699f661c99e11ad04",
+    "shared/kitty/pass_keys.py": "b0d775566836a6b8a8453b54c7eef6cdf56346784cddc759f71a66ae3e53e8b3",
+    "shared/kitty/quick-access-terminal-center.conf": "2fe4c523cf485f1023d54910a3e780ffa07cb1db37f27d9b7b06aa03dcc9efd2",
+    "shared/kitty/quick-access-terminal-daily.conf": "6a791c911a92134034a065418b1d39c72ab5d946d118be9cbdd0c52f267b33d9",
+    "shared/kitty/scripts/kitty-list-sessions.sh": "444a96469fd224f137ee1a48732d82998b26bbf7893d6d5acce83a5a38cad0aa",
+    "shared/kitty/scripts/kitty-zoxide-session.sh": "ad3e7e96faa8aa1e1493c269199048110a98f36090ac959aba8eb360a4b74897",
+    "shared/kitty/sessions/blogpost.kitty-session": "137526cdd1943c2794fbdf75718b1c8f3d6cb1c27170150a63fbede748dd8317",
+    "shared/kitty/sessions/dotfiles.kitty-session": "0713ab5cbebeb7ebf729772034ead6566f313b8fe0bae49922ff7f9082b53056",
+    "shared/kitty/sessions/dots-private.kitty-session": "f63148758de9bb7ad67a1909c41332b4d942d8dcda3135e45e2b34fdbed37f26",
+    "shared/kitty/sessions/glove80.kitty-session": "cd4d73ed881d496e0f772917b49f5738150260bd2ab2a2b0819fe6a82c8332d1",
+    "shared/kitty/sessions/home.kitty-session": "b962a12b207221bf1b9d2bc53664a1537f13f9922bf8cb53f376a240816da8ed",
+    "shared/kitty/sessions/lua.kitty-session": "af2b708bcdc3d2ccd887dba6f81ccfbb3b04f6b7657da52909520d5238e7ed3c",
+    "shared/kitty/sessions/networking.kitty-session": "c87b63b56ca988f8cbc99bf32444451ea03749a877a81242d90156d53017b060",
+    "shared/kitty/sessions/obsidian.kitty-session": "9137e3141fd4fc354a5f3c8493f418fd308abb3e2c4edc4d4f6c5ad9c03d5c23",
+    "shared/kitty/sessions/scripts.kitty-session": "780ba773c793711ed2af43aeb8424a6672d0586041b1d9df1072961313ad43a6",
+    "shared/kitty/sessions/skitty.kitty-session": "513ef5773b75e4a2feebfd61b5906e4ce6ef59073b25a7a854f0bce9ac522517",
+    "shared/kitty/sessions/toucan.kitty-session": "05ad6a98dfb19f98ad75e4a23c62756006c264be8ed452fb0ab73c5739a863ad",
+    "shared/starship/starship.toml": "a79a4b74965eba4e0bfd3dfc0abc0ade54cd54e8e8c6f6dd54247212bce7d414"
+  },
+  "tools": {
+    "chezmoi": "chezmoi version v2.72.0, built at 2026-08-03T08:20:49Z",
+    "openspec": "1.9.0",
+    "python": "3.14.7"
+  }
+}

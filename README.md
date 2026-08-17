@@ -17,6 +17,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 | Entender la estructura | [Dotfiles Architecture](docs/ARCHITECTURE.md) |
 | Entender produccion y canary | [Workstation Lifecycle](docs/WORKSTATION_LIFECYCLE.md) |
 | Consultar decisiones | [Architecture Decision Records](docs/adr/README.md) |
+| Revisar OpenSpec y el piloto Chezmoi | [OpenSpec/Chezmoi Toolchain](docs/tooling/openspec-chezmoi.md) y [`evaluate-chezmoi-pilot`](openspec/changes/evaluate-chezmoi-pilot/) |
 | Evaluar dotfiles externos | [External References](references/README.md) |
 | Ver los enlaces de macOS | [`profiles/macos-main.links`](profiles/macos-main.links) |
 | Diagnosticar los symlinks | `scripts/doctor macos-main` |
@@ -34,9 +35,10 @@ rutas esperadas por cada aplicacion mediante symlinks.
 
 - Nombres de carpetas, archivos tecnicos y titulos en ingles.
 - Contenido explicativo en espanol.
-- Ruta canonica del clon: `~/mydotfiles`.
+- Ubicación convencional del clon: `~/mydotfiles`; la raíz del checkout actual
+  es la referencia portable para automatización y especificaciones.
 - Rutas portables basadas en `$HOME`, `~` o XDG.
-- Una sola fuente canonica por herramienta.
+- Una sola fuente canónica por herramienta.
 - Secretos, tokens, claves privadas, caches y builds fuera de Git.
 - Cada configuracion activa tiene un README y un destino declarado por perfil.
 - Las configuraciones importadas no se activan hasta adaptar rutas y dependencias.
@@ -46,6 +48,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 
 ```text
 mydotfiles/
+  .agents/skills/             # integración Codex administrada por OpenSpec
   shared/                    # herramientas y configuraciones compartidas
     scripts/                 # utilidades portables de uso personal
   os/
@@ -58,7 +61,9 @@ mydotfiles/
   hardware/                  # teclados y otros perifericos
   references/                # fuentes externas: evidencia, no runtime
   scripts/                   # bootstrap, linking y diagnostico
-  docs/                      # arquitectura, ADR e inventarios
+  docs/                      # arquitectura, ADR, tooling e inventarios
+  experiments/               # evaluaciones aisladas; nunca fuentes productivas
+  openspec/                  # contexto, especificaciones y cambios propuestos
 ```
 
 Las configuraciones compartidas viven bajo `shared/<tool>/`; los scripts
@@ -181,4 +186,7 @@ de leerlos, clasificarlos y conservar un rollback.
 
 Los symlinks administrados por el perfil son la estrategia actual. GNU Stow o
 Chezmoi se evaluaran cuando las diferencias reales entre macOS, Arch y Windows
-superen lo que este mecanismo simple puede expresar con claridad.
+superen lo que este mecanismo simple puede expresar con claridad. El cambio
+OpenSpec [`evaluate-chezmoi-pilot`](openspec/changes/evaluate-chezmoi-pilot/)
+define una prueba aislada y criterios de rechazo, continuidad o migración; no
+autoriza aplicar Chezmoi ni transferir ningún target activo.

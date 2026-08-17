@@ -1,0 +1,11 @@
+[user]
+	name = {{ .pilot.git.name }}
+	email = {{ .pilot.git.email }}
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[fetch]
+	prune = true
+[credential]
+	helper = {{ .pilot.git.credentialHelper }}

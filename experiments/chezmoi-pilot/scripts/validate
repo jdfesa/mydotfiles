@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+pilot_root=$(CDPATH='' cd -- "$script_dir/.." && pwd -P)
+python3 -m unittest discover -s "$pilot_root/tests" -p 'test_*.py'
+exec python3 "$script_dir/pilot.py" validate "$@"

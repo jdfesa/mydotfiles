@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 2,
+  "modifierRoles": {
+    "physicalGuiMeta": "Solo registro físico; no implica un rol semántico automático.",
+    "applicationPrimary": {
+      "macos": "Command",
+      "linux": "Ctrl",
+      "windows": "Ctrl"
+    },
+    "desktopWindowManager": {
+      "macos": [
+        "cmd-alt-ctrl-shift (Hyper)",
+        "alt-ctrl-shift (Meh)"
+      ],
+      "linux": [
+        "Definido por sesión: Super o un chord revisado."
+      ],
+      "windows": [
+        "Windows key reservado y sin asignación."
+      ]
+    }
+  },
+  "actions": {
+    "terminal.new-tab": {
+      "meaning": "Abrir un tab de la aplicación; el directorio inicial permanece específico de cada aplicación.",
+      "macos": {
+        "status": "mapped-application-specific",
+        "chords": ["cmd+t"],
+        "sourceFile": "os/macos/kitty/kitty.conf",
+        "expectedLine": "map cmd+t new_tab_with_cwd",
+        "nativeAction": "new_tab_with_cwd"
+      },
+      "linux": {
+        "status": "mapped-application-specific",
+        "chords": ["super+t"],
+        "sourceFile": "os/linux/kitty/kitty.conf",
+        "expectedLine": "map super+t new_tab_with_cwd",
+        "nativeAction": "new_tab_with_cwd"
+      },
+      "windows": {
+        "status": "mapped-application-specific",
+        "chords": ["ctrl+shift+t"],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "expectedCommand": {"command": "newTab", "keys": "ctrl+shift+t"},
+        "nativeAction": "newTab"
+      }
+    },
+    "terminal.new-os-window": {
+      "meaning": "Crear una ventana superior administrada por el sistema operativo.",
+      "macos": {
+        "status": "unsupported-current-config",
+        "chords": [],
+        "sourceFile": "os/macos/kitty/kitty.conf",
+        "nativeAction": null
+      },
+      "linux": {
+        "status": "unsupported-current-config",
+        "chords": [],
+        "sourceFile": "os/linux/kitty/kitty.conf",
+        "nativeAction": null
+      },
+      "windows": {
+        "status": "mapped",
+        "chords": ["ctrl+shift+n"],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "expectedCommand": {"command": "newWindow", "keys": "ctrl+shift+n"},
+        "nativeAction": "newWindow"
+      }
+    },
+    "terminal.new-pane": {
+      "meaning": "Crear un pane dentro del contenedor actual de la aplicación terminal.",
+      "macos": {
+        "status": "mapped-kitty-window-is-pane",
+        "chords": ["cmd+enter"],
+        "sourceFile": "os/macos/kitty/kitty.conf",
+        "expectedLine": "map cmd+enter new_window",
+        "nativeAction": "new_window"
+      },
+      "linux": {
+        "status": "mapped-kitty-window-is-pane",
+        "chords": ["super+enter"],
+        "sourceFile": "os/linux/kitty/kitty.conf",
+        "expectedLine": "map super+enter new_window",
+        "nativeAction": "new_window"
+      },
+      "windows": {
+        "status": "mapped",
+        "chords": ["ctrl+shift+d"],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "expectedCommand": {"command": {"action": "splitPane", "split": "auto"}, "keys": "ctrl+shift+d"},
+        "nativeAction": "splitPane:auto"
+      }
+    },
+    "terminal.focus-pane-left": {
+      "meaning": "Mover el foco espacialmente al pane vecino de la izquierda.",
+      "macos": {
+        "status": "mapped-contextual-nvim-pass-through",
+        "chords": ["ctrl+h"],
+        "sourceFile": "shared/kitty/common.conf",
+        "expectedLine": "map ctrl+h kitten pass_keys.py left   ctrl+h \"nvim\"",
+        "helperFile": "shared/kitty/pass_keys.py",
+        "helperLine": "boss.active_tab.neighboring_window(direction)",
+        "nativeAction": "neighboring_window:left"
+      },
+      "linux": {
+        "status": "mapped-contextual-nvim-pass-through",
+        "chords": ["ctrl+h"],
+        "sourceFile": "shared/kitty/common.conf",
+        "expectedLine": "map ctrl+h kitten pass_keys.py left   ctrl+h \"nvim\"",
+        "helperFile": "shared/kitty/pass_keys.py",
+        "helperLine": "boss.active_tab.neighboring_window(direction)",
+        "nativeAction": "neighboring_window:left"
+      },
+      "windows": {
+        "status": "mapped",
+        "chords": ["alt+left"],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "expectedCommand": {"command": {"action": "moveFocus", "direction": "left"}, "keys": "alt+left"},
+        "nativeAction": "moveFocus:left"
+      }
+    },
+    "terminal.previous-pane-in-order": {
+      "meaning": "Seleccionar el pane anterior según el orden propio de la aplicación, no según dirección espacial.",
+      "macos": {
+        "status": "mapped-order-based",
+        "chords": ["ctrl+shift+h"],
+        "sourceFile": "shared/kitty/common.conf",
+        "expectedLine": "map ctrl+shift+h previous_window",
+        "nativeAction": "previous_window"
+      },
+      "linux": {
+        "status": "mapped-order-based",
+        "chords": ["ctrl+shift+h"],
+        "sourceFile": "shared/kitty/common.conf",
+        "expectedLine": "map ctrl+shift+h previous_window",
+        "nativeAction": "previous_window"
+      },
+      "windows": {
+        "status": "unsupported-current-fixture",
+        "chords": [],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "nativeAction": null,
+        "supportedNativeAction": "moveFocus:previousInOrder"
+      }
+    },
+    "terminal.copy": {
+      "meaning": "Copiar la selección cuando la aplicación dispone de una.",
+      "macos": {
+        "status": "native-default-conditional",
+        "chords": ["cmd+c"],
+        "sourceFile": "shared/kitty/kitty.default.conf",
+        "expectedLine": "# map --allow-fallback=shifted,ascii cmd+c copy_or_noop",
+        "nativeAction": "copy_or_noop"
+      },
+      "linux": {
+        "status": "mapped",
+        "chords": ["ctrl+shift+c"],
+        "sourceFile": "os/linux/kitty/kitty.conf",
+        "expectedLine": "map ctrl+shift+c copy_to_clipboard",
+        "nativeAction": "copy_to_clipboard"
+      },
+      "windows": {
+        "status": "mapped",
+        "chords": ["ctrl+shift+c"],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "expectedCommand": {"command": "copy", "keys": "ctrl+shift+c"},
+        "nativeAction": "copy"
+      }
+    },
+    "terminal.paste": {
+      "meaning": "Pegar desde el clipboard de la plataforma.",
+      "macos": {
+        "status": "native-default",
+        "chords": ["cmd+v"],
+        "sourceFile": "shared/kitty/kitty.default.conf",
+        "expectedLine": "# map --allow-fallback=shifted,ascii cmd+v paste_from_clipboard",
+        "nativeAction": "paste_from_clipboard"
+      },
+      "linux": {
+        "status": "mapped",
+        "chords": ["ctrl+shift+v"],
+        "sourceFile": "os/linux/kitty/kitty.conf",
+        "expectedLine": "map ctrl+shift+v paste_from_clipboard",
+        "nativeAction": "paste_from_clipboard"
+      },
+      "windows": {
+        "status": "mapped",
+        "chords": ["ctrl+shift+v"],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "expectedCommand": {"command": "paste", "keys": "ctrl+shift+v"},
+        "nativeAction": "paste"
+      }
+    },
+    "terminal.reload-config": {
+      "meaning": "Recargar la configuración de la aplicación terminal.",
+      "macos": {
+        "status": "mapped",
+        "chords": ["ctrl+cmd+,"],
+        "sourceFile": "os/macos/kitty/kitty.conf",
+        "expectedLine": "map ctrl+cmd+, load_config_file",
+        "nativeAction": "load_config_file"
+      },
+      "linux": {
+        "status": "mapped",
+        "chords": ["ctrl+super+,"],
+        "sourceFile": "os/linux/kitty/kitty.conf",
+        "expectedLine": "map ctrl+super+, load_config_file",
+        "nativeAction": "load_config_file"
+      },
+      "windows": {
+        "status": "unsupported-native",
+        "chords": [],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "nativeAction": null
+      }
+    },
+    "terminal.close-pane": {
+      "meaning": "Cerrar el pane activo; el comportamiento cuando es el último pane permanece específico de la aplicación.",
+      "macos": {
+        "status": "mapped-application-specific",
+        "chords": ["cmd+option+w"],
+        "sourceFile": "shared/kitty/common.conf",
+        "expectedLine": "map kitty_mod+w close_window",
+        "nativeAction": "close_window"
+      },
+      "linux": {
+        "status": "mapped-application-specific",
+        "chords": ["super+alt+w"],
+        "sourceFile": "shared/kitty/common.conf",
+        "expectedLine": "map kitty_mod+w close_window",
+        "nativeAction": "close_window"
+      },
+      "windows": {
+        "status": "mapped-application-specific",
+        "chords": ["ctrl+shift+w"],
+        "sourceFile": "fixtures/windows-terminal/settings.json",
+        "expectedCommand": {"command": "closePane", "keys": "ctrl+shift+w"},
+        "nativeAction": "closePane"
+      }
+    },
+    "desktop.focus-left": {
+      "meaning": "Enfocar el contenedor de escritorio de la izquierda.",
+      "macos": {
+        "status": "preserved-aerospace-hyper",
+        "chords": ["cmd-alt-ctrl-shift+h"],
+        "sourceFile": "os/macos/aerospace/aerospace.toml",
+        "expectedLine": "cmd-alt-ctrl-shift-h = 'focus left'",
+        "nativeAction": "focus:left"
+      },
+      "linux": {
+        "status": "session-defined",
+        "chords": [],
+        "sourceFile": "active-session",
+        "nativeAction": null
+      },
+      "windows": {
+        "status": "deferred-windows-key-reserved",
+        "chords": [],
+        "sourceFile": "future-design",
+        "nativeAction": null
+      }
+    },
+    "desktop.move-left": {
+      "meaning": "Mover el contenedor de escritorio activo hacia la izquierda.",
+      "macos": {
+        "status": "preserved-aerospace-meh",
+        "chords": ["alt-ctrl-shift+h"],
+        "sourceFile": "os/macos/aerospace/aerospace.toml",
+        "expectedLine": "alt-ctrl-shift-h = 'move left'",
+        "nativeAction": "move:left"
+      },
+      "linux": {
+        "status": "session-defined",
+        "chords": [],
+        "sourceFile": "active-session",
+        "nativeAction": null
+      },
+      "windows": {
+        "status": "deferred-windows-key-reserved",
+        "chords": [],
+        "sourceFile": "future-design",
+        "nativeAction": null
+      }
+    }
+  }
+}
