@@ -276,6 +276,20 @@ class EvidencePolicyTests(unittest.TestCase):
                     pilot_policy.evidence_projection(changed),
                 )
 
+    def test_projection_diagnostics_report_normalized_leaf_paths(self) -> None:
+        reviewed = pilot_policy.evidence_projection(self.evidence())
+        fresh = copy.deepcopy(reviewed)
+        fresh["comparison"]["metric"] = 11
+        fresh["results"]["linux"]["manifest"][0]["sha256"] = "manifest-b"
+        differences = pilot_policy.projection_differences(reviewed, fresh)
+        self.assertEqual(
+            [difference["path"] for difference in differences],
+            [
+                "$/comparison/metric",
+                "$/results/linux/manifest/0/sha256",
+            ],
+        )
+
     @staticmethod
     def mandatory() -> dict:
         return {

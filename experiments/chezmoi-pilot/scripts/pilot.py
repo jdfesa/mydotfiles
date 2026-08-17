@@ -36,6 +36,7 @@ from pilot_policy import (
     measure_files,
     minimal_environment,
     project_chezmoi_version,
+    projection_differences,
     select_outcome,
     stable_digest,
 )
@@ -1525,9 +1526,11 @@ def compare_evidence_projection(fresh: dict[str, Any], reviewed: dict[str, Any])
     fresh_digest = evidence_projection_digest(fresh)
     reviewed_digest = evidence_projection_digest(reviewed)
     if fresh_projection != reviewed_projection:
+        differences = projection_differences(reviewed_projection, fresh_projection)
         raise PilotError(
             "fresh deterministic evidence projection differs from review evidence: "
-            f"fresh={fresh_digest} reviewed={reviewed_digest}"
+            f"fresh={fresh_digest} reviewed={reviewed_digest} "
+            f"differences={json.dumps(differences[:32], sort_keys=True)}"
         )
     return fresh_digest
 

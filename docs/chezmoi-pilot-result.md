@@ -32,7 +32,10 @@ sistema, reinicios, hardware, caches y estado mutable siguen fuera.
 
 `validate` ejecuta una evaluación fresh completa y compara toda la proyección de
 evidencia con `evidence/review.json`. `generate-docs --check` repite ese gate
-antes de comprobar Markdown. La proyección elimina timestamps y el contexto Git
+antes de comprobar Markdown. Si difiere, el error enumera paths y valores de la
+proyección ya normalizada para diagnosticar drift sin ocultarlo ni saltear el
+gate.
+La proyección elimina timestamps y el contexto Git
 dinámico de publicación completo (`branch`, `reviewedBase`, `headRevision`,
 `dirty`). Conserva el runtime Python exacto en raw evidence, pero lo proyecta al
 contrato compatible `>=3.11`. Conserva el banner Chezmoi completo en raw, pero
@@ -41,7 +44,7 @@ exactamente `1.9.0`. Commands, exits, paths, hashes, manifests, modes, métricas
 blockers, native state y outcome continúan siendo sensibles.
 
 Final projection digest:
-`b4ca46fdd2fa0bfb76aae6f14ea477a3b9117200f5e617ad1de869fdfa61bacb`.
+`a2bce2c222d0d30c09b1f0791c9db6687dbb33c07a426af50083736be3a11b05`.
 
 Focused tests prueban que timestamps, un rebase merge sintético a `main` y otro
 patch Python compatible no alteran la proyección. Un cambio de command, hash,
@@ -69,7 +72,7 @@ proyección ni `previewDigest`; una versión Chezmoi distinta sí.
 | Operator entry commands | 3 | 1 |
 | Measured internal commands | 6 | 10 por fixture |
 | Comparison/automation files | 3 | 10 automation/test files |
-| Raw automation/test LOC | 381 | 2,649 |
+| Raw automation/test LOC | 381 | 2,698 |
 | Main harness LOC | N/A | `pilot.py`: 1,625 |
 | Templates | 0 | 1 |
 | Persistent state | 0 | 1 DB temporal por run |

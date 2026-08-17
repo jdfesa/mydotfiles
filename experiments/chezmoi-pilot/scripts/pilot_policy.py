@@ -94,6 +94,38 @@ def evidence_projection_digest(evidence: Mapping[str, Any]) -> str:
     return stable_digest(evidence_projection(evidence))
 
 
+def projection_differences(
+    reviewed: Any, fresh: Any, path: str = "$"
+) -> list[dict[str, Any]]:
+    """Return deterministic leaf differences for reviewable validation errors."""
+
+    if type(reviewed) is not type(fresh):
+        return [{"path": path, "reviewed": reviewed, "fresh": fresh}]
+    if isinstance(reviewed, dict):
+        differences: list[dict[str, Any]] = []
+        for key in sorted(set(reviewed) | set(fresh)):
+            child_path = f"{path}/{key}"
+            if key not in reviewed:
+                differences.append({"path": child_path, "reviewed": "<missing>", "fresh": fresh[key]})
+            elif key not in fresh:
+                differences.append({"path": child_path, "reviewed": reviewed[key], "fresh": "<missing>"})
+            else:
+                differences.extend(projection_differences(reviewed[key], fresh[key], child_path))
+        return differences
+    if isinstance(reviewed, list):
+        differences = []
+        if len(reviewed) != len(fresh):
+            differences.append({"path": path, "reviewedLength": len(reviewed), "freshLength": len(fresh)})
+        for index, (reviewed_item, fresh_item) in enumerate(zip(reviewed, fresh)):
+            differences.extend(
+                projection_differences(reviewed_item, fresh_item, f"{path}/{index}")
+            )
+        return differences
+    if reviewed != fresh:
+        return [{"path": path, "reviewed": reviewed, "fresh": fresh}]
+    return []
+
+
 def select_outcome(
     mandatory: Mapping[str, Any],
     native_evidence: Mapping[str, Any],
