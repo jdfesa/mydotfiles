@@ -112,8 +112,8 @@ unpinned.
 ## CI Runtime
 
 CI usa directamente el VM GitHub-hosted fijado `ubuntu-22.04`; no usa un job
-container. `apt-get` instala Bubblewrap, certificados, curl, Git y ShellCheck
-desde Ubuntu antes del sandbox. `actions/setup-python@v6` selecciona el contrato
+container. `apt-get` instala Bubblewrap, certificados, curl y Git desde Ubuntu
+antes del sandbox. `actions/setup-python@v6` selecciona el contrato
 Python `3.11` y `actions/setup-node@v6` fija Node.js `26.7.0`; npm se fija en
 `12.0.2` y OpenSpec en `1.9.0` bajo `$HOME/.local`.
 
@@ -126,6 +126,15 @@ Chezmoi se descarga desde el release oficial `v2.72.0` como
 
 ```text
 ba563f716d5c00a2e91d4aeb199b417c6b219db2896f890fd422fc72610b2d90
+```
+
+ShellCheck también se descarga desde su release oficial `v0.11.0` y se valida
+antes de ejecutar los validators. Ubuntu 22.04 empaqueta una versión anterior
+que rechazó sintaxis ya aceptada por el validator habitual del repositorio; el
+pin elimina esa diferencia de parser sin omitir ni relajar lint:
+
+```text
+8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198
 ```
 
 Los builds Arch/upstream y sus defaults `dump-config` pueden incluir provenance
@@ -160,3 +169,4 @@ bloqueado.
 - Chezmoi `v2.72.0`: https://github.com/twpayne/chezmoi/releases/tag/v2.72.0
 - GitHub-hosted runners: https://docs.github.com/en/actions/reference/runners/github-hosted-runners
 - Ubuntu Bubblewrap: https://packages.ubuntu.com/jammy/bubblewrap
+- ShellCheck `v0.11.0`: https://github.com/koalaman/shellcheck/releases/tag/v0.11.0
