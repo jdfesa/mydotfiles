@@ -41,7 +41,7 @@ exactamente `1.9.0`. Commands, exits, paths, hashes, manifests, modes, métricas
 blockers, native state y outcome continúan siendo sensibles.
 
 Final projection digest:
-`0b468d4b45a52aae27eaae6aca38f26aacff789f35d65502aa87500764f2b967`.
+`a3197735a928b707f78183bc6952293e383d73fc76c4cbd8f23eecd46b184509`.
 
 Focused tests prueban que timestamps, un rebase merge sintético a `main` y otro
 patch Python compatible no alteran la proyección. Un cambio de command, hash,
@@ -69,7 +69,7 @@ proyección; una versión Chezmoi distinta sí.
 | Operator entry commands | 3 | 1 |
 | Measured internal commands | 6 | 10 por fixture |
 | Comparison/automation files | 3 | 10 automation/test files |
-| Raw automation/test LOC | 381 | 2,623 |
+| Raw automation/test LOC | 381 | 2,630 |
 | Main harness LOC | N/A | `pilot.py`: 1,625 |
 | Templates | 0 | 1 |
 | Persistent state | 0 | 1 DB temporal por run |
@@ -121,7 +121,8 @@ bypass seccomp/AppArmor, sysctl, skip ni fallback.
 
 Las dependencias y herramientas fijadas se instalan antes del sandbox. El smoke
 test Bubblewrap estricto ocurre antes del checkout y del harness completo; exige
-`/` read-only, private `/dev`/`proc` y temp privado. Esta arquitectura elimina
+`/` read-only, private `/dev`/`proc` y temp privado. El checkout conserva history
+completa para calcular `reviewedBase` contra `origin/main`. Esta arquitectura elimina
 una capa de namespaces sin debilitar Bubblewrap. Su resultado es evidencia
 `portable-linux` en Ubuntu, no native Arch ni native Windows. Arch se cubre
 separadamente con doctor, profiles y symlinks en la máquina real. El job Windows
