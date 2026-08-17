@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,7 @@ AUTOMATED_CHECKS = {
     "UT-BWRAP-PREFIX": "experiments/chezmoi-pilot/tests/test_pilot.py::test_bubblewrap_uses_private_dev_and_one_host_backed_write_root",
     "UT-PROJECTION-VOLATILE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_timestamps_do_not_change_projection",
     "UT-PROJECTION-PUBLICATION": "experiments/chezmoi-pilot/tests/test_pilot.py::test_publication_git_and_compatible_python_do_not_change_projection",
+    "UT-PROJECTION-CHEZMOI-PROVENANCE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_chezmoi_build_provenance_does_not_change_exact_version_projection",
     "UT-PROJECTION-SENSITIVE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_deterministic_evidence_changes_projection",
     "UT-OUTCOME-REJECT": "experiments/chezmoi-pilot/tests/test_pilot.py::test_outcome_selector_rejects_critical_failure",
     "UT-OUTCOME-CONTINUE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_outcome_selector_continues_without_native_windows",
@@ -125,7 +127,18 @@ def validate_ci_workflow(repo_root: Path) -> dict[str, Any]:
     workflow = (repo_root / ".github/workflows/chezmoi-pilot.yml").read_text(encoding="utf-8")
     required = (
         "paths:",
+        "workflow_dispatch:",
+        "runs-on: ubuntu-22.04",
+        "actions/setup-python@v6",
+        'python-version: "3.11"',
+        "actions/setup-node@v6",
+        'node-version: "26.7.0"',
+        "npm@12.0.2 @fission-ai/openspec@1.9.0",
+        "https://github.com/twpayne/chezmoi/releases/download/v2.72.0/chezmoi-linux-amd64",
+        "ba563f716d5c00a2e91d4aeb199b417c6b219db2896f890fd422fc72610b2d90",
         "bwrap --die-with-parent",
+        "--ro-bind / /",
+        "--proc /proc",
         "--dev /dev",
         "experiments/chezmoi-pilot/scripts/validate",
         "openspec validate evaluate-chezmoi-pilot --strict",
@@ -137,4 +150,39 @@ def validate_ci_workflow(repo_root: Path) -> dict[str, Any]:
     missing = [value for value in required if value not in workflow]
     if missing:
         raise AuditError(f"CI workflow policy is incomplete: {missing}")
-    return {"requiredChecks": len(required), "pathFiltered": True, "nativeWindowsJob": "disabled"}
+    if re.search(r"^\s+container:\s*", workflow, re.MULTILINE):
+        raise AuditError("CI must run Bubblewrap directly on the pinned host, not in a job container")
+    forbidden = (
+        "seccomp=unconfined",
+        "--security-opt",
+        "--privileged",
+        "--cap-add",
+        "apparmor=unconfined",
+        "unprivileged_userns_clone",
+        "max_user_namespaces",
+        "sysctl ",
+        "continue-on-error",
+    )
+    present = [value for value in forbidden if value in workflow]
+    if present:
+        raise AuditError(f"CI contains a forbidden security relaxation: {present}")
+    main_push = re.compile(
+        r"(?m)^  push:\n    branches:\n      - main\n    paths:\n"
+    )
+    if not main_push.search(workflow) or "  pull_request:\n" not in workflow:
+        raise AuditError("CI triggers must use pull_request plus path-filtered push on main")
+    smoke = workflow.index("bwrap --die-with-parent")
+    checkout = workflow.index("actions/checkout@v6")
+    harness = workflow.index("experiments/chezmoi-pilot/scripts/validate")
+    if not smoke < checkout < harness:
+        raise AuditError("strict Bubblewrap smoke must precede checkout and the pilot harness")
+    return {
+        "requiredChecks": len(required),
+        "pathFiltered": True,
+        "pushBranches": ["main"],
+        "runner": "ubuntu-22.04",
+        "evidenceClass": "portable-linux",
+        "jobContainer": False,
+        "nativeArch": False,
+        "nativeWindowsJob": "disabled",
+    }

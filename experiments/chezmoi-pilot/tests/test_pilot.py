@@ -15,6 +15,7 @@ PILOT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PILOT_ROOT / "scripts"))
 
 import pilot  # noqa: E402
+import pilot_audit  # noqa: E402
 import pilot_policy  # noqa: E402
 
 
@@ -212,8 +213,30 @@ class EvidencePolicyTests(unittest.TestCase):
             feature_projection["tools"]["python"],
             pilot_policy.PYTHON_COMPATIBILITY_CONTRACT,
         )
-        self.assertEqual(feature_projection["tools"]["chezmoi"], "chezmoi version 2.72.0")
+        self.assertEqual(
+            feature_projection["tools"]["chezmoi"],
+            pilot_policy.CHEZMOI_EXACT_VERSION,
+        )
         self.assertEqual(feature_projection["tools"]["openspec"], "1.9.0")
+
+    def test_chezmoi_build_provenance_does_not_change_exact_version_projection(self) -> None:
+        arch = self.evidence()
+        arch["tools"]["chezmoi"] = (
+            "chezmoi version v2.72.0, built at 2026-08-03T08:20:49Z"
+        )
+        upstream = copy.deepcopy(arch)
+        upstream["tools"]["chezmoi"] = (
+            "chezmoi version v2.72.0, commit f81cb321789aa3df62871248f5e4d361a59e7cc1, "
+            "built at 2026-08-02T18:45:48Z, built by goreleaser"
+        )
+        self.assertEqual(
+            pilot_policy.evidence_projection(arch),
+            pilot_policy.evidence_projection(upstream),
+        )
+        self.assertEqual(
+            pilot_policy.evidence_projection(upstream)["tools"]["chezmoi"],
+            "2.72.0",
+        )
 
     def test_deterministic_evidence_changes_projection(self) -> None:
         changes = {
@@ -289,6 +312,53 @@ class EvidencePolicyTests(unittest.TestCase):
 
 
 class TraceabilityTests(unittest.TestCase):
+    def assert_ci_rejected(self, workflow: str) -> None:
+        with tempfile.TemporaryDirectory(prefix="pilot-ci-policy-") as temp:
+            repo_root = Path(temp)
+            workflow_path = repo_root / ".github/workflows/chezmoi-pilot.yml"
+            workflow_path.parent.mkdir(parents=True)
+            workflow_path.write_text(workflow, encoding="utf-8")
+            with self.assertRaises(pilot_audit.AuditError):
+                pilot_audit.validate_ci_workflow(repo_root)
+
+    def test_ci_policy_rejects_container_and_security_relaxations(self) -> None:
+        workflow = (pilot.REPO_ROOT / ".github/workflows/chezmoi-pilot.yml").read_text(
+            encoding="utf-8"
+        )
+        variants = {
+            "job-container": workflow.replace(
+                "    runs-on: ubuntu-22.04",
+                "    runs-on: ubuntu-22.04\n    container: archlinux:base",
+                1,
+            ),
+            "seccomp-unconfined": workflow + "\n# seccomp=unconfined\n",
+            "privileged": workflow + "\n# --privileged\n",
+            "cap-add": workflow + "\n# --cap-add SYS_ADMIN\n",
+            "apparmor-bypass": workflow + "\n# apparmor=unconfined\n",
+            "sysctl-weakening": workflow + "\n# sysctl kernel.unprivileged_userns_clone=1\n",
+            "silent-skip": workflow + "\n# continue-on-error: true\n",
+        }
+        for name, variant in variants.items():
+            with self.subTest(name=name):
+                self.assert_ci_rejected(variant)
+
+    def test_ci_policy_requires_smoke_before_checkout_and_harness(self) -> None:
+        workflow = (pilot.REPO_ROOT / ".github/workflows/chezmoi-pilot.yml").read_text(
+            encoding="utf-8"
+        )
+        reordered = workflow.replace(
+            "bwrap --die-with-parent", "__PILOT_SMOKE__", 1
+        ).replace(
+            "experiments/chezmoi-pilot/scripts/validate",
+            "bwrap --die-with-parent",
+            1,
+        ).replace(
+            "__PILOT_SMOKE__",
+            "experiments/chezmoi-pilot/scripts/validate",
+            1,
+        )
+        self.assert_ci_rejected(reordered)
+
     def test_traceability_rejects_stale_check_id(self) -> None:
         declaration = pilot.load_json(PILOT_ROOT / "traceability.json")
         declaration = copy.deepcopy(declaration)

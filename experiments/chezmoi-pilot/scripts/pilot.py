@@ -27,6 +27,7 @@ from pilot_audit import (
 )
 from pilot_docs import DocsError, generate_documents as render_documents
 from pilot_policy import (
+    CHEZMOI_EXACT_VERSION,
     POSIX_ENV_ALLOWLIST,
     WINDOWS_ENV_ALLOWLIST,
     assert_outcome_invariants,
@@ -34,6 +35,7 @@ from pilot_policy import (
     evidence_projection_digest,
     measure_files,
     minimal_environment,
+    project_chezmoi_version,
     select_outcome,
     stable_digest,
 )
@@ -46,7 +48,7 @@ CHANGE_ROOT = REPO_ROOT / "openspec/changes/evaluate-chezmoi-pilot"
 MARKER_NAME = ".chezmoi-pilot-root"
 PLATFORMS = ("linux", "macos", "windows")
 EXPECTED_OPEN_SPEC = "1.9.0"
-EXPECTED_CHEZMOI = "2.72.0"
+EXPECTED_CHEZMOI = CHEZMOI_EXACT_VERSION
 WINDOWS_TERMINAL_VERSION = "1.24.11321.0"
 
 class PilotError(RuntimeError):
@@ -1532,7 +1534,7 @@ def compare_evidence_projection(fresh: dict[str, Any], reviewed: dict[str, Any])
 
 def expected_versions() -> dict[str, bool]:
     return {
-        "chezmoi": f"v{EXPECTED_CHEZMOI}" in chezmoi_version(),
+        "chezmoi": project_chezmoi_version(chezmoi_version()) == EXPECTED_CHEZMOI,
         "openspec": openspec_version() == EXPECTED_OPEN_SPEC,
         "python": sys.version_info >= (3, 11),
     }

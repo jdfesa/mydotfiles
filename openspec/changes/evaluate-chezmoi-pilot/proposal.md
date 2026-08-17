@@ -57,6 +57,8 @@ versionados con idempotencia, drift, rollback y documentación.
   implementados únicamente para esta evaluación aprobada.
 - Simulación con destino temporal en Arch para datos Linux, macOS y Windows;
   una recomendación de adoption exige evidencia Windows nativa separada.
+- CI Linux portable sobre `ubuntu-22.04` directo con Bubblewrap estricto; no se
+  presenta como evidencia native Arch, que permanece en checks de máquina real.
 - Comparación read-only con manifests de perfiles y sources canónicos actuales.
 
 ### Non-goals
