@@ -359,6 +359,12 @@ class TraceabilityTests(unittest.TestCase):
         )
         self.assert_ci_rejected(reordered)
 
+    def test_ci_policy_requires_full_reviewed_base_history(self) -> None:
+        workflow = (pilot.REPO_ROOT / ".github/workflows/chezmoi-pilot.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assert_ci_rejected(workflow.replace("          fetch-depth: 0\n", "", 1))
+
     def test_traceability_rejects_stale_check_id(self) -> None:
         declaration = pilot.load_json(PILOT_ROOT / "traceability.json")
         declaration = copy.deepcopy(declaration)

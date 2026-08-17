@@ -168,7 +168,9 @@ primero el smoke test Bubblewrap estricto. MUST fallar si el host no permite
 private `/dev`/`proc` más un único root host-backed escribible. MUST prohibir
 privileged mode, capabilities adicionales, bypass AppArmor/seccomp, cambios de
 sysctl, skip silencioso y fallback fuera de Bubblewrap. El job Windows disabled
-no cuenta como gate; native evidence falso en la evidencia executable sí.
+no cuenta como gate; native evidence falso en la evidencia executable sí. El
+checkout MUST incluir history completa para calcular `reviewedBase` contra
+`origin/main`, no depender de un PR ref shallow.
 
 #### Scenario: Linux CI environment lacks safe Bubblewrap
 - **WHEN** el host `ubuntu-22.04` no puede crear el sandbox requerido

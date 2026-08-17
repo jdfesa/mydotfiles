@@ -136,6 +136,7 @@ def validate_ci_workflow(repo_root: Path) -> dict[str, Any]:
         "npm@12.0.2 @fission-ai/openspec@1.9.0",
         "https://github.com/twpayne/chezmoi/releases/download/v2.72.0/chezmoi-linux-amd64",
         "ba563f716d5c00a2e91d4aeb199b417c6b219db2896f890fd422fc72610b2d90",
+        "fetch-depth: 0",
         "bwrap --die-with-parent",
         "--ro-bind / /",
         "--proc /proc",

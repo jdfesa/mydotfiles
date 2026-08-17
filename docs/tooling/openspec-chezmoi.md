@@ -117,6 +117,10 @@ desde Ubuntu antes del sandbox. `actions/setup-python@v6` selecciona el contrato
 Python `3.11` y `actions/setup-node@v6` fija Node.js `26.7.0`; npm se fija en
 `12.0.2` y OpenSpec en `1.9.0` bajo `$HOME/.local`.
 
+`actions/checkout@v6` usa `fetch-depth: 0`; la evidencia necesita
+`origin/main` completo para calcular el reviewed base incluso cuando GitHub
+ejecuta el PR mediante un merge ref temporal.
+
 Chezmoi se descarga desde el release oficial `v2.72.0` como
 `chezmoi-linux-amd64` y se verifica antes de instalar con:
 

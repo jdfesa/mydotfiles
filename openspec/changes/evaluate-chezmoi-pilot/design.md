@@ -284,7 +284,9 @@ El job instala dependencias Ubuntu y las versiones exactas Chezmoi `2.72.0`,
 OpenSpec `1.9.0`, Node.js `26.7.0` y npm `12.0.2` antes del sandbox. El binario
 Chezmoi se verifica contra un SHA-256 fijado. Luego ejecuta primero un smoke test
 con `/` read-only, private `/dev` y `/proc`; solo después hace checkout y corre
-el harness estricto. Las descargas ocurren antes del sandbox y dentro del piloto
+el harness estricto. El checkout usa history completa para que la provenance
+Git calcule `reviewedBase` contra `origin/main` también bajo el PR merge ref. Las
+descargas ocurren antes del sandbox y dentro del piloto
 siguen prohibidos externals, hooks y refresh. La evidencia común no promete un
 network namespace que el host Arch auditado no soporta.
 
