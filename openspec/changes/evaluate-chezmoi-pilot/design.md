@@ -211,7 +211,9 @@ auditoría humana, pero la comparación reproducible usa una única
 - el patch Python exacto, proyectado al contrato compatible `>=3.11` que también
   aplica `doctor`;
 - el banner de build/distribuidor Chezmoi, proyectado a la versión semántica
-  exacta `2.72.0`.
+  exacta `2.72.0`;
+- hash, line count y preview raw de `dump-config`, reemplazados en la proyección
+  por el hash canónico de `configPaths` más `pilotData` ya validados.
 
 La evidencia raw conserva el banner Chezmoi completo. La proyección conserva
 Chezmoi exactamente en `2.72.0`, OpenSpec exactamente en `1.9.0`, commands,
@@ -222,6 +224,10 @@ y compara toda la proyección.
 El `previewDigest` usa la misma versión semántica Chezmoi exacta: permanece
 estable entre el package Arch y el binario upstream, pero cambia ante otra
 versión.
+El command record conserva `rawStdoutSha256`, `rawStdoutLines` y
+`rawStdoutPreview` para auditar defaults de distribución. Sus campos
+`stdoutSha256`, `stdoutLines` y `stdoutPreview` representan el contrato efectivo
+canónico; por eso un cambio real de path/data sigue alterando la proyección.
 `generate-docs --check` hace la misma comparación antes de verificar contenido.
 Los input digests de documentos son exactamente el digest de esa proyección.
 

@@ -20,6 +20,7 @@ AUTOMATED_CHECKS = {
     "UT-PROJECTION-VOLATILE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_timestamps_do_not_change_projection",
     "UT-PROJECTION-PUBLICATION": "experiments/chezmoi-pilot/tests/test_pilot.py::test_publication_git_and_compatible_python_do_not_change_projection",
     "UT-PROJECTION-CHEZMOI-PROVENANCE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_chezmoi_build_provenance_does_not_change_exact_version_projection",
+    "UT-PROJECTION-DUMP-CONFIG-PROVENANCE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_raw_dump_config_provenance_does_not_change_effective_projection",
     "UT-PROJECTION-SENSITIVE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_deterministic_evidence_changes_projection",
     "UT-OUTCOME-REJECT": "experiments/chezmoi-pilot/tests/test_pilot.py::test_outcome_selector_rejects_critical_failure",
     "UT-OUTCOME-CONTINUE": "experiments/chezmoi-pilot/tests/test_pilot.py::test_outcome_selector_continues_without_native_windows",

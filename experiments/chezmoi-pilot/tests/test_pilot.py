@@ -194,6 +194,9 @@ class EvidencePolicyTests(unittest.TestCase):
                         "startedAt": "start-a",
                         "endedAt": "end-a",
                         "stdoutSha256": "hash-a",
+                        "rawStdoutSha256": "raw-a",
+                        "rawStdoutLines": 246,
+                        "rawStdoutPreview": ["raw-a"],
                     }],
                     "manifest": [{"path": ".config/file", "sha256": "manifest-a", "mode": "0644"}],
                 }
@@ -211,6 +214,20 @@ class EvidencePolicyTests(unittest.TestCase):
         self.assertEqual(
             pilot_policy.evidence_projection(first),
             pilot_policy.evidence_projection(second),
+        )
+
+    def test_raw_dump_config_provenance_does_not_change_effective_projection(self) -> None:
+        arch = self.evidence()
+        ubuntu = copy.deepcopy(arch)
+        command = ubuntu["results"]["linux"]["commands"][0]
+        command.update(
+            rawStdoutSha256="raw-ubuntu",
+            rawStdoutLines=249,
+            rawStdoutPreview=["raw-ubuntu"],
+        )
+        self.assertEqual(
+            pilot_policy.evidence_projection(arch),
+            pilot_policy.evidence_projection(ubuntu),
         )
 
     def test_publication_git_and_compatible_python_do_not_change_projection(self) -> None:

@@ -42,9 +42,13 @@ contrato compatible `>=3.11`. Conserva el banner Chezmoi completo en raw, pero
 proyecta los builds Arch/upstream a la versión exacta `2.72.0`; OpenSpec permanece
 exactamente `1.9.0`. Commands, exits, paths, hashes, manifests, modes, métricas,
 blockers, native state y outcome continúan siendo sensibles.
+Para `dump-config`, raw evidence conserva hash, line count y preview de los
+defaults emitidos por cada host; la proyección usa el hash canónico de los paths
+y datos efectivos que el harness valida. Así Ubuntu/Arch pueden diferir en
+defaults irrelevantes sin ocultar un cambio behavioral.
 
 Final projection digest:
-`a2bce2c222d0d30c09b1f0791c9db6687dbb33c07a426af50083736be3a11b05`.
+`ab06a436db17767b13dc5b20df284be7a1b624a5fba7e25d39bbe00ec24e7624`.
 
 Focused tests prueban que timestamps, un rebase merge sintético a `main` y otro
 patch Python compatible no alteran la proyección. Un cambio de command, hash,
@@ -72,7 +76,7 @@ proyección ni `previewDigest`; una versión Chezmoi distinta sí.
 | Operator entry commands | 3 | 1 |
 | Measured internal commands | 6 | 10 por fixture |
 | Comparison/automation files | 3 | 10 automation/test files |
-| Raw automation/test LOC | 381 | 2,698 |
+| Raw automation/test LOC | 381 | 2,745 |
 | Main harness LOC | N/A | `pilot.py`: 1,625 |
 | Templates | 0 | 1 |
 | Persistent state | 0 | 1 DB temporal por run |
@@ -99,9 +103,9 @@ revisión considerablemente mayor que los scripts productivos comparados.
 
 ## Traceability
 
-Los 93 escenarios OpenSpec tienen 93 entries declaradas:
+Los 94 escenarios OpenSpec tienen 94 entries declaradas:
 
-- 52 `automated-check` con ID y locator concretos;
+- 53 `automated-check` con ID y locator concretos;
 - 28 `generated-evidence` con JSON pointer;
 - 3 `native-blocked`;
 - 10 `human-review-gate`.

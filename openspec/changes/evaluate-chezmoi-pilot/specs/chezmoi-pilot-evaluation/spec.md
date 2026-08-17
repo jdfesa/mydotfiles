@@ -98,6 +98,9 @@ del distribuidor, mientras la proyección MUST exigir la versión semántica exa
 `2.72.0`; OpenSpec MUST permanecer exactamente `1.9.0`. La proyección MUST
 conservar commands, exits, paths normalizados, hashes, manifests, modes,
 métricas, blockers, native evidence y outcome.
+El `dump-config` raw MAY conservar hash, line count y preview del host como
+provenance informativa, pero la proyección MUST usar un hash canónico de los
+paths y datos efectivos validados.
 
 #### Scenario: Only timestamps change
 - **WHEN** cambian `recordedAt`, `startedAt` o `endedAt`
@@ -118,6 +121,10 @@ métricas, blockers, native evidence y outcome.
 #### Scenario: Chezmoi distributor build banner changes preview token
 - **WHEN** cambia solo el banner de build para Chezmoi semántico `2.72.0`
 - **THEN** `previewDigest` permanece estable, pero cambia ante otra versión semántica
+
+#### Scenario: Dump-config host defaults differ
+- **WHEN** Arch y Ubuntu emiten defaults raw distintos fuera del contrato efectivo validado
+- **THEN** raw evidence conserva esa provenance y la proyección compara el mismo hash canónico de paths/datos
 
 #### Scenario: Deterministic behavior changes
 - **WHEN** cambia un command, hash, manifest, mode, metric, blocker o native-evidence field

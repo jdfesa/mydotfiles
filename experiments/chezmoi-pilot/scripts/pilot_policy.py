@@ -60,7 +60,14 @@ def _project(value: Any) -> Any:
         return value
     projected = {}
     for key, item in value.items():
-        if key in {"recordedAt", "startedAt", "endedAt"}:
+        if key in {
+            "recordedAt",
+            "startedAt",
+            "endedAt",
+            "rawStdoutSha256",
+            "rawStdoutLines",
+            "rawStdoutPreview",
+        }:
             continue
         projected[key] = _project(item)
     return projected
@@ -70,8 +77,10 @@ def evidence_projection(evidence: Mapping[str, Any]) -> dict[str, Any]:
     """Return the complete deterministic review projection.
 
     Wall-clock timestamps and all dynamic Git publication provenance are
-    removed. The exact raw Python runtime is projected to the declared >=3.11
-    compatibility contract. Chezmoi distributor build banners are projected to
+    removed. Raw dump-config shape/hash provenance is excluded after its
+    validated effective contract is recorded. The exact raw Python runtime is
+    projected to the declared >=3.11 compatibility contract. Chezmoi
+    distributor build banners are projected to
     the exact 2.72.0 semantic version, while OpenSpec remains exact. Commands,
     paths, hashes, manifests, modes, metrics, blockers, native evidence, and
     outcomes remain visible.

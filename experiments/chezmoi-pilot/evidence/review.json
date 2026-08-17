@@ -10,17 +10,17 @@
         "byFile": {
           "experiments/chezmoi-pilot/scripts/doctor": 5,
           "experiments/chezmoi-pilot/scripts/generate-docs": 5,
-          "experiments/chezmoi-pilot/scripts/pilot.py": 1630,
-          "experiments/chezmoi-pilot/scripts/pilot_audit.py": 190,
+          "experiments/chezmoi-pilot/scripts/pilot.py": 1650,
+          "experiments/chezmoi-pilot/scripts/pilot_audit.py": 191,
           "experiments/chezmoi-pilot/scripts/pilot_docs.py": 206,
-          "experiments/chezmoi-pilot/scripts/pilot_policy.py": 202,
+          "experiments/chezmoi-pilot/scripts/pilot_policy.py": 211,
           "experiments/chezmoi-pilot/scripts/run": 5,
           "experiments/chezmoi-pilot/scripts/run-windows.ps1": 28,
           "experiments/chezmoi-pilot/scripts/validate": 7,
-          "experiments/chezmoi-pilot/tests/test_pilot.py": 420
+          "experiments/chezmoi-pilot/tests/test_pilot.py": 437
         },
         "files": 10,
-        "rawLines": 2698
+        "rawLines": 2745
       },
       "costs": [
         "Encoding propio del source state.",
@@ -44,19 +44,19 @@
           "experiments/chezmoi-pilot/mappings.json": 50,
           "experiments/chezmoi-pilot/scripts/doctor": 5,
           "experiments/chezmoi-pilot/scripts/generate-docs": 5,
-          "experiments/chezmoi-pilot/scripts/pilot.py": 1630,
-          "experiments/chezmoi-pilot/scripts/pilot_audit.py": 190,
+          "experiments/chezmoi-pilot/scripts/pilot.py": 1650,
+          "experiments/chezmoi-pilot/scripts/pilot_audit.py": 191,
           "experiments/chezmoi-pilot/scripts/pilot_docs.py": 206,
-          "experiments/chezmoi-pilot/scripts/pilot_policy.py": 202,
+          "experiments/chezmoi-pilot/scripts/pilot_policy.py": 211,
           "experiments/chezmoi-pilot/scripts/run": 5,
           "experiments/chezmoi-pilot/scripts/run-windows.ps1": 28,
           "experiments/chezmoi-pilot/scripts/validate": 7,
           "experiments/chezmoi-pilot/semantics.json": 286,
-          "experiments/chezmoi-pilot/tests/test_pilot.py": 420,
-          "experiments/chezmoi-pilot/traceability.json": 749
+          "experiments/chezmoi-pilot/tests/test_pilot.py": 437,
+          "experiments/chezmoi-pilot/traceability.json": 757
         },
         "files": 20,
-        "rawLines": 3866
+        "rawLines": 3921
       },
       "internalCommandsPerFixture": {
         "linux": 10,
@@ -430,7 +430,7 @@
   "git": {
     "branch": "feature/openspec-chezmoi-pilot",
     "dirty": true,
-    "headRevision": "3d1f3d4f84698498dd12d1cdacc61919dc033256",
+    "headRevision": "67db4c1b3cd4dea00df9d47ebd35bcd3dfe16907",
     "reviewedBase": "f3a9b108009766b033773bc76a84e8473277b275"
   },
   "host": {
@@ -454,7 +454,7 @@
     "windows": false
   },
   "outcome": "keep-and-continue-evaluation",
-  "recordedAt": "2026-08-17T03:31:43.654832+00:00",
+  "recordedAt": "2026-08-17T03:36:12.863521+00:00",
   "repositoryValidation": {
     "canonicalMappings": 22,
     "ci": {
@@ -515,13 +515,13 @@
     },
     "traceability": {
       "coverageKinds": {
-        "automated-check": 52,
+        "automated-check": 53,
         "generated-evidence": 28,
         "human-review-gate": 10,
         "native-blocked": 3
       },
-      "entries": 93,
-      "scenarios": 93
+      "entries": 94,
+      "scenarios": 94
     },
     "windows": {
       "lineEndings": "LF",
@@ -743,15 +743,11 @@
               "dump-config",
               "--format=json"
             ],
-            "endedAt": "2026-08-17T03:31:38.063200+00:00",
+            "endedAt": "2026-08-17T03:36:07.298174+00:00",
             "exit": 0,
             "label": "dump-config",
-            "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.024590+00:00",
-            "stderrPreview": [],
-            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "stdoutLines": 246,
-            "stdoutPreview": [
+            "rawStdoutLines": 246,
+            "rawStdoutPreview": [
               "{",
               "  \"cacheDir\": \"<RUN>/cache\",",
               "  \"color\": \"auto\",",
@@ -765,7 +761,27 @@
               "      \"host\": \"pilot-linux\",",
               "      \"platform\": \"linux\""
             ],
-            "stdoutSha256": "43f1f8286b19cc85dc3267167172bf05160cccf4971f2171a5bed42a75f50239"
+            "rawStdoutSha256": "43f1f8286b19cc85dc3267167172bf05160cccf4971f2171a5bed42a75f50239",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T03:36:07.260148+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 18,
+            "stdoutPreview": [
+              "{",
+              "  \"configPaths\": {",
+              "    \"cacheDir\": \"<RUN>/cache\",",
+              "    \"destDir\": \"<RUN>/destination\",",
+              "    \"persistentState\": \"<RUN>/state/chezmoi.boltdb\",",
+              "    \"scriptTempDir\": \"<RUN>/tmp\",",
+              "    \"sourceDir\": \"<RUN>/source\"",
+              "  },",
+              "  \"pilotData\": {",
+              "    \"git\": {",
+              "      \"credentialHelper\": \"cache\",",
+              "      \"email\": \"pilot@example.invalid\","
+            ],
+            "stdoutSha256": "b4864e975a2c051b13cebeca89b0591f75dcf4750a8e062ef5589443d1561080"
           },
           {
             "command": [
@@ -792,11 +808,11 @@
               "--include=files",
               "--path-style=relative"
             ],
-            "endedAt": "2026-08-17T03:31:38.135068+00:00",
+            "endedAt": "2026-08-17T03:36:07.370134+00:00",
             "exit": 0,
             "label": "managed",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.096885+00:00",
+            "startedAt": "2026-08-17T03:36:07.331410+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 24,
@@ -839,11 +855,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:38.210543+00:00",
+            "endedAt": "2026-08-17T03:36:07.449163+00:00",
             "exit": 0,
             "label": "status-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.171754+00:00",
+            "startedAt": "2026-08-17T03:36:07.406877+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 30,
@@ -886,11 +902,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:38.287197+00:00",
+            "endedAt": "2026-08-17T03:36:07.525512+00:00",
             "exit": 0,
             "label": "diff-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.243957+00:00",
+            "startedAt": "2026-08-17T03:36:07.482128+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 2128,
@@ -935,11 +951,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:38.364134+00:00",
+            "endedAt": "2026-08-17T03:36:07.602287+00:00",
             "exit": 0,
             "label": "dry-run-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.321862+00:00",
+            "startedAt": "2026-08-17T03:36:07.559139+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 2128,
@@ -982,11 +998,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:38.513114+00:00",
+            "endedAt": "2026-08-17T03:36:07.750625+00:00",
             "exit": 0,
             "label": "apply",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.470660+00:00",
+            "startedAt": "2026-08-17T03:36:07.708225+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -1016,11 +1032,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:38.591826+00:00",
+            "endedAt": "2026-08-17T03:36:07.826728+00:00",
             "exit": 0,
             "label": "apply-second",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.549066+00:00",
+            "startedAt": "2026-08-17T03:36:07.785834+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -1052,11 +1068,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:38.667132+00:00",
+            "endedAt": "2026-08-17T03:36:07.899681+00:00",
             "exit": 0,
             "label": "dry-run-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.625738+00:00",
+            "startedAt": "2026-08-17T03:36:07.859983+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -1086,11 +1102,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:38.740265+00:00",
+            "endedAt": "2026-08-17T03:36:07.973401+00:00",
             "exit": 0,
             "label": "diff-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.700873+00:00",
+            "startedAt": "2026-08-17T03:36:07.932783+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -1120,11 +1136,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:38.814697+00:00",
+            "endedAt": "2026-08-17T03:36:08.048087+00:00",
             "exit": 0,
             "label": "status-drift",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.773958+00:00",
+            "startedAt": "2026-08-17T03:36:08.006921+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 1,
@@ -1142,6 +1158,15 @@
             "persistentState": "<RUN>/state/chezmoi.boltdb",
             "scriptTempDir": "<RUN>/tmp",
             "sourceDir": "<RUN>/source"
+          },
+          "pilotData": {
+            "git": {
+              "credentialHelper": "cache",
+              "email": "pilot@example.invalid",
+              "name": "Pilot User"
+            },
+            "host": "pilot-linux",
+            "platform": "linux"
           }
         },
         "ownership": {
@@ -1426,15 +1451,11 @@
               "dump-config",
               "--format=json"
             ],
-            "endedAt": "2026-08-17T03:31:38.937454+00:00",
+            "endedAt": "2026-08-17T03:36:08.170251+00:00",
             "exit": 0,
             "label": "dump-config",
-            "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.899469+00:00",
-            "stderrPreview": [],
-            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "stdoutLines": 246,
-            "stdoutPreview": [
+            "rawStdoutLines": 246,
+            "rawStdoutPreview": [
               "{",
               "  \"cacheDir\": \"<RUN>/cache\",",
               "  \"color\": \"auto\",",
@@ -1448,7 +1469,27 @@
               "      \"host\": \"pilot-linux\",",
               "      \"platform\": \"linux\""
             ],
-            "stdoutSha256": "43f1f8286b19cc85dc3267167172bf05160cccf4971f2171a5bed42a75f50239"
+            "rawStdoutSha256": "43f1f8286b19cc85dc3267167172bf05160cccf4971f2171a5bed42a75f50239",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T03:36:08.132098+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 18,
+            "stdoutPreview": [
+              "{",
+              "  \"configPaths\": {",
+              "    \"cacheDir\": \"<RUN>/cache\",",
+              "    \"destDir\": \"<RUN>/destination\",",
+              "    \"persistentState\": \"<RUN>/state/chezmoi.boltdb\",",
+              "    \"scriptTempDir\": \"<RUN>/tmp\",",
+              "    \"sourceDir\": \"<RUN>/source\"",
+              "  },",
+              "  \"pilotData\": {",
+              "    \"git\": {",
+              "      \"credentialHelper\": \"cache\",",
+              "      \"email\": \"pilot@example.invalid\","
+            ],
+            "stdoutSha256": "b4864e975a2c051b13cebeca89b0591f75dcf4750a8e062ef5589443d1561080"
           },
           {
             "command": [
@@ -1475,11 +1516,11 @@
               "--include=files",
               "--path-style=relative"
             ],
-            "endedAt": "2026-08-17T03:31:39.010433+00:00",
+            "endedAt": "2026-08-17T03:36:08.242157+00:00",
             "exit": 0,
             "label": "managed",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:38.971823+00:00",
+            "startedAt": "2026-08-17T03:36:08.203909+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 24,
@@ -1522,11 +1563,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:39.087946+00:00",
+            "endedAt": "2026-08-17T03:36:08.321982+00:00",
             "exit": 0,
             "label": "status-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.047443+00:00",
+            "startedAt": "2026-08-17T03:36:08.280959+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 30,
@@ -1569,11 +1610,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:39.164156+00:00",
+            "endedAt": "2026-08-17T03:36:08.399138+00:00",
             "exit": 0,
             "label": "diff-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.121230+00:00",
+            "startedAt": "2026-08-17T03:36:08.355290+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 2128,
@@ -1618,11 +1659,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:39.243648+00:00",
+            "endedAt": "2026-08-17T03:36:08.476162+00:00",
             "exit": 0,
             "label": "dry-run-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.198743+00:00",
+            "startedAt": "2026-08-17T03:36:08.433252+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 2128,
@@ -1665,11 +1706,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:39.394844+00:00",
+            "endedAt": "2026-08-17T03:36:08.626526+00:00",
             "exit": 0,
             "label": "apply",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.349391+00:00",
+            "startedAt": "2026-08-17T03:36:08.582474+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -1699,11 +1740,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:39.474915+00:00",
+            "endedAt": "2026-08-17T03:36:08.703159+00:00",
             "exit": 0,
             "label": "apply-second",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.432754+00:00",
+            "startedAt": "2026-08-17T03:36:08.661737+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -1735,11 +1776,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:39.549205+00:00",
+            "endedAt": "2026-08-17T03:36:08.776691+00:00",
             "exit": 0,
             "label": "dry-run-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.508238+00:00",
+            "startedAt": "2026-08-17T03:36:08.736102+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -1769,11 +1810,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:39.623034+00:00",
+            "endedAt": "2026-08-17T03:36:08.851807+00:00",
             "exit": 0,
             "label": "diff-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.582221+00:00",
+            "startedAt": "2026-08-17T03:36:08.810213+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -1803,11 +1844,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:39.696298+00:00",
+            "endedAt": "2026-08-17T03:36:08.925709+00:00",
             "exit": 0,
             "label": "status-drift",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.656137+00:00",
+            "startedAt": "2026-08-17T03:36:08.885189+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 1,
@@ -1825,6 +1866,15 @@
             "persistentState": "<RUN>/state/chezmoi.boltdb",
             "scriptTempDir": "<RUN>/tmp",
             "sourceDir": "<RUN>/source"
+          },
+          "pilotData": {
+            "git": {
+              "credentialHelper": "cache",
+              "email": "pilot@example.invalid",
+              "name": "Pilot User"
+            },
+            "host": "pilot-linux",
+            "platform": "linux"
           }
         },
         "ownership": {
@@ -2112,15 +2162,11 @@
               "dump-config",
               "--format=json"
             ],
-            "endedAt": "2026-08-17T03:31:39.819730+00:00",
+            "endedAt": "2026-08-17T03:36:09.048669+00:00",
             "exit": 0,
             "label": "dump-config",
-            "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.780413+00:00",
-            "stderrPreview": [],
-            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "stdoutLines": 246,
-            "stdoutPreview": [
+            "rawStdoutLines": 246,
+            "rawStdoutPreview": [
               "{",
               "  \"cacheDir\": \"<RUN>/cache\",",
               "  \"color\": \"auto\",",
@@ -2134,7 +2180,27 @@
               "      \"host\": \"pilot-macos\",",
               "      \"platform\": \"macos\""
             ],
-            "stdoutSha256": "969ad8ebabcec29e42c3d1273ac0d76c365e8d04ee339ca903f2e850b2e8de01"
+            "rawStdoutSha256": "969ad8ebabcec29e42c3d1273ac0d76c365e8d04ee339ca903f2e850b2e8de01",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T03:36:09.010153+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 18,
+            "stdoutPreview": [
+              "{",
+              "  \"configPaths\": {",
+              "    \"cacheDir\": \"<RUN>/cache\",",
+              "    \"destDir\": \"<RUN>/destination\",",
+              "    \"persistentState\": \"<RUN>/state/chezmoi.boltdb\",",
+              "    \"scriptTempDir\": \"<RUN>/tmp\",",
+              "    \"sourceDir\": \"<RUN>/source\"",
+              "  },",
+              "  \"pilotData\": {",
+              "    \"git\": {",
+              "      \"credentialHelper\": \"osxkeychain\",",
+              "      \"email\": \"pilot@example.invalid\","
+            ],
+            "stdoutSha256": "79c3e180003b56848145ead5a715fa916ce63f4f8bfa9212d2216a1f9ef935e4"
           },
           {
             "command": [
@@ -2161,11 +2227,11 @@
               "--include=files",
               "--path-style=relative"
             ],
-            "endedAt": "2026-08-17T03:31:39.892782+00:00",
+            "endedAt": "2026-08-17T03:36:09.120502+00:00",
             "exit": 0,
             "label": "managed",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.853989+00:00",
+            "startedAt": "2026-08-17T03:36:09.082338+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 24,
@@ -2208,11 +2274,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:39.969519+00:00",
+            "endedAt": "2026-08-17T03:36:09.197088+00:00",
             "exit": 0,
             "label": "status-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:39.929543+00:00",
+            "startedAt": "2026-08-17T03:36:09.157109+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 30,
@@ -2255,11 +2321,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:40.046866+00:00",
+            "endedAt": "2026-08-17T03:36:09.272524+00:00",
             "exit": 0,
             "label": "diff-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.002912+00:00",
+            "startedAt": "2026-08-17T03:36:09.230105+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 2125,
@@ -2304,11 +2370,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:40.124250+00:00",
+            "endedAt": "2026-08-17T03:36:09.350837+00:00",
             "exit": 0,
             "label": "dry-run-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.080950+00:00",
+            "startedAt": "2026-08-17T03:36:09.307902+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 2125,
@@ -2351,11 +2417,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:40.272055+00:00",
+            "endedAt": "2026-08-17T03:36:09.499101+00:00",
             "exit": 0,
             "label": "apply",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.230130+00:00",
+            "startedAt": "2026-08-17T03:36:09.457524+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -2385,11 +2451,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:40.347541+00:00",
+            "endedAt": "2026-08-17T03:36:09.574777+00:00",
             "exit": 0,
             "label": "apply-second",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.307504+00:00",
+            "startedAt": "2026-08-17T03:36:09.534095+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -2421,11 +2487,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:40.421671+00:00",
+            "endedAt": "2026-08-17T03:36:09.650074+00:00",
             "exit": 0,
             "label": "dry-run-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.380972+00:00",
+            "startedAt": "2026-08-17T03:36:09.607829+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -2455,11 +2521,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:40.496980+00:00",
+            "endedAt": "2026-08-17T03:36:09.724456+00:00",
             "exit": 0,
             "label": "diff-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.455315+00:00",
+            "startedAt": "2026-08-17T03:36:09.683664+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -2489,11 +2555,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:40.572799+00:00",
+            "endedAt": "2026-08-17T03:36:09.797980+00:00",
             "exit": 0,
             "label": "status-drift",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.531741+00:00",
+            "startedAt": "2026-08-17T03:36:09.757168+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 1,
@@ -2511,6 +2577,15 @@
             "persistentState": "<RUN>/state/chezmoi.boltdb",
             "scriptTempDir": "<RUN>/tmp",
             "sourceDir": "<RUN>/source"
+          },
+          "pilotData": {
+            "git": {
+              "credentialHelper": "osxkeychain",
+              "email": "pilot@example.invalid",
+              "name": "Pilot User"
+            },
+            "host": "pilot-macos",
+            "platform": "macos"
           }
         },
         "ownership": {
@@ -2795,15 +2870,11 @@
               "dump-config",
               "--format=json"
             ],
-            "endedAt": "2026-08-17T03:31:40.697059+00:00",
+            "endedAt": "2026-08-17T03:36:09.919538+00:00",
             "exit": 0,
             "label": "dump-config",
-            "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.659015+00:00",
-            "stderrPreview": [],
-            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "stdoutLines": 246,
-            "stdoutPreview": [
+            "rawStdoutLines": 246,
+            "rawStdoutPreview": [
               "{",
               "  \"cacheDir\": \"<RUN>/cache\",",
               "  \"color\": \"auto\",",
@@ -2817,7 +2888,27 @@
               "      \"host\": \"pilot-macos\",",
               "      \"platform\": \"macos\""
             ],
-            "stdoutSha256": "969ad8ebabcec29e42c3d1273ac0d76c365e8d04ee339ca903f2e850b2e8de01"
+            "rawStdoutSha256": "969ad8ebabcec29e42c3d1273ac0d76c365e8d04ee339ca903f2e850b2e8de01",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T03:36:09.881943+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 18,
+            "stdoutPreview": [
+              "{",
+              "  \"configPaths\": {",
+              "    \"cacheDir\": \"<RUN>/cache\",",
+              "    \"destDir\": \"<RUN>/destination\",",
+              "    \"persistentState\": \"<RUN>/state/chezmoi.boltdb\",",
+              "    \"scriptTempDir\": \"<RUN>/tmp\",",
+              "    \"sourceDir\": \"<RUN>/source\"",
+              "  },",
+              "  \"pilotData\": {",
+              "    \"git\": {",
+              "      \"credentialHelper\": \"osxkeychain\",",
+              "      \"email\": \"pilot@example.invalid\","
+            ],
+            "stdoutSha256": "79c3e180003b56848145ead5a715fa916ce63f4f8bfa9212d2216a1f9ef935e4"
           },
           {
             "command": [
@@ -2844,11 +2935,11 @@
               "--include=files",
               "--path-style=relative"
             ],
-            "endedAt": "2026-08-17T03:31:40.770530+00:00",
+            "endedAt": "2026-08-17T03:36:09.991089+00:00",
             "exit": 0,
             "label": "managed",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.731590+00:00",
+            "startedAt": "2026-08-17T03:36:09.953006+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 24,
@@ -2891,11 +2982,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:40.849214+00:00",
+            "endedAt": "2026-08-17T03:36:10.069615+00:00",
             "exit": 0,
             "label": "status-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.808383+00:00",
+            "startedAt": "2026-08-17T03:36:10.028860+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 30,
@@ -2938,11 +3029,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:40.925690+00:00",
+            "endedAt": "2026-08-17T03:36:10.146328+00:00",
             "exit": 0,
             "label": "diff-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.883163+00:00",
+            "startedAt": "2026-08-17T03:36:10.103468+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 2125,
@@ -2987,11 +3078,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:41.003630+00:00",
+            "endedAt": "2026-08-17T03:36:10.223942+00:00",
             "exit": 0,
             "label": "dry-run-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:40.960484+00:00",
+            "startedAt": "2026-08-17T03:36:10.181306+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 2125,
@@ -3034,11 +3125,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:41.153946+00:00",
+            "endedAt": "2026-08-17T03:36:10.373151+00:00",
             "exit": 0,
             "label": "apply",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.111630+00:00",
+            "startedAt": "2026-08-17T03:36:10.331143+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -3068,11 +3159,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:41.231071+00:00",
+            "endedAt": "2026-08-17T03:36:10.450217+00:00",
             "exit": 0,
             "label": "apply-second",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.189846+00:00",
+            "startedAt": "2026-08-17T03:36:10.408204+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -3104,11 +3195,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:41.307348+00:00",
+            "endedAt": "2026-08-17T03:36:10.523834+00:00",
             "exit": 0,
             "label": "dry-run-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.265347+00:00",
+            "startedAt": "2026-08-17T03:36:10.483770+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -3138,11 +3229,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:41.383159+00:00",
+            "endedAt": "2026-08-17T03:36:10.598092+00:00",
             "exit": 0,
             "label": "diff-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.342246+00:00",
+            "startedAt": "2026-08-17T03:36:10.557438+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -3172,11 +3263,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:41.458814+00:00",
+            "endedAt": "2026-08-17T03:36:10.671331+00:00",
             "exit": 0,
             "label": "status-drift",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.417491+00:00",
+            "startedAt": "2026-08-17T03:36:10.631498+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 1,
@@ -3194,6 +3285,15 @@
             "persistentState": "<RUN>/state/chezmoi.boltdb",
             "scriptTempDir": "<RUN>/tmp",
             "sourceDir": "<RUN>/source"
+          },
+          "pilotData": {
+            "git": {
+              "credentialHelper": "osxkeychain",
+              "email": "pilot@example.invalid",
+              "name": "Pilot User"
+            },
+            "host": "pilot-macos",
+            "platform": "macos"
           }
         },
         "ownership": {
@@ -3355,15 +3455,11 @@
               "dump-config",
               "--format=json"
             ],
-            "endedAt": "2026-08-17T03:31:41.580508+00:00",
+            "endedAt": "2026-08-17T03:36:10.788598+00:00",
             "exit": 0,
             "label": "dump-config",
-            "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.540541+00:00",
-            "stderrPreview": [],
-            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "stdoutLines": 246,
-            "stdoutPreview": [
+            "rawStdoutLines": 246,
+            "rawStdoutPreview": [
               "{",
               "  \"cacheDir\": \"<RUN>/cache\",",
               "  \"color\": \"auto\",",
@@ -3377,7 +3473,27 @@
               "      \"host\": \"pilot-windows\",",
               "      \"platform\": \"windows\""
             ],
-            "stdoutSha256": "3b85299e9df316b7ac920a5cac0e1793cfd6fbdf831a092273cd3b288e6680a9"
+            "rawStdoutSha256": "3b85299e9df316b7ac920a5cac0e1793cfd6fbdf831a092273cd3b288e6680a9",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T03:36:10.750242+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 18,
+            "stdoutPreview": [
+              "{",
+              "  \"configPaths\": {",
+              "    \"cacheDir\": \"<RUN>/cache\",",
+              "    \"destDir\": \"<RUN>/destination\",",
+              "    \"persistentState\": \"<RUN>/state/chezmoi.boltdb\",",
+              "    \"scriptTempDir\": \"<RUN>/tmp\",",
+              "    \"sourceDir\": \"<RUN>/source\"",
+              "  },",
+              "  \"pilotData\": {",
+              "    \"git\": {",
+              "      \"credentialHelper\": \"manager\",",
+              "      \"email\": \"pilot@example.invalid\","
+            ],
+            "stdoutSha256": "5459c9e28aaacd2e05b6c05f254acfbc84a14125b20f1c7830b1f58eb9f0aa2d"
           },
           {
             "command": [
@@ -3404,11 +3520,11 @@
               "--include=files",
               "--path-style=relative"
             ],
-            "endedAt": "2026-08-17T03:31:41.653223+00:00",
+            "endedAt": "2026-08-17T03:36:10.861118+00:00",
             "exit": 0,
             "label": "managed",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.614625+00:00",
+            "startedAt": "2026-08-17T03:36:10.822372+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 3,
@@ -3442,11 +3558,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:41.730961+00:00",
+            "endedAt": "2026-08-17T03:36:10.938279+00:00",
             "exit": 0,
             "label": "status-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.690220+00:00",
+            "startedAt": "2026-08-17T03:36:10.898931+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 9,
@@ -3486,11 +3602,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:41.804557+00:00",
+            "endedAt": "2026-08-17T03:36:11.011966+00:00",
             "exit": 0,
             "label": "diff-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.764774+00:00",
+            "startedAt": "2026-08-17T03:36:10.971954+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 476,
@@ -3535,11 +3651,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:41.878225+00:00",
+            "endedAt": "2026-08-17T03:36:11.085697+00:00",
             "exit": 0,
             "label": "dry-run-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.838224+00:00",
+            "startedAt": "2026-08-17T03:36:11.045527+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 476,
@@ -3582,11 +3698,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:42.022811+00:00",
+            "endedAt": "2026-08-17T03:36:11.229223+00:00",
             "exit": 0,
             "label": "apply",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:41.981474+00:00",
+            "startedAt": "2026-08-17T03:36:11.188923+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -3616,11 +3732,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:42.098107+00:00",
+            "endedAt": "2026-08-17T03:36:11.302757+00:00",
             "exit": 0,
             "label": "apply-second",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.056964+00:00",
+            "startedAt": "2026-08-17T03:36:11.262909+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -3652,11 +3768,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:42.172462+00:00",
+            "endedAt": "2026-08-17T03:36:11.377203+00:00",
             "exit": 0,
             "label": "dry-run-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.131608+00:00",
+            "startedAt": "2026-08-17T03:36:11.335657+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -3686,11 +3802,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:42.245585+00:00",
+            "endedAt": "2026-08-17T03:36:11.450765+00:00",
             "exit": 0,
             "label": "diff-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.205445+00:00",
+            "startedAt": "2026-08-17T03:36:11.409907+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -3720,11 +3836,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:42.318580+00:00",
+            "endedAt": "2026-08-17T03:36:11.523745+00:00",
             "exit": 0,
             "label": "status-drift",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.279209+00:00",
+            "startedAt": "2026-08-17T03:36:11.483919+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 1,
@@ -3742,6 +3858,15 @@
             "persistentState": "<RUN>/state/chezmoi.boltdb",
             "scriptTempDir": "<RUN>/tmp",
             "sourceDir": "<RUN>/source"
+          },
+          "pilotData": {
+            "git": {
+              "credentialHelper": "manager",
+              "email": "pilot@example.invalid",
+              "name": "Pilot User"
+            },
+            "host": "pilot-windows",
+            "platform": "windows"
           }
         },
         "ownership": {
@@ -3878,15 +4003,11 @@
               "dump-config",
               "--format=json"
             ],
-            "endedAt": "2026-08-17T03:31:42.435161+00:00",
+            "endedAt": "2026-08-17T03:36:11.639386+00:00",
             "exit": 0,
             "label": "dump-config",
-            "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.397318+00:00",
-            "stderrPreview": [],
-            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "stdoutLines": 246,
-            "stdoutPreview": [
+            "rawStdoutLines": 246,
+            "rawStdoutPreview": [
               "{",
               "  \"cacheDir\": \"<RUN>/cache\",",
               "  \"color\": \"auto\",",
@@ -3900,7 +4021,27 @@
               "      \"host\": \"pilot-windows\",",
               "      \"platform\": \"windows\""
             ],
-            "stdoutSha256": "3b85299e9df316b7ac920a5cac0e1793cfd6fbdf831a092273cd3b288e6680a9"
+            "rawStdoutSha256": "3b85299e9df316b7ac920a5cac0e1793cfd6fbdf831a092273cd3b288e6680a9",
+            "sandbox": "bubblewrap-private-dev-no-network-namespace",
+            "startedAt": "2026-08-17T03:36:11.601765+00:00",
+            "stderrPreview": [],
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdoutLines": 18,
+            "stdoutPreview": [
+              "{",
+              "  \"configPaths\": {",
+              "    \"cacheDir\": \"<RUN>/cache\",",
+              "    \"destDir\": \"<RUN>/destination\",",
+              "    \"persistentState\": \"<RUN>/state/chezmoi.boltdb\",",
+              "    \"scriptTempDir\": \"<RUN>/tmp\",",
+              "    \"sourceDir\": \"<RUN>/source\"",
+              "  },",
+              "  \"pilotData\": {",
+              "    \"git\": {",
+              "      \"credentialHelper\": \"manager\",",
+              "      \"email\": \"pilot@example.invalid\","
+            ],
+            "stdoutSha256": "5459c9e28aaacd2e05b6c05f254acfbc84a14125b20f1c7830b1f58eb9f0aa2d"
           },
           {
             "command": [
@@ -3927,11 +4068,11 @@
               "--include=files",
               "--path-style=relative"
             ],
-            "endedAt": "2026-08-17T03:31:42.507704+00:00",
+            "endedAt": "2026-08-17T03:36:11.710619+00:00",
             "exit": 0,
             "label": "managed",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.469131+00:00",
+            "startedAt": "2026-08-17T03:36:11.672948+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 3,
@@ -3965,11 +4106,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:42.584355+00:00",
+            "endedAt": "2026-08-17T03:36:11.785577+00:00",
             "exit": 0,
             "label": "status-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.544509+00:00",
+            "startedAt": "2026-08-17T03:36:11.746778+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 9,
@@ -4009,11 +4150,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:42.657911+00:00",
+            "endedAt": "2026-08-17T03:36:11.862047+00:00",
             "exit": 0,
             "label": "diff-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.618093+00:00",
+            "startedAt": "2026-08-17T03:36:11.821486+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 476,
@@ -4058,11 +4199,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:42.732941+00:00",
+            "endedAt": "2026-08-17T03:36:11.935991+00:00",
             "exit": 0,
             "label": "dry-run-before",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.691870+00:00",
+            "startedAt": "2026-08-17T03:36:11.895474+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 476,
@@ -4105,11 +4246,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:42.876314+00:00",
+            "endedAt": "2026-08-17T03:36:12.079666+00:00",
             "exit": 0,
             "label": "apply",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.835925+00:00",
+            "startedAt": "2026-08-17T03:36:12.038554+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -4139,11 +4280,11 @@
               "--use-builtin-diff",
               "apply"
             ],
-            "endedAt": "2026-08-17T03:31:42.949629+00:00",
+            "endedAt": "2026-08-17T03:36:12.154055+00:00",
             "exit": 0,
             "label": "apply-second",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.910378+00:00",
+            "startedAt": "2026-08-17T03:36:12.114115+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -4175,11 +4316,11 @@
               "--dry-run",
               "--verbose"
             ],
-            "endedAt": "2026-08-17T03:31:43.023133+00:00",
+            "endedAt": "2026-08-17T03:36:12.227348+00:00",
             "exit": 0,
             "label": "dry-run-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:42.983644+00:00",
+            "startedAt": "2026-08-17T03:36:12.187593+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -4209,11 +4350,11 @@
               "--use-builtin-diff",
               "diff"
             ],
-            "endedAt": "2026-08-17T03:31:43.096688+00:00",
+            "endedAt": "2026-08-17T03:36:12.301364+00:00",
             "exit": 0,
             "label": "diff-after",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:43.057127+00:00",
+            "startedAt": "2026-08-17T03:36:12.260763+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 0,
@@ -4243,11 +4384,11 @@
               "--use-builtin-diff",
               "status"
             ],
-            "endedAt": "2026-08-17T03:31:43.170206+00:00",
+            "endedAt": "2026-08-17T03:36:12.376426+00:00",
             "exit": 0,
             "label": "status-drift",
             "sandbox": "bubblewrap-private-dev-no-network-namespace",
-            "startedAt": "2026-08-17T03:31:43.130304+00:00",
+            "startedAt": "2026-08-17T03:36:12.335357+00:00",
             "stderrPreview": [],
             "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "stdoutLines": 1,
@@ -4265,6 +4406,15 @@
             "persistentState": "<RUN>/state/chezmoi.boltdb",
             "scriptTempDir": "<RUN>/tmp",
             "sourceDir": "<RUN>/source"
+          },
+          "pilotData": {
+            "git": {
+              "credentialHelper": "manager",
+              "email": "pilot@example.invalid",
+              "name": "Pilot User"
+            },
+            "host": "pilot-windows",
+            "platform": "windows"
           }
         },
         "ownership": {

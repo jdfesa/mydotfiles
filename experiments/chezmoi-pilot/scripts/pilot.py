@@ -665,7 +665,27 @@ def verify_effective_config(context: RunContext) -> dict[str, Any]:
         raise PilotError("effective pilot platform data mismatch")
     if Path(context.environment["HOME"]).resolve(strict=False) != context.home.resolve():
         raise PilotError("effective Chezmoi HOME is not temporary")
-    return {"configPaths": {key: f"<RUN>/{expected.relative_to(context.root)}" for key, expected in expected_paths.items()}}
+    config_paths = {
+        key: f"<RUN>/{expected.relative_to(context.root)}"
+        for key, expected in expected_paths.items()
+    }
+    effective_contract = {
+        "configPaths": config_paths,
+        "pilotData": data["pilot"],
+    }
+    contract_stdout = json.dumps(
+        effective_contract, indent=2, sort_keys=True, ensure_ascii=False
+    ) + "\n"
+    record = context.command_records[-1]
+    if record["label"] != "dump-config":
+        raise PilotError("effective config command record is not dump-config")
+    record["rawStdoutSha256"] = record["stdoutSha256"]
+    record["rawStdoutLines"] = record["stdoutLines"]
+    record["rawStdoutPreview"] = record["stdoutPreview"]
+    record["stdoutSha256"] = sha256_bytes(contract_stdout.encode())
+    record["stdoutLines"] = len(contract_stdout.splitlines())
+    record["stdoutPreview"] = contract_stdout.splitlines()[:12]
+    return effective_contract
 
 
 def managed_targets(context: RunContext) -> list[str]:
