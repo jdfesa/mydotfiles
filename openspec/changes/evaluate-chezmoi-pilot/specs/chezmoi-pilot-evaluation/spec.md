@@ -115,6 +115,10 @@ métricas, blockers, native evidence y outcome.
 - **WHEN** Arch y upstream reportan distinto build/commit banner para Chezmoi `2.72.0`
 - **THEN** raw evidence conserva ambos banners y la proyección permanece exactamente `2.72.0`
 
+#### Scenario: Chezmoi distributor build banner changes preview token
+- **WHEN** cambia solo el banner de build para Chezmoi semántico `2.72.0`
+- **THEN** `previewDigest` permanece estable, pero cambia ante otra versión semántica
+
 #### Scenario: Deterministic behavior changes
 - **WHEN** cambia un command, hash, manifest, mode, metric, blocker o native-evidence field
 - **THEN** cambia la proyección y `validate`/`generate-docs --check` fallan hasta regenerar evidencia y docs

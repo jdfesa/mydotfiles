@@ -118,6 +118,24 @@ class ModelTests(unittest.TestCase):
         template.write_text(template.read_text(encoding="utf-8") + "# changed\n", encoding="utf-8")
         self.assertNotEqual(before, pilot.input_digest(context))
 
+    def test_chezmoi_build_banner_does_not_change_preview_digest(self) -> None:
+        context = pilot.prepare_context("linux")
+        self.addCleanup(shutil.rmtree, context.root, True)
+        arch_banner = "chezmoi version v2.72.0, built at 2026-08-03T08:20:49Z"
+        upstream_banner = (
+            "chezmoi version v2.72.0, commit f81cb321789aa3df62871248f5e4d361a59e7cc1, "
+            "built at 2026-08-02T18:45:48Z, built by goreleaser"
+        )
+        with mock.patch.object(pilot, "chezmoi_version", return_value=arch_banner):
+            arch_digest = pilot.input_digest(context)
+        with mock.patch.object(pilot, "chezmoi_version", return_value=upstream_banner):
+            upstream_digest = pilot.input_digest(context)
+        self.assertEqual(arch_digest, upstream_digest)
+        with mock.patch.object(
+            pilot, "chezmoi_version", return_value="chezmoi version v2.73.0"
+        ):
+            self.assertNotEqual(arch_digest, pilot.input_digest(context))
+
     def test_windows_fixture_is_separate_json(self) -> None:
         result = pilot.validate_windows_fixture()
         self.assertTrue(result["structuralOnly"])

@@ -219,6 +219,9 @@ exits, previews, hashes, manifests, modes, paths normalizados, source provenance
 métricas, blockers, native evidence y outcome. Una versión Python incompatible o
 Chezmoi distinta no se normaliza como válida. `validate` ejecuta evidencia fresca
 y compara toda la proyección.
+El `previewDigest` usa la misma versión semántica Chezmoi exacta: permanece
+estable entre el package Arch y el binario upstream, pero cambia ante otra
+versión.
 `generate-docs --check` hace la misma comparación antes de verificar contenido.
 Los input digests de documentos son exactamente el digest de esa proyección.
 

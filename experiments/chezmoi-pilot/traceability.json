@@ -131,6 +131,14 @@
     },
     {
       "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Chezmoi distributor build banner changes preview token",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PREVIEW-CHEZMOI-PROVENANCE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
       "scenario": "Deterministic behavior changes",
       "coverage": {
         "kind": "automated-check",

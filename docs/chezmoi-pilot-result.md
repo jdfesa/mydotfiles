@@ -41,13 +41,13 @@ exactamente `1.9.0`. Commands, exits, paths, hashes, manifests, modes, métricas
 blockers, native state y outcome continúan siendo sensibles.
 
 Final projection digest:
-`a3197735a928b707f78183bc6952293e383d73fc76c4cbd8f23eecd46b184509`.
+`b4ca46fdd2fa0bfb76aae6f14ea477a3b9117200f5e617ad1de869fdfa61bacb`.
 
 Focused tests prueban que timestamps, un rebase merge sintético a `main` y otro
 patch Python compatible no alteran la proyección. Un cambio de command, hash,
 manifest, metric, Chezmoi/OpenSpec exactos o Python incompatible sí la altera.
 Un banner de distribuidor distinto para el mismo Chezmoi `2.72.0` no altera la
-proyección; una versión Chezmoi distinta sí.
+proyección ni `previewDigest`; una versión Chezmoi distinta sí.
 
 ## Semantic Corrections
 
@@ -69,7 +69,7 @@ proyección; una versión Chezmoi distinta sí.
 | Operator entry commands | 3 | 1 |
 | Measured internal commands | 6 | 10 por fixture |
 | Comparison/automation files | 3 | 10 automation/test files |
-| Raw automation/test LOC | 381 | 2,630 |
+| Raw automation/test LOC | 381 | 2,649 |
 | Main harness LOC | N/A | `pilot.py`: 1,625 |
 | Templates | 0 | 1 |
 | Persistent state | 0 | 1 DB temporal por run |
@@ -96,9 +96,9 @@ revisión considerablemente mayor que los scripts productivos comparados.
 
 ## Traceability
 
-Los 92 escenarios OpenSpec tienen 92 entries declaradas:
+Los 93 escenarios OpenSpec tienen 93 entries declaradas:
 
-- 51 `automated-check` con ID y locator concretos;
+- 52 `automated-check` con ID y locator concretos;
 - 28 `generated-evidence` con JSON pointer;
 - 3 `native-blocked`;
 - 10 `human-review-gate`.
