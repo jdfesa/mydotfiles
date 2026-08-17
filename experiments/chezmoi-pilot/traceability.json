@@ -243,6 +243,38 @@
     },
     {
       "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Explicit OpenSpec override is configured",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OPENSPEC-OVERRIDE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "OpenSpec is available on PATH",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OPENSPEC-PATH"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Non-interactive POSIX PATH omits user-local bin",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OPENSPEC-POSIX-FALLBACK"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
+      "scenario": "OpenSpec executable is missing",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-OPENSPEC-MISSING"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
       "scenario": "Reviewers choose no adoption",
       "coverage": {
         "kind": "human-review-gate",

@@ -306,7 +306,26 @@ nativa Arch ni Windows. Arch se verifica separadamente sobre la máquina real co
 profiles, symlinks y doctor. El job Windows permanece visiblemente disabled y no
 cuenta como evidencia; el invariante executable es el gate real.
 
-### 13. Preserve coexistence and rollback boundaries
+### 13. Resolve OpenSpec without interactive-shell assumptions
+
+El piloto no presupone que un login shell haya agregado `~/.local/bin` a
+`PATH`. `resolve_openspec_bin` aplica una precedencia explícita y testeable:
+
+1. `OPENSPEC_BIN`, que debe resolver a un archivo executable;
+2. `shutil.which("openspec")` con el `PATH` recibido;
+3. solo en POSIX, `Path.home() / ".local/bin/openspec"`.
+
+Un override inválido falla inmediatamente para no ocultar una configuración
+operativa incorrecta. El error enumera esos mecanismos sin volcar el ambiente
+ni repetir valores potencialmente sensibles. No se infiere un path npm de
+Windows: su ubicación depende de configuración/versión de npm y no existe
+evidencia nativa revisada. Windows conserva los mecanismos explícitos
+`OPENSPEC_BIN` y `PATH` hasta que otro cambio agregue un candidato probado.
+
+Esta resolución afecta discovery del tooling; no cambia la versión contractual
+OpenSpec `1.9.0`, que continúa validándose después de resolver el executable.
+
+### 14. Preserve coexistence and rollback boundaries
 
 El overlap lógico sirve solo para comparar casos equivalentes. Las rutas reales
 del destino temporal no intersectan targets productivos. Chezmoi nunca obtiene

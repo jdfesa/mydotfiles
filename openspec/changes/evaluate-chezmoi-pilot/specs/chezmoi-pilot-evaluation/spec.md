@@ -209,6 +209,33 @@ de evaluación, no dependencias productivas implícitas.
 - **WHEN** una versión instalada difiere de la auditada
 - **THEN** doctor falla y exige revisión de provenance antes de nueva evidencia
 
+### Requirement: OpenSpec executable discovery is portable
+
+El harness MUST resolver OpenSpec en este orden: `OPENSPEC_BIN` explícito,
+`shutil.which("openspec")` y, en POSIX, `Path.home() / ".local/bin/openspec"`.
+MUST rechazar un override inválido sin continuar silenciosamente. Si no existe
+un executable válido, MUST fallar con un diagnóstico preciso que enumere los
+métodos soportados sin imprimir el ambiente ni valores secret-like. Ningún path
+MUST depender de un username o home absoluto. Windows SHALL usar únicamente
+`OPENSPEC_BIN` o `PATH` mientras no exista un candidato npm user-local revisado
+y probado nativamente.
+
+#### Scenario: Explicit OpenSpec override is configured
+- **WHEN** `OPENSPEC_BIN` apunta a un executable válido y `PATH` ofrece otro candidato
+- **THEN** el harness usa el override explícito
+
+#### Scenario: OpenSpec is available on PATH
+- **WHEN** no existe override y `shutil.which("openspec")` encuentra un executable
+- **THEN** el harness usa el candidato de `PATH` antes de cualquier fallback user-local
+
+#### Scenario: Non-interactive POSIX PATH omits user-local bin
+- **WHEN** `PATH` no contiene OpenSpec pero `~/.local/bin/openspec` es executable
+- **THEN** el harness usa el candidato derivado de `Path.home()` sin hardcodear el home
+
+#### Scenario: OpenSpec executable is missing
+- **WHEN** override, `PATH` y fallback POSIX no producen un executable
+- **THEN** el harness falla y enumera métodos soportados sin filtrar variables ni secretos
+
 ### Requirement: No-adoption remains a complete path
 
 Cerrar o rechazar el piloto MUST requerir solamente remover experimento, CI y

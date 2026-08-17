@@ -12,9 +12,10 @@ agrega persistent state. Por eso no puede recomendar selective migration.
 Este resultado no autoriza cutover. `scripts/link`, `scripts/profile-resolve`,
 perfiles y `configure-git` continúan como owners productivos.
 
-El controller audit aprobó publicar estos artifacts mediante PR. Esa aprobación
-no aporta evidencia Windows nativa, no cambia el outcome y no autoriza migration
-ni modificación de configuración activa.
+El piloto original se publicó mediante el PR `#14`. El audit Arch posterior
+detectó que un SSH no interactivo podía omitir `~/.local/bin` de `PATH`; este
+follow-up corrige discovery sin cambiar el outcome, aportar evidencia Windows
+nativa ni autorizar migration o modificación de configuración activa.
 
 ## Strategic Fit
 
@@ -48,13 +49,25 @@ y datos efectivos que el harness valida. Así Ubuntu/Arch pueden diferir en
 defaults irrelevantes sin ocultar un cambio behavioral.
 
 Final projection digest:
-`5223206afb4b4381ec5a6e152c3d6339cf79968a52853a85b30a44ff4cb967d8`.
+`7e2243d2e3577f6a5772497c45dc1f546bec7b27793007e22deed8840bd822c7`.
 
 Focused tests prueban que timestamps, un rebase merge sintético a `main` y otro
 patch Python compatible no alteran la proyección. Un cambio de command, hash,
 manifest, metric, Chezmoi/OpenSpec exactos o Python incompatible sí la altera.
 Un banner de distribuidor distinto para el mismo Chezmoi `2.72.0` no altera la
 proyección ni `previewDigest`; una versión Chezmoi distinta sí.
+
+## OpenSpec Discovery
+
+El harness resuelve OpenSpec en orden mediante `OPENSPEC_BIN`,
+`shutil.which("openspec")` y el candidato POSIX derivado
+`Path.home() / ".local/bin/openspec"`. Un override inválido falla de forma
+explícita. Si todos los métodos faltan, el diagnóstico enumera cómo resolverlo
+sin volcar el ambiente ni valores secret-like.
+
+No se incorporó un candidato npm user-local Windows: su ubicación depende de la
+configuración npm y todavía no existe un runner nativo revisado. Windows usa
+`OPENSPEC_BIN` o `PATH` por ahora.
 
 ## Semantic Corrections
 
@@ -76,8 +89,8 @@ proyección ni `previewDigest`; una versión Chezmoi distinta sí.
 | Operator entry commands | 3 | 1 |
 | Measured internal commands | 6 | 10 por fixture |
 | Comparison/automation files | 3 | 10 automation/test files |
-| Raw automation/test LOC | 381 | 2,760 |
-| Main harness LOC | N/A | `pilot.py`: 1,650 |
+| Raw automation/test LOC | 381 | 2,887 |
+| Main harness LOC | N/A | `pilot.py`: 1,701 |
 | Templates | 0 | 1 |
 | Persistent state | 0 | 1 DB temporal por run |
 | Native Windows | No soportado | Bloqueado; structural-only en Arch |
@@ -103,9 +116,9 @@ revisión considerablemente mayor que los scripts productivos comparados.
 
 ## Traceability
 
-Los 94 escenarios OpenSpec tienen 94 entries declaradas:
+Los 98 escenarios OpenSpec tienen 98 entries declaradas:
 
-- 53 `automated-check` con ID y locator concretos;
+- 57 `automated-check` con ID y locator concretos;
 - 28 `generated-evidence` con JSON pointer;
 - 3 `native-blocked`;
 - 10 `human-review-gate`.
@@ -147,14 +160,15 @@ disabled permanece visible, pero no cuenta como gate executable.
 
 ## Task Status
 
-La change queda en `61/64` tareas completadas. Permanecen abiertas:
+La change queda en `65/67` tareas completadas. Permanecen abiertas:
 
 - `6.6`: native Windows evidence, bloqueada sin runner revisado.
 - `9.4`: no aplica con el outcome actual; requiere otra change si una revisión
   futura recomienda migration.
-- `9.5`: publication aprobada en ejecución. Permanece abierta dentro del
-  contenido inmutable del PR porque merge, branch cleanup y sincronización Arch
-  solo pueden verificarse después de que sus checks hayan pasado.
+
+La tarea `9.5` queda completada en este follow-up porque merge, branch cleanup y
+sincronización Arch del PR `#14` ya ocurrieron y pudieron verificarse sin
+anticipar estado futuro.
 
 ## No-Adoption Path
 

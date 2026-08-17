@@ -37,6 +37,10 @@ un JSON pointer; los blocks nativos y gates humanos no se presentan como tests.
 | `chezmoi-pilot-evaluation` | Windows CI is not configured | `generated-evidence` | `review.json#/nativeEvidence/windows` |
 | `chezmoi-pilot-evaluation` | Unrelated repository path changes | `automated-check` | CHK-CI-POLICY — `experiments/chezmoi-pilot/scripts/pilot.py::validate_ci_workflow` |
 | `chezmoi-pilot-evaluation` | Evaluation dependency changes | `automated-check` | CHK-TOOL-VERSIONS — `experiments/chezmoi-pilot/scripts/pilot.py::expected_versions` |
+| `chezmoi-pilot-evaluation` | Explicit OpenSpec override is configured | `automated-check` | UT-OPENSPEC-OVERRIDE — `experiments/chezmoi-pilot/tests/test_pilot.py::test_openspec_explicit_override_precedes_path` |
+| `chezmoi-pilot-evaluation` | OpenSpec is available on PATH | `automated-check` | UT-OPENSPEC-PATH — `experiments/chezmoi-pilot/tests/test_pilot.py::test_openspec_path_discovery_precedes_user_local` |
+| `chezmoi-pilot-evaluation` | Non-interactive POSIX PATH omits user-local bin | `automated-check` | UT-OPENSPEC-POSIX-FALLBACK — `experiments/chezmoi-pilot/tests/test_pilot.py::test_openspec_posix_user_local_fallback_with_stripped_path` |
+| `chezmoi-pilot-evaluation` | OpenSpec executable is missing | `automated-check` | UT-OPENSPEC-MISSING — `experiments/chezmoi-pilot/tests/test_pilot.py::test_openspec_missing_executable_has_safe_diagnostic` |
 | `chezmoi-pilot-evaluation` | Reviewers choose no adoption | `human-review-gate` | La decisión de cerrar la evaluación es un gate humano explícito. |
 | `chezmoi-pilot-evaluation` | Chezmoi package remains installed | `human-review-gate` | Retener o remover tooling del host requiere una decisión separada. |
 | `chezmoi-pilot-safety` | Safe temporary root is accepted | `generated-evidence` | `review.json#/results/linux/first/rootContained` |

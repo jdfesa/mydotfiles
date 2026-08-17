@@ -50,6 +50,9 @@ versionados con idempotencia, drift, rollback y documentación.
   `recommend-selective-migration`.
 - Proporcionar un path de no-adoption que elimine el experimento sin modificar
   targets productivos.
+- Resolver OpenSpec de forma portable en shells interactivos y no interactivos:
+  override explícito, `PATH` y fallback POSIX user-local, sin depender de una
+  ruta absoluta de host ni afirmar un candidato Windows no validado.
 
 ### Scope
 
