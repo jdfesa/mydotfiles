@@ -128,6 +128,12 @@ Chezmoi se descarga desde el release oficial `v2.72.0` como
 ba563f716d5c00a2e91d4aeb199b417c6b219db2896f890fd422fc72610b2d90
 ```
 
+Los builds Arch/upstream y sus defaults `dump-config` pueden incluir provenance
+distinta. `review.json` retiene esos banners y hashes raw, mientras la evidencia
+determinista exige Chezmoi semántico `2.72.0` y un contrato efectivo canónico de
+paths más fixture data. Los tests prueban que otra versión o un cambio efectivo
+sí invalida el digest.
+
 El primer PR check probó que el anterior container Arch bloqueaba el user
 namespace antes de Bubblewrap. Ejecutar sobre el VM directo elimina esa capa y
 reduce complejidad, pero no relaja el boundary del piloto: siguen prohibidos

@@ -139,6 +139,14 @@
     },
     {
       "capability": "chezmoi-pilot-evaluation",
+      "scenario": "Dump-config host defaults differ",
+      "coverage": {
+        "kind": "automated-check",
+        "id": "UT-PROJECTION-DUMP-CONFIG-PROVENANCE"
+      }
+    },
+    {
+      "capability": "chezmoi-pilot-evaluation",
       "scenario": "Deterministic behavior changes",
       "coverage": {
         "kind": "automated-check",
