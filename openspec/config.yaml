@@ -1,0 +1,81 @@
+schema: spec-driven
+
+context: |
+  Este es un único repositorio multi-OS de dotfiles para macOS, Linux y Windows.
+  La raíz del checkout actual es la única fuente de verdad Git para este cambio.
+  ~/mydotfiles es únicamente una ubicación convencional de clonación; ningún
+  requisito, comando o contrato de paths puede depender de ella. La configuración
+  compartida pertenece a shared/<tool>; los entrypoints de plataforma y sesión
+  pertenecen a os/<platform>/<tool>. El comportamiento específico de X11,
+  Wayland, desktop session y host debe permanecer explícito en lugar de ocultarse
+  dentro de un archivo supuestamente universal.
+
+  La meta estratégica del repositorio es un bootstrap personal, versionado,
+  documentado y reproducible para Linux, macOS y Windows. Sus fases futuras
+  deben poder inspeccionarse por separado: prerrequisitos, adquisición del
+  checkout, configuración de usuario, paquetes/servicios del sistema,
+  verificación y gates manuales de autenticación, permisos o reinicio. El
+  tiempo de recuperación debe estar dominado por red e instalación, no por
+  wrappers u orquestación oculta.
+
+  Este cambio no construye ese provisionador completo. Solo evalua si Chezmoi
+  reduce la complejidad de la fase de configuración de usuario y si encaja con
+  adaptadores explícitos para diferencias nativas. Evaluar, en este orden:
+  escalabilidad; complejidad y carga cognitiva totales; mantenibilidad,
+  determinismo y ownership; velocidad y seguridad tras reinstalar; y cambios
+  versionados con idempotencia, drift, rollback y documentación.
+
+  El deployment productivo continúa siendo scripts/profile-resolve más
+  scripts/link y los symlinks declarados por los perfiles actuales. Chezmoi es
+  únicamente un candidato bajo evaluación. Todo cutover futuro requiere
+  canary-first, revisión target-by-target, dry-run, diff, evidencia de
+  idempotencia, detección de drift, rollback y un invariante explícito de owner
+  único.
+
+  Todo rendering y apply del proof of concept debe usar un destino temporal
+  recién creado. Nunca debe apuntar a un home real. No se modifica configuración
+  activa de macOS, links de perfiles Arch, Kitty, Hyprland, Quattro, servicios,
+  paquetes no relacionados, autenticación ni configuración root-owned.
+
+  No se almacenan secretos. Paquetes, servicios privilegiados del sistema,
+  estado mutable de aplicaciones, caches, sesiones de autenticación, inventario
+  de hardware y provisioning general permanecen fuera de Chezmoi salvo una
+  excepción estrecha justificada por otro cambio revisado. Las versiones de
+  OpenSpec, Node.js, npm y Chezmoi instaladas son tooling remoto de evaluación
+  documentado en docs/tooling/openspec-chezmoi.md; este cambio no agrega ni
+  elimina entradas de manifests productivos de paquetes.
+
+  La estructura técnica, los nombres de archivos y directorios, headings,
+  nomenclatura técnica, metadata Git, commits y texto futuro de PR están en
+  inglés. Toda prosa explicativa está obligatoriamente en español profesional
+  UTF-8, salvo keywords estructurales exigidas por OpenSpec.
+
+rules:
+  proposal:
+    - Tratar Chezmoi como candidato y compararlo honestamente con scripts/link más scripts/profile-resolve.
+    - Incluir scope, non-goals, criterios medibles keep/migrate/reject y un path de no-adoption explícitos.
+    - Destacar las prohibiciones de destino no temporal y de modificación del macOS activo.
+  specs:
+    - Usar requisitos normativos SHALL o MUST con escenarios concretos WHEN/THEN.
+    - Cubrir rendering únicamente temporal, ownership único, coexistencia, rollback, drift, secretos, permisos, factibilidad Windows, documentación, CI y aceptación doctor.
+    - Distinguir physical GUI/meta key, application-primary modifier y chord de acción desktop/window-manager definido por sesión sin forzar chords idénticos entre plataformas.
+    - Preservar AeroSpace Hyper (cmd-alt-ctrl-shift) y Meh (alt-ctrl-shift), y reservar Windows key salvo asignación explícita en un diseño Windows posterior.
+  design:
+    - Explicar el aislamiento seguro de source, config, cache, state y destination, con fail-closed si un path resuelve a un home real.
+    - Definir criterios literal-file, small-template y separate-platform-file y prohibir template spaghetti; todo guardrail numérico del piloto es únicamente un tripwire de revisión subordinado a límites semánticos y legibilidad.
+    - Preservar límites shared-versus-platform y X11-versus-Wayland y documentar rollback target-by-target.
+    - Explicar cómo el piloto acotado encaja en un workstation bootstrap por fases sin atribuir a Chezmoi paquetes, servicios, autenticación, permisos, reinicios o adquisición del source.
+  tasks:
+    - Mantener unchecked toda tarea futura y ordenarla canary-first.
+    - Exigir evidencia de validación para dry-run, diff, idempotencia, rollback, drift, permisos, Windows, documentación generada, CI y doctors.
+    - Incluir gates explícitos de revisión antes de conversión de targets, pruebas en máquinas reales o transferencia de ownership.
+
+operations:
+  apply:
+    guidance:
+      - No iniciar implementación sin aprobación explícita del usuario después de revisar los artefactos de planning.
+      - Usar únicamente un destino temporal aislado y detenerse si un path resuelto es el HOME real o un target de perfil activo.
+      - Nunca permitir que Chezmoi y scripts/link compartan ownership de un target ni modificar configuración macOS activa.
+  archive:
+    guidance:
+      - Archivar únicamente después de revisión separada de la implementación y de cada acceptance check.

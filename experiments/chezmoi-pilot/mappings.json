@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "cases": {
+    "starship": {
+      "canonical": "shared/starship/starship.toml",
+      "stage": "dot_config/starship.toml",
+      "platforms": ["linux", "macos", "windows"],
+      "model": "literal"
+    },
+    "git": {
+      "canonical": null,
+      "fixture": "fixtures/git/dot_gitconfig.tmpl",
+      "stage": "dot_gitconfig.tmpl",
+      "platforms": ["linux", "macos", "windows"],
+      "model": "small-template",
+      "productionOwner": "os/linux/packages/scripts/configure-git"
+    },
+    "kitty-common": {
+      "canonical": "shared/kitty/common.conf",
+      "stage": "dot_config/kitty/common.conf",
+      "platforms": ["linux", "macos"],
+      "model": "documented-isolation-transform"
+    },
+    "kitty-linux": {
+      "canonical": "os/linux/kitty/kitty.conf",
+      "stage": "dot_config/kitty/kitty.conf",
+      "platforms": ["linux"],
+      "model": "separate-platform-entrypoint"
+    },
+    "kitty-macos": {
+      "canonical": "os/macos/kitty/kitty.conf",
+      "stage": "dot_config/kitty/kitty.conf",
+      "platforms": ["macos"],
+      "model": "separate-platform-entrypoint"
+    },
+    "windows-terminal": {
+      "canonical": null,
+      "fixture": "fixtures/windows-terminal/settings.json",
+      "stage": "AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json",
+      "platforms": ["windows"],
+      "model": "separate-application",
+      "validatedAgainst": "1.24.11321.0"
+    }
+  },
+  "logicalTargets": {
+    "linux": ["$HOME/.config/starship.toml", "$HOME/.gitconfig", "$HOME/.config/kitty/kitty.conf"],
+    "macos": ["$HOME/.config/starship.toml", "$HOME/.gitconfig", "$HOME/.config/kitty/kitty.conf"],
+    "windows": ["$HOME/.config/starship.toml", "$HOME/.gitconfig", "%LOCALAPPDATA%/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "pilot": {
+    "platform": "windows",
+    "host": "pilot-windows",
+    "git": {"name": "Pilot User", "email": "pilot@example.invalid", "credentialHelper": "manager"}
+  }
+}

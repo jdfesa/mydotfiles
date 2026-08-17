@@ -1,0 +1,7 @@
+{
+  "pilot": {
+    "platform": "macos",
+    "host": "pilot-macos",
+    "git": {"name": "Pilot User", "email": "pilot@example.invalid", "credentialHelper": "osxkeychain"}
+  }
+}
