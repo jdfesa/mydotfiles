@@ -182,11 +182,19 @@ Para mover una configuracion activa:
 No se borran configuraciones o scripts encontrados en una maquina remota antes
 de leerlos, clasificarlos y conservar un rollback.
 
-## Future Managers
+## Management Boundaries
 
-Los symlinks administrados por el perfil son la estrategia actual. GNU Stow o
-Chezmoi se evaluaran cuando las diferencias reales entre macOS, Arch y Windows
-superen lo que este mecanismo simple puede expresar con claridad. El cambio
-OpenSpec [`evaluate-chezmoi-pilot`](openspec/changes/evaluate-chezmoi-pilot/)
-define una prueba aislada y criterios de rechazo, continuidad o migración; no
-autoriza aplicar Chezmoi ni transferir ningún target activo.
+El crecimiento del repositorio se separa por responsabilidad en lugar de buscar
+una herramienta unica para todo:
+
+| Capa | Estado |
+|---|---|
+| Configuracion de usuario | Los perfiles y symlinks siguen siendo productivos |
+| Chezmoi | Evaluacion abierta; no autoriza migracion ni targets activos |
+| Provisioning de workstation | Ansible es candidato para paquetes, servicios y archivos privilegiados |
+| Gobierno de cambios | OpenSpec documenta y revisa; no despliega configuracion |
+
+Ninguna evaluacion puede superponer ownership sobre un mismo target. La
+separacion, los limites de un futuro piloto de Ansible y los criterios para no
+sumar complejidad innecesaria se registran en
+[ADR 0008](docs/adr/0008-separate-dotfile-deployment-from-workstation-provisioning.md).

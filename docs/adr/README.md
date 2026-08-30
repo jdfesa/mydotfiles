@@ -18,6 +18,7 @@ repositorio.
 - [0005: Group Shared Configurations](0005-group-shared-configurations.md)
 - [0006: Separate Hosts From Profiles](0006-separate-hosts-from-profiles.md)
 - [0007: Isolate External Reference Material](0007-isolate-external-reference-material.md)
+- [0008: Separate Dotfile Deployment From Workstation Provisioning](0008-separate-dotfile-deployment-from-workstation-provisioning.md)
 
 ## When To Add An ADR
 
