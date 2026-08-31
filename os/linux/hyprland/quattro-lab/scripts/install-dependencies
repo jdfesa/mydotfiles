@@ -58,7 +58,7 @@ while IFS= read -r package_name || [ -n "$package_name" ]; do
 done < "$arch_packages"
 
 if [ "$dry_run" -eq 1 ]; then
-  printf '[dry-run] sudo pacman -S --needed --'
+  printf '[dry-run] sudo pacman -Syu --needed --'
   printf ' %s' "$@"
   printf '\n'
   while IFS=' ' read -r filename checksum || [ -n "$filename" ]; do
@@ -74,7 +74,7 @@ if [ "$dry_run" -eq 1 ]; then
 fi
 
 sudo -v
-sudo pacman -S --needed -- "$@"
+sudo pacman -Syu --needed -- "$@"
 
 mkdir -p "$cache_root"
 chmod 700 "$cache_root"

@@ -5,7 +5,7 @@ set -eu
 repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)
 cd "$repo_root"
 
-fixtures='test-profile-valid test-profile-identical test-profile-conflict test-profile-conflict-a test-profile-conflict-b test-profile-cycle-a test-profile-cycle-b test-profile-missing test-profile-reference'
+fixtures='test-profile-valid test-profile-identical test-profile-conflict test-profile-conflict-a test-profile-conflict-b test-profile-cycle-a test-profile-cycle-b test-profile-missing test-profile-reference test-profile-target-parent test-profile-target-current test-profile-target-double'
 
 cleanup() {
   for fixture in $fixtures; do
@@ -59,6 +59,18 @@ cat > profiles/test-profile-reference.links <<'EOF'
 references/README.md|$HOME/.config/mydotfiles-reference-test
 EOF
 
+cat > profiles/test-profile-target-parent.links <<'EOF'
+README.md|$HOME/../mydotfiles-target-escape
+EOF
+
+cat > profiles/test-profile-target-current.links <<'EOF'
+README.md|$HOME/.config/./mydotfiles-target-escape
+EOF
+
+cat > profiles/test-profile-target-double.links <<'EOF'
+README.md|$HOME/.config//mydotfiles-target-escape
+EOF
+
 resolved_count=$(scripts/profile-resolve test-profile-valid | wc -l | tr -d '[:space:]')
 if [ "$resolved_count" != 1 ]; then
   printf 'Expected duplicate mapping to resolve once, got %s\n' "$resolved_count" >&2
@@ -77,6 +89,9 @@ expect_failure test-profile-conflict
 expect_failure test-profile-cycle-a
 expect_failure test-profile-missing
 expect_failure test-profile-reference
+expect_failure test-profile-target-parent
+expect_failure test-profile-target-current
+expect_failure test-profile-target-double
 expect_failure ../outside-repository
 
 printf 'Profile resolver tests passed.\n'

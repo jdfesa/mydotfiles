@@ -96,7 +96,9 @@ os/linux/hyprland/quattro-lab/scripts/check-runtime
 `install-dependencies` no agrega el repositorio Omarchy a
 `/etc/pacman.conf`. Descarga `quickshell-git`, `xdg-terminal-exec` y
 `hyprland-preview-share-picker` por sus payloads exactos, valida los SHA-256
-fijados y luego usa `pacman -U`.
+fijados y luego usa `pacman -U`. Antes ejecuta una actualización completa
+`pacman -Syu --needed` junto con las dependencias oficiales; nunca instala
+paquetes contra bases refrescadas mediante una actualización parcial.
 
 ## Modelo de estado
 
