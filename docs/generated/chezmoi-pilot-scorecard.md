@@ -2,7 +2,7 @@
 # Chezmoi Pilot Scorecard
 
 Generator: `experiments/chezmoi-pilot/scripts/generate-docs`  
-Input digest: `7e2243d2e3577f6a5772497c45dc1f546bec7b27793007e22deed8840bd822c7`
+Input digest: `b88fc1f4371ba2454bca0af819c056e291935b82102993fe5d691cbf75e9b98d`
 
 ## Outcome
 
@@ -22,7 +22,7 @@ nativo y no hay un beneficio claro según la policy comparativa declarada.
 | Hidden/persistent state | 0 | 1 per run |
 | Platform adapters | existing profile/session layers | 2 thin adapters plus shared Python |
 | Implementation files | 3 comparison scripts | 20 pilot code/data/test files |
-| Automation/test raw LOC | 381 | 2887 |
+| Automation/test raw LOC | 393 | 2887 |
 | Documentation files | outside current comparison scope | 7 declared pilot/result/generated files |
 | Windows Terminal | unsupported | structural cross-render only |
 | Drift | symlink ownership/target checks | materialized content status/diff |
@@ -38,7 +38,7 @@ complejidad cognitiva.
 | --- | ---: |
 | `scripts/doctor` | 80 |
 | `scripts/link` | 146 |
-| `scripts/profile-resolve` | 155 |
+| `scripts/profile-resolve` | 167 |
 | `experiments/chezmoi-pilot/scripts/doctor` | 5 |
 | `experiments/chezmoi-pilot/scripts/generate-docs` | 5 |
 | `experiments/chezmoi-pilot/scripts/pilot.py` | 1701 |

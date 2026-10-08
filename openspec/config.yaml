@@ -1,81 +1,78 @@
 schema: spec-driven
 
 context: |
-  Este es un único repositorio multi-OS de dotfiles para macOS, Linux y Windows.
-  La raíz del checkout actual es la única fuente de verdad Git para este cambio.
-  ~/mydotfiles es únicamente una ubicación convencional de clonación; ningún
-  requisito, comando o contrato de paths puede depender de ella. La configuración
-  compartida pertenece a shared/<tool>; los entrypoints de plataforma y sesión
-  pertenecen a os/<platform>/<tool>. El comportamiento específico de X11,
-  Wayland, desktop session y host debe permanecer explícito en lugar de ocultarse
-  dentro de un archivo supuestamente universal.
+  Este repositorio mantiene una fuente de verdad versionada para reconstruir
+  estaciones de trabajo. La raíz del checkout actual es la identidad portable
+  del repositorio; `~/mydotfiles` es solo una ubicación convencional y ninguna
+  automatización puede depender de ella.
 
-  La meta estratégica del repositorio es un bootstrap personal, versionado,
-  documentado y reproducible para Linux, macOS y Windows. Sus fases futuras
-  deben poder inspeccionarse por separado: prerrequisitos, adquisición del
-  checkout, configuración de usuario, paquetes/servicios del sistema,
-  verificación y gates manuales de autenticación, permisos o reinicio. El
-  tiempo de recuperación debe estar dominado por red e instalación, no por
-  wrappers u orquestación oculta.
+  Las responsabilidades permanecen separadas: `shared/<tool>` contiene fuentes
+  portables; `os/<platform>/<tool>` contiene comportamiento específico de una
+  plataforma o sesión; `profiles/` compone configuración de usuario reusable;
+  `hosts/` registra hechos y política de máquinas físicas; `hardware/` contiene
+  periféricos; `scripts/` mantiene el repositorio; y `docs/` explica arquitectura,
+  restauración y operación. X11, Wayland, desktop sessions y diferencias de host
+  deben seguir explícitos.
 
-  Este cambio no construye ese provisionador completo. Solo evalua si Chezmoi
-  reduce la complejidad de la fase de configuración de usuario y si encaja con
-  adaptadores explícitos para diferencias nativas. Evaluar, en este orden:
-  escalabilidad; complejidad y carga cognitiva totales; mantenibilidad,
-  determinismo y ownership; velocidad y seguridad tras reinstalar; y cambios
-  versionados con idempotencia, drift, rollback y documentación.
+  El bootstrap objetivo se descompone en prerrequisitos, adquisición del source,
+  configuración de usuario, paquetes y servicios, verificación y gates manuales
+  de autenticación, permisos, secretos o reinicio. El tiempo total debe estar
+  dominado por red e instalación, no por orquestación opaca. Cada cambio declara
+  cuáles fases y plataformas modifica; no puede alterar otra plataforma por
+  conveniencia.
 
-  El deployment productivo continúa siendo scripts/profile-resolve más
-  scripts/link y los symlinks declarados por los perfiles actuales. Chezmoi es
-  únicamente un candidato bajo evaluación. Todo cutover futuro requiere
-  canary-first, revisión target-by-target, dry-run, diff, evidencia de
-  idempotencia, detección de drift, rollback y un invariante explícito de owner
-  único.
+  `scripts/profile-resolve`, `scripts/link` y los symlinks declarados continúan
+  siendo el owner productivo de configuración de usuario. Chezmoi permanece como
+  candidato no adoptado. Ansible es solo un candidato para paquetes, servicios,
+  archivos privilegiados y orquestación. OpenSpec gobierna cambios, pero no
+  despliega configuración. Dos mecanismos nunca administran el mismo target.
 
-  Todo rendering y apply del proof of concept debe usar un destino temporal
-  recién creado. Nunca debe apuntar a un home real. No se modifica configuración
-  activa de macOS, links de perfiles Arch, Kitty, Hyprland, Quattro, servicios,
-  paquetes no relacionados, autenticación ni configuración root-owned.
+  Los cambios son incrementales, canary-first, planificables antes de aplicar,
+  idempotentes y verificables. Una operación privilegiada debe ser explícita,
+  acotada, respaldable y reversible. Un host nuevo o hardware desconocido debe
+  producir diagnóstico o plan para revisión, no una mutación implícita.
 
-  No se almacenan secretos. Paquetes, servicios privilegiados del sistema,
-  estado mutable de aplicaciones, caches, sesiones de autenticación, inventario
-  de hardware y provisioning general permanecen fuera de Chezmoi salvo una
-  excepción estrecha justificada por otro cambio revisado. Las versiones de
-  OpenSpec, Node.js, npm y Chezmoi instaladas son tooling remoto de evaluación
-  documentado en docs/tooling/openspec-chezmoi.md; este cambio no agrega ni
-  elimina entradas de manifests productivos de paquetes.
+  Secretos, tokens, claves privadas, credenciales, caches, builds, datos
+  personales y estado mutable no se versionan. Los gates inevitables se
+  documentan con dueño, momento y verificación; nunca se ocultan detrás de una
+  afirmación de restauración completamente automática.
 
-  La estructura técnica, los nombres de archivos y directorios, headings,
-  nomenclatura técnica, metadata Git, commits y texto futuro de PR están en
-  inglés. Toda prosa explicativa está obligatoriamente en español profesional
-  UTF-8, salvo keywords estructurales exigidas por OpenSpec.
+  Nombres de archivos y directorios, headings, nomenclatura técnica, metadata
+  Git, Conventional Commits y texto de PR se escriben en inglés. La prosa
+  explicativa se escribe en español profesional UTF-8, salvo keywords exigidas
+  por herramientas o formatos externos.
 
 rules:
   proposal:
-    - Tratar Chezmoi como candidato y compararlo honestamente con scripts/link más scripts/profile-resolve.
-    - Incluir scope, non-goals, criterios medibles keep/migrate/reject y un path de no-adoption explícitos.
-    - Destacar las prohibiciones de destino no temporal y de modificación del macOS activo.
+    - Declarar scope, plataformas afectadas, non-goals, riesgos y path de rollback o no-adoption.
+    - Separar estado administrado, estado detectado y gates manuales; no prometer reproducibilidad sin evidencia.
+    - Identificar ownership actual y futuro sin superponer herramientas sobre un mismo target.
+    - Preferir una fase pequeña y verificable antes que una migración amplia.
   specs:
-    - Usar requisitos normativos SHALL o MUST con escenarios concretos WHEN/THEN.
-    - Cubrir rendering únicamente temporal, ownership único, coexistencia, rollback, drift, secretos, permisos, factibilidad Windows, documentación, CI y aceptación doctor.
-    - Distinguir physical GUI/meta key, application-primary modifier y chord de acción desktop/window-manager definido por sesión sin forzar chords idénticos entre plataformas.
-    - Preservar AeroSpace Hyper (cmd-alt-ctrl-shift) y Meh (alt-ctrl-shift), y reservar Windows key salvo asignación explícita en un diseño Windows posterior.
+    - Usar requisitos normativos SHALL o MUST y escenarios concretos WHEN/THEN.
+    - Cubrir plan/dry-run, idempotencia, drift, fallos parciales, rollback, secretos y verificación.
+    - Distinguir capacidades portables, políticas de plataforma y hechos de hardware o host.
+    - Definir resultados observables y evidencia; una revisión humana no se presenta como test automatizado.
   design:
-    - Explicar el aislamiento seguro de source, config, cache, state y destination, con fail-closed si un path resuelve a un home real.
-    - Definir criterios literal-file, small-template y separate-platform-file y prohibir template spaghetti; todo guardrail numérico del piloto es únicamente un tripwire de revisión subordinado a límites semánticos y legibilidad.
-    - Preservar límites shared-versus-platform y X11-versus-Wayland y documentar rollback target-by-target.
-    - Explicar cómo el piloto acotado encaja en un workstation bootstrap por fases sin atribuir a Chezmoi paquetes, servicios, autenticación, permisos, reinicios o adquisición del source.
+    - Mostrar límites de ownership, flujo de datos y fronteras de privilegios.
+    - Explicar defaults, detección de hardware, overrides y comportamiento fail-closed.
+    - Favorecer scripts y adaptadores explícitos sobre abstracciones que aumenten la complejidad total.
+    - Definir estrategia de backup, rollback, drift y segunda ejecución sin cambios.
   tasks:
-    - Mantener unchecked toda tarea futura y ordenarla canary-first.
-    - Exigir evidencia de validación para dry-run, diff, idempotencia, rollback, drift, permisos, Windows, documentación generada, CI y doctors.
-    - Incluir gates explícitos de revisión antes de conversión de targets, pruebas en máquinas reales o transferencia de ownership.
+    - Ordenar trabajo por fases pequeñas, canary-first, con gates explícitos antes de apply, privilegios o promoción.
+    - Incluir validación estática, pruebas aisladas, evidencia en host real y actualización documental.
+    - Mantener unchecked todo trabajo futuro y no anticipar commits, publicación, merge o validación no ejecutados.
+    - Exigir un inventario honesto de lo que permanece manual o fuera de alcance.
 
 operations:
   apply:
     guidance:
-      - No iniciar implementación sin aprobación explícita del usuario después de revisar los artefactos de planning.
-      - Usar únicamente un destino temporal aislado y detenerse si un path resuelto es el HOME real o un target de perfil activo.
-      - Nunca permitir que Chezmoi y scripts/link compartan ownership de un target ni modificar configuración macOS activa.
+      - Leer proposal, specs, design y tasks antes de editar implementación.
+      - Mantener un único owner por target y detenerse ante conflicto, secreto o hardware no reconocido.
+      - Ejecutar validaciones aisladas y dry-run antes de cualquier cambio real o privilegiado.
+      - No modificar plataformas, hosts ni perfiles fuera del scope aprobado del change.
+      - No aplicar cambios al host activo ni usar privilegios sin autorización explícita cuando el change lo requiera.
   archive:
     guidance:
-      - Archivar únicamente después de revisión separada de la implementación y de cada acceptance check.
+      - Archivar solo después de validar implementación, documentación, rollback e idempotencia.
+      - Mantener el estado de tareas históricamente honesto y sincronizar specs cuando corresponda.

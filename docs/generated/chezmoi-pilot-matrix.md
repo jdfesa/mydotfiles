@@ -2,7 +2,7 @@
 # Chezmoi Pilot Matrix
 
 Generator: `experiments/chezmoi-pilot/scripts/generate-docs`  
-Input digest: `7e2243d2e3577f6a5772497c45dc1f546bec7b27793007e22deed8840bd822c7`
+Input digest: `b88fc1f4371ba2454bca0af819c056e291935b82102993fe5d691cbf75e9b98d`
 
 ## Platform Evidence
 

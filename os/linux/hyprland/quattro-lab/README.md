@@ -96,7 +96,9 @@ os/linux/hyprland/quattro-lab/scripts/check-runtime
 `install-dependencies` no agrega el repositorio Omarchy a
 `/etc/pacman.conf`. Descarga `quickshell-git`, `xdg-terminal-exec` y
 `hyprland-preview-share-picker` por sus payloads exactos, valida los SHA-256
-fijados y luego usa `pacman -U`.
+fijados y luego usa `pacman -U`. Antes ejecuta una actualización completa
+`pacman -Syu --needed` junto con las dependencias oficiales; nunca instala
+paquetes contra bases refrescadas mediante una actualización parcial.
 
 ## Modelo de estado
 
@@ -126,6 +128,73 @@ obligatorio y fingerprint permanece ausente mientras no exista esa evidencia.
 4. ejecutar `install-dependencies`, `scripts/link --repair`, `prepare-user` e
    `install-session` en ese orden;
 5. terminar con `check-runtime` y `scripts/doctor arch-hyprland-quattro-lab`.
+
+### Qt y pantalla negra sin barra ni menus
+
+Quickshell usa APIs privadas de Qt: despues de actualizar Qt puede necesitar
+una recompilacion **aunque su version de codigo no cambie**. El payload
+Omarchy fijado no pertenece a un repositorio habilitado en Pacman, por lo que
+`pacman -Syu` no actualiza automaticamente esa recompilacion.
+
+El incidente del 2026-10-04 fue el payload `quickshell-git` pkgrel `-1`,
+compilado contra Qt 6.11.1, frente al Qt 6.11.2 actualizado. El loader fallaba
+con `undefined symbol` y `Qt_6_PRIVATE_API`; Hyprland seguia funcionando, pero
+el shell abandonaba tras seis intentos de arranque. El lock ahora fija pkgrel
+`-3`, publicado por Omarchy con el mismo commit y compilado para Qt 6.11.2.
+
+Antes de reiniciar o revertir el sistema, comprobar:
+
+```sh
+quickshell --private-check-compat
+hyprctl configerrors
+journalctl --user -b -t omarchy-shell --no-pager -n 40
+```
+
+Si Quickshell falla, revisar el rebuild en el DB oficial estable de Omarchy,
+comparar las versiones Qt en `.BUILDINFO`, actualizar el filename/SHA-256 del
+lock y el check de version, e instalar **solo** el payload verificado con
+`sudo pacman -U`. Luego ejecutar `omarchy-restart-shell` como usuario y
+`check-runtime`; no hace falta cerrar las aplicaciones ni reiniciar Hyprland.
+No reinstalar el payload viejo solo porque su checksum siga siendo valido,
+ni hacer downgrade aislado de Qt. `check-runtime` ahora ejecuta tambien el
+chequeo de compatibilidad para detectar futuros cambios de ABI.
+
+### Qt 6.12: menu negro por colision de `Color`
+
+QtQuick 6.12 incorpora un singleton `Color` que oculta `qs.Commons.Color`
+del runtime v4.0.0. El shell sigue respondiendo por IPC, pero los colores de
+menus, barra, bloqueo y paneles quedan `undefined`. Es una regresion QML
+distinta del aviso de ABI; recompilar Quickshell por si solo no la corrige.
+Referencias: [reporte upstream](https://github.com/omacom/omarchy/issues/14548)
+y [tipo incorporado en Qt 6.12](https://doc.qt.io/qt-6/qml-qtquick-color.html).
+
+La compatibilidad de Quattro se limita a su `config/compat-bin`: los wrappers
+`quickshell` y `qs` generan y verifican un overlay bajo
+`~/.local/share/mydotfiles/omarchy-quattro/qtquick-compat/<sha256>`. Solo copian
+el shell y fijan `import QtQuick 6.11` en sus consumidores de `Color`; el resto
+del runtime se enlaza al checkout original, que permanece limpio y fijado.
+Esto limita los tipos QML visibles, **no** baja la version de Qt instalada.
+Los paths de arranque, IPC y kill se traducen juntos; `OMARCHY_PATH` se cambia
+solo dentro de Quickshell para que tambien cargue los plugins corregidos.
+Se requiere Python 3, declarado en `runtime/arch-packages.txt`.
+
+```sh
+os/linux/hyprland/quattro-lab/scripts/prepare-shell-compat
+os/linux/hyprland/quattro-lab/scripts/test-shell-compat
+omarchy-restart-shell
+```
+
+Los overlays son derivados, publicados atomicamente y verificados byte a byte;
+no contienen preferencias del usuario. El wrapper rechaza un checkout upstream
+dirty o fuera del commit fijado. Al actualizar el runtime, revisar esta capa
+junto al lock. Para rollback, retirar los links `compat-bin/{quickshell,qs}` y
+reiniciar el shell con `/usr/bin/quickshell kill -p <overlay>/shell` seguido de
+`omarchy-restart-shell`; no modificar ni restaurar manualmente archivos QML
+upstream. Mientras Qt sea 6.12, ese rollback vuelve a exponer el bug.
+
+El 2026-10-08 el DB estable de Omarchy seguia publicando el payload `-3`,
+compilado contra Qt 6.11.2. El check de ABI se mantiene estricto: la correccion
+del menu no oculta ese aviso ni declara el binario recompilado.
 
 ## Validacion interactiva
 

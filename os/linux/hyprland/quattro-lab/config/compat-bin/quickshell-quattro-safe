@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Only Quattro's PATH includes this directory. Keep launches, IPC and kills on
+# the same generated config path, while preserving the pristine upstream tree.
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+lab_root=$(CDPATH='' cd -- "$script_dir/../.." && pwd -P)
+runtime_root=${OMARCHY_QUATTRO_RUNTIME:-${XDG_DATA_HOME:-$HOME/.local/share}/mydotfiles/omarchy-quattro/runtime}
+runtime_root=${runtime_root%/}
+args=("$@")
+indices=()
+equals_indices=()
+
+for (( i=0; i<${#args[@]}; i++ )); do
+  case ${args[i]} in
+    --) break ;;
+    -p | --path)
+      if (( i + 1 < ${#args[@]} )); then
+        (( i += 1 ))
+        case ${args[i]} in
+          "$runtime_root/shell" | "$runtime_root/shell/shell.qml") indices+=("$i") ;;
+        esac
+      fi
+      ;;
+    --path=*)
+      case ${args[i]#--path=} in
+        "$runtime_root/shell" | "$runtime_root/shell/shell.qml") equals_indices+=("$i") ;;
+      esac
+      ;;
+  esac
+done
+
+if (( ${#indices[@]} + ${#equals_indices[@]} > 0 )) || \
+  [[ ${QS_CONFIG_PATH:-} == "$runtime_root/shell" || ${QS_CONFIG_PATH:-} == "$runtime_root/shell/shell.qml" ]]; then
+  compat_root=$("$lab_root/scripts/prepare-shell-compat")
+  for i in "${indices[@]}"; do
+    args[i]="$compat_root${args[i]#"$runtime_root"}"
+  done
+  for i in "${equals_indices[@]}"; do
+    path=${args[i]#--path=}
+    args[i]="--path=$compat_root${path#"$runtime_root"}"
+  done
+  if [[ ${QS_CONFIG_PATH:-} == "$runtime_root/shell" || ${QS_CONFIG_PATH:-} == "$runtime_root/shell/shell.qml" ]]; then
+    export QS_CONFIG_PATH="$compat_root${QS_CONFIG_PATH#"$runtime_root"}"
+  fi
+  export OMARCHY_PATH="$compat_root"
+fi
+
+# Never resolve through PATH: qs and quickshell both point at this wrapper.
+exec /usr/bin/quickshell "${args[@]}"

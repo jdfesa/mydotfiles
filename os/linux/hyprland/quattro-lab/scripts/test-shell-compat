@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Exercise the derived overlay and session-scoped Quickshell argument mapping."""
+
+import json
+import os
+from pathlib import Path
+import runpy
+import subprocess
+import tempfile
+import unittest
+from unittest import mock
+
+LAB = Path(__file__).resolve().parent.parent
+MODULE = runpy.run_path(str(LAB / "scripts/prepare-shell-compat"))
+COMMIT = next(line.split("=", 1)[1] for line in
+              (LAB / "runtime/source.lock").read_text().splitlines()
+              if line.startswith("OMARCHY_COMMIT="))
+
+
+class ShellCompatibilityTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="quattro-shell-compat-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.source = self.root / "upstream"
+        (self.source / "shell/Commons").mkdir(parents=True)
+        (self.source / "bin").mkdir()
+        capture = self.source / "shell/capture.sh"
+        capture.write_text("#!/bin/sh\nexit 0\n")
+        capture.chmod(0o755)
+        self.qml = b"import QtQuick\nimport qs.Commons\nQtObject { property string marker: Color.marker }\n"
+        (self.source / "shell/shell.qml").write_bytes(self.qml)
+        (self.source / "shell/Commons/Color.qml").write_text(
+            "pragma Singleton\nimport QtQuick\nQtObject { property string marker: 'custom' }\n")
+        self.env = dict(os.environ, OMARCHY_QUATTRO_RUNTIME=str(self.source),
+                        XDG_DATA_HOME=str(self.root / "data"), OMARCHY_PATH=str(self.source))
+
+    def prepare(self, check=False, commit=COMMIT, dirty=False):
+        def git(args, **kwargs):
+            return commit if "rev-parse" in args else (b" M shell/shell.qml\n" if dirty else b"")
+        with mock.patch.dict(os.environ, self.env), mock.patch.object(subprocess, "check_output", side_effect=git):
+            return MODULE["prepare"](check)
+
+    def test_overlay_is_pinned_and_upstream_remains_unchanged(self):
+        target = self.prepare()
+        self.assertEqual((self.source / "shell/shell.qml").read_bytes(), self.qml)
+        self.assertIn(b"import QtQuick 6.11\n", (target / "shell/shell.qml").read_bytes())
+        self.assertEqual((target / "bin").resolve(), self.source / "bin")
+        self.assertEqual((target / "shell/capture.sh").stat().st_mode & 0o777, 0o755)
+        self.assertEqual(target, self.prepare(check=True))
+        self.assertEqual(json.loads((target / ".quattro-compat.json").read_text())["patched"],
+                         ["shell/shell.qml"])
+
+    def test_check_does_not_create_overlay(self):
+        with self.assertRaisesRegex(RuntimeError, "missing"):
+            self.prepare(check=True)
+        self.assertFalse((self.root / "data").exists())
+
+    def test_refuses_dirty_or_wrong_upstream(self):
+        with self.assertRaisesRegex(RuntimeError, "local modifications"):
+            self.prepare(dirty=True)
+        with self.assertRaisesRegex(RuntimeError, "pinned"):
+            self.prepare(commit="0" * 40)
+
+    def test_refuses_tampered_overlay(self):
+        target = self.prepare()
+        (target / "shell/shell.qml").write_text("tampered")
+        with self.assertRaisesRegex(RuntimeError, "file differs"):
+            self.prepare(check=True)
+
+    def test_refuses_extra_overlay_files(self):
+        target = self.prepare()
+        (target / "shell/extra.qml").write_text("unexpected")
+        with self.assertRaisesRegex(RuntimeError, "inventory differs"):
+            self.prepare(check=True)
+
+    def wrapper(self, args):
+        fake_bin = self.root / "test-bin"
+        fake_bin.mkdir(exist_ok=True)
+        git = fake_bin / "git"
+        git.write_text(f'#!/bin/sh\nif [ "$3" = rev-parse ]; then printf "%s\\n" "{COMMIT}"; fi\n')
+        git.chmod(0o755)
+        # Intercept only the final Bash exec, never changing a system binary or
+        # starting a GUI. The generated helper still runs normally.
+        bash_env = self.root / "bash-env"
+        bash_env.write_text('exec() { printf "%s\\0" "${OMARCHY_PATH:-}" "$@"; }\n')
+        env = dict(self.env, BASH_ENV=str(bash_env), PATH=str(fake_bin) + ":" + os.environ["PATH"])
+        result = subprocess.run(["bash", str(LAB / "config/compat-bin/quickshell-quattro-safe"), *args],
+                                env=env, check=True, capture_output=True)
+        return result.stdout.decode().rstrip("\0").split("\0")
+
+    def test_launch_ipc_kill_and_equals_paths_are_mapped(self):
+        original = str(self.source / "shell")
+        for args in (["-n", "-p", original], ["ipc", "--path", original, "call", "--", "shell", "ping"],
+                     ["kill", "-p", original, "--any-display"], ["--path=" + original + "/shell.qml"]):
+            with self.subTest(args=args):
+                result = self.wrapper(args)
+                overlay = Path(result[0])
+                self.assertEqual(result[1], "/usr/bin/quickshell")
+                self.assertTrue((overlay / ".quattro-compat.json").is_file())
+                self.assertEqual(result[2:], [arg.replace(original, str(overlay / "shell")) for arg in args])
+
+    def test_unrelated_paths_and_post_separator_args_are_untouched(self):
+        args = ["--help", "--", "-p", str(self.source / "shell")]
+        self.assertEqual(self.wrapper(args)[2:], args)
+        self.assertEqual(self.wrapper(["-p", "/tmp/another-shell"])[2:], ["-p", "/tmp/another-shell"])
+        self.assertFalse((self.root / "data").exists())
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -122,6 +122,18 @@ resolve_profile() {
             return 1
             ;;
         esac
+        target_rel=${target_expr#\$HOME/}
+        if [ -z "$target_rel" ]; then
+          printf 'Target must stay below $HOME: %s\n' "$target_expr" >&2
+          return 1
+        fi
+        case "/$target_rel/" in
+          *'/../'*|*'/./'*|*'//'*|*'|'*)
+            printf 'Target must stay below $HOME without ambiguous segments: %s\n' \
+              "$target_expr" >&2
+            return 1
+            ;;
+        esac
 
         if [ ! -e "$repo_root/$source_rel" ]; then
           printf 'Missing profile source: %s\n' "$repo_root/$source_rel" >&2
