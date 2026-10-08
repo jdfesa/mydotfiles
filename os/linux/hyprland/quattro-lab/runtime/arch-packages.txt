@@ -9,6 +9,7 @@ lua51
 luarocks
 pamixer
 power-profiles-daemon
+python
 socat
 udiskie
 wtype

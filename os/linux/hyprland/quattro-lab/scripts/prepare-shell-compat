@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""Build a verified QtQuick compatibility overlay without editing upstream."""
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import stat
+import subprocess
+import sys
+import tempfile
+
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def prepare(check=False):
+    lab = Path(__file__).resolve().parent.parent
+    data = Path(os.environ.get("XDG_DATA_HOME", str(Path.home() / ".local/share")))
+    source = Path(os.environ.get("OMARCHY_QUATTRO_RUNTIME", str(
+        data / "mydotfiles/omarchy-quattro/runtime"))).resolve()
+    lock = dict(line.split("=", 1) for line in
+                (lab / "runtime/source.lock").read_text().splitlines()
+                if line and not line.startswith("#"))
+    commit = subprocess.check_output(
+        ["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
+    if commit != lock["OMARCHY_COMMIT"]:
+        raise RuntimeError("synchronize the pinned Quattro runtime first")
+    if subprocess.check_output(["git", "-C", str(source), "status", "--porcelain"]):
+        raise RuntimeError("upstream runtime has local modifications; refusing to hide them")
+
+    files = {}
+    modes = {}
+    patched = []
+    for path in sorted((source / "shell").rglob("*")):
+        if path.is_symlink():
+            raise RuntimeError("unexpected symlink inside upstream shell")
+        if not path.is_file():
+            continue
+        content = path.read_bytes()
+        if path.suffix == ".qml" and re.search(rb"\bColor\.", content):
+            # QtQuick 6.12's Color shadows qs.Commons.Color. This only limits
+            # QML type exposure; it does not downgrade installed Qt libraries.
+            content, count = re.subn(
+                rb"(?m)^([ \t]*)import QtQuick[ \t]*$",
+                rb"\1import QtQuick 6.11", content)
+            if count != 1:
+                raise RuntimeError(f"unexpected QtQuick import in {path}")
+            patched.append(str(path.relative_to(source)))
+        name = str(path.relative_to(source))
+        files[name] = content
+        modes[name] = stat.S_IMODE(path.stat().st_mode)
+    if not patched:
+        raise RuntimeError("no expected Omarchy Color consumers found")
+
+    links = {p.name: str(p) for p in source.iterdir()
+             if p.name not in (".git", "shell")}
+    manifest = {
+        "source": str(source), "commit": commit,
+        "generator": digest(Path(__file__).read_bytes()),
+        "files": {name: digest(content) for name, content in files.items()},
+        "modes": modes, "links": links, "patched": patched,
+    }
+    encoded = json.dumps(manifest, sort_keys=True, indent=2).encode() + b"\n"
+    target = data / "mydotfiles/omarchy-quattro/qtquick-compat" / digest(encoded)
+
+    def verify():
+        if target.is_symlink() or not target.is_dir():
+            raise RuntimeError("compatibility overlay is missing; run prepare-shell-compat")
+        if (target / ".quattro-compat.json").read_bytes() != encoded:
+            raise RuntimeError("compatibility overlay manifest differs")
+        if {p.name for p in target.iterdir()} != set(links) | {"shell", ".quattro-compat.json"}:
+            raise RuntimeError("unexpected compatibility overlay entries")
+        for name, link in links.items():
+            if not (target / name).is_symlink() or os.readlink(target / name) != link:
+                raise RuntimeError(f"compatibility runtime link differs: {name}")
+        shell_files = {str(p.relative_to(target)) for p in (target / "shell").rglob("*")
+                       if p.is_file() or p.is_symlink()}
+        if shell_files != set(files):
+            raise RuntimeError("compatibility shell file inventory differs")
+        for name, content in files.items():
+            path = target / name
+            if path.is_symlink() or path.read_bytes() != content or stat.S_IMODE(path.stat().st_mode) != modes[name]:
+                raise RuntimeError(f"compatibility shell file differs: {name}")
+
+    if not target.exists() and not target.is_symlink() and not check:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        staging = Path(tempfile.mkdtemp(prefix=".prepare-", dir=target.parent))
+        try:
+            for name, content in files.items():
+                path = staging / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(content)
+                path.chmod(modes[name])
+            for name, link in links.items():
+                (staging / name).symlink_to(link, target_is_directory=Path(link).is_dir())
+            (staging / ".quattro-compat.json").write_bytes(encoded)
+            try:
+                staging.rename(target)
+            except OSError:
+                if not target.is_dir():
+                    raise
+        finally:
+            if staging.exists():
+                shutil.rmtree(staging)
+    verify()
+    return target
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true", help="verify, without generating files")
+    args = parser.parse_args()
+    try:
+        print(prepare(args.check))
+    except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+        print(f"Quattro shell compatibility: {error}", file=sys.stderr)
+        sys.exit(1)

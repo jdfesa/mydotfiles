@@ -69,6 +69,16 @@ else
   fail 'runtime checkout has local modifications'
 fi
 
+if [ -L "$config_root/compat-bin/quickshell" ] && \
+  [ -L "$config_root/compat-bin/qs" ] && \
+  [ "$(readlink -f "$config_root/compat-bin/quickshell")" = "$lab_root/config/compat-bin/quickshell-quattro-safe" ] && \
+  [ "$(readlink -f "$config_root/compat-bin/qs")" = "$lab_root/config/compat-bin/quickshell-quattro-safe" ] && \
+  "$lab_root/scripts/prepare-shell-compat" --check >/dev/null 2>&1; then
+  ok 'verified QtQuick Color compatibility overlay and launch/IPC wrappers'
+else
+  fail 'QtQuick compatibility overlay or session-scoped wrappers are missing or altered'
+fi
+
 for pair in \
   "$config_root/hyprland.lua:$runtime_root/config/hypr/hyprland.lua" \
   "$config_root/hypr/monitors.lua:$runtime_root/config/hypr/monitors.lua" \
@@ -192,12 +202,27 @@ else
 fi
 
 if [ "$(pacman -Q quickshell-git 2>/dev/null || true)" = \
-  'quickshell-git 0.3.0.r20.g28771c7-1' ] && \
-  [ "$(pacman -Q xdg-terminal-exec 2>/dev/null || true)" = \
-  'xdg-terminal-exec 0.14.2-1' ]; then
-  ok 'pinned Omarchy shell packages are installed'
+  'quickshell-git 0.3.0.r20.g28771c7-3' ]; then
+  ok 'pinned Omarchy Quickshell rebuild is installed'
 else
-  fail 'quickshell-git or xdg-terminal-exec exact version is missing'
+  fail 'quickshell-git exact rebuild 0.3.0.r20.g28771c7-3 is missing'
+fi
+
+# Qt private APIs can break a previously valid, checksummed Quickshell binary.
+# Check the executable, not just its package version, before trusting the UI.
+if quickshell_compat=$(timeout --kill-after=1s 5s quickshell --private-check-compat 2>&1); then
+  ok 'Quickshell executable is compatible with the current Qt runtime'
+else
+  fail 'Quickshell reports a Qt build mismatch; install a verified matching rebuild'
+  printf '%s\n' "$quickshell_compat" >&2
+fi
+
+# Arch now supplies this helper directly; newer official releases are valid.
+if command -v xdg-terminal-exec >/dev/null 2>&1 && \
+  pacman -T 'xdg-terminal-exec>=0.14.2-1' >/dev/null 2>&1; then
+  ok 'xdg-terminal-exec minimum supported version is installed'
+else
+  fail 'xdg-terminal-exec 0.14.2-1 or newer is missing'
 fi
 
 if [ "$(pacman -Q hyprland-preview-share-picker 2>/dev/null || true)" = \
