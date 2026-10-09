@@ -66,6 +66,9 @@ persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]
 # ═════════════════════════════════════════════════════════════════════
 [mode.main.binding]
 
+    # ─── TERMINAL: Launcher estilo Omarchy (Super = Cmd en macOS) ─────
+    cmd-enter = 'exec-and-forget open -n -a kitty'
+
     # ─── WORKSPACE: Ir (Hyper + letra) ───────────────────────────────
     cmd-alt-ctrl-shift-u = 'workspace U'       # Uno (principal)
     cmd-alt-ctrl-shift-i = 'workspace I'       # Internet

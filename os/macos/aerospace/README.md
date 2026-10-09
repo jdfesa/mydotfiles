@@ -27,6 +27,14 @@ Configuracion personal de [AeroSpace](https://github.com/nikitabobko/AeroSpace) 
 
 ## Uso Diario
 
+### Terminal
+
+| Atajo | Accion |
+|---|---|
+| `Cmd + Enter` | Abrir una nueva instancia/ventana de Kitty (equivalente a `Super + Enter` de Omarchy) |
+
+El launcher funciona en `main` y toma precedencia sobre el atajo interno de Kitty para crear paneles. Usa `open -n -a kitty` para abrir una nueva instancia con su ventana en cada pulsacion, incluso si Kitty ya esta abierto.
+
 ### Workspaces
 
 | Atajo | Accion |

@@ -18,6 +18,14 @@ Regla personal de esta configuracion:
 
 Este es el modo normal. Si no ves `[S]` ni `[R]` en Sketchybar, estas en `main`.
 
+### Abrir Terminal
+
+| Atajo | Accion |
+|---|---|
+| `Cmd + Enter` | Abrir una nueva instancia de Kitty con una ventana independiente |
+
+Este launcher replica `Super + Enter` de Omarchy: en macOS usamos `Cmd` como equivalente de `Super`. AeroSpace captura el atajo globalmente en `main`, por lo que ya no crea un panel interno cuando Kitty tiene el foco. Cada pulsacion ejecuta `open -n -a kitty` para abrir una nueva instancia con su ventana, incluso si Kitty ya esta abierto.
+
 ### Ir a Workspace
 
 | Atajo | Accion |
