@@ -61,14 +61,19 @@ Antes de instalar o enlazar, revisar que el repositorio este limpio:
 git status --short
 ```
 
-Activar los hooks versionados del repositorio:
+Preparar la visualizacion del Silakka54 si vas a modificar su configuracion:
 
 ```sh
-git config core.hooksPath .githooks
+cd hardware/silakka54
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+./render.sh --watch
 ```
 
-Esto restaura, entre otros controles, la regeneracion automatica del diagrama de
-Silakka54 cuando cambia su archivo `.vil`.
+El observador regenera el diagrama al guardar el `.vil`. Revisar `keymap.svg`
+antes de añadir los archivos y hacer commit; el commit ya no genera ni añade
+artefactos. Detener el observador con Ctrl+C y volver a la raiz del repositorio
+con `cd ../..` antes de continuar. Ver `hardware/silakka54/README.md`.
 
 ## 3. Install Packages
 

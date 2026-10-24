@@ -1,103 +1,155 @@
-# ⌨️ Silakka54 Dotfiles Configuration
+# Silakka54: respaldo y referencia de teclas
 
-Bienvenido a la configuración de tu teclado **Silakka54** (Split 5x6 Column Staggered).
+**`silakka54_main.vil` es la fuente de verdad y el respaldo de la configuración
+exportada desde Vial.** Los scripts solo lo leen: nunca lo modifican ni escriben
+en el teclado. Conservá este archivo aunque no necesites el gráfico.
 
-![Silakka54 Layout](./keymap.svg)
+![Teclas actuales del Silakka54](./keymap.svg)
 
-Esta carpeta contiene todo lo necesario para gestionar el layout del teclado y generar automáticamente la visualización gráfica del mismo.
+## Flujo: guardar → generar → revisar → commit
 
-## 📂 Estructura de Archivos
+1. Ajustá las teclas en Vial y exportá la configuración a `silakka54_main.vil`.
+2. Generá el gráfico, manualmente o con el observador de archivos.
+3. Abrí **`keymap.svg`** y revisá cada capa contra tu configuración.
+4. Recién entonces añadí el `.vil`, `keymap.yaml` y `keymap.svg` a Git y hacé commit.
 
-*   **`silakka54_main.vil`**: El archivo "fuente de la verdad". Es el layout exportado desde **Vial**. Aquí es donde haces tus cambios de teclas.
-*   **`render.sh`**: Script maestro de automatización.
-    *   Convierte `.vil` -> JSON intermedio.
-    *   Invierte las filas de la mano derecha (porque Vial las exporta al revés).
-    *   Invoca `post_process.py` para aplicar estilos.
-    *   Ejecuta `keymap-drawer` para generar el SVG.
-*   **`post_process.py`**: Script en Python que inyecta lógica visual.
-    *   Combina los estilos de `draw_config.yaml`.
-    *   Asigna automáticamente colores: Rojo para teclas destructivas (`Esc`, `Bksp`) y Azul para capas (`MO`, `LT`).
-*   **`qmk_info.json`**: Definición física del teclado. Le dice al dibujante dónde va cada tecla geométricamente (stagger, pulgares).
-*   **`draw_config.yaml`**: Configuración visual (CSS, modo oscuro, fuente JetBrains Mono).
-*   **`requirements.txt`**: Librerías de Python necesarias (`keymap-drawer`, `PyYAML`).
-*   **`keymap.svg`**: La imagen generada automáticamente. **No la edites manualmnete**.
+**El commit no genera imágenes ni añade archivos al stage.** Se eliminó el hook
+anterior: la revisión del gráfico tiene que ocurrir antes, no durante el commit.
 
-## 🚀 Cómo Funciona la Automatización
+### Generar una vez
 
-Todo está conectado a través de **Git**.
+Desde la raíz del repositorio (también funciona desde cualquier otra carpeta
+usando la ruta al script):
 
-1.  **Edita tu layout**:
-    *   Usa [Vial Web](https://vial.rocks/) o Vial Desktop.
-    *   Guarda tu configuración como `silakka54_main.vil` en esta carpeta (sobrescribiendo el anterior).
-2.  **Haz Commit**:
-    *   Simplemente ejecuta `git add .` y `git commit`.
-    *   Un **Git Hook** (`.git/hooks/pre-commit`) detectará que cambiaste el `.vil`.
-    *   Ejecutará `render.sh` automáticamente.
-    *   Si todo sale bien, la imagen `keymap.svg` se actualizará y se añadirá a tu commit.
+```bash
+./hardware/silakka54/render.sh
+```
 
-## 🛠 Instalación y Mantenimiento
+### Regenerar automáticamente al guardar
 
-Si cambias de ordenador o necesitas reinstalar el entorno:
+```bash
+./hardware/silakka54/render.sh --watch
+```
 
-1.  **Prerrequisitos**: Python 3 instalado.
-2.  **Crear entorno virtual**:
-    ```bash
-    cd mydotfiles/silakka54
-    python3 -m venv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
-    ```
-3.  **Probar generación manual**:
-    ```bash
-    ./render.sh
-    ```
+Hace una generación inicial y después observa el contenido del `.vil` y de las
+fuentes del renderizador. Espera a que termine el guardado antes de regenerar.
+Dejá esa terminal abierta mientras ajustás el teclado; `Ctrl+C` detiene el
+observador. No instala servicios, no depende de Git y no hace commits.
+Si un guardado es inválido, informa el error, conserva el gráfico anterior y
+vuelve a intentarlo cuando cambien las fuentes.
 
-## 🎨 Personalización Visual
+## Cómo leer el gráfico
 
-Si quieres cambiar colores o estilos:
+- **L0–L7**: todas las capas exportadas, incluidas las vacías/transparentes.
+- **Centro**: acción al tocar y soltar la tecla.
+- **Abajo**: en las teclas de doble función, acción al mantenerlas presionadas.
+  Por ejemplo, `Tab` con `L1` debajo significa: tocar envía Tab; mantener activa L1.
+- **1-shot**: no es una acción que requiera mantener la tecla. Indica que el
+  modificador queda preparado para la siguiente pulsación. En el Shift izquierdo,
+  tocá y soltá Shift y luego pulsá `a`: obtenés `A` sin sostener Shift. Si lo
+  mantenés presionado, también funciona como Shift normal.
+- **▽**: tecla transparente; se busca su acción en una capa activa inferior.
+  No significa «deshabilitada» ni se reemplaza siempre por la tecla de L0:
+  depende de qué capas estén activas. Una tecla sin acción queda en blanco.
+- **Azul**: cambio de capa. **Rojo**: Esc, Backspace, Delete o Caps Lock.
+- **× y borde discontinuo**: uso evitado por decisión personal; la tecla sigue activa.
+- **Meh**: Ctrl+Alt+Shift. **Hyper**: Ctrl+Alt+Shift+Gui.
 
-1.  Edita **`draw_config.yaml`** para cambiar el CSS (colores de fondo, fuentes).
-2.  Edita **`post_process.py`** si quieres cambiar qué teclas se consideran "destructivas" (rojas) o de "capa" (azules).
+El gráfico representa las asignaciones por capa, no una simulación del estado
+del teclado. No representa combos, macros, tap dances ni tiempos de pulsación;
+esos datos se conservan en el `.vil`.
 
-## 🧠 Comportamientos "Mágicos" (Ya configurados)
+### Decisión personal de ergonomía: evitar la fila superior
 
-Tu teclado tiene superpoderes ocultos en la configuración actual:
+No uso intencionalmente la fila superior (Esc, números y Backspace) para limitar
+el desplazamiento de los dedos a una posición desde la fila central. Por eso
+sus 12 teclas están marcadas con **× solo en L0**. Siguen teniendo sus funciones:
+la marca no las desactiva ni cambia el `.vil` o las demás capas. Eventualmente
+planeo migrar a un teclado sin esa fila. La anotación se reaplica al generar el gráfico.
 
-*   **Hyper Key**: Si mantienes presionado `Enter` (pulgar derecho), actúa como `Cmd+Alt+Ctrl+Shift`. Ideal para atajos de window management (Aerospace).
-*   **Escape Rápido**: Presionar `j` + `k` al mismo tiempo = `Esc`. (Combo).
-*   **Caps Word**: Presionar `Shift Izquierdo` + `Shift Derecho` al mismo tiempo activa mayúsculas *solo para la palabra actual*. Se desactiva automáticamente al presionar Espacio.
-*   **Caps Lock Perenne**: Golpear `Shift Izquierdo` dos veces rápido (Double Tap) = Caps Lock activado permanentemente. (Un toque más para desactivar).
-*   **Space**: Configurado como tecla única en el pulgar izquierdo.
+### Gui: el mismo modificador en distintos sistemas
 
----
+**`Gui` es el nombre técnico neutral del modificador**, no una tecla exclusiva
+de macOS. En el gráfico se mantiene esa etiqueta corta para no sobrecargar
+las teclas con varios nombres:
 
-## 🔮 El Camino hacia Corne (Sugerencias 40%)
+| Sistema | Nombre habitual de Gui |
+|---|---|
+| macOS | Cmd / Command (⌘) |
+| Linux | Super |
+| Windows | Win / Windows |
 
-Si tu meta es reducir teclas (migrar a un Corne de 42 o 36 teclas) y descartar la fila numérica y columnas exteriores, aquí tienes una hoja de ruta de mejoras sugeridas (sin aplicar aún):
+En tu configuración:
 
-### 1. Home Row Mods (La clave del minimalismo)
-Como perderás las columnas exteriores donde viven `Ctrl`, `Alt`, `Shift` clásico, la solución es ponerlos en `A, S, D, F`.
-*   Mantener `F` = `Shift`
-*   Mantener `D` = `Cmd` (o `Ctrl`)
-*   Mantener `S` = `Alt`
-*   Esto libera los meñiques y permite teclados en miniatura.
+- **Esc / Gui**, pulgar izquierdo: tocar envía Esc; mantener activa Gui izquierdo.
+- **Bksp / Gui**, pulgar derecho: tocar envía Backspace; mantener activa Gui derecho.
 
-### 2. Capa de Navegación & Mouse (Capa 4 - Vacía)
-Podrías usar una de las capas vacías para convertir `I, J, K, L` en un mouse real.
-*   Move Mouse Up/Down/Left/Right.
-*   Click Izquierdo/Derecho en los pulgares.
-*   Scroll con `U` y `O`.
-*   *Útil para no soltar el teclado nunca.*
+Ambos son modificadores Gui; la distinción izquierda/derecha se conserva en el
+`.vil`. El teclado puede enviar los mismos códigos en todos los sistemas,
+pero eso no garantiza que sus atajos completos tengan el mismo efecto:
+el sistema operativo y cada aplicación deciden qué hacer con ellos.
 
-### 3. Capa de Símbolos Optimizada (Coding)
-La capa actual tiene símbolos, pero un layout como **"Callum-style mods"** o una capa de símbolos dedicada para programar (`{ } [ ] ( )` en la "Home Row" de una capa) acelera el flujo de código un 200%.
+### KP + y KP −: códigos de teclado numérico
 
-### 4. Capa AeroSpace Dedicada (Capa 5 - Vacía)
-Ya que usas AeroSpace, podrías mapear una capa donde:
-*   Las teclas `Q, W, E, R...` muevan ventanas directamente sin necesitar el acorde de 4 dedos (Hyper).
-*   Simplemente mantienes presionado un pulgar (ej. `Lower`) y presionas `1` para ir al workspace 1.
+**KP significa keypad**, teclado numérico. El respaldo asigna `KC_KP_PLUS` y
+`KC_KP_MINUS`: por eso el gráfico muestra `KP +` y `KP -`, aunque no exista un
+bloque numérico físico en el Silakka54.
 
-*Estas son solo ideas para cuando te sientas listo para el siguiente nivel de eficiencia.* 🧪
+Normalmente producen los símbolos `+` y `-`, pero sus códigos son distintos de
+los de la zona principal del teclado y pueden distinguirse en los atajos. No
+se elimina `KP` para no ocultar esa diferencia; no depende del sistema operativo.
 
----
-*Documentación generada para el futuro yo.* 🤖
+### Símbolos US: distribución de idioma, no sistema operativo
+
+Los símbolos (`{`, `}`, `!`, etc.) se muestran interpretando los códigos según
+la distribución estadounidense **US**. Esto no hace al teclado exclusivo de un
+sistema: podés usar una distribución US tanto en macOS como en Linux o Windows.
+
+El teclado envía códigos, no caracteres de texto. La distribución configurada
+en el sistema los interpreta; con una distribución de idioma diferente, algunos
+caracteres pueden no coincidir con los dibujados.
+
+Referencias oficiales: [modificadores y keypad en QMK](https://docs.qmk.fm/keycodes_basic),
+[one-shot](https://docs.qmk.fm/one_shot_keys),
+[capas transparentes](https://docs.qmk.fm/keymap#layer-precedence-and-transparency) y
+[distribuciones de idioma](https://docs.qmk.fm/reference_keymap_extras).
+
+## Instalación
+
+Se necesita Python 3.10 o posterior. Desde la raíz del repositorio:
+
+```bash
+cd hardware/silakka54
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+./render.sh
+```
+
+Las versiones probadas de `keymap-drawer` y `PyYAML` están fijadas. La generación
+no descarga geometría, iconos ni fuentes: usa `qmk_info.json` y fuentes locales.
+`keymap-drawer` puede mostrar un aviso de deprecación de Pydantic al cargar su
+configuración; no es un fallo de generación. El script verifica el SVG antes de
+publicarlo y devuelve un error si no puede generarlo.
+
+## Archivos
+
+| Archivo | Función |
+|---|---|
+| `silakka54_main.vil` | Respaldo original; no se regenera ni modifica |
+| `render.sh` | Generación segura; solo publica resultados completos y validados |
+| `watch.py` | Regeneración automática opt-in al guardar las fuentes |
+| `convert_vial.py` | Valida 54 posiciones y normaliza el orden físico y `LTn` |
+| `post_process.py` | Traduce leyendas, aplica estilos y anota la fila de uso evitado en L0 |
+| `qmk_info.json` | Posiciones físicas, incluyendo el orden de los pulgares |
+| `draw_config.yaml` | Estilo del gráfico y leyenda |
+| `keymap.yaml`, `keymap.svg` | Artefactos generados; no editar a mano |
+
+## Pruebas
+
+```bash
+hardware/silakka54/.venv/bin/python -m unittest discover -s hardware/silakka54 -p 'test_*.py' -v
+```
+
+Comprueban el orden de ambas manos y pulgares, traducciones, capas, generación
+reproducible, marcas de uso evitado solo en L0, regeneración al guardar y
+conservación de salidas ante errores.

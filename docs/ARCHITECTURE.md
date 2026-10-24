@@ -99,9 +99,6 @@ mydotfiles/
     validate-profiles
     validate-references
 
-  .githooks/                 # hooks de Git versionados
-    pre-commit
-
   docs/
     ARCHITECTURE.md
     RESTORE.md

@@ -27,8 +27,9 @@ bootstrap, linking, instalacion y mantenimiento general de `~/mydotfiles`.
 Los manifiestos instalables viven en `profiles/*.links`; sus fragmentos
 reusables viven en `profiles/layers/`. Ver `profiles/README.md`.
 
-Los hooks de Git viven en `.githooks/` para que tambien sean reproducibles. Se
-activan una vez por clon con `git config core.hooksPath .githooks`.
+El grafico del Silakka54 se genera **antes** del commit, con
+`hardware/silakka54/render.sh` o su modo `--watch`, para revisarlo antes de
+añadirlo al stage. No se genera ni se añade automaticamente durante el commit.
 
 Las herramientas de auditoria de fuentes externas viven en
 `references/tools/`; no pertenecen a esta carpeta porque no participan del
