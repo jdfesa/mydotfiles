@@ -1,51 +1,20 @@
 draw_config:
-  key_w: 72
   key_h: 62
-  split_gap: 30
   dark_mode: true
   n_columns: 1
-  
-  # --- CSS CRÍTICO: ESTO ES LO QUE ARREGLA EL COLOR ---
-  svg_style: |
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800');
-    
-    /* 1. REGLA GLOBAL: Todo texto nace BLANCO */
-    text, tspan {
-        font-family: "JetBrains Mono", monospace !important;
-        fill: #ffffff !important; /* Blanco obligatorio */
-        text-anchor: middle;
-        dominant-baseline: middle;
-        stroke: none !important;
-    }
-
-    /* 2. FORZAR BLANCO EN TECLAS DE COLOR (La solución real) */
-    /* Apuntamos especificamente a las clases que generan el fondo rojo/azul */
-    .destructive text, .layer text, .destructive tspan, .layer tspan {
-        fill: #ffffff !important;
-        opacity: 1 !important;
-    }
-
-    /* Tamaños y Posición */
-    text.tap { font-size: 13px !important; font-weight: 800; }
-    
-    /* Texto Secundario (Super/Sym/Nav) - SUBIDO para que se vea */
-    text.hold, text.shifted {
-        font-size: 10px !important;
-        font-weight: 800 !important;
-        transform: translateY(-9px); /* Subimos 9px para separarlo del borde */
-    }
-
-    /* Colores de Fondo */
-    .destructive { fill: #c62828 !important; } /* Rojo */
-    .layer { fill: #0277bd !important; }       /* Azul */
-    .trans { fill: #424242 !important; opacity: 0.9; }
-    .ghost { fill: none !important; stroke: #aaaaaa !important; stroke-dasharray: 4 2; opacity: 0.5; }
-
-    /* ETIQUETAS DE CAPA (L0, Sym, etc) */
-    text.label {
-        fill: #ffffff !important;
-        font-size: 20px !important;
-        font-weight: 800 !important;
-        opacity: 1 !important;
-        text-anchor: start !important; /* Alinear a la izquierda si es necesario */
-    }
+  footer_text: '×: uso evitado (activa) · Centro: toque · Abajo: mantener · 1-shot: próxima tecla · ▽: transparente · Símbolos US'
+  # Preserve keymap-drawer's default styles and work without remote fonts.
+  svg_extra_style: |
+    svg.keymap { font-family: "JetBrains Mono", monospace; background: #181b20; }
+    text, tspan { fill: #f5f7fa; stroke: none; }
+    text.tap { font-size: 13px; font-weight: 700; }
+    text.hold, text.shifted { font-size: 10px; }
+    text.label { font-size: 20px; font-weight: 700; }
+    rect.key { fill: #303640; stroke: #69727f; }
+    rect.key.destructive { fill: #a82c36; }
+    rect.key.layer { fill: #126496; }
+    rect.key.trans { fill: #232830; stroke: #414955; }
+    text.key.trans { fill: #8993a2; }
+    rect.key.avoided { stroke: #e9ad55; stroke-width: 1.5; stroke-dasharray: 4 3; }
+    text.key.avoided.tr { fill: #ffc373; font-size: 18px; font-weight: 700; }
+    text.footer { font-size: 12px; }

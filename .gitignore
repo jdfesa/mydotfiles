@@ -2,5 +2,7 @@
 .nvimlog
 os/macos/sketchybar/secrets.sh
 hardware/silakka54/.venv
+hardware/silakka54/__pycache__/
+hardware/silakka54/.render.*/
 tmp/
 shared/zsh/local.zsh

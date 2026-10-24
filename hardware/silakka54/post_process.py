@@ -1,103 +1,109 @@
-import yaml
+"""Translate Vial/QMK legends and apply presentation-only styles."""
+
+from pathlib import Path
+import json
+import re
 import sys
-import os
 
-def represent_str(dumper, data):
-    if '\n' in data:
-        return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
-    return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+import yaml
 
-yaml.add_representer(str, represent_str)
+
+LABELS = {
+    "SCOLON": ";", "SEMICOLON": ";", "SCLN": ";",
+    "MINUS": "-", "MINS": "-", "EQUAL": "=", "EQL": "=",
+    "LBRACKET": "[", "LEFT_BRACKET": "[", "LBRC": "[",
+    "RBRACKET": "]", "RIGHT_BRACKET": "]", "RBRC": "]",
+    "BSLASH": "\\", "BACKSLASH": "\\", "BSLS": "\\",
+    "SLASH": "/", "COMMA": ",", "DOT": ".", "QUOTE": "'", "GRAVE": "`",
+    "ESCAPE": "Esc", "ESC": "Esc", "BSPACE": "Bksp", "BSPC": "Bksp",
+    "DELETE": "Del", "DEL": "Del", "CAPSLOCK": "Caps", "CAPS": "Caps",
+    "SPACE": "Space", "SPC": "Space", "ENTER": "Enter", "ENT": "Enter", "TAB": "Tab",
+    "LALT": "Alt", "RALT": "Alt", "LCTL": "Ctrl", "RCTL": "Ctrl", "Ctl": "Ctrl",
+    "LCTRL": "Ctrl", "RCTRL": "Ctrl", "LGUI": "Gui", "RGUI": "Gui", "Sft": "Shift",
+    "LSFT": "Shift", "RSFT": "Shift", "LSHIFT": "Shift", "RSHIFT": "Shift",
+    "MEH": "Meh", "ALL": "Hyper", "HYPR": "Hyper",
+    "TRNS": "▽", "TRANSPARENT": "▽", "sticky": "1-shot",
+    "KP PLUS": "KP +", "KP MINUS": "KP -",
+    "HOME": "Home", "END": "End", "PGUP": "PgUp", "PGDOWN": "PgDn",
+    "LEFT": "←", "DOWN": "↓", "UP": "↑", "RIGHT": "→",
+    "APPLICATION": "Menu", "VOLU": "Vol +", "VOLD": "Vol -",
+    "MFFD": "Fwd", "MPRV": "Prev", "MNXT": "Next",
+}
+SHIFTED = dict(zip("1234567890`-=[]\\;',./", "!@#$%^&*()~_+{}|:\"<>?"))
+DESTRUCTIVE = {"Esc", "Bksp", "Del", "Caps"}
+
+
+def legend(label):
+    """Keep unknown legends visible; never silently drop an unmapped binding."""
+    label = str(label)
+    if label.startswith("Sft+") and label.count("+") == 1:
+        base = legend(label[4:])
+        return SHIFTED.get(base, f"Shift+{base}")
+    if "+" in label:
+        return "+".join(legend(part) for part in label.split("+"))
+    return LABELS.get(label.removeprefix("KC_"), label)
+
+
+def style_key(key, binding=None):
+    meta = dict(key) if isinstance(key, dict) else {"t": key}
+    for field in ("t", "h", "s", "left", "right"):
+        if field in meta:
+            meta[field] = legend(meta[field])
+
+    # This is a binding reference, not a simulated activation path. The parser
+    # may clear held legends, so consult the source instead of guessing whether
+    # a blank key was transparent or explicitly disabled with KC_NO.
+    types = meta.get("type", "").split()
+    if binding in ("KC_TRNS", "KC_TRANSPARENT", "_______"):
+        meta["t"] = "▽"
+    types = [value for value in types if value not in ("held", "alternate")]
+    if meta.get("t") == "▽" and not meta.get("h"):
+        types.append("trans")
+    if any(re.fullmatch(r"L\d+", meta.get(field, "")) for field in ("t", "h")):
+        types.append("layer")
+    elif meta.get("t") in DESTRUCTIVE:
+        types.append("destructive")
+    meta.pop("type", None)
+    if types:
+        meta["type"] = " ".join(dict.fromkeys(types))
+    return meta if set(meta) != {"t"} else meta["t"]
+
+
+def process(data, source):
+    for layer_index, rows in enumerate(data["layers"].values()):
+        position = 0
+        for row in rows:
+            for index, key in enumerate(row):
+                styled = style_key(key, source["layers"][layer_index][position])
+                # Personal usage note, not a disabled key or a firmware change.
+                # After Vial conversion, positions 0–11 span both top rows.
+                if layer_index == 0 and position < 12:
+                    styled = dict(styled) if isinstance(styled, dict) else {"t": styled}
+                    styled["tr"] = "×"
+                    styled["type"] = " ".join(filter(None, (styled.get("type"), "avoided")))
+                row[index] = styled
+                position += 1
+    return data
+
+
+def represent_str(dumper, value):
+    return dumper.represent_scalar(
+        "tag:yaml.org,2002:str", value, style="|" if "\n" in value else None
+    )
+
+
+yaml.SafeDumper.add_representer(str, represent_str)
+
 
 def main():
-    base_dir = sys.argv[1]
-    layers_path = os.path.join(base_dir, "keymap_layers.yaml")
-    config_path = os.path.join(base_dir, "draw_config.yaml")
-    output_path = os.path.join(base_dir, "keymap.yaml")
+    layers_path, source_path, output_path = map(Path, sys.argv[1:])
+    data = yaml.safe_load(layers_path.read_text(encoding="utf-8"))
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    output_path.write_text(
+        yaml.safe_dump(process(data, source), sort_keys=False, allow_unicode=True),
+        encoding="utf-8",
+    )
 
-    # Load Layers
-    with open(layers_path, 'r') as f:
-        data = yaml.safe_load(f)
-
-    # Load Config
-    with open(config_path, 'r') as f:
-        config = yaml.safe_load(f)
-
-    # Merge Config into Data (Top level)
-    if 'draw_config' in config:
-        data['draw_config'] = config['draw_config']
-    
-    # Post-process keys for styling
-    destructive_keys = ['Esc', 'Bksp', 'Del', 'Caps', 'ESCAPE', 'BSPACE', 'DELETE', 'CAPSLOCK']
-    
-    if 'layers' in data:
-        for layer_name, rows in data['layers'].items():
-            for row in rows:
-                for i, key in enumerate(row):
-                    # Key can be a string or a dict
-                    label = key
-                    meta = {}
-                    
-                    if isinstance(key, dict):
-                        label = key.get('t', '')
-                        meta = key
-                    elif isinstance(key, str):
-                        label = key
-                        meta = {'t': key}
-                        # If we modify it, we must replace the string with the dict
-                    
-                    # REPLACEMENTS
-                    replacements = {
-                        'SCOLON': ';', 'KC_SCOLON': ';',
-                        'MINUS': '-', 'KC_MINUS': '-',
-                        'EQUAL': '=', 'KC_EQUAL': '=',
-                        'LBRACKET': '[', 'KC_LBRACKET': '[',
-                        'RBRACKET': ']', 'KC_RBRACKET': ']',
-                        'BSLASH': '\\', 'KC_BSLASH': '\\',
-                        'SLASH': '/', 'KC_SLASH': '/',
-                        'COMMA': ',', 'KC_COMMA': ',',
-                        'DOT': '.', 'KC_DOT': '.',
-                        'QUOTE': "'", 'KC_QUOTE': "'",
-                        'GRAVE': '`', 'KC_GRAVE': '`',
-                        'Sft+1': '!', 'Sft+2': '@', 'Sft+3': '#', 'Sft+4': '$', 'Sft+5': '%',
-                        'Sft+6': '^', 'Sft+7': '&', 'Sft+8': '*', 'Sft+9': '(', 'Sft+0': ')',
-                        'Sft+`': '~', 'Sft+-': '_', 'Sft+=': '+', 'Sft+[': '{', 'Sft+]': '}',
-                        'Sft+\\': '|', 'Sft+;': ':', 'Sft+\'': '"', 'Sft+,': '<', 'Sft+.': '>', 'Sft+/': '?',
-                        'LALT': 'Alt', 'RALT': 'Alt', 'LCTL': 'Ctrl', 'RCTL': 'Ctrl',
-                        'LGUI': 'Gui', 'RGUI': 'Gui', 'LSFT': 'Shift', 'RSFT': 'Shift',
-                        'ESCAPE': 'Esc', 'BSPACE': 'Bksp', 'DELETE': 'Del', 'CAPSLOCK': 'Caps',
-                        'KC_ESCAPE': 'Esc', 'KC_BSPACE': 'Bksp', 'KC_DELETE': 'Del', 'KC_CAPSLOCK': 'Caps',
-                        'KC_LALT': 'Alt', 'KC_RALT': 'Alt', 'KC_LCTL': 'Ctrl', 'KC_RCTL': 'Ctrl',
-                        'KC_LGUI': 'Gui', 'KC_RGUI': 'Gui', 'KC_LSFT': 'Shift', 'KC_RSFT': 'Shift',
-                        'KC_SPACE': 'Space', 'KC_ENTER': 'Enter', 'KC_TAB': 'Tab'
-                    }
-                    
-                    # Clean up common prefixes if needed (like KC_) - handled in dict above for safety
-                    if label in replacements:
-                        label = replacements[label]
-                        meta['t'] = label
-                        row[i] = meta # Ensure change is saved
-                    
-                    # Clean up 'Sft+' prefix for unmapped keys if desirabled? 
-                    # User asked for "Sft+1" -> "!", covering most common ones.
-                    
-                    # Apply rules
-                    # 1. Destructive
-                    if label in destructive_keys:
-                        meta['type'] = 'destructive'
-                        row[i] = meta
-                    
-                    # 2. Layer (if it has a hold 'h' that looks like a layer or is explicit)
-                    if isinstance(key, dict) and 'h' in key:
-                        hold = key['h']
-                        # Simple heuristic: if hold starts with L (L1, L2) or matches Nav/Sym/Func etc
-                        if str(hold).startswith('L') or str(hold) in ['Sym', 'Nav', 'Func', 'Num', 'Maus']:
-                             meta['type'] = 'layer'
-                             row[i] = meta
-
-    # Write output
-    with open(output_path, 'w') as f:
-        yaml.dump(data, f, sort_keys=False, default_flow_style=None)
 
 if __name__ == "__main__":
     main()
