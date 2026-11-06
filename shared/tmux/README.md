@@ -1,25 +1,24 @@
 # Tmux
 
-Tmux mantiene las sesiones en el equipo donde corre su servidor. Cerrar la
-terminal o desconectarse no mata los procesos de una sesión; reiniciar el
-equipo o detener el servidor sí termina el trabajo que estaba en ejecución.
-
-## Configuration
-
-`tmux.conf` conserva el prefijo nativo `Ctrl+b` y no carga plugins, layouts
-guardados ni scripts. Al crear una ventana o dividir un panel, la nueva
-terminal abre en el directorio del panel activo. No se cambia `TERM` ni se
-añade un comando de portapapeles específico del sistema.
+`tmux.conf` conserva sin cambios la [configuración de
+hendrikmi/dotfiles](https://github.com/hendrikmi/dotfiles/blob/01b73ac65c3680d38407f88d2d143f330b09577b/tmux/tmux.conf).
+El aviso MIT correspondiente está en [LICENSE](LICENSE).
 
 ## macOS
 
 Homebrew instala tmux como parte del manifiesto base. El perfil `macos-main`
-enlaza el archivo en `~/.config/tmux/tmux.conf`. Antes de desplegar el perfil,
-revisa el plan de `scripts/link --dry-run macos-main`.
+enlaza el archivo en `~/.config/tmux/tmux.conf`. Ghostty abre o recupera la
+sesión `mydotfiles` sin un script intermedio. Kitty conserva sus atajos
+propios; el prefijo de tmux no es `Ctrl+b`.
 
-Kitty en macOS deja pasar `Ctrl+b` a tmux. Ghostty abre o recupera la sesión
-`mydotfiles` con tmux directamente, sin un script intermedio; si no puede,
-abre Zsh. No se cambian los perfiles de Arch o Debian.
+El archivo inicia Zsh, usa `pbcopy` para el portapapeles de macOS y busca TPM
+en `~/.tmux/plugins/tpm/tpm`. Si falta TPM, no se cargan los plugins. Para
+un despliegue real, revisa primero el perfil con
+`scripts/link --dry-run macos-main` y sigue las
+[instrucciones de TPM](https://github.com/tmux-plugins/tpm#installation).
+Una vez disponible TPM, `Ctrl+Espacio` seguido de `I` instala los plugins
+declarados en el archivo. El historial y los archivos de restauración
+pueden contener información privada y deben quedar fuera de Git.
 
 ## Quick Start
 
@@ -27,28 +26,31 @@ abre Zsh. No se cambian los perfiles de Arch o Debian.
 tmux new-session -A -s mydotfiles -c "$HOME/mydotfiles"
 ```
 
-Una **sesión** agrupa el trabajo de un proyecto, una **ventana** funciona como
-una pestaña y un **panel** es una terminal dentro de esa ventana. Pulsa y
-suelta `Ctrl+b` antes de la segunda tecla:
+El prefijo es **`Ctrl+Espacio`**. Pulsa y suelta la combinación antes de
+presionar la segunda tecla:
 
 | Tecla | Acción |
 |---|---|
-| `c` | Crear una ventana en el directorio actual |
-| `%` / `"` | Dividir izquierda/derecha o arriba/abajo, en el directorio actual |
+| `c` | Crear una ventana en el directorio del panel activo |
+| `\` | Dividir izquierda/derecha |
+| `-` | Dividir arriba/abajo |
 | Flechas | Cambiar de panel |
+| `m` | Maximizar o restaurar el panel |
 | `s` / `w` | Elegir sesión o ventana |
-| `z` | Maximizar o restaurar el panel |
 | `d` | Desconectarse sin cerrar la sesión |
 
-Para volver, ejecuta el mismo `new-session -A` desde el shell, fuera de tmux.
-Puedes ver las sesiones disponibles con `tmux list-sessions`.
+Las divisiones también heredan el directorio del panel activo. Ejecuta
+`tmux attach-session -t mydotfiles` para volver a la sesión. Tras un reinicio,
+los plugins de restauración pueden reconstruir la disposición guardada; no
+mantienen vivos los procesos que estaban ejecutándose.
 
-## Isolated Test
+## Keyboard Conflicts
 
-```sh
-tmux -L macos-trial -f "$HOME/mydotfiles/shared/tmux/tmux.conf" new-session -A -s trial
-```
+Si `Ctrl+Espacio` no llega a tmux, revisa **Ajustes del Sistema → Teclado →
+Atajos de teclado → Fuentes de entrada**. macOS puede reservar esa
+combinación para cambiar de fuente de entrada. Este repositorio no modifica
+ese ajuste del sistema.
 
-Este socket separado permite probar la configuración sin recargar el servidor
-habitual. Tras desconectarte, usa `tmux -L macos-trial attach-session -t trial`
-para comprobar que sigue viva.
+Para probar la configuración sin afectar el servidor habitual, usa un
+`HOME` y un socket de tmux separados. No recargues una sesión de trabajo
+para hacer la prueba.
