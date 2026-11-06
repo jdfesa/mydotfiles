@@ -9,7 +9,7 @@ informando `16 ok, 0 warning(s), 0 error(s)`.
 El repositorio restaura automaticamente:
 
 - los archivos versionados;
-- los 16 symlinks declarados en `profiles/macos-main.links`;
+- los enlaces declarados en `profiles/macos-main.links`;
 - configuraciones de terminal, shell, editores y herramientas CLI;
 - configuraciones exclusivas de macOS como AeroSpace, Sketchybar y Hammerspoon;
 - la receta de paquetes declarada mediante Brewfiles.

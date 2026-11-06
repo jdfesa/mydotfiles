@@ -34,6 +34,8 @@ Actualmente incluye:
 - rutas base portables (`/usr/local/bin`, `/opt/homebrew/bin`, `~/.local/bin`).
 - carga opcional de `zsh/local.zsh` para GHCup/Cabal, Android, Java, Antigravity, opencode, NVM u otras rutas locales.
 - `bat`, usado mediante aliases seguros para lectura enriquecida de archivos sin reemplazar `cat`.
+- Neovim, disponible con el alias `v`: `v archivo.md` abre el archivo
+  con el perfil habitual del editor.
 - `eza`, usado mediante aliases para `ls`, `ll`, `la` y `lt`.
 - `ripgrep`, usado mediante aliases para busqueda rapida con `rg`.
 - `fzf`, inicializado con `source <(fzf --zsh)` para historial y selectores interactivos.
@@ -47,6 +49,7 @@ type z
 type zi
 type b
 type preview
+type v
 type ls
 type ll
 type rgi

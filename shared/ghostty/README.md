@@ -24,8 +24,8 @@ Configuration for [Ghostty](https://github.com/ghostty-org/ghostty), the fast, f
 *   **Quick Terminal**: Toggle with `Cmd + S`.
     *   *Animation*: 0.08s slide-in.
 *   **Shell Integration**:
-    *   Auto-attaches to **Tmux** if installed (`tmux-sessionizer`).
-    *   Falls back to `zsh` if Tmux is missing.
+    *   Abre o recupera la sesión `mydotfiles` con tmux directamente.
+    *   Abre Zsh si no puede conectarse o si ya está dentro de tmux.
 *   **MacOS Option Key**: Mapped to `Right Option` as Alt (preserves Left Option for macOS special chars).
 
 ## 🔄 How to Reload

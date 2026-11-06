@@ -12,14 +12,8 @@ set -euo pipefail
 
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
 script_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/$(basename -- "${BASH_SOURCE[0]}")"
-work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
 colorscheme_file="$HOME/mydotfiles/shared/colorscheme/active/active-colorscheme.sh"
 fzf_colors_file="$HOME/mydotfiles/shared/colorscheme/active/active-fzf-colors.sh"
-
-if [[ -f "$work_env_file" ]]; then
-  # shellcheck disable=SC1090
-  source "$work_env_file"
-fi
 
 if [[ -f "$colorscheme_file" ]]; then
   # shellcheck disable=SC1090
