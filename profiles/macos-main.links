@@ -17,7 +17,7 @@ shared/lazygit/config.yml|$HOME/Library/Application Support/lazygit/config.yml
 shared/nvim|$HOME/.config/nvim
 shared/sesh|$HOME/.config/sesh
 shared/starship/starship.toml|$HOME/.config/starship.toml
-shared/tmux/tmux.conf|$HOME/.config/tmux/tmux.conf
+os/macos/tmux/tmux.conf|$HOME/.config/tmux/tmux.conf
 shared/vscode/settings.json|$HOME/Library/Application Support/Code/User/settings.json
 shared/yazi|$HOME/.config/yazi
 shared/zsh/zshrc|$HOME/.zshrc
