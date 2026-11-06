@@ -15,9 +15,10 @@ rutas esperadas por cada aplicacion mediante symlinks.
 |---|---|
 | Restaurar la Mac desde cero | [Restore macOS](docs/RESTORE.md) |
 | Entender la estructura | [Dotfiles Architecture](docs/ARCHITECTURE.md) |
+| Consultar las reglas de trabajo | [Working Guide](AGENTS.md) |
 | Entender produccion y canary | [Workstation Lifecycle](docs/WORKSTATION_LIFECYCLE.md) |
 | Consultar decisiones | [Architecture Decision Records](docs/adr/README.md) |
-| Revisar OpenSpec y el piloto Chezmoi | [OpenSpec/Chezmoi Toolchain](docs/tooling/openspec-chezmoi.md) y [`evaluate-chezmoi-pilot`](openspec/changes/evaluate-chezmoi-pilot/) |
+| Consultar el resultado histórico del piloto Chezmoi | [Chezmoi Pilot Result](docs/chezmoi-pilot-result.md) |
 | Evaluar dotfiles externos | [External References](references/README.md) |
 | Ver los enlaces de macOS | [`profiles/macos-main.links`](profiles/macos-main.links) |
 | Diagnosticar los symlinks | `scripts/doctor macos-main` |
@@ -35,8 +36,10 @@ rutas esperadas por cada aplicacion mediante symlinks.
 
 - Nombres de carpetas, archivos tecnicos y titulos en ingles.
 - Contenido explicativo en espanol.
+- Las reglas de nombres, sincronización y revisión de cambios se detallan en
+  [AGENTS.md](AGENTS.md).
 - Ubicación convencional del clon: `~/mydotfiles`; la raíz del checkout actual
-  es la referencia portable para automatización y especificaciones.
+  es la referencia portable para la automatización.
 - Rutas portables basadas en `$HOME`, `~` o XDG.
 - Una sola fuente canónica por herramienta.
 - Secretos, tokens, claves privadas, caches y builds fuera de Git.
@@ -48,7 +51,8 @@ rutas esperadas por cada aplicacion mediante symlinks.
 
 ```text
 mydotfiles/
-  .agents/skills/             # integración Codex administrada por OpenSpec
+  AGENTS.md                  # convenciones y flujo de trabajo
+  .agents/skills/            # instrucciones para herramientas de asistencia
   shared/                    # herramientas y configuraciones compartidas
     scripts/                 # utilidades portables de uso personal
   os/
@@ -63,7 +67,6 @@ mydotfiles/
   scripts/                   # bootstrap, linking y diagnostico
   docs/                      # arquitectura, ADR, tooling e inventarios
   experiments/               # evaluaciones aisladas; nunca fuentes productivas
-  openspec/                  # contexto, especificaciones y cambios propuestos
 ```
 
 Las configuraciones compartidas viven bajo `shared/<tool>/`; los scripts
@@ -190,9 +193,9 @@ una herramienta unica para todo:
 | Capa | Estado |
 |---|---|
 | Configuracion de usuario | Los perfiles y symlinks siguen siendo productivos |
-| Chezmoi | Evaluacion abierta; no autoriza migracion ni targets activos |
+| Chezmoi | Piloto histórico; no despliega configuraciones ni se ejecuta en CI |
 | Provisioning de workstation | Ansible es candidato para paquetes, servicios y archivos privilegiados |
-| Gobierno de cambios | OpenSpec documenta y revisa; no despliega configuracion |
+| Gobierno de cambios | [AGENTS.md](AGENTS.md) define el flujo; los cambios de impacto se revisan mediante PR |
 
 Ninguna evaluacion puede superponer ownership sobre un mismo target. La
 separacion, los limites de un futuro piloto de Ansible y los criterios para no
