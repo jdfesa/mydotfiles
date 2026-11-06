@@ -8,10 +8,8 @@ El aviso MIT correspondiente está en [LICENSE](LICENSE).
 
 Homebrew instala tmux como parte del manifiesto base. El perfil `macos-main`
 enlaza `os/macos/tmux/tmux.conf` en `~/.config/tmux/tmux.conf`. Ese archivo
-carga la configuración compartida, mueve la barra de estado abajo y acepta
-`Ctrl+b` como prefijo alternativo a `Ctrl+Espacio`. Kitty en macOS deja pasar
-`Ctrl+b` al programa activo en vez de usarlo para cambiar sus propias sesiones.
-Ghostty abre o recupera `mydotfiles` al iniciar.
+carga la configuración compartida y mueve la barra de estado abajo, sin cambiar
+los atajos de tmux. Ghostty abre o recupera `mydotfiles` al iniciar.
 
 El archivo compartido inicia Zsh, usa `pbcopy` para el portapapeles de macOS y
 busca TPM en `~/.tmux/plugins/tpm/tpm`. Si falta TPM, no se cargan los plugins.
@@ -32,10 +30,9 @@ Si todavía no existe, crea o recupera la sesión con:
 tmux new-session -A -s mydotfiles -c "$HOME/mydotfiles"
 ```
 
-Dentro de tmux en macOS, pulsa **`Ctrl+b`**, suelta ambas teclas y presiona
-la segunda tecla. Para la ayuda, usa `?` (`Shift+/` en un teclado US), **sin**
-mantener `Ctrl`. También puedes usar `Ctrl+Espacio` como prefijo si macOS lo
-deja pasar.
+Dentro de tmux, pulsa **`Ctrl+Espacio`**, suelta ambas teclas y presiona la
+segunda tecla. Para la ayuda, usa `?` (`Shift+/` en un teclado US), **sin**
+mantener `Ctrl`.
 
 | Tecla después del prefijo | Acción |
 |---|---|
@@ -55,9 +52,10 @@ reconstruir una disposición guardada, pero no mantienen vivos esos procesos.
 
 ## Keyboard Conflicts
 
-Si `Ctrl+Espacio` no llega a tmux, usa `Ctrl+b` o revisa **Ajustes del
-Sistema → Teclado → Atajos de teclado → Fuentes de entrada**. Este
-repositorio no modifica ese ajuste del sistema.
+Para que `Ctrl+Espacio` llegue a tmux en macOS, ve a **Ajustes del Sistema →
+Teclado → Atajos de teclado → Fuentes de entrada** y desactiva **Seleccionar
+la fuente de entrada anterior** si usa esa combinación. Es un ajuste local;
+el perfil del repositorio no lo cambia.
 
 `home` y `dotfiles` son nombres de sesiones de Kitty, no sesiones de tmux.
 La sesión `dotfiles` de Kitty usa `~/mydotfiles` como directorio.
