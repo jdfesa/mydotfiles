@@ -10,6 +10,9 @@ fi
 # Base paths. Keep Homebrew paths first so Intel and Apple Silicon Macs both work.
 export PATH="/usr/local/bin:/opt/homebrew/bin:$HOME/.local/bin:$PATH"
 
+# Use Neovim with its normal configuration; local aliases may override this.
+alias v='nvim'
+
 # Machine-specific config lives here and is ignored by Git.
 if [[ -f "$HOME/mydotfiles/shared/zsh/local.zsh" ]]; then
   source "$HOME/mydotfiles/shared/zsh/local.zsh"
