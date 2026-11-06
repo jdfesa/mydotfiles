@@ -10,7 +10,7 @@ propio entrypoint y sus propios modificadores.
   - `common.conf`: opciones y bindings realmente compartidos.
   - `active-theme.conf`: tema cargado por `common.conf`.
   - `themes/`: Local copy of Kitty themes.
-  - `sessions/`: Saved Kitty sessions.
+  - `sessions/`: sesión genérica `home`; no incluye proyectos predefinidos.
   - `scripts/`: Helper scripts used by session/keymap actions.
 - **Linux entrypoint**: `os/linux/kitty/kitty.conf`.
 - **macOS entrypoint**: `os/macos/kitty/kitty.conf`.

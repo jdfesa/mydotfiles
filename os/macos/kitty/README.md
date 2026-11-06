@@ -16,9 +16,9 @@ Si el shell ya estaba abierto, abre una pestaña nueva para cargar esta
 integración. Dentro de tmux, el título de Kitty no sigue cada panel.
 
 Kitty no inicia su sesión `home` ni usa los atajos heredados de sesiones
-(`Ctrl+b` y `Ctrl+Shift+s`). Los archivos de sesión compartidos siguen
-disponibles para otros perfiles. La paleta, la transparencia y el estilo de
-la barra no cambian.
+(`Ctrl+b` y `Ctrl+Shift+s`). Linux conserva el arranque genérico `home`;
+no hay lanzadores de proyectos predefinidos. La paleta, la transparencia y
+el estilo de la barra no cambian.
 
 tmux gestiona las sesiones, ventanas y paneles; se inicia o adjunta desde el
 shell. Si ya existe una sesión, `tmux a` permite volver a ella. Los cambios de

@@ -57,8 +57,8 @@ Teclado → Atajos de teclado → Fuentes de entrada** y desactiva **Seleccionar
 la fuente de entrada anterior** si usa esa combinación. Es un ajuste local;
 el perfil del repositorio no lo cambia.
 
-`home` y `dotfiles` son nombres de sesiones de Kitty, no sesiones de tmux.
-La sesión `dotfiles` de Kitty usa `~/mydotfiles` como directorio.
+Kitty en macOS abre un shell normal, sin sesiones propias al arrancar.
+La sesión `mydotfiles` se administra desde tmux.
 
 Para probar cambios sin afectar el servidor habitual, usa un `HOME` y un
 socket de tmux separados.
