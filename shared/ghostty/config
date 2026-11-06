@@ -86,21 +86,9 @@ custom-shader = shaders/cursor_smear.glsl
 #     process will exit when the command exits. Additionally, the
 #     `quit-after-last-window-closed-delay` is unset.
 # ############################################################################ 
-# The following command checks if tmux is installed.
-# If tmux is installed, it automatically attaches to an existing tmux session.
-# If no tmux session exists, a new one is created.
-# If tmux is not installed, it simply starts zsh without tmux.
-#
-# For this to work properly, you need to make sure that your shell is configured
-# for homebrew, so you should have this line:
-# eval "$(/opt/homebrew/bin/brew shellenv)"
-# In your ~/.zprofile file
-# If you don't have that line, or if the file doesn't exist, run this:
-# echo '' >>~/.zprofile && echo '# Configure shell for brew' >>~/.zprofile && echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>~/.zprofile && eval "$(/opt/homebrew/bin/brew shellenv)"
-#
-# This assumes you installed tmux through brew if using macos
-# command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then tmux attach || tmux; else zsh; fi"
-command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then $HOME/mydotfiles/shared/tmux/tools/prime/tmux-sessionizer.sh $HOME/mydotfiles || (tmux attach 2>/dev/null || tmux); else exec zsh; fi"
+# Reuse the dotfiles session when tmux and the checkout are available.
+# Start a login shell if attach fails or this terminal is already in tmux.
+command = zsh --login -c 'if [ -z "${TMUX:-}" ] && command -v tmux >/dev/null 2>&1 && [ -d "$HOME/mydotfiles" ]; then tmux new-session -A -s mydotfiles -c "$HOME/mydotfiles" && exit; fi; exec zsh --login'
 
 # Horizontal window padding. This applies padding between the terminal cells
 # and the left and right window borders. The value is in points, meaning that

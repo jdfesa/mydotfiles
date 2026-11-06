@@ -28,7 +28,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 
 | Plataforma | Estado |
 |---|---|
-| macOS | Produccion: 16 symlinks declarados; no se modifica durante experimentos |
+| macOS | Produccion: enlaces declarados en `macos-main`; no se modifica durante experimentos |
 | Arch Linux | Canary: Hyprland/Wayland activo, XFCE X11 y XRDP de recuperacion |
 | Windows | Planificada; sin perfil activo todavia |
 

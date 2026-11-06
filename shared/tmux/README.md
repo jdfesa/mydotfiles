@@ -1,88 +1,54 @@
 # Tmux
 
-Configuracion para [tmux](https://github.com/tmux/tmux), pensada como siguiente paso natural para complementar Ghostty/Kitty con sesiones persistentes.
+Tmux mantiene las sesiones en el equipo donde corre su servidor. Cerrar la
+terminal o desconectarse no mata los procesos de una sesión; reiniciar el
+equipo o detener el servidor sí termina el trabajo que estaba en ejecución.
 
-## Para que sirve
+## Configuration
 
-`tmux` es un multiplexor de terminal: permite tener varias ventanas y paneles dentro de una misma sesion de terminal, y dejar esa sesion viva aunque cierres la ventana de Ghostty/Kitty.
+`tmux.conf` conserva el prefijo nativo `Ctrl+b` y no carga plugins, layouts
+guardados ni scripts. Al crear una ventana o dividir un panel, la nueva
+terminal abre en el directorio del panel activo. No se cambia `TERM` ni se
+añade un comando de portapapeles específico del sistema.
 
-En el dia a dia sirve para:
+## macOS
 
-- Mantener un proyecto abierto con editor, servidor, logs y Git en paneles separados.
-- Cerrar la terminal y volver despues con `tmux attach` sin reconstruir todo.
-- Conectarte por SSH y no perder el trabajo si se corta la conexion.
-- Usar `sesh` como selector para saltar rapido entre proyectos.
+Homebrew instala tmux como parte del manifiesto base. El perfil `macos-main`
+enlaza el archivo en `~/.config/tmux/tmux.conf`. Antes de desplegar el perfil,
+revisa el plan de `scripts/link --dry-run macos-main`.
 
-Ejemplo mental:
+Kitty en macOS deja pasar `Ctrl+b` a tmux. Ghostty abre o recupera la sesión
+`mydotfiles` con tmux directamente, sin un script intermedio; si no puede,
+abre Zsh. No se cambian los perfiles de Arch o Debian.
 
-```text
-Ghostty o Kitty = la ventana grafica de terminal
-Zsh = el shell donde escribes comandos
-tmux = las sesiones, ventanas y paneles persistentes dentro de esa terminal
-sesh = el selector rapido para abrir o volver a esas sesiones
+## Quick Start
+
+```sh
+tmux new-session -A -s mydotfiles -c "$HOME/mydotfiles"
 ```
 
-## Tmux, Zellij y Nushell
+Una **sesión** agrupa el trabajo de un proyecto, una **ventana** funciona como
+una pestaña y un **panel** es una terminal dentro de esa ventana. Pulsa y
+suelta `Ctrl+b` antes de la segunda tecla:
 
-`tmux` y `zellij` compiten en la misma categoria: organizar sesiones, paneles y ventanas de terminal.
+| Tecla | Acción |
+|---|---|
+| `c` | Crear una ventana en el directorio actual |
+| `%` / `"` | Dividir izquierda/derecha o arriba/abajo, en el directorio actual |
+| Flechas | Cambiar de panel |
+| `s` / `w` | Elegir sesión o ventana |
+| `z` | Maximizar o restaurar el panel |
+| `d` | Desconectarse sin cerrar la sesión |
 
-`nushell` no compite directamente con ellos. `nushell` reemplaza o complementa a `zsh`: cambia el lenguaje con el que escribes comandos y trabaja con datos estructurados, tablas y pipelines mas modernos.
+Para volver, ejecuta el mismo `new-session -A` desde el shell, fuera de tmux.
+Puedes ver las sesiones disponibles con `tmux list-sessions`.
 
-Resumen practico:
+## Isolated Test
 
-- `tmux`: clasico, estable, muy usado, ideal si quieres sesiones persistentes y mucha compatibilidad.
-- `zellij`: alternativa moderna a tmux, con interfaz mas guiada, layouts declarativos y mejor experiencia visual inicial.
-- `nushell`: shell alternativo; util si quieres pipelines estructurados, pero cambia habitos basicos de terminal.
-
-Recomendacion para este setup: activar primero `tmux` de forma simple, porque ya tenemos `sesh`, `fzf`, `zoxide`, Ghostty/Kitty y documentacion preparada alrededor de ese flujo. Evaluar `zellij` despues si `tmux` se siente incomodo. Dejar `nushell` como experimento separado, no como shell principal por ahora.
-
-## Estado
-
-Importado y separado en dos niveles:
-
-- `tmux.conf`: base adaptada a `~/mydotfiles`, mas segura para probar.
-- `REMOVED_REFERENCE.md`: nota local que reemplaza la referencia importada
-  original, porque no queremos conservar rutas personales o dependencias
-  externas.
-
-## Que queremos rescatar
-
-- TrueColor y compatibilidad con undercurl.
-- OSC52/clipboard.
-- Copy-mode estilo Vim.
-- Mouse y renumeracion automatica de ventanas.
-- Integracion opcional con `sesh` y `fzf`.
-- Layouts guardados en `layouts/`.
-- Sessionizer generico en `tools/prime/tmux-sessionizer.sh`.
-
-## Instalacion
-
-```bash
-brew install tmux fzf fd sesh
+```sh
+tmux -L macos-trial -f "$HOME/mydotfiles/shared/tmux/tmux.conf" new-session -A -s trial
 ```
 
-Opcional si luego usamos plugins:
-
-```bash
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-```
-
-## Activacion
-
-```bash
-ln -s ~/mydotfiles/shared/tmux/tmux.conf ~/.tmux.conf
-```
-
-Si ya existe `~/.tmux.conf`, respaldarlo antes.
-
-## Relacion con Ghostty
-
-Tu `ghostty/config` ya tiene una idea de arranque con tmux. Antes de activarla conviene adaptar el sessionizer para que apunte a `~/mydotfiles` y no a rutas del repo original.
-
-## Pendiente
-
-- Probar `tmux.conf` en una sesion aislada.
-- Decidir si `prefix` queda en `C-b` o se adapta a tu teclado Silakka54.
-- Integrar `sesh` solo despues de ajustar `sesh/sesh.toml`.
-- Evaluar plugins cuando la base ya sea comoda.
-- Conectar el sessionizer con Ghostty/Kitty si realmente mejora el flujo.
+Este socket separado permite probar la configuración sin recargar el servidor
+habitual. Tras desconectarte, usa `tmux -L macos-trial attach-session -t trial`
+para comprobar que sigue viva.
