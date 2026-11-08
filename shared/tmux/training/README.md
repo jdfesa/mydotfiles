@@ -13,8 +13,29 @@ los atajos de una vez. La verificación prioritaria es **Arch y macOS**.
 3. Si una tecla no responde, consulta [Compatibility](compatibility.md) antes
    de sustituirla o cambiar el prefijo.
 
-**Prefijo = `Ctrl+Espacio`: pulsar, soltar, luego la acción.** No mantener
-Control durante la segunda tecla salvo que diga explícitamente `Ctrl+…`.
+## What Prefix Means
+
+**En esta configuración, prefijo = `Ctrl+Espacio`, no Control solo.** No es
+una tecla física llamada «prefijo»: es la combinación que avisa a tmux de que
+la siguiente tecla será una orden para él.
+
+Por ejemplo, **prefijo → `c`** significa:
+
+1. Mantener **Control** y pulsar **Espacio**.
+2. **Soltar ambas teclas**.
+3. Pulsar **`c` sola** para crear una ventana.
+
+No significa mantener Control mientras se pulsa `c`, ni pulsar
+Control+Espacio+c simultáneamente.
+
+| Notación | Cómo se pulsa |
+|---|---|
+| Prefijo → flecha derecha | Control+Espacio, soltar ambas, flecha derecha sola |
+| Prefijo → `Ctrl+s` | Control+Espacio, soltar ambas, después Control+s |
+| `Ctrl+h` **sin prefijo** | Control+h directamente, sin pulsar antes Control+Espacio |
+
+«Sin prefijo» describe una combinación directa; no indica que se deba añadir
+un atajo nuevo. Esta explicación no cambia los mapas del terminal ni de Neovim.
 
 ## Levels
 

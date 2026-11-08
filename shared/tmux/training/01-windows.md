@@ -33,7 +33,14 @@ rtk proxy tmux new-session -A -s work
 Crea `work` si no existe o vuelve a ella si ya existe. No reinicia sus tareas.
 Si ya estás dentro, no anides tmux: consulta el nivel 2.
 
-**Prefijo = `Ctrl+Espacio`: pulsa ambas teclas, suéltalas y pulsa la acción.**
+**Prefijo = `Ctrl+Espacio`, no Control solo.** Para crear una ventana:
+
+1. Pulsa **Control+Espacio**.
+2. **Suelta Control y Espacio**.
+3. Pulsa **`c` sola**, sin mantener Control.
+
+Es una secuencia, no Control+Espacio+c a la vez. La explicación de
+[con prefijo y sin prefijo](README.md#what-prefix-means) incluye más ejemplos.
 
 | Después del prefijo | Acción |
 |---|---|
