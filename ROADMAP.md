@@ -18,7 +18,7 @@ instalaciones pendientes del roadmap.
 | Capacidad | Estado y evidencia |
 |---|---|
 | Shell y utilidades CLI | Zsh integra Starship, `eza`, `bat`, `ripgrep`, `fzf` y `zoxide`; véase [Zsh](shared/zsh/README.md). |
-| Entorno de ventanas macOS | AeroSpace, Sketchybar y Borders tienen fuentes bajo `os/macos/` y destinos en el [perfil macOS](profiles/macos-main.links). |
+| Entorno de ventanas macOS | AeroSpace, Sketchybar y Borders tienen fuentes bajo `os/macos/` y destinos en el [perfil macOS](profiles/macos-main.links). La [distribución numérica 1–5](os/macos/aerospace/WORKSPACES.md) está en prueba y requiere aceptación de uso real; no acredita despliegue. |
 | Terminales | [Ghostty](shared/ghostty/README.md) tiene configuración compartida; Kitty separa sus entrypoints de [macOS](os/macos/kitty/README.md) y [Linux](os/linux/kitty/README.md). |
 | Sesiones de terminal | [Tmux](shared/tmux/README.md) tiene capas macOS/Linux, guías de uso diario, entrenamiento y recuperación de disposiciones. |
 | Git y navegación | [Lazygit](shared/lazygit/README.md) y [Yazi](shared/yazi/README.md) tienen configuración y destinos en los perfiles macOS y Arch. |

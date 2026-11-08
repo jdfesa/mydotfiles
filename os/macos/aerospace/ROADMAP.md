@@ -6,9 +6,11 @@ La configuracion se incorpora por fases. La prioridad es aprender bien cada capa
 
 **Fase 2: Navegacion + Ajuste**
 
-Ya estan activos:
+La fuente de esta revisión incluye las siguientes capacidades. La prueba
+numérica todavía requiere aceptación de uso real; no implica integración en
+`main` ni despliegue en todas las máquinas:
 
-- Workspaces por letras.
+- Cinco workspaces numéricos (`1`–`5`) con distribución revisable en prueba.
 - Navegacion y movimiento con `Hyper` / `Meh`.
 - Toggle `tiles` / `accordion`.
 - Modo service.
@@ -16,6 +18,12 @@ Ya estan activos:
 - Ruteo automatico de apps principales.
 - Integracion con Sketchybar para workspaces e indicador de modo.
 - Colores de borde por modo de teclado.
+
+## Numeric Workspace Trial
+
+- [x] Definir cinco IDs persistentes y accesos con Hyper/Meh.
+- [x] Conservar las reglas por aplicación con destinos numéricos documentados en [Workspaces](WORKSPACES.md).
+- [ ] Aceptar teclado, ruteo y barra en uso real después de una aplicación controlada; véase [Repository Tasks](../../../TODO.md#desktop-trial).
 
 ## Fase 2: Puedo Ajustar
 
@@ -30,7 +38,7 @@ Ya estan activos:
 ## Fase 3: Tengo Superpoderes
 
 - [x] **App routing**: reglas `on-window-detected` para apps reales.
-- [x] **Sketchybar workspaces**: letras persistentes y workspace activo.
+- [x] **Sketchybar workspaces**: identificadores persistentes y workspace activo.
 - [x] **Sketchybar mode indicator**: `[S]` y `[R]`.
 - [x] **Colores de bordes por modo**: usar `scripts/borders_mode.sh`.
 - [ ] **Move workspace to monitor**: mover workspace completo entre monitores.
@@ -53,6 +61,6 @@ Motivo: puede crear loops de reload. Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md
 
 - Debe respetar la gramatica `Hyper = navegar`, `Meh = actuar`.
 - Debe estar documentado en el mismo cambio.
-- Debe tener una mnemotecnia clara.
+- Debe tener una distribución de teclas cómoda y una intención clara.
 - Debe poder validarse con `aerospace reload-config --dry-run --no-gui`.
 - Debe mejorar el flujo real, no solo existir porque AeroSpace lo permite.

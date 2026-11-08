@@ -47,6 +47,22 @@ los ADR.
     evidencia y cuáles siguen pendientes. Curar paquetes o ejecutar una
     restauración se aborda en un cambio separado.
 
+## Desktop Trial
+
+- [ ] **Validar la distribución numérica de AeroSpace en uso real.**
+  - Alcance: cinco workspaces `1`–`5`, atajos Hyper/Meh, las reglas existentes
+    por aplicación y los ítems de Sketchybar. La distribución es experimental y
+    puede cambiar; no se considera definitiva por existir en esta revisión.
+  - Evidencia de implementación: [configuración](os/macos/aerospace/aerospace.toml),
+    [mapa y migración](os/macos/aerospace/WORKSPACES.md) y
+    [pruebas aisladas](os/macos/aerospace/scripts/test-workspaces.py).
+  - Cierre: tras acordar la aplicación, comprobar los diez atajos de workspace
+    con el teclado real, los destinos de nuevas ventanas de cada grupo y los
+    cinco ítems de la barra; migrar las ventanas anteriores sin cerrarlas y
+    aceptar o revisar la distribución. El dry-run no sustituye estas pruebas.
+  - Integración en `main` y despliegue se verifican por separado. No recargar
+    procesos ni mover ventanas automáticamente como parte de las pruebas aisladas.
+
 ## Decisions Required
 
 Las siguientes revisiones no forman parte de una limpieza automática ni del

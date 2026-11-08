@@ -35,6 +35,9 @@ jobs:
       - name: Test Quattro shell compatibility overlay
         run: os/linux/hyprland/quattro-lab/scripts/test-shell-compat
 
+      - name: Test AeroSpace workspace configuration and highlight in isolation
+        run: python3 os/macos/aerospace/scripts/test-workspaces.py
+
       - name: Validate repository metadata and profile graph
         run: |
           scripts/test-profile-resolve

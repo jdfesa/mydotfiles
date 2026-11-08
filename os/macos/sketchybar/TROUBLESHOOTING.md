@@ -1,5 +1,13 @@
 # Sketchybar — Troubleshooting
 
+## Numeric Trial Scope
+
+Los ejemplos numéricos corresponden a la distribución en prueba. Antes de
+diagnosticar, consultar `aerospace list-workspaces --all` y distinguir la fuente
+en disco de los bindings cargados (`aerospace config --get mode.main.binding --json`).
+Si el proceso todavía usa letras, la ausencia de `space.1` no demuestra un fallo:
+la [migración controlada](../aerospace/WORKSPACES.md#migration-and-verification) sigue pendiente.
+
 Registro de problemas encontrados en producción y sus soluciones confirmadas.
 Para problemas genéricos de instalación, ver el [README](README.md#-troubleshooting-solución-de-problemas).
 
@@ -7,12 +15,12 @@ Para problemas genéricos de instalación, ver el [README](README.md#-troublesho
 
 ## Problema: Los workspaces de AeroSpace no aparecen después de reiniciar
 
-**Síntoma**: La barra carga, pero los ítems `space.U`, `space.I`, etc. no se crean. En su lugar aparecen ítems genéricos (`item_0`, `item_1`...) sin letra ni iconos de apps. Funciona si se recarga manualmente con `sketchybar --reload` o `brew services restart sketchybar` *después* de que el sistema ya cargó.
+**Síntoma**: La barra carga, pero los ítems `space.1`, `space.2`, etc. no se crean. En su lugar aparecen ítems genéricos (`item_0`, `item_1`...) sin número ni iconos de apps. Funciona si se recarga manualmente con `sketchybar --reload` o `brew services restart sketchybar` *después* de que el sistema ya cargó.
 
 **Verificación rápida**:
 ```bash
-sketchybar --query space.U
-# Si devuelve: [!] Query: Invalid query, or item 'space.U' not found
+sketchybar --query space.1
+# Si devuelve: [!] Query: Invalid query, or item 'space.1' not found
 # → Confirmado: el bug está activo.
 ```
 
@@ -64,7 +72,7 @@ Cualquier `io.popen(...)` o `SBAR.exec(...)` dentro de la config Lua de Sketchyb
 
 ## Manejo de Workspaces vacíos al arrancar (Race Condition)
 
-**Síntoma**: La barra carga pero los workspaces (U, I, O, P, Y, N) aparecen vacíos o sin iconos de apps. Después de unos segundos, aparecen correctamente sin intervención manual.
+**Síntoma**: La barra carga pero los workspaces (1, 2, 3, 4, 5) aparecen vacíos o sin iconos de apps. Después de unos segundos, aparecen correctamente sin intervención manual.
 
 **Causa**: Sketchybar arranca (vía LaunchAgent `RunAtLoad` o brew) **antes** que AeroSpace. Cuando `aerospace.lua` se ejecuta, `aerospace list-workspaces --all` devuelve una lista vacía porque el binario aún no está disponible o no terminó de inicializar.
 
@@ -186,12 +194,11 @@ solo para reiniciar un servicio ya instalado.
 
 ```bash
 aerospace list-workspaces --all
-sketchybar --query space.U
-sketchybar --query space.I
-sketchybar --query space.O
-sketchybar --query space.P
-sketchybar --query space.Y
-sketchybar --query space.N
+sketchybar --query space.1
+sketchybar --query space.2
+sketchybar --query space.3
+sketchybar --query space.4
+sketchybar --query space.5
 ```
 
 Cada consulta debe devolver un objeto con `"type": "item"` y

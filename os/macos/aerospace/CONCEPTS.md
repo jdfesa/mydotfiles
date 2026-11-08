@@ -1,6 +1,6 @@
 # AeroSpace Concepts
 
-Este documento explica el modelo mental de esta configuracion. La referencia rapida de teclas esta en [KEYBINDINGS.md](KEYBINDINGS.md), y la mnemotecnia de workspaces esta en [WORKSPACES.md](WORKSPACES.md).
+Este documento explica el modelo mental de esta configuracion. La referencia rapida de teclas esta en [KEYBINDINGS.md](KEYBINDINGS.md), y la distribución en prueba de workspaces esta en [WORKSPACES.md](WORKSPACES.md).
 
 ## Workspaces vs Spaces de macOS
 
@@ -18,7 +18,7 @@ AeroSpace trabaja mejor si usas un solo Space nativo de macOS y dejas que AeroSp
 AeroSpace organiza las ventanas como un arbol:
 
 ```text
-Workspace U
+Workspace 2
 ├── Ghostty
 └── Contenedor horizontal
     ├── Chrome
@@ -88,7 +88,7 @@ Floating sirve para ventanas pequenas, temporales o poco compatibles con tiling.
 
 Sketchybar cumple dos roles para AeroSpace:
 
-- Muestra los workspaces persistentes `U I O P Y N`.
+- Muestra los workspaces persistentes `1 2 3 4 5`.
 - Muestra el modo activo con un indicador temporal: `[S]` para service, `[R]` para resize.
 
 Los detalles tecnicos de esa integracion viven en [SCRIPTS.md](SCRIPTS.md).

@@ -1,8 +1,8 @@
 # AeroSpace Keybindings
 
-Este documento es la chuleta de uso diario. La mnemotecnia de workspaces esta en [WORKSPACES.md](WORKSPACES.md), y los conceptos de layouts/modos estan en [CONCEPTS.md](CONCEPTS.md).
+Este documento es la chuleta de uso diario. La distribución en prueba de workspaces esta en [WORKSPACES.md](WORKSPACES.md), y los conceptos de layouts/modos estan en [CONCEPTS.md](CONCEPTS.md).
 
-## Modificadores
+## Modifiers
 
 | Nombre | Modificadores reales | Intencion |
 |---|---|---|
@@ -12,13 +12,14 @@ Este documento es la chuleta de uso diario. La mnemotecnia de workspaces esta en
 Regla personal de esta configuracion:
 
 - `Hyper + tecla` = ir o mirar.
+- Workspaces `1`–`5` en prueba: `Hyper + número` navega y `Meh + número` envía ventanas.
 - `Meh + tecla` = mover, enviar o ejecutar una accion.
 
 ## Main Mode
 
 Este es el modo normal. Si no ves `[S]` ni `[R]` en Sketchybar, estas en `main`.
 
-### Abrir Terminal
+### Launch Terminal
 
 | Atajo | Accion |
 |---|---|
@@ -26,28 +27,26 @@ Este es el modo normal. Si no ves `[S]` ni `[R]` en Sketchybar, estas en `main`.
 
 Este launcher replica `Super + Enter` de Omarchy: en macOS usamos `Cmd` como equivalente de `Super`. AeroSpace captura el atajo globalmente en `main`, por lo que ya no crea un panel interno cuando Kitty tiene el foco. Cada pulsacion ejecuta `open -n -a kitty` para abrir una nueva instancia con su ventana, incluso si Kitty ya esta abierto.
 
-### Ir a Workspace
+### Switch Workspace
 
 | Atajo | Accion |
 |---|---|
-| `Hyper + U` | Ir a `U` |
-| `Hyper + I` | Ir a `I` |
-| `Hyper + O` | Ir a `O` |
-| `Hyper + P` | Ir a `P` |
-| `Hyper + Y` | Ir a `Y` |
-| `Hyper + N` | Ir a `N` |
+| `Hyper + 1` | Ir a `1` |
+| `Hyper + 2` | Ir a `2` |
+| `Hyper + 3` | Ir a `3` |
+| `Hyper + 4` | Ir a `4` |
+| `Hyper + 5` | Ir a `5` |
 | `Hyper + Tab` | Volver al workspace anterior |
 
-### Enviar Ventana a Workspace
+### Send Window to Workspace
 
 | Atajo | Accion |
 |---|---|
-| `Meh + U` | Enviar ventana a `U` |
-| `Meh + I` | Enviar ventana a `I` |
-| `Meh + O` | Enviar ventana a `O` |
-| `Meh + P` | Enviar ventana a `P` |
-| `Meh + Y` | Enviar ventana a `Y` |
-| `Meh + N` | Enviar ventana a `N` |
+| `Meh + 1` | Enviar ventana a `1` |
+| `Meh + 2` | Enviar ventana a `2` |
+| `Meh + 3` | Enviar ventana a `3` |
+| `Meh + 4` | Enviar ventana a `4` |
+| `Meh + 5` | Enviar ventana a `5` |
 
 ### Foco Entre Ventanas
 

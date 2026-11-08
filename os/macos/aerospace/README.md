@@ -10,7 +10,7 @@ Configuracion personal de [AeroSpace](https://github.com/nikitabobko/AeroSpace) 
 
 - `Hyper` (`cmd-ctrl-alt-shift`) = navegar, mirar, cambiar foco.
 - `Meh` (`ctrl-alt-shift`) = actuar, mover, enviar, entrar a modos.
-- Workspaces por letras, no por numeros.
+- Cinco workspaces numéricos (`1`–`5`) con distribución en prueba, revisable según el uso diario.
 - La configuracion es personal, pero la estructura del repo debe ser clara y mantenible.
 - Cada cambio funcional en [aerospace.toml](aerospace.toml) debe actualizar la documentacion correspondiente en el mismo cambio.
 
@@ -20,7 +20,7 @@ Configuracion personal de [AeroSpace](https://github.com/nikitabobko/AeroSpace) 
 |---|---|
 | [CONCEPTS.md](CONCEPTS.md) | Modelo mental: workspaces, arbol, layouts, modos, Sketchybar |
 | [KEYBINDINGS.md](KEYBINDINGS.md) | Chuleta completa de atajos y modos |
-| [WORKSPACES.md](WORKSPACES.md) | Mnemotecnia, ergonomia del Silakka54 y ruteo de apps |
+| [WORKSPACES.md](WORKSPACES.md) | Distribución numérica en prueba, ruteo de apps y migración |
 | [SCRIPTS.md](SCRIPTS.md) | Scripts usados por AeroSpace y Sketchybar |
 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Problemas comunes, sintomas y soluciones |
 | [ROADMAP.md](ROADMAP.md) | Fases, pendientes y criterios para agregar features |
@@ -39,8 +39,8 @@ El launcher funciona en `main` y toma precedencia sobre el atajo interno de Kitt
 
 | Atajo | Accion |
 |---|---|
-| `Hyper + U/I/O/P/Y/N` | Ir al workspace |
-| `Meh + U/I/O/P/Y/N` | Enviar ventana al workspace |
+| `Hyper + 1/2/3/4/5` | Ir al workspace |
+| `Meh + 1/2/3/4/5` | Enviar ventana al workspace |
 | `Hyper + Tab` | Volver al workspace anterior |
 
 ### Ventanas
@@ -74,14 +74,13 @@ En resize mode:
 
 ## Workspaces
 
-| Workspace | Mnemotecnia | Uso |
-|---|---|---|
-| `U` | Universe | Dev, terminal, trabajo activo |
-| `I` | Internet | Browser y referencias |
-| `O` | Organize | Notas, escritura, documentos |
-| `P` | People / Planning | Comunicacion y calendario |
-| `Y` | Yield | Musica y video |
-| `N` | Navigate | Finder, sistema y utilidades |
+| Workspace | Uso en prueba |
+|---|---|
+| `1` | Navegadores y referencias web |
+| `2` | Trabajo y terminales |
+| `3` | Notas y documentos |
+| `4` | Finder y utilidades |
+| `5` | Calendario, comunicación y multimedia |
 
 El detalle de apps y bundle IDs esta en [WORKSPACES.md](WORKSPACES.md).
 
@@ -94,7 +93,17 @@ El detalle de apps y bundle IDs esta en [WORKSPACES.md](WORKSPACES.md).
 | [scripts/update_mode_indicator.sh](scripts/update_mode_indicator.sh) | Muestra `[S]`, `[R]` u oculta el modo |
 | [scripts/borders_mode.sh](scripts/borders_mode.sh) | Actualiza el color del borde activo por modo |
 
-## Recargar y Validar
+## Reload and Validate
+
+La distribución es experimental. Cambiar la fuente no acredita recarga ni
+validación del uso real. Antes de aplicar, seguir la
+[migración de ventanas y barra](WORKSPACES.md#migration-and-verification).
+
+Pruebas aisladas (Python 3.11+ y Bash):
+
+```bash
+python3 os/macos/aerospace/scripts/test-workspaces.py
+```
 
 Validar sin aplicar:
 

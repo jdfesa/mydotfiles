@@ -1,6 +1,6 @@
 -- AeroSpace workspace integration for Sketchybar
 -- Uses "item" type instead of "space" type since AeroSpace workspaces
--- are not macOS native spaces (they use string IDs like "U", "I", "O").
+-- are not macOS native spaces (their names are strings, including "1"–"5").
 ---@diagnostic disable: need-check-nil
 local app_icons = require("helpers.spaces_util.app_icons")
 
