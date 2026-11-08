@@ -27,6 +27,8 @@ fzf
 zoxide
 direnv
 tmux
+xclip
+python
 
 # Editors, navigation, search and diagnostics
 neovim

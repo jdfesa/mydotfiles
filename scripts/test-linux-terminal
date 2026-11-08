@@ -1,0 +1,166 @@
+#!/usr/bin/env python3
+"""Validate the terminal workflow without touching real sessions or clipboards."""
+
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import tempfile
+import unittest
+
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+class ClipboardTests(unittest.TestCase):
+    def setUp(self):
+        self.work = tempfile.TemporaryDirectory(prefix="mydotfiles-clipboard-")
+        self.addCleanup(self.work.cleanup)
+        self.base = Path(self.work.name)
+        self.bin = self.base / "bin"
+        self.bin.mkdir()
+        (self.bin / "cat").symlink_to(shutil.which("cat"))
+        self.result = self.base / "result"
+        self.env = dict(os.environ, PATH=str(self.bin), RESULT=str(self.result))
+        self.env.pop("WAYLAND_DISPLAY", None)
+        self.env.pop("DISPLAY", None)
+
+    def backend(self, name):
+        target = self.bin / name
+        target.write_text(
+            '#!/bin/sh\nprintf "%s %s\\n" "${0##*/}" "$*" > "$RESULT"\n'
+            'cat >> "$RESULT"\n'
+        )
+        target.chmod(0o755)
+
+    def copy(self):
+        return subprocess.run(
+            [ROOT / "os/linux/tmux/copy-to-clipboard"],
+            input=b"test selection\n", capture_output=True, env=self.env, check=True,
+        )
+
+    def test_wayland_precedes_xwayland(self):
+        self.backend("wl-copy")
+        self.backend("xclip")
+        self.env.update(WAYLAND_DISPLAY="test-wayland", DISPLAY=":test")
+        self.copy()
+        self.assertEqual(self.result.read_text(), "wl-copy \ntest selection\n")
+
+    def test_x11_clipboard(self):
+        self.backend("xclip")
+        self.env["DISPLAY"] = ":test"
+        self.copy()
+        self.assertEqual(
+            self.result.read_text(), "xclip -selection clipboard\ntest selection\n"
+        )
+
+    def test_missing_wayland_backend_falls_back_to_x11(self):
+        self.backend("xclip")
+        self.env.update(WAYLAND_DISPLAY="test-wayland", DISPLAY=":test")
+        self.copy()
+        self.assertTrue(self.result.read_text().startswith("xclip "))
+
+    def test_headless_does_not_use_installed_backends(self):
+        self.backend("wl-copy")
+        self.backend("xclip")
+        self.assertIn(b"selection remains in tmux", self.copy().stderr)
+        self.assertFalse(self.result.exists())
+
+    def test_missing_tools_keep_tmux_buffer(self):
+        self.env.update(WAYLAND_DISPLAY="test-wayland", DISPLAY=":test")
+        self.assertIn(b"selection remains in tmux", self.copy().stderr)
+        self.assertFalse(self.result.exists())
+
+
+@unittest.skipUnless(shutil.which("tmux"), "tmux is not installed")
+class TmuxTests(unittest.TestCase):
+    def test_linux_entrypoint(self):
+        with tempfile.TemporaryDirectory(prefix="mydotfiles-terminal-") as work:
+            home = Path(work)
+            (home / "mydotfiles").symlink_to(ROOT, target_is_directory=True)
+            tpm = home / ".tmux/plugins/tpm/tpm"
+            tpm.parent.mkdir(parents=True)
+            tpm.write_text("#!/bin/sh\nexit 0\n")
+            tpm.chmod(0o755)
+            env = dict(os.environ, HOME=work, XDG_CONFIG_HOME=f"{work}/.config")
+            env.pop("TMUX", None)
+            subprocess.run(
+                [ROOT / "scripts/link", "layers/linux-tmux"],
+                env=env, check=True, capture_output=True,
+            )
+            socket = f"{work}/socket"
+
+            def tmux(*args):
+                result = subprocess.run(
+                    ["tmux", "-S", socket, *args], env=env, text=True,
+                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout)
+                return result.stdout.strip()
+
+            try:
+                tmux("-f", f"{work}/.config/tmux/tmux.conf", "new-session",
+                     "-d", "-s", "test", "/bin/sleep 120")
+                self.assertEqual(tmux("show-options", "-gv", "prefix"), "C-Space")
+                self.assertEqual(tmux("show-options", "-gv", "prefix2"), "None")
+                self.assertEqual(tmux("show-options", "-gv", "status-position"), "bottom")
+                self.assertIn("WAYLAND_DISPLAY", tmux("show-options", "-gv", "update-environment"))
+                copy = tmux("list-keys", "-T", "copy-mode-vi", "y")
+                self.assertIn("copy-to-clipboard", copy)
+                self.assertNotIn("pbcopy", copy)
+                for key in ("c", "\\", "-"):
+                    self.assertIn("pane_current_path", tmux("list-keys", "-T", "prefix", key))
+                self.assertIn("resize-pane -Z", tmux("list-keys", "-T", "prefix", "m"))
+                tmux("source-file", f"{work}/.config/tmux/tmux.conf")
+                self.assertEqual(tmux("show-options", "-gv", "status-position"), "bottom")
+                self.assertEqual(tmux("show-options", "-gv", "update-environment").count("WAYLAND_DISPLAY"), 1)
+                if not any(p.read_text().strip() == "Battery"
+                           for p in Path("/sys/class/power_supply").glob("*/type")):
+                    self.assertNotIn("󱊣", tmux("show-options", "-gv", "status-right"))
+            finally:
+                subprocess.run(["tmux", "-S", socket, "kill-server"], env=env,
+                               capture_output=True, check=False)
+
+
+@unittest.skipUnless(shutil.which("kitty"), "Kitty parser is not installed")
+class KittyTests(unittest.TestCase):
+    def test_platform_entrypoints(self):
+        code = '''
+from kitty.config import load_config
+from kitty.key_encoding import parse_shortcut
+import os
+root = os.environ["TERMINAL_TEST_ROOT"]
+options = []
+for platform in ("linux", "macos"):
+    bad = []
+    o = load_config(f"{root}/os/{platform}/kitty/kitty.conf", accumulate_bad_lines=bad)
+    assert not bad, bad
+    assert o.startup_session is None
+    assert o.shell_integration == frozenset({"no-sudo"})
+    assert o.tab_title_template == "{tab.active_wd.rsplit('/', 1)[-1]}"
+    for shortcut in ("ctrl+b", "ctrl+shift+s"):
+        mods, key = parse_shortcut(shortcut)
+        mappings = [d for k, defs in o.keyboard_modes[""].keymap.items()
+                    if k.mods == mods and k.key == key for d in defs]
+        assert not any(d.is_sequence or "save_as_session" in d.definition for d in mappings)
+    options.append(o)
+for key in ("font_family", "font_size", "foreground", "background",
+            "background_opacity", "tab_bar_style", "window_padding_width"):
+    assert getattr(options[0], key) == getattr(options[1], key), key
+for shortcut in ("ctrl+h", "ctrl+j", "ctrl+k", "ctrl+l"):
+    mods, key = parse_shortcut(shortcut)
+    mappings = [d for k, defs in options[0].keyboard_modes[""].keymap.items()
+                if k.mods == mods and k.key == key for d in defs]
+    assert any("nvim|tmux" in d.definition for d in mappings), shortcut
+'''
+        with tempfile.TemporaryDirectory(prefix="mydotfiles-kitty-") as work:
+            (Path(work) / "mydotfiles").symlink_to(ROOT, target_is_directory=True)
+            env = dict(os.environ, HOME=work, XDG_CONFIG_HOME=f"{work}/.config",
+                       TERMINAL_TEST_ROOT=str(ROOT))
+            result = subprocess.run(["kitty", "+runpy", code], env=env, check=False,
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

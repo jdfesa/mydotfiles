@@ -4,6 +4,13 @@
 hendrikmi/dotfiles](https://github.com/hendrikmi/dotfiles/blob/01b73ac65c3680d38407f88d2d143f330b09577b/tmux/tmux.conf).
 El aviso MIT correspondiente está en [LICENSE](LICENSE).
 
+## Linux
+
+Los perfiles de Arch cargan el entrypoint `os/linux/tmux/tmux.conf`, que
+mantiene esta base y adapta barra y portapapeles. Consulta
+[Tmux on Linux](../../os/linux/tmux/README.md) para instalar los plugins,
+validar sin tocar sesiones activas y reproducir el flujo de Kitty/macOS.
+
 ## macOS
 
 Homebrew instala tmux como parte del manifiesto base. El perfil `macos-main`

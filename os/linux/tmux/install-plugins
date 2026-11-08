@@ -1,0 +1,63 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/../../.." && pwd -P)
+config=${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf
+tpm=$HOME/.tmux/plugins/tpm
+plugins=${config%/*}/plugins
+
+for tool in git tmux bash python3; do
+  command -v "$tool" >/dev/null 2>&1 || {
+    printf 'Required command not found: %s\n' "$tool" >&2
+    exit 1
+  }
+done
+
+if [ ! -L "$config" ] || [ "$(readlink "$config")" != "$repo_root/os/linux/tmux/tmux.conf" ]; then
+  printf 'Apply the Linux tmux profile first: scripts/link layers/linux-tmux\n' >&2
+  exit 1
+fi
+
+if [ ! -e "$tpm" ] && [ ! -L "$tpm" ]; then
+  git clone https://github.com/tmux-plugins/tpm "$tpm"
+fi
+[ -x "$tpm/bin/install_plugins" ] || {
+  printf 'Invalid TPM installation: %s\n' "$tpm" >&2
+  exit 1
+}
+
+mkdir -p "$plugins"
+if [ ! -e "$plugins/tpm" ] && [ ! -L "$plugins/tpm" ]; then
+  ln -s "$tpm" "$plugins/tpm"
+fi
+
+# TPM invokes tmux internally; bind all those calls to our private server.
+work=$(mktemp -d "${TMPDIR:-/tmp}/mydotfiles-tmux-install.XXXXXX")
+socket=$work/socket
+cleanup() {
+  tmux -S "$socket" kill-server 2>/dev/null || true
+  rmdir "$work" 2>/dev/null || true
+}
+trap cleanup EXIT HUP INT TERM
+
+tmux -S "$socket" -f "$config" new-session -d -s plugin-install /bin/sleep 600
+TMUX=$(tmux -S "$socket" display-message -p '#{socket_path},#{pid},0')
+export TMUX
+"$tpm/bin/install_plugins"
+tmux -S "$socket" source-file "$config"
+
+monitor=$plugins/tmux-cpu-mem-monitor
+"$monitor/venv/bin/python" -c 'import psutil; print("psutil", psutil.__version__)'
+"$monitor/venv/bin/python" "$monitor/src/cpu.py" -i 0 > /dev/null
+"$monitor/venv/bin/python" "$monitor/src/mem.py" > /dev/null
+"$monitor/venv/bin/python" "$monitor/src/disk.py" -f > /dev/null
+case $(tmux -S "$socket" show-options -gv status-right) in
+  *'#{cpu}'*|*'#{mem}'*|*'#{disk -f}'*|*'#{battery}'*)
+    printf 'Monitor placeholders were not initialized.\n' >&2
+    exit 1
+    ;;
+esac
+
+printf 'Plugins installed and initialized using an isolated tmux server.\n'
+printf 'Existing plugins were not updated; no regular server was reloaded.\n'
