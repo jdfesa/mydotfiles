@@ -10,10 +10,20 @@
 ## Cross-Machine Synchronization
 
 - GitHub (`origin`) es la fuente de verdad para los cambios compartidos. `main` es la base común una vez integrados los cambios; una rama de trabajo no actualiza `main` por sí sola.
-- Antes de editar o desplegar, identifica la máquina, el clon, la rama y su upstream. Revisa `git status --short --branch` y `git remote -v`; usa `git fetch origin` para actualizar las referencias y comprobar si la rama está adelantada, atrasada o divergió.
-- Si la rama correcta tiene upstream, el árbol está limpio y la actualización puede avanzar sin merge, usa `git pull --ff-only` antes de empezar. Si hay cambios locales, commits sin publicar o divergencia, no los sobrescribas: explica el estado y acuerda cómo integrarlos. No uses `reset --hard`, `clean` ni force push para sincronizar.
+- Al comenzar cualquier trabajo en cualquier máquina —incluidos análisis, auditorías y mantenimiento documental—, identifica la máquina, el clon, la rama y su upstream. Revisa `git status --short --branch` y `git remote -v`; ejecuta `git fetch origin` para comprobar si la rama está adelantada, atrasada o divergió. Esta sincronización se hace antes de analizar el contenido o crear una rama, no al terminar el trabajo.
+- Si la rama correcta tiene upstream, el árbol está limpio y la actualización puede avanzar sin merge, ejecuta `git pull --ff-only` antes de continuar, aunque solo vayas a leer documentación. Para un trabajo nuevo, actualiza `main` desde `origin/main` y crea después la rama de trabajo. Para retomar una rama existente, actualiza su upstream y revisa también cuánto avanzó `origin/main`; no cambies de rama ni integres historias automáticamente si hay trabajo pendiente.
+- Si hay cambios locales, commits sin publicar, divergencia o un fallo de red o permisos, explica el estado y acuerda cómo continuar antes de empezar el trabajo sobre una base posiblemente desactualizada. No sobrescribas cambios, no hagas stash automáticamente y no uses `reset --hard`, `clean` ni force push para sincronizar.
+- Los cambios ya integrados en `origin/main` constituyen la base compartida aceptada. Traerlos al clon no requiere repetir la aprobación de su PR. Esto no autoriza instalar paquetes, aplicar perfiles ni reiniciar o recargar procesos; esas operaciones siguen siendo independientes de la sincronización de archivos.
 - La **máquina A**, donde se hace el cambio, modifica y valida la fuente versionada, revisa el diff, hace commit de lo que corresponde y publica la rama acordada en GitHub. Si hace falta un PR, espera a su integración antes de actualizar otros clones desde `main`. Verifica que el commit publicado esté en la rama esperada.
 - La **máquina B** trae el cambio desde GitHub en la rama correcta antes de continuar o desplegar. `fetch` solo actualiza referencias; para actualizar los archivos del clon hace falta integrar esos cambios, normalmente con `pull --ff-only`. No uses SSH para sincronizar archivos versionados ni des la sincronización por hecha si falla el push o el pull.
+- La sincronización inicial reduce conflictos evitables, pero no impide que otras máquinas publiquen mientras se trabaja. Antes de publicar o actualizar el PR, vuelve a ejecutar `git fetch origin` y revisa el upstream y `origin/main`. Si avanzaron, acuerda cómo integrar los cambios y vuelve a validar; no resuelvas divergencias con force push.
+
+## Documentation Maintenance
+
+- Usa `ROADMAP.md` para capacidades, prioridades y límites de adopción; usa `TODO.md` para tareas concretas con alcance, evidencia y criterio de cierre. Los README y las guías técnicas conservan los pasos de instalación, uso y verificación; los ADR conservan las decisiones y sus motivos.
+- Realiza el mantenimiento documental en una rama `docs/<description>` creada desde `main` sincronizada. Mantén el cambio separado de limpieza local, modificaciones de configuración o despliegues, salvo que formen parte del alcance aprobado.
+- Al agregar, adoptar, retirar o completar una herramienta, revisa el roadmap y las tareas afectadas en el mismo cambio. Una idea o una configuración existente no demuestra por sí sola instalación, uso o validación en todas las máquinas.
+- Antes de registrar un hallazgo como pendiente, contrástalo con los archivos y perfiles actuales. Cierra las tareas con enlaces a evidencia técnica; distingue contenido implementado en una rama, integración en `main` y despliegue en cada sistema. No conviertas archivos locales ignorados ni hallazgos descartados en tareas compartidas sin un motivo reproducible.
 
 ## Secrets and Recovery
 
