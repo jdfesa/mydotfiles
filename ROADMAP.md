@@ -1,139 +1,79 @@
-# 🗺️ Roadmap de Herramientas — Dotfiles de JD
+# Repository Roadmap
 
-> Basado en tu stack actual: `zsh` + `starship` + `aerospace` + `sketchybar` + `ghostty` + `vscode` + `fastfetch` + `borders`
-> Investigado y priorizado al 17/04/2025.
-> Marca cada ítem con `[x]` a medida que lo explorés.
+Este documento resume las capacidades versionadas y las prioridades de evolución
+del repositorio. Las tareas concretas y sus criterios de cierre viven en
+[TODO.md](TODO.md); la instalación y la verificación se documentan junto a cada
+herramienta. El historial de Git conserva los estados anteriores.
 
----
+La presencia de una configuración o de un paquete en un manifiesto no acredita
+su instalación ni su despliegue en todas las máquinas. Los destinos se declaran
+en [perfiles](profiles/README.md), y la promoción entre sistemas sigue el
+[ciclo de vida de las workstations](docs/WORKSTATION_LIFECYCLE.md).
 
-## ✅ Ya configurado y funcionando
+## Established Capabilities
 
-- [x] **Zsh** — Shell principal con autosuggestions y syntax highlighting
-- [x] **Starship** — Prompt ultrarrápido multiplataforma (reemplazó a Powerlevel10k)
-- [x] **Aerospace** — Tiling window manager estilo i3, sin necesidad de deshabilitar SIP
-- [x] **Sketchybar** — Barra de estado personalizable con integración a Aerospace
-- [x] **Ghostty** — Terminal GPU-acelerada, cross-platform y minimalista
-- [x] **Borders** — Bordes visuales en ventanas activas
-- [x] **Fastfetch** — Reemplazo moderno de neofetch para mostrar info del sistema
-- [x] **VS Code** — Editor personalizado: Claude Theme + Maple Mono + Vim motions
-- [x] **VSCode Vim** — Modal editing con colores dinámicos de barra según modo
+Estas capacidades ya tienen fuentes o procedimientos versionados; no son
+instalaciones pendientes del roadmap.
 
----
+| Capacidad | Estado y evidencia |
+|---|---|
+| Shell y utilidades CLI | Zsh integra Starship, `eza`, `bat`, `ripgrep`, `fzf` y `zoxide`; véase [Zsh](shared/zsh/README.md). |
+| Entorno de ventanas macOS | AeroSpace, Sketchybar y Borders tienen fuentes bajo `os/macos/` y destinos en el [perfil macOS](profiles/macos-main.links). |
+| Terminales | [Ghostty](shared/ghostty/README.md) tiene configuración compartida; Kitty separa sus entrypoints de [macOS](os/macos/kitty/README.md) y [Linux](os/linux/kitty/README.md). |
+| Sesiones de terminal | [Tmux](shared/tmux/README.md) tiene capas macOS/Linux, guías de uso diario, entrenamiento y recuperación de disposiciones. |
+| Git y navegación | [Lazygit](shared/lazygit/README.md) y [Yazi](shared/yazi/README.md) tienen configuración y destinos en los perfiles macOS y Arch. |
+| Monitorización | [Btop](shared/btop/README.md) y [Fastfetch](shared/fastfetch/README.md) tienen fuentes compartidas y destinos declarados por perfil. |
+| Editores | [Neovim/LazyVim](shared/nvim/README.md) vive en `shared/nvim/`; [VS Code](shared/vscode/README.md) mantiene una configuración propia. No se presupone una migración completa entre editores. |
+| Paquetes macOS | Hay [Brewfiles por capas](os/macos/packages/homebrew/README.md). Su existencia está resuelta; el curado y la comprobación de recuperación siguen siendo trabajo independiente. |
+| Despliegue de dotfiles | Los [perfiles y capas](profiles/README.md) se resuelven, enlazan y diagnostican con los [scripts del repositorio](scripts/README.md), sin depender de Stow. |
+| Verificación automatizada | [CI](.github/workflows/lint.yml) ejecuta ShellCheck, validadores, reconstrucción de perfiles en hogares aislados y pruebas de terminal Linux. |
 
-## 🟡 Siguiente paso — Alto impacto, bajo riesgo
+## Current Focus
 
-> Instalar cualquiera de estos toma menos de 5 minutos. Empezá de arriba hacia abajo.
+El foco inmediato es el mantenimiento documental, sin cambios de configuración
+ni despliegues asociados:
 
-### CLI Esencial
+1. Mantener explícita la sincronización desde GitHub antes de cualquier trabajo
+   en cada máquina, según [AGENTS.md](AGENTS.md#cross-machine-synchronization).
+2. Separar capacidades existentes, tareas pendientes e ideas todavía no
+   aprobadas, con evidencia enlazada y criterios de cierre en [TODO.md](TODO.md).
+3. Normalizar los README de herramientas: cuerpo en español, títulos en inglés,
+   fuente canónica, perfil, dependencias y verificación reproducible.
+4. Alinear la documentación de restauración y los manifiestos sin presentar un
+   inventario importado como una recuperación completa ya validada.
 
-- [x] **`eza`** — Reemplaza el viejo `ls` con colores, íconos de Git y vista de árbol.
-  - Instalación: `brew install eza`
-  - Config en `.zshrc`: aliases protegidos para `ls`, `ll`, `la` y `lt`
-  - Estado: instalado y activado en Zsh.
-  - **Por qué probarlo:** Compatible directo con tu Nerd Font. Impacto visual inmediato en cada `ls` que ejecutés.
+## Future Capabilities
 
-- [x] **`bat`** — Lectura enriquecida de archivos con syntax highlighting, números de línea e integración Git.
-  - Instalación: `brew install bat`
-  - Config en `.zshrc`: aliases seguros `b`, `bp`, `catp` y `preview`; no reemplaza `cat` todavia.
-  - Estado: instalado y activado en Zsh.
-  - **Por qué probarlo:** Lo usás imperceptiblemente, pero hace la terminal 10x más legible al leer archivos.
+Estas líneas no autorizan instalaciones ni migraciones. Cada implementación
+requiere un alcance propio, validación y aceptación antes de integrarse.
 
-- [x] **`ripgrep (rg)`** — Búsqueda en código ultrarrápida. Complementa `grep`.
-  - Instalación: `brew install ripgrep`
-  - Config en `.zshrc`: aliases protegidos `rgi`, `rgl` y `rgp`; no reemplaza `grep` todavia.
-  - Estado: instalado y activado en Zsh.
-  - **Por qué probarlo:** Si trabajás con proyectos Java/Python, sentís la diferencia al buscar texto en miles de archivos. Respeta `.gitignore` automáticamente.
+| Línea | Límite y criterio de avance |
+|---|---|
+| Recuperación reproducible | Curar dependencias y demostrar una restauración desde un entorno limpio, con secretos recuperables por separado; referencia: [Restore macOS](docs/RESTORE.md). |
+| Calificación de Arch | Mantener el canary y documentar compatibilidad, uso sostenido y recuperación antes de promover cambios; referencia: [Workstation Lifecycle](docs/WORKSTATION_LIFECYCLE.md). |
+| Provisioning de workstation | Ansible es candidato para paquetes, servicios y archivos privilegiados, no para duplicar el ownership de los dotfiles; requiere un piloto aislado según [ADR 0008](docs/adr/0008-separate-dotfile-deployment-from-workstation-provisioning.md). |
+| Windows | Definir perfiles y automatización solo cuando exista validación nativa y una estrategia de privilegios; referencia: [Windows](os/windows/README.md). |
 
-- [x] **`zoxide`** — Reemplaza `cd` con saltos inteligentes basados en tu historial de uso.
-  - Instalación: `brew install zoxide`
-  - Config en `.zshrc`: bloque protegido al final del archivo con `eval "$(zoxide init zsh)"`
-  - Estado: instalado y activado en Zsh.
-  - **Por qué probarlo:** Escribís `z poo` y te lleva directo a `~/Development/poo-2026`. Aprende tus carpetas frecuentes solo.
+## Candidates And Boundaries
 
-- [x] **`fzf`** — Fuzzy finder interactivo para archivos, historial de comandos y procesos.
-  - Instalación: `brew install fzf`
-  - Config en `.zshrc`: bloque protegido con `source <(fzf --zsh)`, antes de `zoxide`
-  - Estado: instalado y activado en Zsh.
-  - **Por qué probarlo:** Se integra con `zoxide`, `bat` y el `Ctrl+R` de Zsh. Es la pieza que une todo el stack.
+- **Atuin y otras utilidades opcionales:** permanecen como ideas en
+  [Brew and Shell Ideas](os/macos/packages/homebrew/IDEAS.md). Antes de adoptar
+  hooks de shell o sincronización de historial, definir necesidad, solapamientos
+  y privacidad. No equivalen a tareas de instalación aprobadas.
+- **Chezmoi:** el [resultado del piloto](docs/chezmoi-pilot-result.md) es evidencia
+  histórica, no una migración autorizada. Los perfiles y symlinks siguen siendo
+  el mecanismo productivo.
+- **Stow, Yabai, Warp y frameworks de Zsh:** no tienen una adopción programada en
+  este roadmap. Una reconsideración debe justificar una necesidad concreta y
+  documentar convivencia o sustitución, verificación y recuperación.
+- **Plugins y nuevas capas de Hyprland:** se ensayan en el canary; no se activan
+  implícitamente en perfiles estables ni se trasladan a macOS.
 
-### Git desde la terminal
+## Maintenance Rules
 
-- [ ] **`lazygit`** — Interfaz TUI completa para Git (staging, branches, rebase visual).
-  - Instalación: `brew install lazygit`
-  - **Por qué probarlo:** Si abrís el panel de Git de VS Code frecuentemente, `lazygit` hace lo mismo pero desde cualquier terminal, incluyendo la de NetBeans. Podés invocarla con un shortcut de Ghostty.
-
-### Historial inteligente
-
-- [ ] **`atuin`** — Reemplaza `Ctrl+R` con búsqueda fuzzy del historial, sincronizado entre máquinas.
-  - Instalación: `brew install atuin`
-  - Config en `.zshrc`: `eval "$(atuin init zsh)"`
-  - **Por qué probarlo:** Si trabajás en más de un Mac (Hackintosh + otro), sincroniza tu historial de comandos entre ambos automáticamente.
-
----
-
-## 🔵 Para explorar más adelante
-
-> Estas herramientas requieren un poco más de contexto o tiempo para configurar bien.
-
-- [ ] **`yazi`** — File manager TUI con preview de imágenes y integración con `fzf` y `bat`.
-  - **Nota:** Ya tenés `yazi-vscode.yaziPath` configurado en tu `settings.json` de VS Code. Solo falta probarlo en la práctica.
-  - **Por qué probarlo:** Navegación de archivos visual desde la terminal. Alternativa elegante al explorador de VS Code.
-
-- [ ] **`btop`** — Monitor interactivo de procesos, CPU, RAM y red. Reemplaza `htop`.
-  - Instalación: `brew install btop`
-  - **Por qué probarlo:** Si Sketchybar ya muestra CPU/RAM en la barra, `btop` es su hermano mayor para análisis en profundidad dentro de la terminal.
-
-- [ ] **`tmux`** — Multiplexor: múltiples sesiones de terminal, paneles y layouts persistentes.
-  - **Cuándo considerarlo:** Cuando empieces a trabajar con servidores SSH o necesités sesiones que sobrevivan al cierre de Ghostty. No es urgente con tu setup actual.
-
-- [ ] **`Brewfile`** — Lista reproducible de todas tus dependencias de Homebrew.
-  - Comando para generarlo: `brew bundle dump --describe --file ~/mydotfiles/os/macos/packages/homebrew/Brewfile`
-  - **Por qué probarlo:** Tu repo de dotfiles ya está muy ordenado. Un `Brewfile` lo convierte en un setup **100% reproducible** en cualquier Mac nuevo con un solo comando.
-
-- [ ] **`stow`** — Gestor de symlinks para dotfiles. Automatiza los `ln -sf` manuales.
-  - Instalación: `brew install stow`
-  - **Por qué probarlo:** Tenés varios symlinks creados a mano. `stow` los organiza y los hace reversibles de forma estructurada.
-
----
-
-## 🟢 En adopcion gradual
-
-- [x] **Neovim / LazyVim (como editor principal gradual)**
-  - **Decision actual:** La configuracion vive en `nvim/` dentro del repo y debe enlazarse a `~/.config/nvim`.
-  - **Criterio:** Empezar con LazyVim base, Markdown, Python y Java. No copiar configs enormes hasta entender el flujo.
-
----
-
-## 🔴 Definitivamente NO tocar aún
-
-> Estas herramientas son poderosas pero su costo/beneficio hoy no tiene sentido para tu flujo.
-
-- [ ] **Yabai (en lugar de Aerospace)**
-  - **¿Por qué no?** Aerospace hace exactamente lo mismo sin riesgo. Yabai requiere deshabilitar SIP, una variable de riesgo extra en un Hackintosh. No hay ganancia real.
-
-- [ ] **Warp Terminal (en lugar de Ghostty)**
-  - **¿Por qué no?** Ghostty ya está perfectamente configurado. Warp requiere cuenta en la nube y es más "opinionated". Tu setup actual es más minimalista y alineado con tu estética.
-
-- [ ] **Oh My Zsh o Prezto**
-  - **¿Por qué no?** Migraste de Powerlevel10k a Starship justamente para escapar de la complejidad de los frameworks de Zsh. Volver sería dar un paso atrás sin ningún beneficio.
-
----
-
-## 📦 Orden sugerido de instalación
-
-Si querés ir de a uno, arrancá así (de menor a mayor complejidad):
-
-```
-1.  eza       → impacto inmediato, cero riesgo
-2.  bat       → impacto inmediato, cero riesgo
-3.  ripgrep   → útil para proyectos Java/Python
-4.  zoxide    → cambia tu flujo de navegación terminal
-5.  fzf       → integra todo lo anterior como pegamento
-6.  lazygit   → cuando Git desde terminal empiece a incomodarte
-7.  atuin     → si trabajás en más de una máquina
-8.  yazi      → ya está medio configurado, solo falta probarlo
-9.  btop      → curiosidad, monitoreo bonito del sistema
-10. Brewfile  → para dejar el repo 100% reproducible
-11. stow      → para automatizar los symlinks
-12. tmux      → cuando trabajes con SSH o sesiones remotas
-```
+Actualizar este documento y las tareas afectadas cuando cambie una capacidad.
+Enlazar a las fuentes canónicas en lugar de duplicar comandos de instalación.
+No conservar como pendientes herramientas ya incorporadas ni marcar una
+capacidad como desplegada en todas las máquinas por su sola presencia en Git.
+El flujo de ramas, revisión e integración se define en
+[AGENTS.md](AGENTS.md#documentation-maintenance).

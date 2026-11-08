@@ -16,6 +16,8 @@ rutas esperadas por cada aplicacion mediante symlinks.
 | Restaurar la Mac desde cero | [Restore macOS](docs/RESTORE.md) |
 | Entender la estructura | [Dotfiles Architecture](docs/ARCHITECTURE.md) |
 | Consultar las reglas de trabajo | [Working Guide](AGENTS.md) |
+| Consultar capacidades y prioridades | [Repository Roadmap](ROADMAP.md) |
+| Revisar tareas y criterios de cierre | [Repository Tasks](TODO.md) |
 | Aprender tmux progresivamente y revisar colisiones | [Tmux Training](shared/tmux/training/README.md) |
 | Trabajar a diario con tmux y recuperar sesiones | [Tmux Daily Workflow](shared/tmux/daily-workflow.md) |
 | Recordar los atajos de tmux | [Tmux Cheatsheet](shared/tmux/tmux-cheatsheet.md) |
@@ -55,6 +57,8 @@ rutas esperadas por cada aplicacion mediante symlinks.
 ```text
 mydotfiles/
   AGENTS.md                  # convenciones y flujo de trabajo
+  ROADMAP.md                 # capacidades y prioridades
+  TODO.md                    # tareas verificables y decisiones pendientes
   .agents/skills/            # instrucciones para herramientas de asistencia
   shared/                    # herramientas y configuraciones compartidas
     scripts/                 # utilidades portables de uso personal
