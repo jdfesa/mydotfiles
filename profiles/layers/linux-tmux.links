@@ -1,0 +1,2 @@
+# Linux tmux overrides on top of the original shared configuration.
+os/linux/tmux/tmux.conf|$HOME/.config/tmux/tmux.conf

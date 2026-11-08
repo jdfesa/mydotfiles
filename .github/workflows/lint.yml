@@ -8,6 +8,16 @@ permissions:
   contents: read
 
 jobs:
+  linux-terminal:
+    name: Isolated Linux terminal tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install test dependencies
+        run: sudo apt-get update && sudo apt-get install -y tmux zsh
+      - name: Test tmux and clipboard without active sessions
+        run: scripts/test-linux-terminal
+
   shellcheck:
     name: ShellCheck and profile validation
     runs-on: ubuntu-latest

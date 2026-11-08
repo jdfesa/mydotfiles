@@ -2,3 +2,4 @@
 @include layers/shared-workstation
 @include layers/linux-common
 @include layers/linux-kitty
+@include layers/linux-tmux
