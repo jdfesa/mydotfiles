@@ -4,6 +4,16 @@
 hendrikmi/dotfiles](https://github.com/hendrikmi/dotfiles/blob/01b73ac65c3680d38407f88d2d143f330b09577b/tmux/tmux.conf).
 El aviso MIT correspondiente está en [LICENSE](LICENSE).
 
+## Usage Guides
+
+- [Daily Workflow](daily-workflow.md): comenzar con una sesión y tres ventanas,
+  retomar el trabajo, guardar/restaurar tras reiniciar y retirar una sesión.
+- [Tmux Cheatsheet](tmux-cheatsheet.md): comandos y atajos de consulta rápida,
+  incluidos copia, plugins y cierre selectivo.
+
+Las guías distinguen desconectar procesos vivos de reconstruir un entorno
+guardado. Los snapshots son privados; no forman parte de los dotfiles en Git.
+
 ## Linux
 
 Los perfiles de Arch cargan el entrypoint `os/linux/tmux/tmux.conf`, que

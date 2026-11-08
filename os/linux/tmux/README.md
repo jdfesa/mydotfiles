@@ -5,9 +5,21 @@ solo las diferencias de plataforma: barra inferior y portapapeles Wayland/X11.
 Los perfiles derivados de `arch-workstation` incluyen `layers/linux-tmux` y
 enlazan el archivo en `~/.config/tmux/tmux.conf`.
 
+Para aprender el uso diario, consulta [Daily Workflow](../../../shared/tmux/daily-workflow.md).
+Para recordar una tecla, usa [Tmux Cheatsheet](../../../shared/tmux/tmux-cheatsheet.md).
+Esta página se centra en instalar y verificar la capa Linux.
+
 ## Installation
 
-Necesita `tmux`, `git`, `bash`, `zsh` y `python` del manifiesto base de Arch.
+Necesita `tmux`, `git`, `bash`, `zsh`, `python` e `inetutils` del manifiesto base
+de Arch. [inetutils](https://archlinux.org/packages/core/x86_64/inetutils/files/)
+proporciona `hostname`, que Resurrect invoca al resolver
+la ruta de guardado. Si falta en un entorno ya instalado:
+
+```sh
+rtk proxy sudo pacman -S --needed inetutils
+```
+
 Para copiar al sistema, usa `wl-clipboard` en Wayland o `xclip` en X11.
 
 ```sh

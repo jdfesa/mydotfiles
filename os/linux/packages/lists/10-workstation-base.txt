@@ -27,6 +27,7 @@ fzf
 zoxide
 direnv
 tmux
+inetutils
 xclip
 python
 
