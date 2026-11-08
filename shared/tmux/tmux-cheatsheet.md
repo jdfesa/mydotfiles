@@ -2,6 +2,7 @@
 
 Referencia rápida de la configuración de este repositorio. Para empezar desde
 cero o entender la persistencia, consulta [Daily Workflow](daily-workflow.md).
+Para practicar progresivamente: [Tmux Training](training/README.md).
 
 ## Prefix
 
@@ -54,9 +55,11 @@ tmux puede intentar anidar sesiones: usa el selector de sesiones o
 | `m` | Maximizar/restaurar el panel; no cierra los demás |
 | `h` / `j` / `k` / `l` | Redimensionar hacia izquierda/abajo/arriba/derecha |
 
-Con `vim-tmux-navigator` cargado y un terminal que deje pasar las teclas,
-`Ctrl+h/j/k/l`, **sin prefijo**, cambia de panel. El entrypoint Linux de Kitty
-está preparado para ello. No confundirlo con redimensionar **con prefijo**.
+`Ctrl+h/j/k/l` **sin prefijo** es una extensión contextual: depende del terminal,
+el plugin y el editor, y reemplaza acciones del shell. Linux tiene el adaptador
+Kitty preparado; macOS y el cruce Neovim/tmux no están uniformados. La base
+común es **prefijo y flechas**; consulta [Compatibility](training/compatibility.md#contextual-extensions).
+No confundirlo con redimensionar **con prefijo**.
 
 ## Copy Mode
 

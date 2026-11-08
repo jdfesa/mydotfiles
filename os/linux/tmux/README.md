@@ -6,6 +6,7 @@ Los perfiles derivados de `arch-workstation` incluyen `layers/linux-tmux` y
 enlazan el archivo en `~/.config/tmux/tmux.conf`.
 
 Para aprender el uso diario, consulta [Daily Workflow](../../../shared/tmux/daily-workflow.md).
+Para practicar por niveles, usa [Tmux Training](../../../shared/tmux/training/README.md).
 Para recordar una tecla, usa [Tmux Cheatsheet](../../../shared/tmux/tmux-cheatsheet.md).
 Esta página se centra en instalar y verificar la capa Linux.
 
@@ -68,8 +69,11 @@ al buffer de tmux como al portapapeles del sistema. El helper prioriza
 gráfico conserva el buffer de tmux y muestra un aviso. `prefijo`, `P` pega
 ese buffer. Las variables Wayland se actualizan al adjuntar un cliente.
 
-`vim-tmux-navigator` habilita `Ctrl+h/j/k/l` entre paneles. La configuración
-Linux de Kitty deja pasar esas teclas cuando tmux está en primer plano.
+`vim-tmux-navigator` habilita `Ctrl+h/j/k/l` entre paneles desde el shell. La
+configuración Linux de Kitty deja pasar esas teclas cuando tmux está en primer
+plano. El lado Neovim requiere integración propia, todavía no declarada en
+este checkout. La alternativa común es prefijo y flechas; consulta la
+[auditoría](../../../shared/tmux/training/compatibility.md#contextual-extensions).
 No se cambian atajos globales del compositor ni la configuración macOS.
 La barra omite la batería cuando `/sys/class/power_supply` no contiene una:
 el script upstream presupone su existencia y falla en equipos de escritorio.

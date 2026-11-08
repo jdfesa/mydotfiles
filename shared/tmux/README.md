@@ -6,6 +6,8 @@ El aviso MIT correspondiente está en [LICENSE](LICENSE).
 
 ## Usage Guides
 
+- [Tmux Training](training/README.md): ejercicios por niveles, índice de la
+  configuración actual y auditoría de compatibilidad Arch/macOS.
 - [Daily Workflow](daily-workflow.md): comenzar con una sesión y tres ventanas,
   retomar el trabajo, guardar/restaurar tras reiniciar y retirar una sesión.
 - [Tmux Cheatsheet](tmux-cheatsheet.md): comandos y atajos de consulta rápida,

@@ -3,6 +3,8 @@
 Guía para trabajar con menos ventanas del emulador y poder retomar el entorno.
 Los atajos corresponden a `shared/tmux/tmux.conf` y sus entrypoints de Linux y
 macOS. La [chuleta](tmux-cheatsheet.md) sirve para consultas rápidas.
+Para aprender gradualmente, usa [Tmux Training](training/README.md) y su
+[índice vigente](training/keybindings.md).
 
 ## Contents
 
@@ -132,8 +134,10 @@ la vez, por ejemplo editor y logs.
 | `h/j/k/l` | Redimensionar; no navegar |
 
 Con el plugin de navegación y Kitty Linux actualizado, `Ctrl+h/j/k/l` **sin
-prefijo** permite navegar. Las flechas con prefijo siguen siendo una opción
-sin depender de ese plugin.
+prefijo** permite navegar entre paneles desde el shell, pero reemplaza acciones
+del shell y no garantiza cruzar splits Neovim. Kitty macOS aún tiene otra regla
+de envío. La base común son las flechas con prefijo; consulta la
+[auditoría de extensiones](training/compatibility.md#contextual-extensions).
 
 ## Persistence
 

@@ -16,6 +16,7 @@ rutas esperadas por cada aplicacion mediante symlinks.
 | Restaurar la Mac desde cero | [Restore macOS](docs/RESTORE.md) |
 | Entender la estructura | [Dotfiles Architecture](docs/ARCHITECTURE.md) |
 | Consultar las reglas de trabajo | [Working Guide](AGENTS.md) |
+| Aprender tmux progresivamente y revisar colisiones | [Tmux Training](shared/tmux/training/README.md) |
 | Trabajar a diario con tmux y recuperar sesiones | [Tmux Daily Workflow](shared/tmux/daily-workflow.md) |
 | Recordar los atajos de tmux | [Tmux Cheatsheet](shared/tmux/tmux-cheatsheet.md) |
 | Entender produccion y canary | [Workstation Lifecycle](docs/WORKSTATION_LIFECYCLE.md) |

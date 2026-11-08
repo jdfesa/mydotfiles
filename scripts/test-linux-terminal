@@ -3,6 +3,7 @@
 
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -122,44 +123,124 @@ class TmuxTests(unittest.TestCase):
                                capture_output=True, check=False)
 
 
+class TrainingTests(unittest.TestCase):
+    def test_local_links(self):
+        documents = [ROOT / "README.md", ROOT / "os/linux/tmux/README.md",
+                     ROOT / "os/linux/kitty/README.md"]
+        documents += list((ROOT / "shared/tmux").rglob("*.md"))
+        for document in documents:
+            for link in re.findall(r"\]\(([^)]+)\)", document.read_text()):
+                if re.match(r"[a-z]+://", link):
+                    continue
+                target, _, anchor = link.partition("#")
+                path = (document.parent / target).resolve() if target else document
+                self.assertTrue(path.exists(), f"{document}: {link}")
+                if anchor:
+                    headings = re.findall(r"^#+ (.+)$", path.read_text(), re.M)
+                    slugs = [re.sub(r"[^\w\- ]", "", heading.lower()).replace(" ", "-")
+                             for heading in headings]
+                    self.assertIn(anchor, slugs, f"{document}: {link}")
+
+    @unittest.skipUnless(shutil.which("tmux"), "tmux is not installed")
+    def test_core_contract_on_both_platforms(self):
+        contract = (ROOT / "shared/tmux/training/keybindings.md").read_text()
+        bindings = []
+        for line in contract.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.split("|")[1:-1]]
+            if len(cells) == 6 and cells[4] == "core":
+                bindings.append(cells[:3])
+        self.assertGreater(len(bindings), 25, "Missing core contract rows")
+        prefix = re.search(r"Prefijo único \*\*`([^`]+)`", contract)
+        self.assertIsNotNone(prefix)
+
+        for platform in ("linux", "macos"):
+            with self.subTest(platform=platform), tempfile.TemporaryDirectory(
+                prefix="mydotfiles-contract-"
+            ) as work:
+                home = Path(work)
+                (home / "mydotfiles").symlink_to(ROOT, target_is_directory=True)
+                config = home / ".config/tmux/tmux.conf"
+                config.parent.mkdir(parents=True)
+                config.symlink_to(ROOT / f"os/{platform}/tmux/tmux.conf")
+                tpm = home / ".tmux/plugins/tpm/tpm"
+                tpm.parent.mkdir(parents=True)
+                tpm.write_text("#!/bin/sh\nexit 0\n")
+                tpm.chmod(0o755)
+                env = dict(os.environ, HOME=work, XDG_CONFIG_HOME=f"{work}/.config")
+                env.pop("TMUX", None)
+                socket = f"{work}/socket"
+
+                def tmux(*args):
+                    result = subprocess.run(["tmux", "-S", socket, *args], env=env,
+                                            capture_output=True, text=True, check=False)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    return result.stdout.strip()
+
+                try:
+                    tmux("-f", str(config), "new-session", "-d", "-s", "training", "/bin/sleep 120")
+                    self.assertEqual(tmux("show-options", "-gv", "prefix"), prefix.group(1))
+                    self.assertEqual(tmux("show-options", "-gv", "prefix2"), "None")
+                    for table, key, command in bindings:
+                        self.assertIn(command, tmux("list-keys", "-T", table, key),
+                                      f"{platform}: {table} {key}")
+                finally:
+                    subprocess.run(["tmux", "-S", socket, "kill-server"], env=env,
+                                   capture_output=True, check=False)
+
+
 @unittest.skipUnless(shutil.which("kitty"), "Kitty parser is not installed")
 class KittyTests(unittest.TestCase):
     def test_platform_entrypoints(self):
         code = '''
 from kitty.config import load_config
-from kitty.key_encoding import parse_shortcut
+from kitty.options.utils import parse_shortcut
 import os
+
+# Kitty embeds optimized Python: assert statements are removed under -OO.
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
+def effective_mapping(options, shortcut):
+    definitions = options.keyboard_modes[""].keymap.get(parse_shortcut(shortcut), [])
+    # These entrypoints use unconditional mappings; the last definition wins.
+    return definitions[-1] if definitions else None
+
 root = os.environ["TERMINAL_TEST_ROOT"]
 options = []
 for platform in ("linux", "macos"):
     bad = []
     o = load_config(f"{root}/os/{platform}/kitty/kitty.conf", accumulate_bad_lines=bad)
-    assert not bad, bad
-    assert o.startup_session is None
-    assert o.shell_integration == frozenset({"no-sudo"})
-    assert o.tab_title_template == "{tab.active_wd.rsplit('/', 1)[-1]}"
-    for shortcut in ("ctrl+b", "ctrl+shift+s"):
-        mods, key = parse_shortcut(shortcut)
-        mappings = [d for k, defs in o.keyboard_modes[""].keymap.items()
-                    if k.mods == mods and k.key == key for d in defs]
-        assert not any(d.is_sequence or "save_as_session" in d.definition for d in mappings)
+    require(not bad, str(bad))
+    require(o.startup_session is None, platform + " startup session")
+    require(o.shell_integration == frozenset({"no-sudo"}), platform + " shell integration")
+    require(o.tab_title_template == "{tab.active_wd.rsplit('/', 1)[-1]}", platform + " tab title")
+    for shortcut in ("ctrl+space", "ctrl+b", "ctrl+shift+s"):
+        mapping = effective_mapping(o, shortcut)
+        require(mapping is None or (not mapping.is_sequence and not mapping.definition),
+                platform + " intercepted " + shortcut)
     options.append(o)
 for key in ("font_family", "font_size", "foreground", "background",
             "background_opacity", "tab_bar_style", "window_padding_width"):
-    assert getattr(options[0], key) == getattr(options[1], key), key
+    require(getattr(options[0], key) == getattr(options[1], key), key)
 for shortcut in ("ctrl+h", "ctrl+j", "ctrl+k", "ctrl+l"):
-    mods, key = parse_shortcut(shortcut)
-    mappings = [d for k, defs in options[0].keyboard_modes[""].keymap.items()
-                if k.mods == mods and k.key == key for d in defs]
-    assert any("nvim|tmux" in d.definition for d in mappings), shortcut
+    mapping = effective_mapping(options[0], shortcut)
+    require(mapping is not None and "nvim|tmux" in mapping.definition, shortcut)
 '''
         with tempfile.TemporaryDirectory(prefix="mydotfiles-kitty-") as work:
             (Path(work) / "mydotfiles").symlink_to(ROOT, target_is_directory=True)
             env = dict(os.environ, HOME=work, XDG_CONFIG_HOME=f"{work}/.config",
                        TERMINAL_TEST_ROOT=str(ROOT))
-            result = subprocess.run(["kitty", "+runpy", code], env=env, check=False,
+            result = subprocess.run(["kitty", "+runpy", f"exec({code!r}, {{}})"], env=env, check=False,
                                     capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            negative_code = code + '\nrequire(False, "negative validation probe")'
+            negative = subprocess.run(
+                ["kitty", "+runpy", f"exec({negative_code!r}, {{}})"],
+                env=env, check=False, capture_output=True, text=True,
+            )
+            self.assertNotEqual(negative.returncode, 0, "Kitty validation silently ignored a failure")
+            self.assertIn("negative validation probe", negative.stderr)
 
 
 if __name__ == "__main__":

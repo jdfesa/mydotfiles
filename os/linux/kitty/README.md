@@ -18,8 +18,10 @@ pestaña nueva carga la integración de shell que refresca ese título al volver
 al prompt después de `cd`. Dentro de tmux, ese título no sigue cada panel.
 
 `Ctrl+h/j/k/l` se envía a Neovim o tmux cuando uno de ellos está en primer
-plano. Con el plugin `vim-tmux-navigator`, esas teclas navegan entre paneles;
-fuera de esas aplicaciones conservan la navegación de ventanas Kitty.
+plano. Con `vim-tmux-navigator`, esas teclas navegan entre paneles desde el
+shell; cruzar splits Neovim requiere integración en el editor. Fuera de esas
+aplicaciones conservan la navegación de ventanas Kitty. Consulta las
+[limitaciones actuales](../../../shared/tmux/training/compatibility.md#contextual-extensions).
 El portapapeles externo sigue usando `Ctrl+Shift+C/V`.
 
 Consulta [Tmux on Linux](../tmux/README.md) para instalar y verificar el flujo.
