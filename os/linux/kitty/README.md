@@ -23,3 +23,6 @@ fuera de esas aplicaciones conservan la navegación de ventanas Kitty.
 El portapapeles externo sigue usando `Ctrl+Shift+C/V`.
 
 Consulta [Tmux on Linux](../tmux/README.md) para instalar y verificar el flujo.
+Si Kitty ya estaba abierto antes de actualizar el archivo, inicia un proceso
+nuevo con el entrypoint actualizado; una pestaña del proceso anterior por sí
+sola no recarga sus opciones. No hace falta cerrar ni recargar el trabajo activo.

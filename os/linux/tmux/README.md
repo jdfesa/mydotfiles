@@ -31,7 +31,14 @@ completada una instalación con placeholders sin resolver.
 
 ## Workflow
 
-Abre una pestaña nueva de Kitty y crea o recupera la sesión:
+Inicia un proceso nuevo de Kitty para leer el entrypoint actualizado sin
+recargar las ventanas que ya están abiertas:
+
+```sh
+kitty --detach --config "$HOME/mydotfiles/os/linux/kitty/kitty.conf"
+```
+
+Dentro de esa nueva instancia, crea o recupera la sesión:
 
 ```sh
 tmux new-session -A -s mydotfiles -c "$HOME/mydotfiles"
@@ -66,8 +73,8 @@ Las pruebas usan un `HOME`, un socket y backends de clipboard falsos; no
 escriben el portapapeles real ni tocan servidores activos. Si Kitty está
 disponible, también validan sus dos entrypoints con el parser instalado.
 
-Para la comprobación física, abre una ventana nueva de Kitty cuando sea
-conveniente, entra a tmux y prueba prefijo, divisiones, navegación, copia y
+Para la comprobación física, usa esa instancia nueva cuando sea conveniente,
+entra a tmux y prueba prefijo, divisiones, navegación, copia y
 barra inferior. No cierres ni recargues ventanas con trabajo pendiente.
 Resurrect/Continuum pueden reconstruir una disposición después de reiniciar,
 pero no mantienen vivos los procesos. Sus archivos de estado, historial y
