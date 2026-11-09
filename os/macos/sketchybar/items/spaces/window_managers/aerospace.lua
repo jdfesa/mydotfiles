@@ -7,6 +7,7 @@ local app_icons = require("helpers.spaces_util.app_icons")
 -- Ruta absoluta necesaria: al iniciar sesión, Sketchybar corre sin el PATH
 -- del shell, por lo que 'aerospace' sin ruta completa no se encuentra.
 local AEROSPACE = "/usr/local/bin/aerospace"
+local SKETCHYBAR = "/usr/local/bin/sketchybar"
 
 local function parse_string_to_table(s)
   local result = {}
@@ -70,6 +71,23 @@ function Window_Manager:create_workspace_items(current_workspace)
           SBAR.exec(AEROSPACE .. " workspace " .. workspace)
         end
       end)
+    end
+  end
+end
+
+function Window_Manager:place_front_app_after_workspaces()
+  -- La consulta IPC confirma los ítems pendientes antes de lanzar --move.
+  -- No usa procesos síncronos ni depende del orden de los callbacks de carga.
+  local bar = SBAR.query("bar")
+  if type(bar) ~= "table" or type(bar.items) ~= "table" then
+    return
+  end
+  for _, name in ipairs(bar.items) do
+    if name == "front_app" then
+      local last_item = "space." .. aerospace_workspaces[#aerospace_workspaces]
+      local quoted_item = "'" .. last_item:gsub("'", "'\\''") .. "'"
+      SBAR.exec(SKETCHYBAR .. " --move front_app after " .. quoted_item)
+      return
     end
   end
 end
@@ -150,6 +168,7 @@ function Window_Manager:init()
         init_done = true
         pending = false
         self:create_workspace_items(focused[1].workspace)
+        self:place_front_app_after_workspaces()
         self:update_space_labels()
         stop_retry()
       end)

@@ -6,7 +6,7 @@ io.popen = function()
   error("La inicialización no debe usar io.popen")
 end
 
-local function fixture()
+local function fixture(with_front_app)
   local items, requests, commands = {}, {}, {}
   local anonymous = 0
   package.loaded["helpers.spaces_util.app_icons"] = { default = "?" }
@@ -41,11 +41,20 @@ local function fixture()
       assert(items[name], "Se intentó eliminar dos veces: " .. name)
       items[name] = nil
     end,
+    query = function(name)
+      assert(name == "bar")
+      local names = {}
+      for item_name in pairs(items) do table.insert(names, item_name) end
+      return { items = names }
+    end,
     animate = function(_, _, callback) callback() end,
   }
   local manager = dofile(module_path)
   manager:init()
   manager:start_watcher()
+  if with_front_app ~= false then
+    SBAR.add("item", "front_app", {})
+  end
   assert(items.aerospace_mode, "El indicador de modo no debe esperar al proceso externo")
   assert(not items["space.1"], "La carga inicial debe devolver antes del callback")
   local retry = items.aerospace_retry.routine
@@ -60,6 +69,14 @@ local function fixture()
     assert(respond(rows, 0):match("%-%-all"))
     assert(respond({ { workspace = focused } }, 0):match("%-%-focused"))
     assert(not items.aerospace_retry, "Eliminar el timer al completar la inicialización")
+    local last_item = "space." .. names[#names]
+    local quoted_item = "'" .. last_item:gsub("'", "'\\''") .. "'"
+    local expected_move = "/usr/local/bin/sketchybar --move front_app after " .. quoted_item
+    local found_move = false
+    for _, command in ipairs(commands) do
+      if command == expected_move then found_move = true end
+    end
+    assert(found_move == (with_front_app ~= false), "Posicionar la app activa tras el último workspace")
     for _, name in ipairs(names) do
       local item = assert(items["space." .. name])
       assert(item.config.icon.string == name)
@@ -87,6 +104,12 @@ local tests = {
   end },
   { "legacy process", function()
     fixture().complete({ "U", "I", "O", "P", "Y", "N" }, "I")
+  end },
+  { "front app disabled", function()
+    fixture(false).complete(numeric, "1")
+  end },
+  { "workspace names are shell quoted", function()
+    fixture().complete({ "1", "with'quote" }, "1")
   end },
   { "failed workspace query", function()
     local f = fixture()

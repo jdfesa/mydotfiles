@@ -139,6 +139,12 @@ inicializar; recargar AeroSpace no reconstruye los ítems existentes de la barra
 Seguir la [migración controlada](../aerospace/WORKSPACES.md#migration-and-verification)
 antes de validar que solo aparezcan los cinco números.
 
+El indicador de la aplicación activa (`front_app`, icono y nombre) queda
+**después de `space.5`** en el bloque izquierdo: `1 → 2 → 3 → 4 → 5 → app activa`.
+El módulo fija ese orden después de crear los workspaces asíncronamente, también
+cuando el proceso aparece durante un reintento. Los iconos dentro de cada
+workspace siguen representando sus ventanas y no sustituyen a `front_app`.
+
 ---
 
 ## 🔧 Troubleshooting (Solución de Problemas)
