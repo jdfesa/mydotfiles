@@ -1,5 +1,13 @@
 # AeroSpace Troubleshooting
 
+## Numeric Trial Scope
+
+Los ejemplos numéricos corresponden a la distribución en prueba. Antes de
+diagnosticar, consultar `aerospace list-workspaces --all` y distinguir la fuente
+en disco de los bindings cargados (`aerospace config --get mode.main.binding --json`).
+Si el proceso todavía usa letras, la ausencia de `space.1` no demuestra un fallo:
+la [migración controlada](WORKSPACES.md#migration-and-verification) sigue pendiente.
+
 Este documento agrupa sintomas, causas probables y soluciones. Para atajos diarios ver [KEYBINDINGS.md](KEYBINDINGS.md). Para scripts e integracion con Sketchybar ver [SCRIPTS.md](SCRIPTS.md).
 
 ## Checklist Rapido
@@ -19,7 +27,7 @@ Si el dry-run pasa, el TOML es valido. Si un comportamiento sigue raro, revisar 
 
 **Solucion**:
 
-- La config define `persistent-workspaces = ["U", "I", "O", "P", "Y", "N"]`.
+- La config define `persistent-workspaces = ["1", "2", "3", "4", "5"]`.
 - Recargar con `Meh + ; -> Esc`.
 - Verificar con `aerospace list-workspaces --all`.
 
@@ -130,7 +138,7 @@ launchctl kickstart -k gui/$(id -u)/homebrew.mxcl.sketchybar
 Verificacion:
 
 ```bash
-sketchybar --query space.U
+sketchybar --query space.1
 ```
 
 Si `aerospace list-workspaces --all` ya responde, no es necesario volver a abrir

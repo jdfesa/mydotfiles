@@ -121,17 +121,29 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 
 | Problema | Solución |
 |---|---|
-| `SBAR.add("space", ...)` solo acepta IDs enteros (Spaces de macOS) | Se usa `SBAR.add("item", ...)` que acepta strings como `"U"`, `"I"`, `"O"` |
+| `SBAR.add("space", ...)` solo acepta IDs enteros (Spaces de macOS) | Se usa `SBAR.add("item", ...)` que acepta nombres string como `"1"`, `"2"`, `"3"` (no son IDs nativos) |
 | Los eventos Lua (`subscribe`) no reaccionaban bien para controlar el ítem de modo o el highlight del workspace | Se eliminaron los subscribers Lua; AeroSpace controla los ítems directamente vía CLI (`sketchybar --set`) usando scripts externos (Ver [SCRIPTS.md](../aerospace/SCRIPTS.md)) |
 | `exec-and-forget` de AeroSpace no encontraba el binario `sketchybar` | Se usa la ruta absoluta `/usr/local/bin/sketchybar` (ver [SCRIPTS.md](../aerospace/SCRIPTS.md)) |
 | `sketchybar --reload` no siempre reemplaza los procesos Lua anteriores | Se usa `launchctl kickstart -k gui/$(id -u)/homebrew.mxcl.sketchybar` para reiniciar todo el árbol del servicio. Ver el [procedimiento de rescate](TROUBLESHOOTING.md#rescate-solo-aparece-la-app-actual-y-faltan-los-workspaces) |
 | Los workspaces no aparecen al reiniciar (los ítems `space.*` no se crean) | Sketchybar arranca sin el PATH del shell; `io.popen("aerospace ...")"` falla silenciosamente. Solución: ruta absoluta `"/usr/local/bin/aerospace"` en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua). Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
+| La inicialización Lua puede bloquearse en `io.popen` / `pclose` antes de enviar los ítems a la barra | El módulo usa `SBAR.exec` con JSON para consultar lista y foco asíncronamente; incluye reintentos acotados y [regresión aislada](tests/test-aerospace.lua). |
 | AeroSpace no estaba listo al arrancar (race condition) — los workspaces aparecen vacíos | Auto-retry timer en `aerospace.lua`: consulta AeroSpace cada 3s (máx. 10 intentos), crea los items cuando responde y luego se elimina. No ejecuta `sketchybar --reload`. Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md#manejo-de-workspaces-vacíos-al-arrancar-race-condition) |
 
 #### Componentes
 
-1. **Workspaces (U, I, O, P, Y, N)**: Ítems a la izquierda de la barra que muestran cada workspace con su letra e íconos de las apps que contiene. El workspace activo se resalta en color lavanda.
+1. **Workspaces (1, 2, 3, 4, 5)**: Ítems a la izquierda de la barra que muestran cada workspace con su número e íconos de las apps que contiene. El workspace activo se resalta en color lavanda.
 2. **Indicador de modo (`aerospace_mode`)**: Ítem oculto por defecto (`drawing = false`). AeroSpace lo muestra/oculta con `aerospace/scripts/update_mode_indicator.sh` al entrar/salir de modos. Muestra `[S]` para servicio y `[R]` para resize.
+
+La distribución numérica está en prueba. El módulo consulta los workspaces al
+inicializar; recargar AeroSpace no reconstruye los ítems existentes de la barra.
+Seguir la [migración controlada](../aerospace/WORKSPACES.md#migration-and-verification)
+antes de validar que solo aparezcan los cinco números.
+
+El indicador de la aplicación activa (`front_app`, icono y nombre) queda
+**después de `space.5`** en el bloque izquierdo: `1 → 2 → 3 → 4 → 5 → app activa`.
+El módulo fija ese orden después de crear los workspaces asíncronamente, también
+cuando el proceso aparece durante un reintento. Los iconos dentro de cada
+workspace siguen representando sus ventanas y no sustituyen a `front_app`.
 
 ---
 
@@ -161,7 +173,7 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 ### "Los workspaces no aparecen después de reiniciar el sistema"
 - **Causa conocida**: Sketchybar arranca sin el PATH del shell; el binario `aerospace` no se encuentra desde Lua. O bien ocurre una "race condition" durante el arranque de macOS.
 - **Estado de Pruebas**: Se implementó una solución (auto-retry timer) que funcionó con éxito en el arranque actual, logrando que AeroSpace cargue y al final Sketchybar se actualice con la información correcta de los workspaces. **IMPORTANTE:** Se debe probar este comportamiento durante N arranques para confirmar que siempre sea funcional de manera consistente y no dependa de otros factores aleatorios del arranque.
-- **Verificación**: `sketchybar --query space.U` → si devuelve `not found`, el bug está activo.
+- **Verificación**: después de aplicar la prueba numérica, comprobar que `aerospace list-workspaces --all` incluya `1` y consultar `sketchybar --query space.1`. Si AeroSpace todavía usa letras, que no exista `space.1` no demuestra este fallo.
 - **Implementación principal**: ruta absoluta en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua) y auto-retry timer.
 - **Detalle completo**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 

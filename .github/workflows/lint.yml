@@ -35,6 +35,15 @@ jobs:
       - name: Test Quattro shell compatibility overlay
         run: os/linux/hyprland/quattro-lab/scripts/test-shell-compat
 
+      - name: Test AeroSpace workspace configuration and highlight in isolation
+        run: python3 os/macos/aerospace/scripts/test-workspaces.py
+
+      - name: Install Lua test interpreter
+        run: sudo apt-get update && sudo apt-get install -y lua5.4
+
+      - name: Test asynchronous Sketchybar workspace initialization
+        run: lua5.4 os/macos/sketchybar/tests/test-aerospace.lua
+
       - name: Validate repository metadata and profile graph
         run: |
           scripts/test-profile-resolve

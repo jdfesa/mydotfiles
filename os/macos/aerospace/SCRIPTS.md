@@ -31,10 +31,21 @@ Inicialmente, Sketchybar dependía de un evento Lua (`subscribe("aerospace_works
 Se eliminó la dependencia del evento Lua para el highlight. En su lugar, el script bash se ejecuta directamente por AeroSpace y utiliza el CLI de Sketchybar (`sketchybar --set ...`) para forzar el cambio de color de manera directa y 100% confiable.
 
 ### Funcionamiento
-1. AeroSpace detecta el cambio de workspace (ej. pasamos a la `I`).
+1. AeroSpace detecta el cambio de workspace (ej. pasamos al `1`).
 2. Dispara el hook `exec-on-workspace-change`.
 3. El hook llama a este script pasándole la variable de entorno `$AEROSPACE_FOCUSED_WORKSPACE`.
-4. El script itera sobre todos los workspaces conocidos (U, I, O, P, Y, N) y usa `sketchybar --set` para encender el highlight del activo y apagar el de los demás.
+4. El script consulta `/usr/local/bin/aerospace list-workspaces --all` e itera
+   sobre los IDs del proceso, sin duplicar una lista fija. Usa `sketchybar --set`
+   para encender el highlight del activo y apagar el de los demás. Si la consulta
+   falla, sale con error antes de cambiar la barra.
+5. Esto admite tanto los IDs numéricos en prueba como los antiguos mientras
+   haya ventanas pendientes de migrar. No mueve ventanas ni reconstruye ítems
+   de Sketchybar.
+
+Para pruebas aisladas, `AEROSPACE_BIN` y `SKETCHYBAR_BIN` permiten sustituir
+ambos ejecutables por dobles locales. Por defecto se conservan las rutas
+absolutas de la tabla anterior. La prueba se ejecuta con
+`python3 os/macos/aerospace/scripts/test-workspaces.py`.
 
 > **Nota sobre íconos**: El script solo actualiza el **highlight**. La actualización de los íconos de las aplicaciones dentro del workspace sigue estando a cargo de un watcher periódico (routine) en el código Lua de Sketchybar.
 
