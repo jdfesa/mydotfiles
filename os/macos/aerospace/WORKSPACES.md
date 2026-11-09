@@ -114,10 +114,11 @@ Antes de aplicar, ejecutar las pruebas aisladas y validar sin recargar:
 
 ```bash
 python3 os/macos/aerospace/scripts/test-workspaces.py
+lua os/macos/sketchybar/tests/test-aerospace.lua
 aerospace reload-config --dry-run --no-gui
 ```
 
-Las pruebas requieren Python 3.11 o superior y Bash; no llaman a las
+Las pruebas requieren Python 3.11 o superior, Bash y Lua 5.4; no llaman a las
 aplicaciones reales ni alteran ventanas. El dry-run verifica la configuración,
 no la comodidad del teclado ni el resultado visual.
 

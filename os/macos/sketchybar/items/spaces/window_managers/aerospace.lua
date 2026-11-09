@@ -16,25 +16,9 @@ local function parse_string_to_table(s)
   return result
 end
 
-local function get_workspaces()
-  local file = io.popen(AEROSPACE .. " list-workspaces --all")
-  local result = file:read("*a")
-  file:close()
-  return parse_string_to_table(result)
-end
-
-local function get_current_workspace()
-  local file = io.popen(AEROSPACE .. " list-workspaces --focused")
-  local result = file:read("*a")
-  file:close()
-  return parse_string_to_table(result)[1]
-end
-
-local aerospace_workspaces = get_workspaces()
-
--- Si AeroSpace no estaba corriendo al arrancar (race condition al inicio de macOS),
--- INIT_DONE será false y el retry en init() se encarga de esperar e inicializar.
-local INIT_DONE = (#aerospace_workspaces > 0)
+-- La inicialización se completa por callbacks; nunca bloquear el hilo Lua
+-- con io.popen/pclose mientras SbarLua administra procesos asíncronos.
+local aerospace_workspaces = {}
 
 -- Note: workspace highlights are updated via CLI (bash script) from aerospace.toml
 -- App icon labels are updated via a periodic timer below
@@ -44,8 +28,7 @@ local Window_Manager = {}
 -- Store created workspace items for later updates
 local workspace_items = {}
 
-function Window_Manager:create_workspace_items()
-  local current_workspace = get_current_workspace()
+function Window_Manager:create_workspace_items(current_workspace)
 
   for _, workspace in ipairs(aerospace_workspaces) do
     local selected = workspace == current_workspace
@@ -92,7 +75,6 @@ function Window_Manager:create_workspace_items()
 end
 
 function Window_Manager:init()
-  self:create_workspace_items()
 
   -- Mode indicator — hidden by default.
   -- AeroSpace controls this directly via `sketchybar --set` in aerospace.toml.
@@ -117,42 +99,75 @@ function Window_Manager:init()
     },
   })
 
-  if INIT_DONE then
-    -- AeroSpace estaba listo → actualizar iconos de apps normalmente
-    self:update_space_labels()
-  else
-    -- AeroSpace no estaba listo al arrancar (race condition).
-    -- Timer que reintenta cada 3s. Cuando AeroSpace responda, crea los items
-    -- directamente y se elimina. No vuelve a ejecutar toda la configuracion.
-    local retry_count = 0
-    local MAX_RETRIES = 10
-    local retry_done = false
-    local retry_watcher = SBAR.add("item", "aerospace_retry", {
-      drawing = false,
-      updates = true,
-      update_freq = 3,
-    })
+  local init_done = false
+  local pending = false
+  local retry_count = 0
+  local MAX_RETRIES = 10
+  local retry_active = true
+  local retry_watcher = SBAR.add("item", "aerospace_retry", {
+    drawing = false,
+    updates = true,
+    update_freq = 3,
+  })
 
-    retry_watcher:subscribe("routine", function()
-      if retry_done then
+  local function stop_retry()
+    if retry_active then
+      retry_active = false
+      SBAR.remove("aerospace_retry")
+    end
+  end
+
+  local function try_initialize()
+    if init_done or pending then
+      return
+    end
+    pending = true
+
+    -- SbarLua decodifica JSON: los IDs numéricos siguen siendo strings.
+    SBAR.exec(AEROSPACE .. " list-workspaces --all --json", function(rows, exit_code)
+      local workspaces = {}
+      if (exit_code == nil or exit_code == 0) and type(rows) == "table" then
+        for _, row in ipairs(rows) do
+          if type(row) == "table" and type(row.workspace) == "string" and row.workspace ~= "" then
+            table.insert(workspaces, row.workspace)
+          end
+        end
+      end
+      if #workspaces == 0 then
+        pending = false
         return
       end
 
-      retry_count = retry_count + 1
-      local ws = get_workspaces()
+      SBAR.exec(AEROSPACE .. " list-workspaces --focused --json", function(focused, focus_exit_code)
+        if (focus_exit_code ~= nil and focus_exit_code ~= 0)
+          or type(focused) ~= "table" or type(focused[1]) ~= "table"
+          or type(focused[1].workspace) ~= "string" then
+          pending = false
+          return
+        end
 
-      if #ws > 0 then
-        retry_done = true
-        aerospace_workspaces = ws
-        self:create_workspace_items()
+        aerospace_workspaces = workspaces
+        init_done = true
+        pending = false
+        self:create_workspace_items(focused[1].workspace)
         self:update_space_labels()
-        SBAR.remove("aerospace_retry")
-      elseif retry_count >= MAX_RETRIES then
-        retry_done = true
-        SBAR.remove("aerospace_retry")
-      end
+        stop_retry()
+      end)
     end)
   end
+
+  retry_watcher:subscribe("routine", function()
+    if init_done then
+      return
+    end
+    retry_count = retry_count + 1
+    try_initialize()
+    if retry_count >= MAX_RETRIES then
+      stop_retry()
+    end
+  end)
+
+  try_initialize()
 end
 
 function Window_Manager:start_watcher()

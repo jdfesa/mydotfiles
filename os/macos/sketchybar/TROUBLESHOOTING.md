@@ -76,34 +76,24 @@ Cualquier `io.popen(...)` o `SBAR.exec(...)` dentro de la config Lua de Sketchyb
 
 **Causa**: Sketchybar arranca (vía LaunchAgent `RunAtLoad` o brew) **antes** que AeroSpace. Cuando `aerospace.lua` se ejecuta, `aerospace list-workspaces --all` devuelve una lista vacía porque el binario aún no está disponible o no terminó de inicializar.
 
-### Estado actual de la configuración
+### Asynchronous Initialization
 
-Actualmente se utiliza un **retry timer interno** en `aerospace.lua` que:
+El módulo [`aerospace.lua`](items/spaces/window_managers/aerospace.lua):
 
-1. Al cargar, intenta obtener los workspaces con `get_workspaces()`.
-2. Si la lista está vacía (`INIT_DONE = false`), crea un item invisible `aerospace_retry` que se ejecuta cada **3 segundos**.
-3. En cada tick, consulta a AeroSpace. Si responde (lista de workspaces no vacía):
-   - Crea los items de workspace directamente en el proceso actual.
-   - Actualiza sus iconos.
-   - Elimina el watcher `aerospace_retry`.
-4. **Máximo 10 intentos** (30 segundos). Si AeroSpace nunca responde, elimina el watcher y deja de intentar.
-5. Si AeroSpace **ya estaba listo** al arrancar (`INIT_DONE = true`), el timer nunca se crea — cero overhead.
+1. Programa consultas de lista y foco con `SBAR.exec` y salida JSON, sin
+   bloquear la inicialización de los otros widgets.
+2. Crea un timer invisible `aerospace_retry` cada **3 segundos**. Lo elimina
+   en cuanto los callbacks validan la lista y el foco y crean los ítems.
+3. Si una consulta falla, devuelve una lista vacía o datos inválidos, permite
+   reintentar. Mientras una consulta esté pendiente no lanza otra en paralelo.
+4. Después del intento inicial permite hasta **10 reintentos** del timer
+   (30 segundos); al alcanzar el límite elimina el watcher.
+5. Si AeroSpace ya responde, crea los ítems al completar los callbacks sin
+   esperar el primer tick del timer.
 
-```lua
--- Fragmento clave en aerospace.lua:
-local INIT_DONE = (#aerospace_workspaces > 0)
-
--- En init():
-if INIT_DONE then
-  self:create_workspace_items()
-  self:update_space_labels()
-else
-  -- Crear retry timer (3s × 10 intentos máximo)
-  -- Al detectar AeroSpace → crear items y eliminar el timer
-end
-```
-
-**Comportamiento visible**: La barra aparece primero sin los workspaces (o con indicadores vacíos), y ~3-9 segundos después se completa automáticamente.
+Las consultas se coordinan en `try_initialize()`. Los nombres numéricos
+permanecen como strings en las tablas JSON. La actualización periódica de
+iconos sigue separada de esta inicialización.
 
 **Por qué no usa reload**: en este caso, `sketchybar --reload` desde el callback
 volvia a ejecutar la configuracion repetidamente. Cada ciclo intentaba crear otra
@@ -115,10 +105,34 @@ configuracion completa.
 
 ---
 
+## Blocked Lua Initialization
+
+Si el daemon responde pero `sketchybar --query bar` muestra cero ítems, comprobar
+si el proceso Lua está detenido en `io_pclose`, `pclose` o `wait4` antes de
+completar `SBAR.end_config()`. En ese estado, repetir recargas no corrige la
+consulta síncrona que bloquea la inicialización.
+
+El módulo de AeroSpace utiliza `SBAR.exec` para consultar
+`list-workspaces --all --json` y `list-workspaces --focused --json`. Esto
+mantiene libre el hilo de SbarLua y conserva los nombres numéricos como strings.
+No usar `io.popen` en ese camino; SbarLua recomienda su
+[API asíncrona](https://github.com/FelixKratz/SbarLua#important-remarks).
+
+Prueba de regresión sin procesos gráficos (Lua 5.4):
+
+```bash
+lua os/macos/sketchybar/tests/test-aerospace.lua
+```
+
+Verifica callbacks diferidos, IDs numéricos y anteriores, fallos de consulta,
+respuestas inválidas, reintentos acotados y ausencia de consultas solapadas.
+Una ejecución manual de `lua sketchybarrc` no sustituye al proceso gestionado
+por el LaunchAgent.
+
 ## Rescate: solo aparece la app actual y faltan los workspaces
 
 **Síntoma confirmado**: Sketchybar carga `front_app` y otros widgets, pero no
-muestra `U`, `I`, `O`, `P`, `Y` ni `N`. Ejecutar `sketchybar --reload` no lo
+muestra los workspaces `1`–`5`. Ejecutar `sketchybar --reload` no lo
 resuelve o deja la barra vacía durante el nuevo arranque.
 
 Este caso puede combinar dos problemas:
@@ -138,15 +152,14 @@ pgrep -fl AeroSpace
 aerospace list-workspaces --all
 ```
 
-El segundo comando debe devolver los seis workspaces:
+El segundo comando debe devolver los cinco workspaces de la prueba aplicada:
 
 ```text
-I
-N
-O
-P
-U
-Y
+1
+2
+3
+4
+5
 ```
 
 Si devuelve `Can't connect to AeroSpace server`, abrir la aplicación y volver a

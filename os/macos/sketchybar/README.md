@@ -126,6 +126,7 @@ Sketchybar reemplaza los Spaces nativos de macOS mostrando los workspaces de Aer
 | `exec-and-forget` de AeroSpace no encontraba el binario `sketchybar` | Se usa la ruta absoluta `/usr/local/bin/sketchybar` (ver [SCRIPTS.md](../aerospace/SCRIPTS.md)) |
 | `sketchybar --reload` no siempre reemplaza los procesos Lua anteriores | Se usa `launchctl kickstart -k gui/$(id -u)/homebrew.mxcl.sketchybar` para reiniciar todo el árbol del servicio. Ver el [procedimiento de rescate](TROUBLESHOOTING.md#rescate-solo-aparece-la-app-actual-y-faltan-los-workspaces) |
 | Los workspaces no aparecen al reiniciar (los ítems `space.*` no se crean) | Sketchybar arranca sin el PATH del shell; `io.popen("aerospace ...")"` falla silenciosamente. Solución: ruta absoluta `"/usr/local/bin/aerospace"` en [`aerospace.lua`](items/spaces/window_managers/aerospace.lua). Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
+| La inicialización Lua puede bloquearse en `io.popen` / `pclose` antes de enviar los ítems a la barra | El módulo usa `SBAR.exec` con JSON para consultar lista y foco asíncronamente; incluye reintentos acotados y [regresión aislada](tests/test-aerospace.lua). |
 | AeroSpace no estaba listo al arrancar (race condition) — los workspaces aparecen vacíos | Auto-retry timer en `aerospace.lua`: consulta AeroSpace cada 3s (máx. 10 intentos), crea los items cuando responde y luego se elimina. No ejecuta `sketchybar --reload`. Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md#manejo-de-workspaces-vacíos-al-arrancar-race-condition) |
 
 #### Componentes

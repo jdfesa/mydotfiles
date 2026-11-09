@@ -99,10 +99,11 @@ La distribución es experimental. Cambiar la fuente no acredita recarga ni
 validación del uso real. Antes de aplicar, seguir la
 [migración de ventanas y barra](WORKSPACES.md#migration-and-verification).
 
-Pruebas aisladas (Python 3.11+ y Bash):
+Pruebas aisladas (Python 3.11+, Bash y Lua 5.4):
 
 ```bash
 python3 os/macos/aerospace/scripts/test-workspaces.py
+lua os/macos/sketchybar/tests/test-aerospace.lua
 ```
 
 Validar sin aplicar:
