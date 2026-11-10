@@ -13,3 +13,4 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.confirm = true
 vim.opt.spelllang = { "en" }
+vim.g.lazyvim_php_lsp = "intelephense"

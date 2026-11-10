@@ -23,7 +23,7 @@ instalaciones pendientes del roadmap.
 | Sesiones de terminal | [Tmux](shared/tmux/README.md) tiene capas macOS/Linux, guías de uso diario, entrenamiento y recuperación de disposiciones. |
 | Git y navegación | [Lazygit](shared/lazygit/README.md) y [Yazi](shared/yazi/README.md) tienen configuración y destinos en los perfiles macOS y Arch. |
 | Monitorización | [Btop](shared/btop/README.md) y [Fastfetch](shared/fastfetch/README.md) tienen fuentes compartidas y destinos declarados por perfil. |
-| Editores | [Neovim/LazyVim](shared/nvim/README.md) vive en `shared/nvim/`; [VS Code](shared/vscode/README.md) mantiene una configuración propia. No se presupone una migración completa entre editores. |
+| Editores | [Neovim/LazyVim](shared/nvim/README.md) vive en `shared/nvim/` y configura [diagnósticos PHP con Intelephense](shared/nvim/README.md#php-diagnostics), cuya instalación y conexión deben verificarse por máquina; [VS Code](shared/vscode/README.md) mantiene una configuración propia. No se presupone una migración completa entre editores. |
 | Paquetes macOS | Hay [Brewfiles por capas](os/macos/packages/homebrew/README.md). Su existencia está resuelta; el curado y la comprobación de recuperación siguen siendo trabajo independiente. |
 | Despliegue de dotfiles | Los [perfiles y capas](profiles/README.md) se resuelven, enlazan y diagnostican con los [scripts del repositorio](scripts/README.md), sin depender de Stow. |
 | Verificación automatizada | [CI](.github/workflows/lint.yml) ejecuta ShellCheck, validadores, reconstrucción de perfiles en hogares aislados y pruebas de terminal Linux. |
