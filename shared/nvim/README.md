@@ -23,6 +23,20 @@ Java usa `jdtls` desde Homebrew (`/usr/local/bin/jdtls`). No se usa el paquete `
 
 El spellcheck queda en ingles por ahora para evitar warnings de diccionario faltante. El diccionario espanol se puede agregar despues si se quiere revisar notas desde Neovim.
 
+## PHP Diagnostics
+
+El extra `lazyvim.plugins.extras.lang.php` se habilita en
+[`lazyvim.json`](lazyvim.json). La opción
+`vim.g.lazyvim_php_lsp = "intelephense"` en
+[`options.lua`](lua/config/options.lua) selecciona Intelephense antes de cargar
+los plugins de LazyVim.
+
+El servidor debe estar instalado y disponible en cada máquina; la configuración
+compartida no demuestra su despliegue. Para verificarlo, abrir un archivo PHP,
+ejecutar `:LspInfo` y confirmar que `intelephense` está conectado al buffer.
+Comprobar los diagnósticos con un error de sintaxis en un archivo de prueba fuera
+del repositorio.
+
 ## Atajos propios
 
 Los atajos base son los de LazyVim. Los propios empiezan con `Space N`:
